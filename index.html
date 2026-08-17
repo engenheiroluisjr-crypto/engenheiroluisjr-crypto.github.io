@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Obras ATA FDE — previsto x medido</title>
 <style>
@@ -51,9 +50,12 @@
     border-top:1px solid var(--line);color:var(--text-secondary);font:inherit;font-size:11px;
     padding:5px 6px;margin-top:4px;cursor:pointer}
   .ms .lim:hover{color:var(--previsto)}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:10px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:10px;margin-bottom:10px}
   .kpi{text-align:center}
-  .kpi .v{font-size:23px;font-weight:600;line-height:1.15;display:block}
+  /* valor de 8 digitos (R$ 55.398.408) nao cabe em 23px num cartao de 150px e
+     o numero saia cortado; a fonte encolhe junto com a largura da tela */
+  .kpi .v{font-size:clamp(13px,1.15vw,21px);font-weight:600;line-height:1.15;display:block;
+          white-space:nowrap;letter-spacing:-.2px}
   .kpi .l{font-size:11px;color:var(--text-secondary);margin-top:3px;display:block}
   /* a pagina dos empreiteiros tem 8 numeros na linha: fonte menor para nao cortar */
   #eKpis{grid-template-columns:repeat(5,1fr)}
@@ -175,6 +177,7 @@
       <div style="flex:1 1 220px"><label class="f" for="fBusca">Buscar obra</label>
         <input id="fBusca" style="width:100%" placeholder="nº ou nome da escola"></div>
       <div><label class="f">&nbsp;</label><button class="tab btpdf" id="btLimpar">Limpar filtros</button></div>
+      <div><label class="f">&nbsp;</label><button class="tab btpdf" id="btPadrao">Filtro padrão</button></div>
       <div><label class="f">&nbsp;</label><button class="tab btpdf" id="btPdfCart">PDF desta tela</button></div>
       <div><label class="f">&nbsp;</label><button class="tab btpdf" id="btPdfTodas2">PDF de todas as obras (1 por página)</button></div>
     </div>
@@ -570,6 +573,27 @@ msInit('fEng',[...new Set(D.obras.flatMap(o=>o.engs||[]))].sort((a,b)=>a.localeC
 msInit('fEmp',[...new Set(D.obras.flatMap(o=>o.emps||[]))].sort((a,b)=>a.localeCompare(b,'pt')),'Todas');
 msInit('fStatus',uniq(o=>o.status),'Todos');
 msInit('fAno',uniq(o=>String(o.ano)),'Todos');
+
+// ---- filtro com que o painel ABRE -------------------------------------------
+// o painel de trabalho e o das obras que estao andando agora: 2026, em obra,
+// lotes 41 e 42. Sem isso o painel abre com as concluidas de 2024/2025 juntas e
+// todo percentual sai diluido. "Limpar filtros" mostra tudo; "Filtro padrao" volta.
+const PADRAO={fAno:['2026'],fStatus:['Execução','Atenção','Atrasado'],fLote:['41','42']};
+function msMarcar(id,vals){
+  if(!MS[id])return;
+  MS[id].sel.clear();
+  $(id).querySelectorAll('.pop input').forEach(i=>{
+    i.checked=vals.includes(i.value);
+    if(i.checked)MS[id].sel.add(i.value);
+  });
+  msLabel(id);
+}
+function filtroPadrao(){
+  Object.entries(PADRAO).forEach(([id,vals])=>msMarcar(id,vals));
+  $('fCron').value=''; $('fBusca').value='';
+  aoFiltrar();
+}
+Object.entries(PADRAO).forEach(([id,vals])=>msMarcar(id,vals));   // aplica ja na abertura
 
 function filtradas(){
   const b=($('fBusca').value||'').toLowerCase().trim();
@@ -1600,6 +1624,7 @@ $('btPdfCart').onclick=()=>window.print();
 $('fCron').onchange=aoFiltrar;
 $('fBusca').oninput=aoFiltrar;
 $('btLimpar').onclick=limparFiltros;
+$('btPadrao').onclick=filtroPadrao;
 
 $('rodapeObs').innerHTML=`Fonte: aba <b>Cronograma</b> das planilhas M001 de cada obra (previsto) + aba <b>MEDIÇÕES</b> do `+
   `00. CTR FDE BARUERI - ATUALIZADO.xlsx (medido) + portal SMV/FDE. `+
@@ -1609,5 +1634,5 @@ $('btInfo').textContent=`fonte dos dados e critérios · dados de ${dbr(D.gerado
 $('btInfo').onclick=()=>$('rodape').classList.toggle('aberto');
 renderCarteira();
 </script>
-<a href="https://engenheiroluisjr-crypto.github.io/painel-prototipo/" style="position:fixed;right:12px;bottom:12px;z-index:99;background:#d95926;color:#fff;text-decoration:none;font:600 12px/1 Segoe UI,system-ui,sans-serif;padding:9px 13px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.45)" class="btpdf">ver a versão diretoria &rarr;</a></body>
+</body>
 </html>
