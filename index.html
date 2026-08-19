@@ -1317,6 +1317,15 @@ function renderPrev(){
   }).filter(x=>x.totalT>0.5||x.totalA>0.5||x.metaM>0.5)
     .sort((a,b)=>b.totalT-a.totalT);
   const S=(f)=>linhas.reduce((a,x)=>a+f(x),0);
+  // "bate a meta?" = o que ja esta no portal + a previsao que o Luis lancou, menos a meta.
+  // Sem esta coluna a tabela mostrava "Já lançado: —" em obras onde ele ja tinha lancado a
+  // previsao inteira do mes, e parecia que nada tinha sido feito.
+  const bateCel=(x)=>{
+    if(x.metaM<=0.5) return '<td class="num" style="color:var(--text-muted)">—</td>';
+    const d=(x.aprM+x.traM+x.pvM)-x.metaM;
+    const cor=d>=-0.5?'var(--good)':(x.pvM||x.aprM||x.traM)?'var(--warning)':'var(--critical)';
+    const txt=d>=-0.5?'bate'+(d>0.5?' +'+brl(d):''):'falta '+brl(-d);
+    return '<td class="num" style="color:'+cor+'">'+txt+'</td>';};
   const vPv=S(x=>x.pvM);
   const vMeta=S(x=>x.metaM), vLanc=S(x=>x.aprM+x.traM), vAprM=S(x=>x.aprM),
         vAtrT=S(x=>x.atrasoT), vAtrA=S(x=>x.atrasoA), vTotT=S(x=>x.totalT), vTotA=S(x=>x.totalA);
@@ -1339,17 +1348,24 @@ function renderPrev(){
     (semCron?' ('+semCron+' sem cronograma ficam de fora)':'')+'. Respeita os filtros do topo.';
   barrasPrev($('pBar'), linhas.slice(0,15));
 
-  $('pNota2').textContent='O bloco da esquerda é o acumulado até o mês passado; o da direita, o mês corrente. '+
+  $('pNota2').innerHTML='O bloco da esquerda é o acumulado até o mês passado; o da direita, o mês corrente. '+
+    '<b>Já lançado</b> é o que existe no portal da FDE (aprovado + em tramitação); '+
+    '<b>Previsão lançada</b> é o que você lançou no CTR como <b>0. PREVISÃO</b> e ainda não foi para o portal. '+
+    'A última coluna soma os dois e compara com a meta. '+
     'Clique no número para abrir a página da obra.';
   $('pTab').innerHTML='<thead>'+
     '<tr><th class="grp vazio" colspan="4"></th>'+
     '<th class="grp ctr" colspan="4">acumulado até o mês passado</th>'+
-    '<th class="grp emp" colspan="3">'+mesAno(MES)+'</th>'+
+    '<th class="grp emp" colspan="5">'+mesAno(MES)+'</th>'+
     '<th class="grp" colspan="2" style="background:#2b1f14;border-bottom-color:var(--previsto)">previsão a medir</th></tr>'+
     '<tr><th>Nº</th><th>Unidade</th><th>Empreiteiro</th><th>Eng.</th>'+
     '<th class="num">Previsto</th><th class="num">Aprovado</th><th class="num">Em tramitação</th>'+
     '<th class="num">Atraso</th>'+
-    '<th class="num">Meta do mês</th><th class="num">Já lançado</th><th class="num">Falta da meta</th>'+
+    '<th class="num">Meta do mês</th>'+
+    '<th class="num">Já lançado<br><span style="font-weight:400;font-size:10px;color:var(--text-muted)">no portal</span></th>'+
+    '<th class="num">Previsão lançada<br><span style="font-weight:400;font-size:10px;color:var(--text-muted)">0. PREVISÃO no CTR</span></th>'+
+    '<th class="num">Falta da meta</th>'+
+    '<th class="num">Bate a meta?<br><span style="font-weight:400;font-size:10px;color:var(--text-muted)">portal + previsão − meta</span></th>'+
     '<th class="num">Com tramitação</th><th class="num">Só aprovado</th></tr></thead><tbody>'+
     (linhas.length?linhas.map(x=>{const o=x.o;
       return '<tr><td><a href="#" onclick="abrirObra('+o.cod+');return false">'+o.cod+'</a></td>'+
@@ -1360,17 +1376,23 @@ function renderPrev(){
         '<td class="num" style="color:'+(x.traAnt?'var(--warning)':'var(--text-muted)')+'">'+(x.traAnt?brl(x.traAnt):'—')+'</td>'+
         '<td class="num" style="color:'+(x.atrasoT?'var(--critical)':'var(--good)')+'">'+(x.atrasoT?brl(x.atrasoT):'em dia')+'</td>'+
         '<td class="num">'+brl(x.metaM)+'</td>'+
-        '<td class="num" style="color:var(--realizado)">'+((x.aprM+x.traM)?brl(x.aprM+x.traM):'—')+'</td>'+
+        '<td class="num" style="color:'+((x.aprM+x.traM)?'var(--realizado)':'var(--text-muted)')+'">'+((x.aprM+x.traM)?brl(x.aprM+x.traM):'—')+'</td>'+
+        '<td class="num" style="color:'+(x.pvM?'var(--terceiro)':'var(--text-muted)')+'">'+(x.pvM?brl(x.pvM):'—')+'</td>'+
         '<td class="num">'+brl(x.faltaT)+'</td>'+
+        bateCel(x)+
         '<td class="num"><b>'+brl(x.totalT)+'</b></td>'+
         '<td class="num" style="color:var(--warning)">'+brl(x.totalA)+'</td></tr>';}).join('')
-      :'<tr><td colspan="13" style="color:var(--good)">Nenhuma obra precisa medir neste mês dentro do filtro.</td></tr>')+
+      :'<tr><td colspan="15" style="color:var(--good)">Nenhuma obra precisa medir neste mês dentro do filtro.</td></tr>')+
     (linhas.length?'<tr><td colspan="4" style="text-align:right;color:var(--text-secondary)"><b>total</b></td>'+
       '<td class="num"><b>'+brl(S(x=>x.prevAnt))+'</b></td><td class="num"><b>'+brl(S(x=>x.aprAnt))+'</b></td>'+
       '<td class="num"><b>'+brl(S(x=>x.traAnt))+'</b></td>'+
       '<td class="num" style="color:var(--critical)"><b>'+brl(vAtrT)+'</b></td>'+
       '<td class="num"><b>'+brl(vMeta)+'</b></td><td class="num"><b>'+brl(vLanc)+'</b></td>'+
+      '<td class="num" style="color:var(--terceiro)"><b>'+(vPv?brl(vPv):'—')+'</b></td>'+
       '<td class="num"><b>'+brl(S(x=>x.faltaT))+'</b></td>'+
+      (function(){const d=vLanc+vPv-vMeta;
+        return '<td class="num" style="color:'+(d>=-0.5?'var(--good)':'var(--warning)')+'"><b>'+
+          (d>=-0.5?'bate'+(d>0.5?' +'+brl(d):''):'falta '+brl(-d))+'</b></td>';})()+
       '<td class="num"><b>'+brl(vTotT)+'</b></td>'+
       '<td class="num" style="color:var(--warning)"><b>'+brl(vTotA)+'</b></td></tr>':'')+'</tbody>';
 }
