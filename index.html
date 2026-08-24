@@ -129,6 +129,13 @@
   @media(max-width:1050px){.grid2,.grid3{grid-template-columns:1fr}}
   #impressao{display:none}
   @media print{
+    /* "Imprimir só esta lista": esconde o resto da tela pela visibilidade
+       (display:none nos pais mataria o quadro junto) e solta a rolagem interna. */
+    body.umQuadro *{visibility:hidden !important}
+    body.umQuadro .alvoImpr,body.umQuadro .alvoImpr *{visibility:visible !important}
+    body.umQuadro .alvoImpr{position:absolute;left:0;top:0;width:100%;break-inside:auto}
+    body.umQuadro .alvoImpr div[style*="overflow"]{max-height:none !important;overflow:visible !important}
+    body.umQuadro .alvoImpr .btpdf,body.umQuadro .alvoImpr label{display:none !important}
     /* tudo passa pelas variáveis, então trocá-las já deixa o PDF em papel branco
        com letra preta, sem depender de !important em cada regra */
     :root{
@@ -425,7 +432,7 @@
       <div style="max-height:460px;overflow:auto"><table class="tbl" id="rTabComp"></table></div>
     </div>
 
-    <div class="card" style="margin-top:10px">
+    <div class="card" id="cardTram" style="margin-top:10px">
       <h2 id="cxTramTit">Em tramitação — vira recebimento quando a FDE aprovar</h2>
       <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px">
         Data de pagamento <b>estimada</b> pelo ciclo medido nas suas próprias aprovações:
@@ -435,6 +442,7 @@
         aprovado não existe — a linha mostra o <b>valor apresentado</b>, em cinza, e ele entra num
         total separado, porque ainda não é promessa de caixa.</p>
       <label style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);margin:0 0 8px;cursor:pointer"><input type="checkbox" id="cxTramTodas"> mostrar todas as competências</label>
+      <button class="tab btpdf" id="btImprimirTram" style="margin:0 0 8px 12px">Imprimir só esta lista</button>
       <div style="max-height:420px;overflow:auto"><table class="tbl" id="rTabTram"></table></div>
     </div>
 
@@ -1823,6 +1831,15 @@ function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
   if($('cxTramTodas')) $('cxTramTodas').onchange=renderReceb;
   $('rBusca').oninput=renderReceb;
   $('btImprimirReceb').onclick=()=>window.print();
+  // imprime só o quadro da tramitação, respeitando o filtro de competência que está na tela
+  $('btImprimirTram').onclick=()=>{
+    const c=$('cardTram'); if(!c) return window.print();
+    document.body.classList.add('umQuadro'); c.classList.add('alvoImpr');
+    const limpar=()=>{document.body.classList.remove('umQuadro'); c.classList.remove('alvoImpr');
+      window.removeEventListener('afterprint',limpar);};
+    window.addEventListener('afterprint',limpar);
+    setTimeout(()=>{window.print(); setTimeout(limpar,1500);},60);
+  };
   $('btSem').onclick=()=>$('rodapeSem').classList.toggle('aberto');
   $('lgPag').textContent=RC.pag; $('lgPag2').textContent=RC.pag; $('lgPag3').textContent=RC.pag;
   $('lgLag').textContent=RC.lag;
