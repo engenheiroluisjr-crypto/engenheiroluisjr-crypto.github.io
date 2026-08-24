@@ -129,13 +129,17 @@
   @media(max-width:1050px){.grid2,.grid3{grid-template-columns:1fr}}
   #impressao{display:none}
   @media print{
-    /* "Imprimir só esta lista": esconde o resto da tela pela visibilidade
-       (display:none nos pais mataria o quadro junto) e solta a rolagem interna. */
-    body.umQuadro *{visibility:hidden !important}
-    body.umQuadro .alvoImpr,body.umQuadro .alvoImpr *{visibility:visible !important}
-    body.umQuadro .alvoImpr{position:absolute;left:0;top:0;width:100%;break-inside:auto}
-    body.umQuadro .alvoImpr div[style*="overflow"]{max-height:none !important;overflow:visible !important}
-    body.umQuadro .alvoImpr .btpdf,body.umQuadro .alvoImpr label{display:none !important}
+    /* "Imprimir só esta lista": o quadro é CLONADO para #impressao e o resto da
+       tela sai do fluxo. Tentar esconder por visibility deixava as células
+       sobrepostas no papel — o texto de uma coluna caía por cima da outra. */
+    body.umQuadro .wrap,body.umQuadro .tip{display:none !important}
+    body.umQuadro #impressao{display:block !important}
+    body.umQuadro #impressao .card{break-inside:auto;border:0 !important;padding:0 !important}
+    body.umQuadro #impressao .tbl{table-layout:auto;width:100%;font-size:8.5pt}
+    body.umQuadro #impressao .tbl td,body.umQuadro #impressao .tbl th{
+      vertical-align:top;padding:3px 4px;word-break:normal}
+    body.umQuadro #impressao tr{break-inside:avoid}
+    body.umQuadro #impressao thead{display:table-header-group}
     /* tudo passa pelas variáveis, então trocá-las já deixa o PDF em papel branco
        com letra preta, sem depender de !important em cada regra */
     :root{
@@ -1833,9 +1837,20 @@ function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
   $('btImprimirReceb').onclick=()=>window.print();
   // imprime só o quadro da tramitação, respeitando o filtro de competência que está na tela
   $('btImprimirTram').onclick=()=>{
-    const c=$('cardTram'); if(!c) return window.print();
-    document.body.classList.add('umQuadro'); c.classList.add('alvoImpr');
-    const limpar=()=>{document.body.classList.remove('umQuadro'); c.classList.remove('alvoImpr');
+    const c=$('cardTram'), imp=$('impressao'); if(!c||!imp) return window.print();
+    const cl=c.cloneNode(true);
+    cl.querySelectorAll('button,label').forEach(e=>e.remove());
+    cl.querySelectorAll('div').forEach(d=>{
+      if((d.getAttribute('style')||'').includes('overflow')){d.style.maxHeight='none';d.style.overflow='visible';}});
+    imp.innerHTML='';
+    const cab=document.createElement('div');
+    cab.style.cssText='font-size:11px;margin:0 0 6px';
+    cab.textContent='ATA FDE · '+($('rMes')&&$('rMes').selectedOptions[0]?
+      'competência '+$('rMes').selectedOptions[0].textContent.trim():'')+
+      ' · gerado em '+new Date().toLocaleDateString('pt-BR');
+    imp.appendChild(cab); imp.appendChild(cl);
+    document.body.classList.add('umQuadro');
+    const limpar=()=>{document.body.classList.remove('umQuadro'); imp.innerHTML='';
       window.removeEventListener('afterprint',limpar);};
     window.addEventListener('afterprint',limpar);
     setTimeout(()=>{window.print(); setTimeout(limpar,1500);},60);
