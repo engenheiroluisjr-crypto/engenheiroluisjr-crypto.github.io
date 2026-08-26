@@ -353,6 +353,7 @@
       <div><label class="f">Contrato</label><div class="ms" id="rContrato"></div></div>
       <div><label class="f">Lote</label><div class="ms" id="rLote"></div></div>
       <div><label class="f">Fiscal</label><div class="ms" id="rFiscal"></div></div>
+      <div><label class="f">Status no portal</label><div class="ms" id="rPortal"></div></div>
       <div style="flex:1 1 200px"><label class="f" for="rBusca">Buscar obra</label>
         <input id="rBusca" style="width:100%" placeholder="nº ou nome da escola"></div>
       <div><label class="f">&nbsp;</label><button class="tab" id="btImprimirReceb">Imprimir</button></div>
@@ -1501,9 +1502,21 @@ const mais = (iso,d)=>{const x=new Date(iso+'T12:00:00'); x.setDate(x.getDate()+
   return x.toISOString().slice(0,10);};
 const D30 = mais(HOJE_ISO,30), D60 = mais(HOJE_ISO,60);
 
-function rFiltro(){
+// ---- status no portal de uma medicao (coluna SITUAÇÃO NO PORTAL do CTR).
+// Quem nao tem o campo recebe o rotulo da lista de onde veio: aprovada e
+// aprovada mesmo sem o campo; 0. PREVISÃO / 1. ESTUDO nao estao no portal.
+const ORDEM_PORTAL=['Edição','Análise Fiscal','Aprovação Supervisor','Análise SCM',
+  'Aprovação Gerente','Aprovação Diretor','Aprovada','não está no portal','sem status no portal'];
+const ehPrevM=m=>/^[01]\./.test(String(m.sit||''))||(m.pv===true&&!m.sit);
+function spDe(it,pad){return String(it.sp||'').trim()||pad||'sem status no portal';}
+function spPad(it){return ehPrevM(it)?'não está no portal':null;}
+function spOrd(a,b){const i=ORDEM_PORTAL.indexOf(a),j=ORDEM_PORTAL.indexOf(b);
+  return (i<0?99:i)-(j<0?99:j)||a.localeCompare(b,'pt');}
+
+function rFiltro(pad){
   const b=($('rBusca').value||'').toLowerCase().trim();
-  const ct=msVals('rContrato'), lo=msVals('rLote'), fi=msVals('rFiscal');
+  const ct=msVals('rContrato'), lo=msVals('rLote'), fi=msVals('rFiscal'),
+        sp=msVals('rPortal');
   // a Caixa tem que falar do mesmo universo que o resto do painel: o que sobra
   // do filtro do topo. Sem isso a tela mostrava as 312 obras enquanto as outras
   // páginas mostravam as 90 do filtro, e os números não conversavam.
@@ -1513,6 +1526,7 @@ function rFiltro(){
         && (!ct.length||ct.includes(o.contratoAta))
         && (!lo.length||lo.includes(o.lote))
         && (!fi.length||fi.includes(o.fiscal))
+        && (!sp.length||sp.includes(spDe(it,pad)))
         && (!b||String(it.c).includes(b)||(o.unidade||'').toLowerCase().includes(b));};
 }
 
@@ -1522,10 +1536,21 @@ function rFiltro(){
 function obrasCaixa(){
   const ct=msVals('rContrato'), lo=msVals('rLote'), fi=msVals('rFiscal');
   const b=($('rBusca').value||'').toLowerCase().trim();
-  return filtradas().filter(o=>(!ct.length||ct.includes(o.contratoAta))
+  const sp=msVals('rPortal');
+  let base=filtradas().filter(o=>(!ct.length||ct.includes(o.contratoAta))
     && (!lo.length||lo.includes(o.lote))
     && (!fi.length||fi.includes(o.fiscal))
     && (!b||String(o.cod).includes(b)||(o.unidade||'').toLowerCase().includes(b)));
+  // o filtro de status e por medicao, nao por obra: a obra entra se tiver pelo
+  // menos uma medicao no status escolhido.
+  if(sp.length){
+    const ok=new Set();
+    (RC.tram||[]).forEach(m=>{if(sp.includes(spDe(m,spPad(m))))ok.add(m.c);});
+    (RC.meds||[]).forEach(m=>{if(sp.includes(spDe(m,'Aprovada')))ok.add(m.c);});
+    (RC.semData||[]).forEach(m=>{if(sp.includes(spDe(m,'Aprovada')))ok.add(m.c);});
+    base=base.filter(o=>ok.has(o.cod));
+  }
+  return base;
 }
 
 function renderComp(){
@@ -1580,17 +1605,19 @@ function renderComp(){
 }
 
 function renderReceb(){
-  const f=rFiltro();
+  // cada lista tem um status padrao proprio, para o filtro saber o que ela e
+  // quando a medicao nao tem a coluna preenchida.
+  const fTram=rFiltro(), fPrev=rFiltro('não está no portal'), fAp=rFiltro('Aprovada');
   // RC.tram traz duas coisas juntas: o que esta tramitando de verdade e a
   // PREVISÃO LANÇADA (0. PREVISÃO), que o Luis lancou mas ainda nao virou medicao.
   // A Carteira ja separa as duas; aqui tem que separar tambem, senao a Caixa
   // anuncia 'em tramitação' um numero que nenhuma outra tela confirma.
-  const tramT=RC.tram.filter(f);
   // 'pv' vem do gerador novo; o /^0\./ no situação cobre painel gerado antes dele.
   // 0. PREVISÃO e 1. ESTUDO nao estao no portal: sao intencao de medir, nao medicao.
-  const ehPrev=m=>/^[01]\./.test(String(m.sit||''))||(m.pv===true&&!m.sit);
-  const tram=tramT.filter(m=>!ehPrev(m)), prevl=tramT.filter(ehPrev);
-  const meds=RC.meds.filter(f), sem=RC.semData.filter(f);
+  const ehPrev=ehPrevM;
+  const tram=RC.tram.filter(m=>!ehPrev(m)).filter(fTram);
+  const prevl=RC.tram.filter(ehPrev).filter(fPrev);
+  const meds=RC.meds.filter(fAp), sem=RC.semData.filter(fAp);
   const soma=a=>a.reduce((x,y)=>x+(y.v||0),0);
   const mes=$('rMes').value;
 
@@ -1663,7 +1690,8 @@ function renderReceb(){
   tram.forEach(m=>põe(m.p.slice(0,7),'t',m.v,(m.r||'').slice(0,7)));
   // a previsao lancada continua no caixa (senao abre um buraco), mas na faixa 'p'
   prevl.forEach(m=>põe(m.p.slice(0,7),'p',m.v,(m.r||'').slice(0,7)));
-  const temFiltro = msVals('rContrato').length||msVals('rLote').length||msVals('rFiscal').length||$('rBusca').value.trim()
+  const temFiltro = msVals('rContrato').length||msVals('rLote').length||msVals('rFiscal').length
+                 || msVals('rPortal').length||$('rBusca').value.trim()
                  || filtradas().length!==D.obras.length;
   if(!temFiltro) (RC.prev||[]).forEach((x,i)=>{const c=(RC.prevComp||[])[i];
     põe(x.k,'p',x.v,c?c.k:'');});
@@ -1875,6 +1903,12 @@ function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
   msInit('rContrato',uniq(o=>o.contratoAta),'Todos',null,renderReceb);
   msInit('rLote',uniq(o=>o.lote),'Todos',x=>'Lote '+x,renderReceb);
   msInit('rFiscal',uniq(o=>o.fiscal),'Todos',null,renderReceb);
+  // lista de status na ordem real da fila da FDE, montada do que existe no dado
+  msInit('rPortal',[...new Set([].concat(
+      (RC.tram||[]).map(m=>spDe(m,spPad(m))),
+      (RC.meds||[]).map(m=>spDe(m,'Aprovada')),
+      (RC.semData||[]).map(m=>spDe(m,'Aprovada'))))].sort(spOrd),
+    'Todos',null,renderReceb);
   $('rMes').onchange=renderReceb;
   if($('cxTramTodas')) $('cxTramTodas').onchange=renderReceb;
   if($('cxTodasComp')) $('cxTodasComp').onchange=renderReceb;
