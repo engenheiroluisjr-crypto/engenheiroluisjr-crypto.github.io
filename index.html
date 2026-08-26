@@ -347,6 +347,9 @@
     <div class="filtros card">
       <div><label class="f" for="rMes">Mês da medição (competência)</label>
         <select id="rMes"></select></div>
+      <div><label class="f">&nbsp;</label>
+        <label style="font-size:11px;display:flex;align-items:center;gap:5px;white-space:nowrap">
+          <input type="checkbox" id="cxTodasComp"> todas as competências</label></div>
       <div><label class="f">Contrato</label><div class="ms" id="rContrato"></div></div>
       <div><label class="f">Lote</label><div class="ms" id="rLote"></div></div>
       <div><label class="f">Fiscal</label><div class="ms" id="rFiscal"></div></div>
@@ -361,6 +364,7 @@
     <div class="card cxbloco" style="margin-top:10px">
       <div class="cxgrupo">
         <div class="cxtit"><span class="pt firme"></span>DINHEIRO FIRME — a FDE já aprovou, o pagamento sai 30 dias depois
+          <span id="cxFirmeEsc" style="font-weight:400;color:var(--text-muted)"></span>
           <b id="cxFirmeTot">–</b></div>
         <div class="kpis">
           <div class="card kpi"><span class="v" id="rkAtraso">–</span><span class="l" id="rkAtrasoL">Já venceu · deve estar na conta</span></div>
@@ -370,6 +374,7 @@
       </div>
       <div class="cxgrupo">
         <div class="cxtit"><span class="pt incerto"></span>AINDA NÃO É CAIXA — só vira dinheiro se for aprovado
+          <span id="cxIncertoEsc" style="font-weight:400;color:var(--text-muted)"></span>
           <b id="cxIncertoTot">–</b></div>
         <div class="kpis">
           <div class="card kpi"><span class="v" id="rkTram">–</span><span class="l" id="rkTramL">Em tramitação no portal</span></div>
@@ -378,7 +383,7 @@
         </div>
       </div>
       <div class="cxgrupo cxmes">
-        <div class="cxtit"><span class="pt neutro"></span>O QUE FOI LANÇADO NA COMPETÊNCIA ESCOLHIDA LÁ EM CIMA</div>
+        <div class="cxtit"><span class="pt neutro"></span>TOTAL LANÇADO NA COMPETÊNCIA — é a soma dos dois blocos acima</div>
         <div class="kpis">
           <div class="card kpi"><span class="v" id="rkMes">–</span><span class="l" id="rkMesL">Lançado no mês</span></div>
         </div>
@@ -1600,9 +1605,19 @@ function renderReceb(){
     `<span style="color:${soma(tramMes)?'var(--warning)':'var(--text-muted)'}">`+
     `${brl(soma(tramMes))} em tramitação</span>`+
     (soma(pvMes)?` · <span style="color:var(--text-muted)">${brl(soma(pvMes))} previsão lançada</span>`:'');
-  const j30=meds.filter(m=>m.p>HOJE_ISO&&m.p<=D30), j60=meds.filter(m=>m.p>D30&&m.p<=D60);
-  const t30=tram.filter(m=>m.p>HOJE_ISO&&m.p<=D30), t60=tram.filter(m=>m.p>D30&&m.p<=D60);
-  const venc=meds.filter(m=>m.p<=HOJE_ISO);
+  // Os seis KPIs de cima passam a valer para a competência escolhida (pedido do
+  // Luis em 26/08). Antes só o quadro de baixo obedecia ao mês e os de cima
+  // mostravam a carteira inteira — dois números na mesma tela sem relação.
+  // A caixa "todas as competências" volta ao comportamento antigo.
+  const todasC=$('cxTodasComp')&&$('cxTodasComp').checked;
+  const naComp=m=>todasC||!mes||(m.r||'').slice(0,7)===mes;
+  const medsK=meds.filter(naComp), tramK=tram.filter(naComp),
+        prevK=prevl.filter(naComp), semK=sem.filter(naComp);
+  const escopo=todasC?'todas as competências':(mes?'competência '+mesAno(mes):'');
+  if($('cxFirmeEsc')) $('cxFirmeEsc').textContent=escopo?' · '+escopo:'';
+  if($('cxIncertoEsc')) $('cxIncertoEsc').textContent=escopo?' · '+escopo:'';
+  const j30=medsK.filter(m=>m.p>HOJE_ISO&&m.p<=D30), j60=medsK.filter(m=>m.p>D30&&m.p<=D60);
+  const venc=medsK.filter(m=>m.p<=HOJE_ISO);
   // ---- bloco 1: DINHEIRO FIRME (aprovado, data de aprovação conhecida)
   $('rkAtraso').textContent=brl(soma(venc));
   $('rkAtraso').style.color=soma(venc)?'var(--realizado)':'var(--text-secondary)';
@@ -1619,21 +1634,21 @@ function renderReceb(){
   $('cxFirmeTot').textContent=brl(soma(venc)+soma(j30)+soma(j60));
 
   // ---- bloco 2: AINDA NÃO É CAIXA
-  $('rkTram').textContent=brl(soma(tram));
-  $('rkTram').style.color=soma(tram)?'var(--warning)':'var(--text-secondary)';
+  $('rkTram').textContent=brl(soma(tramK));
+  $('rkTram').style.color=soma(tramK)?'var(--warning)':'var(--text-secondary)';
   $('rkTramL').innerHTML=`Em tramitação no portal · aguardando a FDE<br>`+
-    `<span style="color:var(--text-muted)">${tram.length} medições lançadas e enviadas</span>`;
-  $('rkPrev').textContent=brl(soma(prevl));
-  $('rkPrev').style.color=soma(prevl)?'var(--text-secondary)':'var(--text-secondary)';
+    `<span style="color:var(--text-muted)">${tramK.length} medições lançadas e enviadas</span>`;
+  $('rkPrev').textContent=brl(soma(prevK));
+  $('rkPrev').style.color='var(--text-secondary)';
   $('rkPrevL').innerHTML=`Previsão lançada · ainda não está no portal<br>`+
-    `<span style="color:var(--text-muted)">${prevl.length} medições em 0. PREVISÃO / 1. ESTUDO</span>`;
-  $('rkSem').textContent=brl(soma(sem));
-  $('rkSem').style.color=sem.length?'var(--critical)':'var(--good)';
+    `<span style="color:var(--text-muted)">${prevK.length} medições em 0. PREVISÃO / 1. ESTUDO</span>`;
+  $('rkSem').textContent=brl(soma(semK));
+  $('rkSem').style.color=semK.length?'var(--critical)':'var(--good)';
   $('rkSemL').innerHTML=`Aprovado sem data de aprovação<br>`+
-    `<span style="color:${sem.length?'var(--critical)':'var(--text-muted)'}">`+
-    (sem.length?`${sem.length} medições fora do calendário — falta a data no CTR`
+    `<span style="color:${semK.length?'var(--critical)':'var(--text-muted)'}">`+
+    (semK.length?`${semK.length} medições fora do calendário — falta a data no CTR`
               :'nenhuma pendência')+`</span>`;
-  $('cxIncertoTot').textContent=brl(soma(tram)+soma(prevl)+soma(sem));
+  $('cxIncertoTot').textContent=brl(soma(tramK)+soma(prevK)+soma(semK));
 
 
   // ---- série mensal do recebimento
@@ -1862,6 +1877,7 @@ function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
   msInit('rFiscal',uniq(o=>o.fiscal),'Todos',null,renderReceb);
   $('rMes').onchange=renderReceb;
   if($('cxTramTodas')) $('cxTramTodas').onchange=renderReceb;
+  if($('cxTodasComp')) $('cxTodasComp').onchange=renderReceb;
   $('rBusca').oninput=renderReceb;
   $('btImprimirReceb').onclick=()=>window.print();
   // imprime só o quadro da tramitação, respeitando o filtro de competência que está na tela
