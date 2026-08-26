@@ -44,6 +44,9 @@
   .ms .pop label{display:flex;gap:7px;align-items:center;font-size:12px;color:var(--text-primary);
     padding:4px 6px;border-radius:5px;cursor:pointer;white-space:nowrap}
   .ms .pop label:hover{background:var(--surface-1)}
+  .ms .pop label i{margin-left:auto;padding-left:10px;font-style:normal;font-size:10px;
+    color:var(--text-muted);font-variant-numeric:tabular-nums}
+  .ms .pop label.zero{opacity:.42}
   .ms .pop input[type=checkbox]{appearance:auto;-webkit-appearance:checkbox;width:13px;height:13px;
     padding:0;margin:0;border:0;background:none;accent-color:var(--previsto);flex:none}
   .ms .lim{display:block;width:100%;text-align:left;background:none;border:0;
@@ -657,9 +660,10 @@ function msInit(id,itens,todos,fmt,aoMudar){
   box.querySelector('.pop').onclick=e=>e.stopPropagation();
   box.querySelectorAll('.pop input').forEach(inp=>inp.onchange=()=>{
     if(inp.checked)MS[id].sel.add(inp.value); else MS[id].sel.delete(inp.value);
-    msLabel(id); MS[id].aoMudar();});
+    MS_ORIGEM=id; msLabel(id); MS[id].aoMudar();});
   box.querySelector('.lim').onclick=()=>{MS[id].sel.clear();
-    box.querySelectorAll('.pop input').forEach(i=>i.checked=false); msLabel(id); MS[id].aoMudar();};
+    box.querySelectorAll('.pop input').forEach(i=>i.checked=false);
+    MS_ORIGEM=id; msLabel(id); MS[id].aoMudar();};
   msLabel(id);
 }
 function msLabel(id){const s=[...MS[id].sel],box=$(id),sp=box.querySelector('button.tg span');
@@ -667,6 +671,70 @@ function msLabel(id){const s=[...MS[id].sel],box=$(id),sp=box.querySelector('but
   sp.textContent = s.length===0?MS[id].todos : s.length===1?MS[id].fmt(s[0]) : s.length+' selecionados';
   box.querySelector('button.tg').title = s.length?s.map(MS[id].fmt).join(' · '):'';}
 function msVals(id){return [...MS[id].sel];}
+
+// ---- opcoes dinamicas -------------------------------------------------------
+// Cada filtro passa a oferecer so os valores que existem no recorte deixado
+// pelos OUTROS filtros. Sem isso o painel oferecia Lote 41/42 com o contrato
+// ATA.CPS selecionado -- valores que nao existem naquele contrato e levam a
+// tela para zero obra. Este painel atende varios contratos alem da FDE, entao
+// nada aqui pode ficar preso a uma lista fixa.
+// Regra: o filtro em que voce ACABOU de mexer manda; os outros se ajustam a ele.
+//  - no filtro de origem nada e desmarcado: a opcao escolhida fica na lista
+//    mesmo sem obra nenhuma, voce ve zero e decide o que afrouxar;
+//  - nos demais, valor que deixou de existir sai junto com a marca. E o que faz
+//    trocar de contrato limpar o Lote 41/42 que vem no filtro padrao, em vez de
+//    deixar a tela em zero obra sem dizer por que.
+let MS_ORIGEM=null;
+function msSetItens(id,pares,preservar){
+  const M=MS[id]; if(!M) return false;
+  if(pares.length&&!Array.isArray(pares[0])) pares=pares.map(v=>[String(v),null]);
+  let mudou=false;
+  if(!preservar){
+    const vivos=new Set(pares.filter(x=>x[1]===null||x[1]>0).map(x=>String(x[0])));
+    [...M.sel].forEach(v=>{if(!vivos.has(String(v))){M.sel.delete(v);mudou=true;}});
+  }
+  pares=pares.slice().sort((a,b)=>(M.ord||ordPt)(a[0],b[0]));
+  const box=$(id), pop=box.querySelector('.pop');
+  const assin=pares.map(x=>x[0]+'\u0002'+x[1]).join('\u0001');
+  if(pop.dataset.assin!==assin){
+    pop.dataset.assin=assin;
+    pop.innerHTML=pares.map(([x,n])=>`<label${n===0?' class="zero"':''}>`+
+        `<input type="checkbox" value="${esc(x)}"${M.sel.has(String(x))?' checked':''}>`+
+        `<span>${esc(M.fmt(x))}</span>${n===null?'':`<i>${n}</i>`}</label>`).join('')+
+      `<button type="button" class="lim">limpar seleção</button>`;
+    pop.querySelectorAll('input').forEach(inp=>inp.onchange=()=>{
+      if(inp.checked)M.sel.add(inp.value); else M.sel.delete(inp.value);
+      MS_ORIGEM=id; msLabel(id); M.aoMudar();});
+    pop.querySelector('.lim').onclick=()=>{M.sel.clear();
+      pop.querySelectorAll('input').forEach(i=>i.checked=false);
+      MS_ORIGEM=id; msLabel(id); M.aoMudar();};
+  }
+  msLabel(id);
+  return mudou;
+}
+const ordPt=(a,b)=>String(a).localeCompare(String(b),'pt',{numeric:true});
+// devolve [valor, quantas obras] -- a contagem e o que permite mostrar tudo sem
+// mentir: opcao que nao existe no recorte aparece apagada, com 0, e continua
+// clicavel. Assim nenhum filtro prende o painel num contrato so.
+function opcoesDe(todas,lista,val){
+  const n={};
+  lista.forEach(o=>new Set(val(o).filter(x=>x!==null&&x!==undefined&&x!=='').map(String))
+    .forEach(v=>n[v]=(n[v]||0)+1));
+  const univ=new Set(todas.flatMap(val)
+    .filter(x=>x!==null&&x!==undefined&&x!=='').map(String));
+  Object.keys(n).forEach(v=>univ.add(v));
+  return [...univ].map(v=>[v,n[v]||0]);
+}
+// itera porque soltar uma marca invalida alarga o recorte e pode liberar valor
+// novo em outro filtro. 4 voltas e folga de sobra para 8 filtros.
+function cascata(regs,base,univ){
+  for(let volta=0;volta<4;volta++){
+    let mudou=false;
+    regs.forEach(f=>{
+      if(msSetItens(f.id,opcoesDe(univ,base(f.id),f.val),f.id===MS_ORIGEM)) mudou=true; });
+    if(!mudou) return;
+  }
+}
 document.addEventListener('click',()=>document.querySelectorAll('.ms.aberto')
   .forEach(m=>m.classList.remove('aberto')));
 
@@ -695,17 +763,26 @@ function msMarcar(id,vals){
   msLabel(id);
 }
 function filtroPadrao(){
+  // limpa antes: senao o contrato que estava marcado continua valendo e o
+  // padrao (2026 · em obra · lotes 41/42) nao volta de fato.
+  ['fContrato','fLote','fCidade','fEng','fEmp','fFiscal','fStatus','fAno'].forEach(id=>{
+    if(!MS[id])return; MS[id].sel.clear();
+    $(id).querySelectorAll('.pop input').forEach(i=>i.checked=false); msLabel(id);});
   Object.entries(PADRAO).forEach(([id,vals])=>msMarcar(id,vals));
   $('fCron').value=''; $('fBusca').value='';
+  MS_ORIGEM=null;
   aoFiltrar();
 }
 Object.entries(PADRAO).forEach(([id,vals])=>msMarcar(id,vals));   // aplica ja na abertura
 
-function filtradas(){
+// 'exceto' ignora um filtro -- e assim que se descobre quais valores aquele
+// filtro ainda pode oferecer sem se auto-limitar.
+function filtradas(exceto){
   const b=($('fBusca').value||'').toLowerCase().trim();
-  const ct=msVals('fContrato'),lo=msVals('fLote'),ci=msVals('fCidade'),
-        st=msVals('fStatus'),an=msVals('fAno'),en=msVals('fEng'),ep=msVals('fEmp'),
-        fi=msVals('fFiscal');
+  const V=id=>id===exceto?[]:msVals(id);
+  const ct=V('fContrato'),lo=V('fLote'),ci=V('fCidade'),
+        st=V('fStatus'),an=V('fAno'),en=V('fEng'),ep=V('fEmp'),
+        fi=V('fFiscal');
   return D.obras.filter(o=>
     (!ct.length||ct.includes(o.contratoAta))&&
     (!lo.length||lo.includes(o.lote))&&
@@ -1305,7 +1382,15 @@ function barrasEmpreita(el,lista){
 }
 
 // re-desenha a tela que estiver aberta quando um filtro muda
+const FTOPO=[
+  {id:'fContrato',val:o=>[o.contratoAta]}, {id:'fLote',  val:o=>[o.lote]},
+  {id:'fCidade',  val:o=>[o.cidade]},      {id:'fEng',   val:o=>o.engs||[]},
+  {id:'fEmp',     val:o=>o.emps||[]},      {id:'fFiscal',val:o=>[o.fiscal]},
+  {id:'fStatus',  val:o=>[o.status]},      {id:'fAno',   val:o=>[String(o.ano)]},
+];
+
 function aoFiltrar(){
+  cascata(FTOPO, id=>filtradas(id), D.obras);
   renderCarteira();
   if(!$('secEmpr').classList.contains('oculto')) renderEmpr();
   if(!$('secPrev').classList.contains('oculto')) renderPrev();
@@ -1325,6 +1410,7 @@ function limparFiltros(){
     msLabel(id);
   });
   $('fCron').value=''; $('fBusca').value='';
+  MS_ORIGEM=null;
   aoFiltrar();
 }
 
@@ -1475,6 +1561,9 @@ function fiscalAlerta(cod){const f=msVals('aFiscal');
   return !f.length||f.includes((OBRA[cod]||{}).fiscal);}
 
 function renderAlerta(){
+  // o filtro desta tela so oferece fiscal que tem ponto para conferir
+  msSetItens('aFiscal',[...new Set([].concat(ALERTAS_T.map(a=>a.cod),SEMCRON_T.map(o=>o.cod))
+    .map(c=>(OBRA[c]||{}).fiscal).filter(Boolean))].sort(ordPt));
   const ALERTAS=ALERTAS_T.filter(a=>fiscalAlerta(a.cod));
   const SEMCRON=SEMCRON_T.filter(o=>fiscalAlerta(o.cod));
   if($('aNota')) $('aNota').textContent=msVals('aFiscal').length
@@ -1533,10 +1622,11 @@ function rFiltro(pad){
 // ---- obras que sobram depois do filtro do topo E do filtro da propria Caixa.
 // A comparacao meta x previsao x portal sai daqui, e nao de RC, porque a serie de
 // cada obra ja tem previsto/aprovado/tramitacao/previsao-lancada por competencia.
-function obrasCaixa(){
-  const ct=msVals('rContrato'), lo=msVals('rLote'), fi=msVals('rFiscal');
+function obrasCaixa(exceto){
+  const V=id=>id===exceto?[]:msVals(id);
+  const ct=V('rContrato'), lo=V('rLote'), fi=V('rFiscal');
   const b=($('rBusca').value||'').toLowerCase().trim();
-  const sp=msVals('rPortal');
+  const sp=V('rPortal');
   let base=filtradas().filter(o=>(!ct.length||ct.includes(o.contratoAta))
     && (!lo.length||lo.includes(o.lote))
     && (!fi.length||fi.includes(o.fiscal))
@@ -1604,7 +1694,27 @@ function renderComp(){
     '</tbody>';
 }
 
+const FCAIXA=[
+  {id:'rContrato',val:o=>[o.contratoAta]},
+  {id:'rLote',    val:o=>[o.lote]},
+  {id:'rFiscal',  val:o=>[o.fiscal]},
+];
+// o status no portal nao vem da obra e sim das medicoes dela
+function opcoesPortal(){
+  const cods=new Set(obrasCaixa('rPortal').map(o=>o.cod));
+  const todas=[].concat(
+    (RC.tram||[]).map(m=>[m.c,spDe(m,spPad(m))]),
+    (RC.meds||[]).map(m=>[m.c,spDe(m,'Aprovada')]),
+    (RC.semData||[]).map(m=>[m.c,spDe(m,'Aprovada')]));
+  const n={};
+  todas.forEach(([c,sp])=>{n[sp]=n[sp]||0; if(cods.has(c))n[sp]++;});
+  return Object.keys(n).sort(spOrd).map(sp=>[sp,n[sp]]);
+}
+
 function renderReceb(){
+  cascata(FCAIXA, id=>obrasCaixa(id), D.obras);
+  if(MS['rPortal']) MS['rPortal'].ord=spOrd;
+  msSetItens('rPortal', opcoesPortal(), MS_ORIGEM==='rPortal');
   // cada lista tem um status padrao proprio, para o filtro saber o que ela e
   // quando a medicao nao tem a coluna preenchida.
   const fTram=rFiltro(), fPrev=rFiltro('não está no portal'), fAp=rFiltro('Aprovada');
@@ -2002,7 +2112,8 @@ $('rodapeObs').innerHTML=`Fonte: aba <b>Cronograma</b> das planilhas M001 de cad
   `${D.obras.length} obras · ${D.comCron} com cronograma real · ${ALERTAS.length} pontos a conferir.`;
 $('btInfo').textContent=`fonte dos dados e critérios · dados de ${dbr(D.gerado)}`;
 $('btInfo').onclick=()=>$('rodape').classList.toggle('aberto');
-renderCarteira();
+MS_ORIGEM=null;
+aoFiltrar();
 </script>
 </body>
 </html>
