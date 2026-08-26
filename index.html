@@ -1702,12 +1702,17 @@ const FCAIXA=[
 // o status no portal nao vem da obra e sim das medicoes dela
 function opcoesPortal(){
   const cods=new Set(obrasCaixa('rPortal').map(o=>o.cod));
+  // a contagem tem que obedecer a competencia escolhida, senao a lista diz 21 e o
+  // KPI mostra 20 -- dois numeros para a mesma coisa na mesma tela.
+  const mes=$('rMes')?$('rMes').value:'';
+  const todasC=$('cxTodasComp')&&$('cxTodasComp').checked;
+  const naComp=m=>todasC||!mes||(m.r||'').slice(0,7)===mes;
   const todas=[].concat(
-    (RC.tram||[]).map(m=>[m.c,spDe(m,spPad(m))]),
-    (RC.meds||[]).map(m=>[m.c,spDe(m,'Aprovada')]),
-    (RC.semData||[]).map(m=>[m.c,spDe(m,'Aprovada')]));
+    (RC.tram||[]).map(m=>[m,spDe(m,spPad(m))]),
+    (RC.meds||[]).map(m=>[m,spDe(m,'Aprovada')]),
+    (RC.semData||[]).map(m=>[m,spDe(m,'Aprovada')]));
   const n={};
-  todas.forEach(([c,sp])=>{n[sp]=n[sp]||0; if(cods.has(c))n[sp]++;});
+  todas.forEach(([m,sp])=>{n[sp]=n[sp]||0; if(cods.has(m.c)&&naComp(m))n[sp]++;});
   return Object.keys(n).sort(spOrd).map(sp=>[sp,n[sp]]);
 }
 
