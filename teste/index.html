@@ -200,20 +200,21 @@
     .pxl .tbl{table-layout:fixed !important;width:100%;font-size:7.6pt !important}
     .pxl .tbl th,.pxl .tbl td{padding:1.5px 4px !important;line-height:1.2;word-break:normal}
     .pxl .tbl th{font-size:7.2pt !important}
+    .pxl .tbl .mono{font-size:6.6pt !important;letter-spacing:-.1px}
     .pxl .tbl td div{font-size:6.4pt !important;line-height:1.1}
     .pxl .tbl th span{font-size:6.2pt !important}
     .pxl .tbl th span{font-size:6.6pt !important}
     .pxl h2{font-size:12pt}
     .pxl .tbl th:nth-child(1),.pxl .tbl td:nth-child(1){width:3%}
-    .pxl .tbl th:nth-child(2),.pxl .tbl td:nth-child(2){width:19%}
-    .pxl .tbl th:nth-child(3),.pxl .tbl td:nth-child(3){width:10.5%}
-    .pxl .tbl th:nth-child(4),.pxl .tbl td:nth-child(4){width:8.5%}
-    .pxl .tbl th:nth-child(5),.pxl .tbl td:nth-child(5){width:11.5%}
-    .pxl .tbl th:nth-child(6),.pxl .tbl td:nth-child(6){width:7.5%}
-    .pxl .tbl th:nth-child(7),.pxl .tbl td:nth-child(7){width:9%}
-    .pxl .tbl th:nth-child(8),.pxl .tbl td:nth-child(8){width:9%}
+    .pxl .tbl th:nth-child(2),.pxl .tbl td:nth-child(2){width:17.5%}
+    .pxl .tbl th:nth-child(3),.pxl .tbl td:nth-child(3){width:11%}
+    .pxl .tbl th:nth-child(4),.pxl .tbl td:nth-child(4){width:8%}
+    .pxl .tbl th:nth-child(5),.pxl .tbl td:nth-child(5){width:10.5%}
+    .pxl .tbl th:nth-child(6),.pxl .tbl td:nth-child(6){width:10.5%}
+    .pxl .tbl th:nth-child(7),.pxl .tbl td:nth-child(7){width:8%}
+    .pxl .tbl th:nth-child(8),.pxl .tbl td:nth-child(8){width:8%}
     .pxl .tbl th:nth-child(9),.pxl .tbl td:nth-child(9){width:11%}
-    .pxl .tbl th:nth-child(10),.pxl .tbl td:nth-child(10){width:11%}
+    .pxl .tbl th:nth-child(10),.pxl .tbl td:nth-child(10){width:12.5%}
     .pagina-obra{break-after:page}
     /* exportação de várias obras: só o container de impressão vai para o papel */
     body.imprimindo>.wrap,body.imprimindo>.tip{display:none !important}
@@ -1574,10 +1575,11 @@ function pxlTabela(l){
         '<td class="mono">'+esc(o.contrato||o.contratoAta||'—')+'</td>'+
         '<td class="num">'+brl(o.valor||0)+'</td>'+
         '<td class="num" style="color:var(--previsto)">'+(x.pv?brl(x.pv):'—')+
-          '<div class="pxs" style="color:var(--realizado)">'+(x.ev?brl(x.ev):'—')+' aprovado</div></td>'+
+          '<div class="pxs" style="color:'+(x.ev?'var(--realizado)':'var(--text-muted)')+'">'+
+          (x.ev?brl(x.ev)+' aprovado':'nada aprovado')+'</div></td>'+
         '<td class="num" style="color:'+pxlCorSPI(x.spi)+'"><b>'+pxlN2(x.spi)+'</b>'+
           '<div class="pxs">'+(x.sv===null?'sem linha de base':(x.sv>=0?'+':'−')+brl(Math.abs(x.sv)))+
-          (x.spiT!==null&&x.spiT!==x.spi?' · c/ tram. '+pxlN2(x.spiT):'')+'</div></td>'+
+          (x.spiT!==null&&x.spiT!==x.spi?' · c/tr '+pxlN2(x.spiT):'')+'</div></td>'+
         '<td class="num" style="color:'+(x.cron?'var(--previsto)':'var(--text-muted)')+'">'+
           (x.cron?brl(x.cron)+'<div class="pxs">'+(x.pctMes?pct(x.pctMes)+' da obra':'sem % do mês')+'</div>'
                  :'sem cronograma no mês')+'</td>'+
@@ -1599,7 +1601,7 @@ function pxlTabela(l){
       '<td class="num"><b>'+brl(pv)+'</b><div class="pxs">'+brl(ev)+' aprovado</div></td>'+
       '<td class="num" style="color:'+pxlCorSPI(spi)+'"><b>'+pxlN2(spi)+'</b>'+
         '<div class="pxs">'+(sv===null?'—':(sv>=0?'+':'−')+brl(Math.abs(sv)))+
-        (pv>0.5?' · c/ tram. '+pxlN2(evt/pv):'')+'</div></td>'+
+        (pv>0.5?' · c/tr '+pxlN2(evt/pv):'')+'</div></td>'+
       '<td class="num" style="color:var(--previsto)"><b>'+brl(S(x=>x.cron))+'</b></td>'+
       '<td class="num" style="color:var(--terceiro)"><b>'+brl(pr)+'</b></td>'+
       '<td class="num"><b style="color:var(--good)">'+brl(S(x=>x.apr))+'</b>'+
@@ -2308,9 +2310,14 @@ $('btPdfComp').onclick=()=>{
   const bl=$('secComp'), imp=$('impressao'); if(!bl||!imp) return window.print();
   imp.innerHTML='';
   const cab=document.createElement('div');
-  cab.style.cssText='font-size:11px;margin:0 0 8px';
-  cab.textContent='ATA FDE · previsão × lançado · '+($('cTit').textContent||'')+
-    ' · gerado em '+new Date().toLocaleDateString('pt-BR');
+  cab.style.cssText='font-size:10px;margin:0 0 8px;line-height:1.5';
+  cab.innerHTML='<b>ATA FDE</b> · '+esc($('cTit').textContent||'')+
+    ' · gerado em '+new Date().toLocaleDateString('pt-BR')+
+    '<br><b>SPI</b> = medição aprovada pela FDE ÷ planejado pelo cronograma, acumulado até o mês '+
+    'fechado (1,00 = em dia; abaixo de 0,85 = atraso relevante); o segundo número conta também o '+
+    'que está na fila do portal (c/tr). <b>PPC</b> = cumpriu ≥ 95% da previsão do mês. '+
+    '<b>Lançado no portal</b> = aprovado / ainda em tramitação. '+
+    'Custo real não entra neste relatório, portanto não há CPI nem EAC.';
   imp.appendChild(cab);
   ['cardComp41','cardComp42'].forEach(id=>{
     const c=$(id); if(!c) return;
