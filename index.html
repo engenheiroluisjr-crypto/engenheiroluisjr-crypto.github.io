@@ -272,28 +272,44 @@
       <div class="card kpi"><span class="v" id="kCron">–</span><span class="l">Com cronograma real</span></div>
     </div>
 
+    <div class="card" style="margin-bottom:10px">
+      <h2>Meta do mês corrente</h2>
+      <p class="escopo" style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px"></p>
+      <div id="cAlvo"></div>
+    </div>
+
     <div class="grid2">
       <div class="card">
-        <h2>Previsto x medido por mês</h2>
+        <h2>Variação de prazo por mês</h2>
         <p class="escopo" style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px"></p>
-        <div class="legend"><span><i style="background:var(--previsto)"></i>Previsto (cronograma do Relatório de Vistoria)</span><span><i style="background:var(--terceiro)"></i>Cronograma ajustado</span><span><i style="background:var(--realizado)"></i>Medido aprovado</span><span><i style="background:var(--realizado);opacity:.4"></i>Em tramitação</span></div>
-        <div id="cMensal"></div>
+        <div class="legend"><span><i style="background:var(--realizado)"></i>Acima do previsto</span><span><i style="background:var(--previsto)"></i>Abaixo do previsto</span><span><i style="background:var(--text-muted)"></i>Mês ainda aberto</span></div>
+        <div id="cVar"></div>
         <p style="font-size:11px;color:var(--text-muted);margin:8px 0 0;line-height:1.5">
-          O <b style="color:var(--terceiro)">cronograma ajustado</b> é o previsto do mês com a falta
-          — ou a sobra — do mês anterior já embutida. Executado conta aprovado <b>+</b> em tramitação.
-          Depois do mês corrente não há desvio conhecido, então ele volta a ser o previsto do RV.</p>
+          A barra sobe quando o mês entregou mais que o previsto do RV e desce quando entregou
+          menos. Executado conta aprovado <b>+</b> em tramitação. A escala sai só dos meses
+          fechados — o mês corrente entraria grande demais e achataria os outros; o corte é
+          marcado na barra.</p>
       </div>
       <div class="card">
-        <h2>Avanço acumulado</h2>
+        <h2>Curva S — valor planejado x agregado</h2>
         <p class="escopo" style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px"></p>
-        <div class="legend"><span><i style="background:var(--previsto)"></i>% previsto</span><span><i style="background:var(--terceiro)"></i>% ajustado</span><span><i style="background:var(--realizado)"></i>% realizado</span></div>
+        <div class="legend"><span><i style="background:var(--previsto)"></i>Planejado (PV)</span><span><i style="background:var(--realizado)"></i>Agregado (EV)</span><span><i style="background:var(--terceiro)"></i>Projeção no ritmo atual</span></div>
         <div id="cCurva"></div>
         <p style="font-size:11px;color:var(--text-muted);margin:8px 0 0;line-height:1.5">
-          A linha <b style="color:var(--terceiro)">ajustada</b> acompanha o que foi de fato executado
-          (aprovado + tramitação) nos meses fechados e reencontra a curva do RV no mês corrente.
-          Quando ela cola no previsto, a carteira está em dia — o afastamento da linha
-          <b style="color:var(--realizado)">realizada</b> é só a defasagem de aprovação da FDE.</p>
+          O <b>agregado</b> para na data de status — não existe medição no futuro. Daí para
+          frente a linha tracejada projeta o ritmo medido até aqui (SPI). O vão entre ela e o
+          planejado é o que a carteira deixa de entregar se nada mudar.</p>
       </div>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>SPI — índice de desempenho de prazo</h2>
+      <p class="escopo" style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px"></p>
+      <div class="legend"><span><i style="background:var(--realizado)"></i>SPI contando tramitação</span><span><i style="background:var(--text-secondary)"></i>SPI só do aprovado</span><span><i style="background:var(--terceiro);opacity:.35"></i>Faixa aceitável 0,95–1,05</span></div>
+      <div id="cSpi"></div>
+      <p style="font-size:11px;color:var(--text-muted);margin:8px 0 0;line-height:1.5">
+        Acima de 1,00 a carteira está adiantada. A distância entre as duas linhas é o gargalo
+        de aprovação da FDE: obra feita, medição lançada, pagamento ainda parado na fila.</p>
     </div>
 
     <div class="card" style="margin-top:10px">
@@ -351,9 +367,9 @@
       <h2 id="pTit">Previsão de medição do mês</h2>
       <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px" id="pNota"></p>
       <div class="legend">
-        <span><i style="background:var(--previsto)"></i>Meta do mês pelo cronograma</span>
-        <span><i style="background:var(--critical)"></i>Atraso que vem dos meses anteriores</span>
-        <span><i style="background:var(--realizado)"></i>Já lançado neste mês</span>
+        <span><i style="background:var(--previsto)"></i>Falta da meta do mês</span>
+        <span><i style="background:var(--critical)"></i>Atraso que veio de trás</span>
+        <span style="margin-left:6px;padding-left:14px;border-left:1px solid var(--line)"><i style="background:var(--realizado);height:5px;border-radius:2px"></i>Já lançado no mês <span style="color:var(--text-muted)">(barra fina de baixo)</span></span>
       </div>
       <div id="pBar"></div>
     </div>
@@ -931,8 +947,10 @@ function renderCarteira(){
     // Soma obra a obra: cada uma tem o seu próprio desvio.
     agg[s.k].a+=(s.a!==undefined?s.a:s.p);}));
   const serie=Object.values(agg).sort((a,b)=>a.k<b.k?-1:1);
-  barras($('cMensal'),serie);
-  curva($('cCurva'),serie,vtc);
+  alvoDoMes($('cAlvo'),serie);
+  variacao($('cVar'),serie);
+  curvaS($('cCurva'),serie,vtc);
+  spiChart($('cSpi'),serie);
   document.querySelectorAll('.escopo').forEach(e=>e.textContent=
     `considera as ${comCron.length} obras do filtro que têm cronograma (${brl(vtc)})`);
 
@@ -1005,6 +1023,179 @@ function renderCarteira(){
     }).join('')+'</tbody>';
   $('tabObras').querySelectorAll('tr.clic').forEach(tr=>
     tr.addEventListener('click',()=>{abrirObra(+tr.dataset.cod);}));
+}
+
+
+/* ===================== 31-08 · gráficos no padrão EVM (PMBOK) =========================
+   curvaS   : PV cheio, EV parando na data de status, projeção tracejada no ritmo atual
+   variacao : SV mês a mês, barras divergentes em torno do zero
+   spiChart : SPI acumulado com faixa de tolerância
+   alvoDoMes: barra-alvo do mês corrente (meta ajustada x medido)
+   Executado = aprovado + em tramitação em todos eles.                                    */
+
+function _exec(d){ return d.m+(d.t||0); }
+function _spiStatus(dados){          // SPI acumulado até a data de status
+  const kH=MES_HOJE(); let pv=0,ev=0;
+  dados.forEach(d=>{ if(d.k<=kH){ pv+=d.p; ev+=_exec(d); } });
+  return pv?ev/pv:1;
+}
+
+function curvaS(el,dados,total){
+  el.innerHTML='';
+  if(dados.length<2||!total){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Série insuficiente.</p>';return;}
+  const W=560,H=235,ml=44,mr=48,mt=16,mb=32,s=svgEl(W,H);el.appendChild(s);
+  const iw=W-ml-mr,ih=H-mt-mb,kH=MES_HOJE(),SPI=_spiStatus(dados);
+  let pv=0,ev=0,pr=0;
+  const pts=dados.map((d,i)=>{
+    pv+=d.p; const fech=d.k<=kH;
+    if(fech){ev+=_exec(d);pr=ev;} else pr+=d.p*SPI;
+    return {k:d.k,n:d.n,i,pv,ev:fech?ev:null,pr,d};});
+  const xx=i=>ml+(i/(pts.length-1))*iw, yy=v=>mt+ih-Math.min(v/total,1.04)/1.04*ih;
+  [0,.25,.5,.75,1].forEach(f=>{const y=mt+ih-f/1.04*ih;
+    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:'#2a2a28'});
+    txt(s,ml-8,y+3,(f*100).toFixed(0)+'%',{anchor:'end',size:9});});
+  const iH=pts.findIndex(q=>q.k===kH), ix=iH<0?pts.length-1:iH;
+  add(s,'line',{x1:xx(ix),x2:xx(ix),y1:mt,y2:mt+ih,stroke:'var(--text-secondary)','stroke-opacity':.45});
+  txt(s,xx(ix),mt-4,'hoje',{size:9,fill:'var(--text-secondary)'});
+  add(s,'path',{d:'M'+pts.map(q=>`${xx(q.i)} ${yy(q.pv)}`).join(' L')+
+    ` L${xx(pts.length-1)} ${mt+ih} L${ml} ${mt+ih} Z`,fill:'var(--previsto)','fill-opacity':.14});
+  add(s,'path',{d:'M'+pts.map(q=>`${xx(q.i)} ${yy(q.pv)}`).join(' L'),
+    stroke:'var(--previsto)','stroke-width':2,fill:'none'});
+  const fut=pts.filter(q=>q.k>=kH);
+  if(fut.length>1) add(s,'path',{d:'M'+fut.map(q=>`${xx(q.i)} ${yy(q.pr)}`).join(' L'),
+    stroke:'var(--terceiro)','stroke-width':2,fill:'none','stroke-dasharray':'6 4'});
+  const fech=pts.filter(q=>q.ev!==null);
+  if(fech.length) add(s,'path',{d:'M'+fech.map(q=>`${xx(q.i)} ${yy(q.ev)}`).join(' L'),
+    stroke:'var(--realizado)','stroke-width':2,fill:'none'});
+  fech.forEach(q=>add(s,'circle',{cx:xx(q.i),cy:yy(q.ev),
+    r:q.k===kH?5:3.5,fill:'var(--realizado)',stroke:'var(--surface-1)','stroke-width':2}));
+  const ult=fech[fech.length-1];
+  if(ult) txt(s,xx(ult.i)+8,yy(ult.ev)+4,pct(ult.ev/total),
+    {anchor:'start',size:11,fill:'var(--realizado)'});
+  const fim=pts[pts.length-1];
+  txt(s,W-mr+5,yy(fim.pv)+4,'100%',{anchor:'start',size:11,fill:'var(--previsto)'});
+  if(fim.pr<fim.pv*.995) txt(s,W-mr+5,yy(fim.pr)+14,pct(fim.pr/total),
+    {anchor:'start',size:11,fill:'var(--terceiro)'});
+  pts.forEach(q=>{
+    const hit=add(s,'rect',{x:xx(q.i)-iw/pts.length/2,y:mt,width:iw/pts.length,height:ih,fill:'transparent'});
+    hit.addEventListener('mousemove',e=>showTip(e,`<b>${mesAno(q.k)}</b>`+(q.n?` · mês ${q.n}`:'')+
+      `<br><span class="k">Planejado (PV):</span> ${pct(q.pv/total)} · ${brl(q.pv)}`+
+      (q.ev!==null
+        ? `<br><span class="k">Agregado (EV):</span> ${pct(q.ev/total)} · ${brl(q.ev)}`+
+          `<br><span class="k">Variação (SV):</span> ${brl(q.ev-q.pv)}`+
+          `<br><span class="k">SPI:</span> ${(q.ev/q.pv).toFixed(2)}`
+        : `<br><span class="k" style="color:var(--terceiro)">Projeção (SPI ${SPI.toFixed(2)}):</span> ${pct(q.pr/total)}`+
+          `<br><span class="k">Deixaria de entregar:</span> ${brl(q.pv-q.pr)}`)));
+    hit.addEventListener('mouseleave',hideTip);
+    if(pts.length<=20||q.i%Math.ceil(pts.length/16)===0)txt(s,xx(q.i),H-11,mesAno(q.k),{size:9});});
+  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'#44443f'});
+}
+
+function variacao(el,dados){
+  el.innerHTML='';
+  const kH=MES_HOJE();
+  const d=dados.filter(r=>r.k<=kH).map(r=>({...r,sv:_exec(r)-r.p,aberto:r.k===kH}));
+  if(!d.length){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Sem meses fechados no filtro.</p>';return;}
+  const W=560,H=235,ml=52,mr=12,mt=18,mb=32,s=svgEl(W,H);el.appendChild(s);
+  const iw=W-ml-mr,ih=H-mt-mb;
+  const fechados=d.filter(r=>!r.aberto).map(r=>Math.abs(r.sv));
+  const lim=(fechados.length?Math.max(...fechados):Math.max(...d.map(r=>Math.abs(r.sv))))*1.35||1;
+  const yy=v=>mt+ih/2-(Math.max(Math.min(v,lim),-lim)/lim)*(ih/2);
+  const passo=iw/d.length,bw=Math.min(passo-14,40);
+  [-1,-.5,0,.5,1].forEach(f=>{const y=yy(lim*f);
+    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:f===0?'#44443f':'#2a2a28'});
+    txt(s,ml-8,y+3,f===0?'0':kfmt(lim*f),{anchor:'end',size:9});});
+  txt(s,ml+4,mt+10,'acima ↑',{anchor:'start',size:8,fill:'var(--realizado)'});
+  txt(s,ml+4,mt+ih-3,'abaixo ↓',{anchor:'start',size:8,fill:'var(--previsto)'});
+  d.forEach((r,i)=>{
+    const cx=ml+i*passo+passo/2, y0=yy(0), y1=yy(r.sv);
+    const cor=r.aberto?'var(--text-muted)':(r.sv>=0?'var(--realizado)':'var(--previsto)');
+    const rect=add(s,'rect',{x:cx-bw/2,y:Math.min(y0,y1),width:bw,
+      height:Math.max(Math.abs(y1-y0),2),rx:4,fill:cor,'fill-opacity':r.aberto?.55:1});
+    rect.addEventListener('mousemove',e=>showTip(e,`<b>${mesAno(r.k)}</b>`+
+      (r.aberto?' · <span style="color:var(--warning)">mês ainda aberto</span>':'')+
+      `<br><span class="k">Previsto (RV):</span> ${brl(r.p)}`+
+      `<br><span class="k">Aprovado:</span> ${brl(r.m)}`+
+      ((r.t>0)?`<br><span class="k">Em tramitação:</span> ${brl(r.t)}`:'')+
+      `<br><span class="k">Variação:</span> ${brl(r.sv)}`));
+    rect.addEventListener('mouseleave',hideTip);
+    const cortada=Math.abs(r.sv)>lim;
+    if(cortada) txt(s,cx,y1+(r.sv<0?-7:13),'⌇',{size:12,fill:'var(--text-secondary)'});
+    if(Math.abs(r.sv)>lim*.06)
+      txt(s,cx,r.sv>=0?y1-7:(cortada?y1-19:y1+13),kfmt(r.sv),
+        {size:9,fill:r.aberto?'var(--text-secondary)':cor});
+    if(d.length<=16||i%Math.ceil(d.length/14)===0)
+      txt(s,cx,H-11,mesAno(r.k),{size:9,fill:r.aberto?'var(--text-primary)':'var(--text-secondary)'});});
+}
+
+function spiChart(el,dados){
+  el.innerHTML='';
+  const kH=MES_HOJE();
+  const base=dados.filter(r=>r.k<=kH);
+  if(base.length<2){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Série insuficiente.</p>';return;}
+  const W=1140,H=190,ml=44,mr=52,mt=14,mb=30,s=svgEl(W,H);el.appendChild(s);
+  const iw=W-ml-mr,ih=H-mt-mb;
+  let pv=0,et=0,ea=0;
+  const d=base.map((r,i)=>{pv+=r.p;et+=_exec(r);ea+=r.m;
+    return{k:r.k,i,spi:pv?et/pv:0,spa:pv?ea/pv:0,aberto:r.k===kH};});
+  const lo=Math.min(.5,...d.map(q=>q.spa))-.05, hi=Math.max(1.3,...d.map(q=>q.spi))+.05;
+  const xx=i=>ml+(i/(d.length-1))*iw, yy=v=>mt+ih-(Math.min(Math.max(v,lo),hi)-lo)/(hi-lo)*ih;
+  add(s,'rect',{x:ml,y:yy(1.05),width:iw,height:Math.max(yy(.95)-yy(1.05),1),
+    fill:'var(--terceiro)','fill-opacity':.2});
+  [.5,.75,1,1.25].filter(v=>v>=lo&&v<=hi).forEach(v=>{
+    add(s,'line',{x1:ml,x2:W-mr,y1:yy(v),y2:yy(v),stroke:v===1?'#44443f':'#2a2a28'});
+    txt(s,ml-8,yy(v)+3,v.toFixed(2).replace('.',','),{anchor:'end',size:9});});
+  add(s,'path',{d:'M'+d.map(q=>`${xx(q.i)} ${yy(q.spa)}`).join(' L'),
+    stroke:'var(--text-secondary)','stroke-width':2,fill:'none','stroke-dasharray':'5 4'});
+  add(s,'path',{d:'M'+d.map(q=>`${xx(q.i)} ${yy(q.spi)}`).join(' L'),
+    stroke:'var(--realizado)','stroke-width':2,fill:'none'});
+  d.forEach(q=>{
+    add(s,'circle',{cx:xx(q.i),cy:yy(q.spi),r:q.aberto?5:3.5,
+      fill:'var(--realizado)',stroke:'var(--surface-1)','stroke-width':2});
+    const hit=add(s,'rect',{x:xx(q.i)-iw/d.length/2,y:mt,width:iw/d.length,height:ih,fill:'transparent'});
+    hit.addEventListener('mousemove',e=>showTip(e,`<b>${mesAno(q.k)}</b>`+
+      (q.aberto?' · <span style="color:var(--warning)">mês ainda aberto</span>':'')+
+      `<br><span class="k">SPI c/ tramitação:</span> ${q.spi.toFixed(2)}`+
+      `<br><span class="k">SPI só aprovado:</span> ${q.spa.toFixed(2)}`+
+      `<br><span class="k">Gargalo de aprovação:</span> ${(q.spi-q.spa).toFixed(2)}`));
+    hit.addEventListener('mouseleave',hideTip);
+    if(d.length<=24||q.i%Math.ceil(d.length/20)===0)
+      txt(s,xx(q.i),H-10,mesAno(q.k),{size:9,fill:q.aberto?'var(--text-primary)':'var(--text-secondary)'});});
+  const u=d[d.length-1];
+  txt(s,W-mr+5,yy(u.spi)+4,u.spi.toFixed(2),{anchor:'start',size:11,fill:'var(--realizado)'});
+  txt(s,W-mr+5,yy(u.spa)+4,u.spa.toFixed(2),{anchor:'start',size:11,fill:'var(--text-secondary)'});
+  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'#44443f'});
+}
+
+function alvoDoMes(el,dados){
+  el.innerHTML='';
+  const kH=MES_HOJE(), cur=dados.find(r=>r.k===kH);
+  if(!cur){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Sem cronograma para o mês corrente no filtro.</p>';return;}
+  const meta=Math.max(cur.a!==undefined?cur.a:cur.p,0), ap=cur.m, tr=cur.t||0,
+        feito=ap+tr, falta=Math.max(meta-feito,0);
+  const W=1140,H=112,ml=14,mr=14,mt=34,bh=30,s=svgEl(W,H);el.appendChild(s);
+  const iw=W-ml-mr, xx=v=>ml+(meta?Math.min(v/meta,1):0)*iw;
+  txt(s,ml,20,'Meta ajustada de '+mesAno(kH),{anchor:'start',size:12,fill:'var(--text-primary)'});
+  txt(s,W-mr,20,brl(meta),{anchor:'end',size:12,fill:'var(--text-primary)'});
+  const trk=add(s,'rect',{x:ml,y:mt,width:iw,height:bh,rx:6,fill:'#2a2a28'});
+  trk.addEventListener('mousemove',e=>showTip(e,`<b>Meta ajustada de ${mesAno(kH)}</b>`+
+    `<br><span class="k">Previsto no RV:</span> ${brl(cur.p)}`+
+    `<br><span class="k">Ajustado:</span> ${brl(meta)}`+
+    `<br>inclui o que faltou nos meses anteriores`));
+  trk.addEventListener('mouseleave',hideTip);
+  if(ap>0){const r=add(s,'rect',{x:ml,y:mt,width:Math.max(xx(ap)-ml,2),height:bh,rx:6,fill:'var(--realizado)'});
+    r.addEventListener('mousemove',e=>showTip(e,`<b>Aprovado pela FDE</b><br>${brl(ap)}`));
+    r.addEventListener('mouseleave',hideTip);}
+  if(tr>0){const x0=xx(ap)+(ap>0?2:0);
+    const r=add(s,'rect',{x:x0,y:mt,width:Math.max(xx(feito)-x0,2),height:bh,rx:6,
+      fill:'var(--realizado)','fill-opacity':.34,stroke:'var(--realizado)','stroke-width':1.5,'stroke-dasharray':'4 3'});
+    r.addEventListener('mousemove',e=>showTip(e,`<b>Lançado e em tramitação</b><br>${brl(tr)}`+
+      `<br><span style="color:var(--warning)">ainda não aprovado pela FDE</span>`));
+    r.addEventListener('mouseleave',hideTip);}
+  add(s,'line',{x1:W-mr,x2:W-mr,y1:mt-5,y2:mt+bh+5,stroke:'var(--terceiro)','stroke-width':2.5});
+  txt(s,ml,mt+bh+20,pct(meta?feito/meta:0)+' da meta · falta medir '+brl(falta),
+    {anchor:'start',size:12,fill:'var(--text-primary)'});
+  txt(s,W-mr,mt+bh+20,'alvo do mês',{anchor:'end',size:10,fill:'var(--terceiro)'});
 }
 
 function barrasEmp(el,lista){
@@ -1735,14 +1926,23 @@ function renderPrev(){
     `<div class="card kpi"><span class="v"><b>${brl(vTotT)}</b></span><span class="l">PREVISÃO DO MÊS — contando a tramitação como aprovada</span></div>`+
     `<div class="card kpi"><span class="v" style="color:var(--warning)">${brl(vTotA)}</span><span class="l">Se só valer o que a FDE já aprovou</span></div>`+
     (vPv>0?`<div class="card kpi"><span class="v" style="color:var(--terceiro)">${brl(vPv)}</span><span class="l">Previsão que você lançou no CTR (0. PREVISÃO)</span></div>`:'');
-  $('pNota').innerHTML='<b>Previsão do mês = o que falta da meta de '+mesAno(MES)+' + o atraso que veio de trás.</b> '+
-    'A coluna principal parte do seu pedido: <b>as medições dos meses anteriores que estão em tramitação '+
-    'contam como aprovadas</b>. A segunda leitura desconsidera tudo que a FDE ainda não aprovou — a diferença '+
-    'entre as duas ('+brl(vTotA-vTotT)+') é exatamente o risco que está parado na fila. '+
-    (vPv>0?'<br><b>As medições que você lançou como 0. PREVISÃO ('+brl(vPv)+')</b> aparecem no número verde e '+
-     'não entram em tramitação nem em aprovado — são intenção de medir, não medição enviada. ':'')+
-    'Só obras em execução, atenção ou atrasadas e com cronograma'+
-    (semCron?' ('+semCron+' sem cronograma ficam de fora)':'')+'. Respeita os filtros do topo.';
+  // a explicação longa saiu do corpo do card e virou um "como ler" recolhido: quem já
+  // conhece a tela não precisa reler três parágrafos toda vez que abre a aba.
+  $('pNota').innerHTML='As 15 obras que mais precisam medir em '+mesAno(MES)+
+    ', da maior para a menor. A barra é o que <b>falta</b> medir; a barra fina de baixo é o '+
+    'que já foi lançado. '+
+    '<details style="margin-top:6px"><summary style="cursor:pointer;color:var(--text-secondary)">como ler</summary>'+
+    '<div style="margin-top:6px;line-height:1.6">'+
+    '<b>Falta medir = o que resta da meta de '+mesAno(MES)+' + o atraso que veio de trás.</b> '+
+    'As medições dos meses anteriores que estão <b>em tramitação contam como aprovadas</b> — '+
+    'foi assim que você pediu. Desconsiderando tudo que a FDE ainda não aprovou o número sobe '+
+    'para '+brl(vTotA)+'; a diferença de '+brl(vTotA-vTotT)+' é o risco parado na fila.'+
+    (vPv>0?'<br>As medições lançadas no CTR como <b>0. PREVISÃO</b> ('+brl(vPv)+') não entram '+
+     'em tramitação nem em aprovado — são intenção de medir, não medição enviada.':'')+
+    '<br>Só obras em execução, atenção ou atrasadas e com cronograma'+
+    (semCron?' ('+semCron+' sem cronograma ficam de fora)':'')+'. Respeita os filtros do topo. '+
+    'Clique numa barra para abrir a obra.'+
+    '</div></details>';
   barrasPrev($('pBar'), linhas.slice(0,15));
   // o relatorio Previsão × Lançado mora nesta mesma aba; se ele falhar, o resto da
   // aba (meta do mes, obra a obra) tem de continuar aparecendo
@@ -1800,32 +2000,66 @@ function renderPrev(){
 function barrasPrev(el,lista){
   el.innerHTML='';
   if(!lista.length){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Nada a medir no filtro.</p>';return;}
-  const ml=230, mr=150, mt=8, hb=16, gap=9, W=1140;
-  const H=mt+lista.length*(hb+gap)+6;
-  const max=Math.max(...lista.map(x=>x.faltaT+x.atrasoT+x.aprM+x.traM))||1;
+  /* ------------------------------------------------------------------ redesenho 31-08
+     O desenho antigo empilhava [já lançado][falta da meta][atraso] numa barra só. Isso
+     misturava duas grandezas diferentes — progresso e pendência — então o comprimento da
+     barra NÃO era o número escrito na ponta, e a ordenação (por "a medir") não batia com
+     o tamanho do que se via. Agora:
+
+       barra de cima  = o que FALTA medir  = falta da meta + atraso   (é o número do rótulo)
+       barra de baixo = o que JÁ foi lançado no mês, na mesma escala e na mesma origem
+
+     Duas grandezas, duas barras, um eixo só. O comprimento de cima ordena a lista.        */
+  const ml=250, mr=170, mt=10, hb=15, hs=5, sep=4, gap=15, W=1140;
+  const linha=hb+sep+hs;
+  const H=mt+lista.length*(linha+gap)+8;
+  const max=Math.max(...lista.map(x=>Math.max(x.totalT,x.aprM+x.traM)))||1;
   const gw=W-ml-mr, xx=v=>v/max*gw;
   const s=svgEl(W,H); s.setAttribute('style','width:100%;height:auto');
-  s.setAttribute('aria-label','Previsao de medicao do mes por obra, repartida em ja lancado, meta do mes e atraso anterior');
+  s.setAttribute('aria-label','Por obra: o que falta medir no mês, repartido em meta do mês e atraso anterior, com o que já foi lançado abaixo');
+  // régua de fundo: dá noção de escala sem precisar ler todos os rótulos
+  [.25,.5,.75,1].forEach(f=>{const x=ml+gw*f;
+    add(s,'line',{x1:x,x2:x,y1:mt-2,y2:H-8,stroke:'#2a2a28'});
+    txt(s,x,H-1,kfmt(max*f),{size:8.5,fill:'var(--text-muted)'});});
   lista.forEach((d,i)=>{
-    const y=mt+i*(hb+gap), o=d.o;
-    const nome=(o.cod+' '+(o.unidade||'')).slice(0,30);
-    txt(s,ml-10,y+hb-4,nome,{size:10.5,anchor:'end',fill:'var(--text-secondary)'});
+    const y=mt+i*(linha+gap), o=d.o, lanc=d.aprM+d.traM;
+    let nome=o.cod+' '+(o.unidade||'');
+    if(nome.length>34) nome=nome.slice(0,33)+'…';
+    const t=txt(s,ml-12,y+hb-2,nome,{size:10.5,anchor:'end',fill:'var(--text-secondary)'});
+    t.style.cursor='pointer';
+    t.addEventListener('click',()=>abrirObra(o.cod));
+    const dica='<b>'+esc(o.cod+' '+(o.unidade||''))+'</b>'+
+      '<br><span class="k">Meta do mês:</span> '+brl(d.metaM)+
+      '<br><span class="k">Já lançado no mês:</span> '+brl(lanc)+
+        (d.metaM>0.5?' <span class="k">('+pct(lanc/d.metaM)+' da meta)</span>':'')+
+      '<br><span class="k" style="color:var(--previsto)">Falta da meta do mês:</span> '+brl(d.faltaT)+
+      '<br><span class="k" style="color:var(--critical)">Atraso dos meses anteriores:</span> '+brl(d.atrasoT)+
+      '<br><b>Falta medir: '+brl(d.totalT)+'</b>';
+    const liga=n=>{n.addEventListener('mousemove',e=>showTip(e,dica));
+                   n.addEventListener('mouseleave',hideTip);
+                   n.style.cursor='pointer';
+                   n.addEventListener('click',()=>abrirObra(o.cod));};
+    // ---- barra de cima: o que falta medir, repartido pela causa
     let x=ml;
-    [[d.aprM+d.traM,'var(--realizado)','já lançado neste mês'],
-     [d.faltaT,'var(--previsto)','falta da meta do mês'],
-     [d.atrasoT,'var(--critical)','atraso dos meses anteriores']].forEach(pp=>{
-      const v=pp[0]; if(v<=0) return;
-      const w=Math.max(xx(v)-2,1);
-      const r=add(s,'rect',{x:x,y:y,width:w,height:hb,rx:3,fill:pp[1]});
-      const dica='<b>'+esc(o.cod+' '+(o.unidade||''))+'</b><br><span class="k">'+pp[2]+':</span> '+brl(v)+
-        '<br><span class="k">Previsão do mês:</span> '+brl(d.totalT)+
-        '<br><span class="k">Meta do mês:</span> '+brl(d.metaM);
-      r.addEventListener('mousemove',e=>showTip(e,dica));
-      r.addEventListener('mouseleave',hideTip);
-      x+=xx(v);
-    });
-    txt(s,ml+xx(d.aprM+d.traM+d.faltaT+d.atrasoT)+8,y+hb-4,brl(d.totalT)+' a medir',
-        {size:10,anchor:'start',fill:'var(--text-primary)'});
+    [[d.faltaT,'var(--previsto)'],[d.atrasoT,'var(--critical)']].forEach(pp=>{
+      if(pp[0]<=0) return;
+      const w=Math.max(xx(pp[0])-2,1.5);
+      liga(add(s,'rect',{x:x,y:y,width:w,height:hb,rx:3,fill:pp[1]}));
+      x+=xx(pp[0]);});
+    if(d.totalT<=0.5){   // nada a medir: marca o zero em vez de deixar a linha vazia
+      txt(s,ml+2,y+hb-3,'meta do mês já coberta',{size:9,anchor:'start',fill:'var(--good)'});}
+    // ---- barra de baixo: o que já foi lançado, mesma origem e mesma escala.
+    // Sem trilho de fundo: um trilho de largura fixa em toda linha vira listra e some
+    // com o sentido do vazio — a ausência da barra azul já diz que nada foi lançado.
+    // A ausência da barra azul já significa "nada lançado" — repetir isso por escrito em
+    // nove linhas de quinze só polui. Fica um traço curto na origem para o olho encontrar
+    // a linha de base sem precisar de texto.
+    if(lanc>0) liga(add(s,'rect',{x:ml,y:y+hb+sep,width:Math.max(xx(lanc),1.5),height:hs,rx:2,
+                                  fill:'var(--realizado)'}));
+    else add(s,'rect',{x:ml,y:y+hb+sep+1.5,width:5,height:2,rx:1,fill:'#3a3a36'});
+    // ---- rótulo: o mesmo número que ordena a lista
+    txt(s,ml+Math.max(xx(d.totalT),0)+9,y+hb-2,brl(d.totalT),
+        {size:10.5,anchor:'start',fill:'var(--text-primary)'});
   });
   el.appendChild(s);
 }
