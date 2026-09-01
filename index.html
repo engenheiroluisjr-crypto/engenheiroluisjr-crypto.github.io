@@ -11,6 +11,7 @@
     --text-primary:#fff; --text-secondary:#c3c2b7; --text-muted:#8b8a80;
     --previsto:#d95926; --realizado:#3987e5; --terceiro:#199e70;
     --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+    --trilho:#2a2a28; --grade:#2a2a28; --marca:#3a3a36;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--plane);color:var(--text-primary);
@@ -152,7 +153,11 @@
     :root{
       --plane:#fff; --surface-1:#fff; --surface-2:#fff; --line:#9a9a94;
       --text-primary:#000; --text-secondary:#000; --text-muted:#3a3a36;
-      --good:#0a6b0a; --warning:#8a5a00; --serious:#9c4a22; --critical:#a51c1c;
+      --good:#0a6b0a; --warning:#7a4e00; --serious:#8a3c18; --critical:#961818;
+      /* as tres series dos graficos escurecem: a 7pt no papel o tom de tela some */
+      --previsto:#b4451a; --realizado:#1f5fae; --terceiro:#0f7a55;
+      /* o trilho da meta saia como um bloco PRETO: no papel parecia 100% cheio */
+      --trilho:#e6e6e0; --grade:#c2c2ba; --marca:#b8b8b0;
     }
     @page{size:A4 landscape;margin:9mm}
     html,body{background:#fff !important;color:#000 !important;
@@ -167,21 +172,38 @@
     /* CADA QUADRO EM SUA PRÓPRIA PÁGINA — no papel, quadro cortado ao meio (uma
        linha órfã no topo da página seguinte) é o que mais atrapalha a leitura.
        O bloco de KPIs e a dupla de gráficos lado a lado contam como um quadro só. */
+    /* NAO forcar pagina por quadro: isso gastava 2/3 de cada folha em branco.
+       O quadro so nao pode ser CORTADO — se nao couber no resto da folha, ele
+       desce inteiro para a proxima. Quem nao cabe nem numa folha ganha .quebravel. */
     .wrap section>.card,
     .wrap section>.grid2,
-    .wrap section>.grid3{break-before:page}
+    .wrap section>.grid3{break-before:auto;break-inside:avoid}
     .wrap section>.kpis{break-before:auto;break-inside:avoid}
-    .wrap section>*:first-child{break-before:auto}
-    .wrap section>.kpis+*{break-before:auto}         /* o 1º quadro divide a folha com os KPIs, se couber */   /* não abre com página vazia */
     .grid2,.grid3{break-inside:avoid}
+    header{break-after:avoid;break-inside:avoid}
+    h2,.card>h2,.card>.escopo{break-after:avoid}
     /* tabela que não cabe numa página precisa poder quebrar; quem marca é o
        beforeprint, olhando o tamanho real do conteúdo */
-    .card.quebravel{break-inside:auto}
+    .card.quebravel,.wrap section>.card.quebravel{break-inside:auto}
     /* no papel o clamp por vw não vale (a largura vira a da folha): trava o
        tamanho do número do KPI para não cortar valor de 8 dígitos */
-    .kpis{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
-    .kpi .v{font-size:15px !important;letter-spacing:-.2px}
-    .kpi .l{font-size:9px}
+    /* No papel cada milimetro vertical vale uma folha: o bloco de KPIs cabia em
+       duas linhas e empurrava a dupla de graficos para a folha seguinte. */
+    .kpis{grid-template-columns:repeat(auto-fit,minmax(116px,1fr));gap:5px}
+    .kpis .card,.card.kpi{padding:5px 6px}
+    .kpi .v{font-size:13.5px !important;letter-spacing:-.2px;line-height:1.15}
+    .kpi .l{font-size:7.6px;line-height:1.15}
+    .card{padding:8px 10px}
+    .card h2,.card>h2{font-size:10.5pt;line-height:1.3;margin:0 0 3px}
+    .card .escopo{font-size:7.4pt;line-height:1.3;margin:0 0 5px}
+    .obs{font-size:7.4pt !important;line-height:1.35;margin-top:4px}
+    .legend{font-size:7.6pt;gap:8px}
+    /* densidade da tabela: com a linha mais baixa cabe quase o dobro de obras
+       por folha, sem perder legibilidade (7,8pt e o corpo de uma nota fiscal) */
+    table.tbl{font-size:7.8pt}
+    table.tbl td,table.tbl th{padding:2px 5px;line-height:1.25}
+    table.tbl td.mono,table.tbl .mono{white-space:nowrap;font-size:6.9pt}
+    table.tbl th{font-size:7.4pt}
     .card div[style*="overflow:auto"]{max-height:none !important;overflow:visible !important}
     table.tbl{break-inside:auto}
     table.tbl thead{display:table-header-group}   /* repete o cabeçalho a cada página */
@@ -215,6 +237,24 @@
     .pxl .tbl th:nth-child(8),.pxl .tbl td:nth-child(8){width:8%}
     .pxl .tbl th:nth-child(9),.pxl .tbl td:nth-child(9){width:11%}
     .pxl .tbl th:nth-child(10),.pxl .tbl td:nth-child(10){width:12.5%}
+
+    /* ---------- IMPRESSAO: nada depende so da cor ---------- */
+    /* faixas alternadas: separam a linha mesmo em P&B, e ajudam a nao pular linha */
+    table.tbl tbody tr:nth-child(even) td{background:#f2f2ee !important}
+    table.tbl thead th{background:#e4e4dd !important;border-bottom:1.2px solid #000 !important}
+    table.tbl td,table.tbl th{border-color:#b0b0a8 !important}
+    /* numero sempre preto e firme; a cor vira so um reforco */
+    table.tbl td.num{color:#000 !important;font-variant-numeric:tabular-nums}
+    /* contorno fino em toda barra/area: em P&B e o que separa uma serie da outra */
+    svg rect[fill^="var("],svg path[fill^="var("]{stroke:#000 !important;stroke-width:.4}
+    svg rect[fill="var(--trilho)"],svg rect[fill="var(--marca)"]{stroke:#9a9a94 !important}
+    svg path[stroke^="var("]{stroke-width:2.2}
+    /* amostras da legenda ganham a mesma textura das barras */
+    .legend i[style*="critical"]{background-image:repeating-linear-gradient(45deg,#000 0 1px,transparent 1px 3px)}
+    .legend i[style*="realizado"]{background-image:radial-gradient(#000 .6px,transparent .7px);background-size:3px 3px}
+    .obs,.card .escopo{color:#2a2a26 !important}
+    /* o "alvo do mes" era uma barra preta cheia no papel: virava 100% aos olhos */
+    .barra-fundo,.trilho{background:#e8e8e2 !important;border:1px solid #9a9a94}
     .pagina-obra{break-after:page}
     /* exportação de várias obras: só o container de impressão vai para o papel */
     body.imprimindo>.wrap,body.imprimindo>.tip{display:none !important}
@@ -691,7 +731,7 @@ function barras(el,dados,alt,comMeta){
   const passo=iw/dados.length,bw=Math.min(passo-6,34);
   const yy=v=>mt+ih-(v/max)*ih;
   [0,.25,.5,.75,1].forEach(f=>{const y=mt+ih-f*ih;
-    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:'#2a2a28'});
+    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:'var(--grade)'});
     txt(s,ml-8,y+3,kfmt(max*f),{anchor:'end',size:9});});
   dados.forEach((d,i)=>{
     const destaque = d.k===kHoje;
@@ -759,7 +799,7 @@ function curva(el,dados,total){
            fut:d.k>kH,aj:aj,ex:exec};});
   const xx=i=>ml+(i/(pts.length-1))*iw, yy=v=>mt+ih-Math.min(v,1.05)/1.05*ih;
   [0,.25,.5,.75,1].forEach(f=>{const y=mt+ih-f/1.05*ih;
-    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:'#2a2a28'});
+    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:'var(--grade)'});
     txt(s,ml-8,y+3,(f*100).toFixed(0)+'%',{anchor:'end',size:9});});
   add(s,'path',{d:'M'+pts.map((d,i)=>`${xx(i)} ${yy(d.p)}`).join(' L')+
     ` L${xx(pts.length-1)} ${mt+ih} L${ml} ${mt+ih} Z`,fill:'var(--previsto)','fill-opacity':.3});
@@ -1079,7 +1119,7 @@ function curvaS(el,dados,total){
     return {k:d.k,n:d.n,i,pv,ev:fech?ev:null,pr,d};});
   const xx=i=>ml+(i/(pts.length-1))*iw, yy=v=>mt+ih-Math.min(v/total,1.04)/1.04*ih;
   [0,.25,.5,.75,1].forEach(f=>{const y=mt+ih-f/1.04*ih;
-    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:'#2a2a28'});
+    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:'var(--grade)'});
     txt(s,ml-8,y+3,(f*100).toFixed(0)+'%',{anchor:'end',size:9});});
   const iH=pts.findIndex(q=>q.k===kH), ix=iH<0?pts.length-1:iH;
   add(s,'line',{x1:xx(ix),x2:xx(ix),y1:mt,y2:mt+ih,stroke:'var(--text-secondary)','stroke-opacity':.45});
@@ -1204,7 +1244,7 @@ function alvoDoMes(el,dados){
   const iw=W-ml-mr, xx=v=>ml+(meta?Math.min(v/meta,1):0)*iw;
   txt(s,ml,20,'Meta ajustada de '+mesAno(kH),{anchor:'start',size:12,fill:'var(--text-primary)'});
   txt(s,W-mr,20,brl(meta),{anchor:'end',size:12,fill:'var(--text-primary)'});
-  const trk=add(s,'rect',{x:ml,y:mt,width:iw,height:bh,rx:6,fill:'#2a2a28'});
+  const trk=add(s,'rect',{x:ml,y:mt,width:iw,height:bh,rx:6,fill:'var(--trilho)'});
   trk.addEventListener('mousemove',e=>showTip(e,`<b>Meta ajustada de ${mesAno(kH)}</b>`+
     `<br><span class="k">Previsto no RV:</span> ${brl(cur.p)}`+
     `<br><span class="k">Ajustado:</span> ${brl(meta)}`+
@@ -2046,7 +2086,7 @@ function barrasPrev(el,lista){
   s.setAttribute('aria-label','Por obra: o que falta medir no mês, repartido em meta do mês e atraso anterior, com o que já foi lançado abaixo');
   // régua de fundo: dá noção de escala sem precisar ler todos os rótulos
   [.25,.5,.75,1].forEach(f=>{const x=ml+gw*f;
-    add(s,'line',{x1:x,x2:x,y1:mt-2,y2:H-8,stroke:'#2a2a28'});
+    add(s,'line',{x1:x,x2:x,y1:mt-2,y2:H-8,stroke:'var(--grade)'});
     txt(s,x,H-1,kfmt(max*f),{size:8.5,fill:'var(--text-muted)'});});
   lista.forEach((d,i)=>{
     const y=mt+i*(linha+gap), o=d.o, lanc=d.aprM+d.traM;
@@ -2083,7 +2123,7 @@ function barrasPrev(el,lista){
     // a linha de base sem precisar de texto.
     if(lanc>0) liga(add(s,'rect',{x:ml,y:y+hb+sep,width:Math.max(xx(lanc),1.5),height:hs,rx:2,
                                   fill:'var(--realizado)'}));
-    else add(s,'rect',{x:ml,y:y+hb+sep+1.5,width:5,height:2,rx:1,fill:'#3a3a36'});
+    else add(s,'rect',{x:ml,y:y+hb+sep+1.5,width:5,height:2,rx:1,fill:'var(--marca)'});
     // ---- rótulo: o mesmo número que ordena a lista
     txt(s,ml+Math.max(xx(d.totalT),0)+9,y+hb-2,brl(d.totalT),
         {size:10.5,anchor:'start',fill:'var(--text-primary)'});
@@ -2513,7 +2553,7 @@ function barrasReceb(el,dados){
   const passo=iw/dados.length,bw=Math.min(passo-6,40),sub=Math.max(bw/2-2,2);
   const yy=v=>mt+ih-(v/max)*ih;
   [0,.25,.5,.75,1].forEach(f=>{const y=mt+ih-f*ih;
-    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:'#2a2a28'});
+    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:'var(--grade)'});
     txt(s,ml-8,y+3,kfmt(max*f),{anchor:'end',size:9});});
   const kh=MES_REF;
   dados.forEach((d,i)=>{
@@ -2676,7 +2716,69 @@ function marcarQuebraveis(){
     c.classList.toggle('quebravel', c.scrollHeight > alturaPagina);
   });
 }
-window.addEventListener('beforeprint', marcarQuebraveis);
+
+// ---- LARGURA: nada pode sair cortado na direita -------------------------
+// A4 paisagem @96dpi = 1122,5px; menos 9mm de margem de cada lado -> ~1054px.
+// So a TABELA precisa de reducao: o card se adapta sozinho a folha, e o grafico
+// tem largura fixa. Reduzir o card inteiro com transform quebrava o desenho
+// quando o quadro passava de uma pagina para a outra.
+// A reducao usa zoom (e nao transform) porque o zoom entra no calculo de
+// layout do Chrome — ou seja, a quebra de pagina acontece no lugar certo.
+const LARGURA_PAPEL = 1054;
+function ajustarLargura(){
+  const wrap=document.querySelector('.wrap');
+  const larguraAntes=wrap.style.width, maxAntes=wrap.style.maxWidth;
+  wrap.style.width=LARGURA_PAPEL+'px'; wrap.style.maxWidth='none';
+  void wrap.offsetHeight;                        // mede ja no tamanho da folha
+  document.querySelectorAll('table.tbl').forEach(t=>{
+    if(!t.getClientRects().length) return;
+    const precisa=t.scrollWidth;
+    if(precisa<=LARGURA_PAPEL+2) return;
+    const k=Math.max(LARGURA_PAPEL/precisa, .55);   // trava: abaixo disso nao se le
+    t.dataset.zoom='1'; t.style.zoom=k.toFixed(3);
+  });
+  wrap.style.width=larguraAntes; wrap.style.maxWidth=maxAntes;
+}
+function desfazerLargura(){
+  document.querySelectorAll('[data-zoom]').forEach(t=>{
+    t.style.zoom=''; delete t.dataset.zoom; });
+}
+
+// ---- COR: textura nas series, para o PDF sobreviver ao P&B --------------
+// As barras sao pintadas com fill="var(--...)", entao da para achar cada serie
+// pelo proprio atributo e trocar por um padrao com a mesma cor + textura.
+const TEXTURAS={
+  'var(--critical)':['hachCrit','#961818',
+    '<path d="M0,4 l4,-4 M-1,1 l2,-2 M3,5 l2,-2" stroke="#000" stroke-width=".7"/>'],
+  'var(--realizado)':['pontoReal','#1f5fae',
+    '<circle cx="2" cy="2" r=".75" fill="#000"/>']
+};
+function aplicarTexturas(){
+  document.querySelectorAll('svg').forEach(svg=>{
+    let defs=null;
+    Object.entries(TEXTURAS).forEach(([varCor,[id,cor,desenho]])=>{
+      const alvos=svg.querySelectorAll('rect[fill="'+varCor+'"]');
+      if(!alvos.length) return;
+      if(!defs){ defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+                 defs.dataset.impressao='1'; svg.insertBefore(defs,svg.firstChild); }
+      const uid=id+'-'+Math.random().toString(36).slice(2,7);
+      defs.insertAdjacentHTML('beforeend',
+        '<pattern id="'+uid+'" width="4" height="4" patternUnits="userSpaceOnUse">'+
+        '<rect width="4" height="4" fill="'+cor+'"/>'+desenho+'</pattern>');
+      alvos.forEach(r=>{ r.dataset.fillOrig=varCor; r.setAttribute('fill','url(#'+uid+')'); });
+    });
+  });
+}
+function removerTexturas(){
+  document.querySelectorAll('svg defs[data-impressao]').forEach(d=>d.remove());
+  document.querySelectorAll('[data-fill-orig]').forEach(r=>{
+    r.setAttribute('fill',r.dataset.fillOrig); delete r.dataset.fillOrig; });
+}
+
+function prepararImpressao(){ marcarQuebraveis(); aplicarTexturas(); ajustarLargura(); }
+function encerrarImpressao(){ desfazerLargura(); removerTexturas(); }
+window.addEventListener('beforeprint', prepararImpressao);
+window.addEventListener('afterprint', encerrarImpressao);
 $('fCron').onchange=aoFiltrar;
 $('fBusca').oninput=aoFiltrar;
 $('btLimpar').onclick=limparFiltros;
