@@ -547,12 +547,16 @@
       <div><label class="f">&nbsp;</label>
         <label style="font-size:11px;display:flex;align-items:center;gap:5px;white-space:nowrap">
           <input type="checkbox" id="cxTodasComp"> todas as competências</label></div>
-      <div><label class="f">Contrato</label><div class="ms" id="rContrato"></div></div>
-      <div><label class="f">Lote</label><div class="ms" id="rLote"></div></div>
-      <div><label class="f">Fiscal</label><div class="ms" id="rFiscal"></div></div>
       <div><label class="f">Status no portal</label><div class="ms" id="rPortal"></div></div>
-      <div style="flex:1 1 200px"><label class="f" for="rBusca">Buscar obra</label>
-        <input id="rBusca" style="width:100%" placeholder="nº ou nome da escola"></div>
+      <!-- 04/09: contrato, lote, fiscal e busca sairam daqui. Duplicavam a barra do topo,
+           que esta tela ja respeita (rFiltro/obrasCaixa intersectam com filtradas()).
+           Os elementos continuam no DOM, ocultos, para msVals()/msInit() seguirem
+           funcionando e devolverem sempre vazio. -->
+      <div style="display:none"><div class="ms" id="rContrato"></div><div class="ms" id="rLote"></div>
+        <div class="ms" id="rFiscal"></div><input id="rBusca"></div>
+      <div style="flex:1 1 240px"><label class="f">&nbsp;</label>
+        <span style="font-size:11px;color:var(--text-muted);line-height:1.5;display:block">
+          Contrato, lote, cidade, fiscal, empreiteira e busca: use os filtros do topo.</span></div>
       <div><label class="f">&nbsp;</label><button class="tab" id="btImprimirReceb">Imprimir</button></div>
     </div>
 
