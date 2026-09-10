@@ -648,9 +648,11 @@
     <div class="card" id="cardTram" style="margin-top:10px">
       <h2 id="cxTramTit">Em tramitação — vira recebimento quando a FDE aprovar</h2>
       <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px">
-        Data de pagamento <b>estimada</b> pelo ciclo medido nas suas próprias aprovações:
-        competência + <b><span id="lgLag">–</span> dias</b> para aprovar + <b><span id="lgPag3">30</span> dias</b> para pagar.<br>
-        <b>Ordem da lista:</b> a que está parada há mais tempo aparece primeiro.<br>
+        Sem data de pagamento: enquanto a FDE não aprovar não há prazo a contar — a estimativa
+        (competência + <b><span id="lgLag">–</span> dias</b> para aprovar + <b><span id="lgPag3">30</span> dias</b> para pagar)
+        só vale depois da aprovação e aparece na lista de recebimento.<br>
+        <b>Ordem da lista:</b> pela <b>competência da medição</b>, da mais antiga para a mais nova
+        (empatou, a que está parada há mais tempo vem primeiro).<br>
         Quando a medição existe só do lado da <b>empreiteira</b> e a FDE ainda não abriu, o valor
         aprovado não existe — a linha mostra o <b>valor apresentado</b>, em cinza, e ele entra num
         total separado, porque ainda não é promessa de caixa.</p>
@@ -2684,8 +2686,11 @@ function renderReceb(){
   $('rTabTram').innerHTML='<thead><tr><th>Nº</th><th>Unidade</th><th>Contrato FDE / PI</th>'+
     '<th class="num">Med.</th><th>Competência</th><th>Situação no CTR</th><th>No portal</th>'+
     '<th>Neste passo desde</th>'+
-    '<th class="num">Dias parada</th><th>Pagamento estimado</th><th class="num">Valor</th></tr></thead><tbody>'+
-    (tramL.length?tramL.slice().sort((a,b)=>{const x=(a.dp==null?-1:a.dp), y=(b.dp==null?-1:b.dp);
+    '<th class="num">Dias parada</th><th class="num">Valor</th></tr></thead><tbody>'+
+    (tramL.length?tramL.slice().sort((a,b)=>{
+      const cx=(a.r||'9999-99-99'), cy=(b.r||'9999-99-99');
+      if(cx!==cy) return cx<cy?-1:1;
+      const x=(a.dp==null?-1:a.dp), y=(b.dp==null?-1:b.dp);
       return y-x || ((b.v||b.e||0)-(a.v||a.e||0));}).map(m=>{const o=OBRA[m.c]||{};
       const d=m.dp==null?null:m.dp;
       const cor=d==null?'var(--text-muted)':(d>=10?'var(--critical)':(d>=6?'var(--warning)':'var(--text-muted)'));
@@ -2694,12 +2699,11 @@ function renderReceb(){
         `<td style="color:var(--warning)">${m.sit||'—'}</td><td>${m.sp||'—'}</td>`+
         `<td style="color:var(--text-secondary)">${dbr(m.dpa)}</td>`+
         `<td class="num" style="color:${cor}">${d==null?'—':d}</td>`+
-        `<td style="color:var(--text-secondary)">${dbr(m.p)}</td>`+
         celValor(m)+`</tr>`;}).join('')
-      :'<tr><td colspan="11" style="color:var(--good)">Nada em tramitação em '+escopoMes()+'.'+(foraMes?' <span style="color:var(--text-muted)">'+foraMes+' medição(ões) em tramitação em outras competências — marque “mostrar todas as competências”.</span>':'')+'</td></tr>')+
-    (tramL.length?`<tr><td colspan="10" style="text-align:right;color:var(--text-secondary)"><b>total aprovado pela FDE</b></td>`+
+      :'<tr><td colspan="10" style="color:var(--good)">Nada em tramitação em '+escopoMes()+'.'+(foraMes?' <span style="color:var(--text-muted)">'+foraMes+' medição(ões) em tramitação em outras competências — marque “mostrar todas as competências”.</span>':'')+'</td></tr>')+
+    (tramL.length?`<tr><td colspan="9" style="text-align:right;color:var(--text-secondary)"><b>total aprovado pela FDE</b></td>`+
       `<td class="num"><b>${brl2(soma(tramL))}</b></td></tr>`+
-      (soApres?`<tr><td colspan="10" style="text-align:right;color:var(--text-muted)">`+
+      (soApres?`<tr><td colspan="9" style="text-align:right;color:var(--text-muted)">`+
         `+ apresentado pela empreiteira, a FDE ainda não avaliou</td>`+
         `<td class="num" style="color:var(--text-muted)"><b>${brl2(soApres)}</b></td></tr>`:'')
       :'')+'</tbody>';
