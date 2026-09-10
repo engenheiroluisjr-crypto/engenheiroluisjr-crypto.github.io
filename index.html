@@ -1755,8 +1755,9 @@ function renderEmpr(){
 
   // ---- obra a obra
   $('eNota2').textContent='Cada obra do filtro com o valor contratado pela FDE, o valor de empreita, '+
-    'o quanto disso já foi medido e aprovado e o que falta. Clique no número para abrir a página da obra.';
-  const ord=obras.slice().sort((a,b)=>(b.empreita||0)-(a.empreita||0));
+    'o quanto disso já foi medido e aprovado e o que falta. Em ordem crescente pelo número da obra. '+
+    'Clique no número para abrir a página da obra.';
+  const ord=obras.slice().sort((a,b)=>(+a.cod||0)-(+b.cod||0));
   $('eTabObras').innerHTML='<thead>'+
     '<tr><th class="grp vazio" colspan="4"></th><th class="grp ctr">contrato FDE</th>'+
     '<th class="grp emp" colspan="6">valor de empreita — a parte do empreiteiro</th>'+
