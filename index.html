@@ -542,8 +542,7 @@
   <!-- ==================== MEDIÇÃO E RECEBIMENTO ==================== -->
   <section id="secReceb" class="oculto">
     <div class="filtros card">
-      <div><label class="f" for="rMes">Mês da medição (competência)</label>
-        <select id="rMes"></select></div>
+      <div><label class="f">Mês da medição (competência)</label><div class="ms" id="rMes"></div></div>
       <div><label class="f">&nbsp;</label>
         <label style="font-size:11px;display:flex;align-items:center;gap:5px;white-space:nowrap">
           <input type="checkbox" id="cxTodasComp"> todas as competências</label></div>
@@ -556,6 +555,7 @@
         <div class="ms" id="rFiscal"></div><input id="rBusca"></div>
       <div style="flex:1 1 240px"><label class="f">&nbsp;</label>
         <span style="font-size:11px;color:var(--text-muted);line-height:1.5;display:block">
+          Pode marcar vários meses na competência; nenhum marcado = todas.<br/>
           Contrato, lote, cidade, fiscal, empreiteira e busca: use os filtros do topo.</span></div>
       <div><label class="f">&nbsp;</label><button class="tab" id="btImprimirReceb">Imprimir</button></div>
     </div>
@@ -2441,14 +2441,23 @@ const FCAIXA=[
   {id:'rLote',    val:o=>[o.lote]},
   {id:'rFiscal',  val:o=>[o.fiscal]},
 ];
+// ---- competencia: passou a ser MULTIPLA (10/09). Nenhuma marcada = todas.
+// mesRef() devolve o mes unico quando so um esta marcado -- os KPIs e titulos que
+// falam de "a competencia" usam ele; com varios marcados o texto vira "N competencias".
+function mesesSel(){ return (typeof MS!=='undefined'&&MS['rMes'])?msVals('rMes'):[]; }
+function mesRef(){ const a=mesesSel(); return a.length===1?a[0]:''; }
+function naCompSel(m){ const a=mesesSel(); return !a.length||a.includes((m.r||'').slice(0,7)); }
+function escopoMes(){ const a=mesesSel();
+  return !a.length?'todas as competências'
+    : a.length===1?'competência '+mesAno(a[0])
+    : a.length+' competências ('+a.slice().sort().map(mesAno).join(', ')+')'; }
 // o status no portal nao vem da obra e sim das medicoes dela
 function opcoesPortal(){
   const cods=new Set(obrasCaixa('rPortal').map(o=>o.cod));
   // a contagem tem que obedecer a competencia escolhida, senao a lista diz 21 e o
   // KPI mostra 20 -- dois numeros para a mesma coisa na mesma tela.
-  const mes=$('rMes')?$('rMes').value:'';
   const todasC=$('cxTodasComp')&&$('cxTodasComp').checked;
-  const naComp=m=>todasC||!mes||(m.r||'').slice(0,7)===mes;
+  const naComp=m=>todasC||naCompSel(m);
   const todas=[].concat(
     (RC.tram||[]).map(m=>[m,spDe(m,spPad(m))]),
     (RC.meds||[]).map(m=>[m,spDe(m,'Aprovada')]),
@@ -2476,14 +2485,14 @@ function renderReceb(){
   const prevl=RC.tram.filter(ehPrev).filter(fPrev);
   const meds=RC.meds.filter(fAp), sem=RC.semData.filter(fAp);
   const soma=a=>a.reduce((x,y)=>x+(y.v||0),0);
-  const mes=$('rMes').value;
+  const mes=mesRef();
 
   // ---- KPIs
-  const doMes=meds.filter(m=>(m.r||'').slice(0,7)===mes);
-  const tramMes=tram.filter(m=>(m.r||'').slice(0,7)===mes);
-  const pvMes=prevl.filter(m=>(m.r||'').slice(0,7)===mes);
+  const doMes=meds.filter(naCompSel);
+  const tramMes=tram.filter(naCompSel);
+  const pvMes=prevl.filter(naCompSel);
   $('rkMes').textContent=brl(soma(doMes)+soma(tramMes)+soma(pvMes));
-  $('rkMesL').innerHTML=`Lançado na competência ${mes?mesAno(mes):'—'} · `+
+  $('rkMesL').innerHTML=`Lançado em ${escopoMes()} · `+
     `${doMes.length+tramMes.length+pvMes.length} medições<br>`+
     `<span style="color:var(--realizado)">${brl(soma(doMes))} aprovado</span> · `+
     `<span style="color:${soma(tramMes)?'var(--warning)':'var(--text-muted)'}">`+
@@ -2494,10 +2503,10 @@ function renderReceb(){
   // mostravam a carteira inteira — dois números na mesma tela sem relação.
   // A caixa "todas as competências" volta ao comportamento antigo.
   const todasC=$('cxTodasComp')&&$('cxTodasComp').checked;
-  const naComp=m=>todasC||!mes||(m.r||'').slice(0,7)===mes;
+  const naComp=m=>todasC||naCompSel(m);
   const medsK=meds.filter(naComp), tramK=tram.filter(naComp),
         prevK=prevl.filter(naComp), semK=sem.filter(naComp);
-  const escopo=todasC?'todas as competências':(mes?'competência '+mesAno(mes):'');
+  const escopo=todasC?'todas as competências':escopoMes();
   if($('cxFirmeEsc')) $('cxFirmeEsc').textContent=escopo?' · '+escopo:'';
   if($('cxIncertoEsc')) $('cxIncertoEsc').textContent=escopo?' · '+escopo:'';
   const j30=medsK.filter(m=>m.p>HOJE_ISO&&m.p<=D30), j60=medsK.filter(m=>m.p>D30&&m.p<=D60);
@@ -2635,7 +2644,7 @@ function renderReceb(){
     (RC.lag+RC.pag)+' dias (competência → aprovação → pagamento) para saber quando vira caixa.');
 
   // ---- medições aprovadas na competência escolhida
-  $('rTitMes').textContent=`Medições aprovadas na competência ${mes?mesAno(mes):'—'}`;
+  $('rTitMes').textContent='Medições aprovadas — '+escopoMes();
   const linhaMed=m=>{const o=OBRA[m.c]||{};
     const atrasado=m.p<=HOJE_ISO;
     return `<tr><td>${m.c}</td><td>${o.unidade||''}</td><td>${contratoPI(m.c)}</td>`+
@@ -2660,10 +2669,10 @@ function renderReceb(){
   // 21/08: a lista ignorava o filtro "Mês da medição" do topo — escolher JUN mostrava JUL.
   // Agora ela obedece o mês selecionado; a caixa "mostrar todas as competências" volta ao antigo.
   const tudoTram=$('cxTramTodas')&&$('cxTramTodas').checked;
-  const tramL=tudoTram?tram:tram.filter(m=>(m.r||'').slice(0,7)===mes);
+  const tramL=tudoTram?tram:tram.filter(naCompSel);
   const foraMes=tram.length-tramL.length;
   if($('cxTramTit')) $('cxTramTit').textContent='Em tramitação — '+
-    (tudoTram?'todas as competências':'competência '+(mes?mesAno(mes):'—'))+
+    (tudoTram?'todas as competências':escopoMes())+
     ' · vira recebimento quando a FDE aprovar';
   const soApres=tramL.filter(m=>!(m.v>0.005)&&(m.e>0.005)).reduce((a,m)=>a+m.e,0);
   const celValor=(m)=>{
@@ -2686,7 +2695,7 @@ function renderReceb(){
         `<td class="num" style="color:${cor}">${d==null?'—':d}</td>`+
         `<td style="color:var(--text-secondary)">${dbr(m.p)}</td>`+
         celValor(m)+`</tr>`;}).join('')
-      :'<tr><td colspan="11" style="color:var(--good)">Nada em tramitação na competência '+(mes?mesAno(mes):'—')+'.'+(foraMes?' <span style="color:var(--text-muted)">'+foraMes+' medição(ões) em tramitação em outras competências — marque “mostrar todas as competências”.</span>':'')+'</td></tr>')+
+      :'<tr><td colspan="11" style="color:var(--good)">Nada em tramitação em '+escopoMes()+'.'+(foraMes?' <span style="color:var(--text-muted)">'+foraMes+' medição(ões) em tramitação em outras competências — marque “mostrar todas as competências”.</span>':'')+'</td></tr>')+
     (tramL.length?`<tr><td colspan="10" style="text-align:right;color:var(--text-secondary)"><b>total aprovado pela FDE</b></td>`+
       `<td class="num"><b>${brl2(soma(tramL))}</b></td></tr>`+
       (soApres?`<tr><td colspan="10" style="text-align:right;color:var(--text-muted)">`+
@@ -2754,9 +2763,11 @@ function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
   const comAprov=[...new Set(RC.meds.map(m=>(m.r||'').slice(0,7)).filter(Boolean))].sort().reverse();
   // ignora competencia no futuro (erro de digitacao no CTR) na hora de escolher o mes
   const alvo=comAprov.find(k=>k<=HOJE_ISO.slice(0,7))||comAprov[0]||comp[0]||'';
-  $('rMes').innerHTML=comp.map(k=>`<option value="${k}"${k===alvo?' selected':''}>${mesAno(k)}`+
-    `${comAprov.includes(k)?'':' (só tramitação)'}</option>`).join('');
-  if(alvo) $('rMes').value=alvo;
+  msInit('rMes',comp,'todas as competências',
+    k=>mesAno(k)+(comAprov.includes(k)?'':' (só tramitação)'),renderReceb);
+  if(alvo&&MS['rMes']){ MS['rMes'].sel.add(alvo);
+    const c=$('rMes').querySelector('.pop input[value="'+alvo+'"]'); if(c)c.checked=true;
+    msLabel('rMes'); }
   msInit('rContrato',uniq(o=>o.contratoAta),'Todos',null,renderReceb);
   msInit('rLote',uniq(o=>o.lote),'Todos',x=>'Lote '+x,renderReceb);
   msInit('rFiscal',uniq(o=>o.fiscal),'Todos',null,renderReceb);
@@ -2766,7 +2777,6 @@ function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
       (RC.meds||[]).map(m=>spDe(m,'Aprovada')),
       (RC.semData||[]).map(m=>spDe(m,'Aprovada'))))].sort(spOrd),
     'Todos',null,renderReceb);
-  $('rMes').onchange=renderReceb;
   if($('cxTramTodas')) $('cxTramTodas').onchange=renderReceb;
   if($('cxTodasComp')) $('cxTodasComp').onchange=renderReceb;
   $('rBusca').oninput=renderReceb;
@@ -2781,8 +2791,7 @@ function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
     imp.innerHTML='';
     const cab=document.createElement('div');
     cab.style.cssText='font-size:11px;margin:0 0 6px';
-    cab.textContent='ATA FDE · '+($('rMes')&&$('rMes').selectedOptions[0]?
-      'competência '+$('rMes').selectedOptions[0].textContent.trim():'')+
+    cab.textContent='ATA FDE · '+escopoMes()+
       ' · gerado em '+new Date().toLocaleDateString('pt-BR');
     imp.appendChild(cab); imp.appendChild(cl);
     document.body.classList.add('umQuadro');
