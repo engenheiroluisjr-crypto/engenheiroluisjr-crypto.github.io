@@ -104,18 +104,32 @@
   #tvNums div{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
   #tvNums .tl{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);display:block}
   #tvNums .tv{font-size:clamp(14px,1.35vw,20px);font-weight:600;display:block;margin-top:3px}
+  .tvh{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary);
+    display:block;margin:10px 0 2px;font-weight:600}
+  body.tv .tvh{font-size:14px;margin:14px 0 4px}
+
+  .bttv{border-color:var(--terceiro) !important;color:var(--terceiro) !important}
+  .bttv:hover{background:var(--surface-2)}
 
   /* modo TV: some com filtro e navegacao, aumenta tudo */
-  body.tv header .tab:not(.btpdf){display:none}
+  body.tv header .tab:not(.bttv){display:none}
+  body.tv #btTvSair{display:inline-block !important}
   body.tv #barraFiltros,body.tv #maisNum,body.tv #proc,body.tv .foot{display:none !important}
-  body.tv #secCarteira>.card:not(#cardTv),body.tv #secCarteira>.grid2,
-  body.tv #secCarteira>details{display:none !important}
-  body.tv #cardTv{min-height:84vh;display:flex;flex-direction:column;justify-content:center;gap:4px}
-  body.tv #tvNums{grid-template-columns:repeat(5,1fr);margin:22px 0 10px}
-  body.tv #tvNums div{padding:16px 18px}
+  /* TV passando obra a obra: fica so a faixa, os 5 cartoes e o quadro da obra */
+  body.tv.tvobras #secCarteira>.card:not(#cardTv),body.tv.tvobras #secCarteira>.grid2,
+  body.tv.tvobras #secCarteira>details{display:none !important}
+  /* TV da visao geral: some o rodizio, ficam os graficos da carteira */
+  body.tv.tvgeral #cardTv{display:none !important}
+  body.tv.tvgeral #secCarteira>details{display:none !important}
+  body.tv.tvgeral .card h2{font-size:16px}
+  body.tv.tvgeral #cCurva{max-width:none}
+  body.tv.tvgeral .grid2{gap:18px}
+  body.tv #cardTv{min-height:96vh;display:flex;flex-direction:column;justify-content:flex-start;gap:2px}
+  body.tv #tvNums{grid-template-columns:repeat(5,1fr);margin:14px 0 6px}
+  body.tv #tvNums div{padding:12px 15px}
   body.tv #tvNums .tl{font-size:13px}
-  body.tv #tvNums .tv{font-size:clamp(22px,2.1vw,34px)}
-  body.tv #tvNome{font-size:clamp(26px,3.1vw,52px)}
+  body.tv #tvNums .tv{font-size:clamp(19px,1.8vw,30px)}
+  body.tv #tvNome{font-size:clamp(24px,2.7vw,44px)}
   body.tv #tvSub{font-size:16px;margin-top:6px}
   body.tv #tvBarra{margin-bottom:14px}
   body.tv #tvNota{font-size:13px;margin-top:14px}
@@ -422,6 +436,10 @@
       <button class="tab" role="tab" id="tPrev" aria-selected="false">Previsão do mês</button>
       <button class="tab" role="tab" id="tReceb" aria-selected="false">Medição e recebimento</button>
       <button class="tab" role="tab" id="tAlerta" aria-selected="false">Conferência <span id="nAlerta"></span></button>
+      <span style="width:1px;height:22px;background:var(--line);margin:0 3px"></span>
+      <button class="tab bttv" id="btTvGeral" title="tela cheia com a visão geral da carteira">▣ TV · visão geral</button>
+      <button class="tab bttv" id="btTvObras" title="tela cheia passando obra a obra">▶ TV · todas as obras</button>
+      <button class="tab bttv" id="btTvSair" style="display:none">✕ sair da TV</button>
     </div>
   </header>
 
@@ -489,11 +507,34 @@
         </select>
         <span id="tvPos" style="font-size:11.5px;color:var(--text-muted)"></span>
         <span id="tvProg"><i></i></span>
-        <button class="bt btpdf" id="btTv" title="tela cheia para a TV">modo TV</button>
+        <button class="bt" id="btTv" title="tela cheia passando obra a obra">▶ tela cheia</button>
       </div>
       <div id="tvNome">–</div><span id="tvSub"></span>
       <div id="tvNums"></div>
       <div id="tvBar"></div>
+      <div id="tvMetaBox" style="margin-top:6px">
+        <span class="tvh">Meta do mês desta obra</span>
+        <div id="tvMeta"></div>
+      </div>
+      <div class="grid2" id="tvGraf" style="margin-top:6px">
+        <div>
+          <span class="tvh">Previsto × medido, mês a mês</span>
+          <div class="legend" style="margin:2px 0 0">
+            <span><i style="background:var(--previsto)"></i>Previsto</span>
+            <span><i style="background:var(--terceiro)"></i>Ajustado</span>
+            <span><i style="background:var(--realizado)"></i>Aprovado</span>
+            <span><i style="background:var(--realizado);opacity:.4"></i>Em tramitação</span></div>
+          <div id="tvBarras"></div>
+        </div>
+        <div>
+          <span class="tvh">Avanço acumulado — a curva S da obra</span>
+          <div class="legend" style="margin:2px 0 0">
+            <span><i style="background:var(--previsto)"></i>% previsto</span>
+            <span><i style="background:var(--terceiro)"></i>% ajustado</span>
+            <span><i style="background:var(--realizado)"></i>% realizado</span></div>
+          <div id="tvCurva"></div>
+        </div>
+      </div>
       <p style="font-size:11px;color:var(--text-muted);margin:8px 0 0;line-height:1.5" id="tvNota"></p>
     </div>
 
@@ -747,6 +788,14 @@
       <div><label class="f">&nbsp;</label><button class="tab btpdf" id="btImprimir">PDF desta obra</button></div>
       <div><label class="f">&nbsp;</label><button class="tab btpdf" id="btPdfTodas">PDF de todas as obras (1 por página)</button></div>
     </div>
+    <div id="faixaObra" style="margin:14px 0;padding:13px 16px;border-radius:10px;
+      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--terceiro)">
+      <span id="foTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+      <span id="foSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+    </div>
+
+    <div class="kpis5" id="oKpiTopo"></div>
+
     <div id="paginaObra"></div>
   </section>
 
@@ -896,6 +945,14 @@
 
   <!-- ============================ CONFERÊNCIA ============================ -->
   <section id="secAlerta" class="oculto">
+    <div id="faixaAlerta" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
+      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--terceiro)">
+      <span id="faTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+      <span id="faSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+    </div>
+
+    <div class="kpis5" id="aKpiTopo"></div>
+
     <div class="card aviso">
       <b>O que esta aba é.</b> Toda vez que o painel é gerado eu confiro o CTR contra as planilhas
       e listo aqui o que não fecha. Não é erro do painel — é dado do controle que precisa de ajuste.
@@ -908,16 +965,18 @@
         <span id="aNota" style="font-size:11px;color:var(--text-muted)"></span></div>
     </div>
 
-    <div class="card" style="margin-top:10px">
-      <h2>Pontos a conferir no CTR</h2>
-      <table class="tbl" id="tabAlerta"></table>
-    </div>
-    <div class="card" style="margin-top:10px">
-      <h2>Obras em andamento sem cronograma</h2>
-      <p style="font-size:11.5px;color:var(--text-muted);margin:-4px 0 8px">
-        Sem planilha M001 com a aba Cronograma preenchida não existe linha de previsto nem meta.</p>
-      <table class="tbl" id="tabSemCron"></table>
-    </div>
+    <details class="drill" open>
+      <summary>Pontos a conferir no CTR<span class="qt" id="aQt1"></span></summary>
+      <div><table class="tbl" id="tabAlerta"></table></div>
+    </details>
+    <details class="drill">
+      <summary>Obras em andamento sem cronograma<span class="qt" id="aQt2"></span></summary>
+      <div>
+        <p style="font-size:11.5px;color:var(--text-muted);margin:-2px 0 8px">
+          Sem planilha M001 com a aba Cronograma preenchida não existe linha de previsto nem meta.</p>
+        <table class="tbl" id="tabSemCron"></table>
+      </div>
+    </details>
   </section>
 
   <div id="proc">
@@ -1279,6 +1338,9 @@ function filtradas(exceto){
 const CORTES={
   atrasadas:{at:1, al:4,  rg:'0 · 1–3 · 4+'},
   ''       :{rg:''},
+  desvObra :{at:-.05,al:-.15,rg:'≥ −5% · −5 a −15% · < −15%', menor:true},
+  saldoObra:{at:.60,al:.85,rg:'≤ 60% · 60–85% · > 85%'},
+  pontos   :{at:1,  al:6,  rg:'0 · 1–5 · 6+'},
   spi      :{at:.95,al:.85,rg:'≥ 0,95 · 0,85–0,95 · < 0,85', menor:true},
   d15      :{at:1, al:6,  rg:'0 · 1–5 · 6+'},
   venc     :{at:1, al:3,  rg:'0 · 1–2 · 3+'},
@@ -1892,6 +1954,17 @@ function tvQuadro(o){
         {anchor:'end',size:13,fill:Math.abs(dev)<0.005?'var(--good)':(dev>0?'var(--good)':'var(--critical)')});
   txt(s,ml,20,'Quanto da obra já foi medido',{anchor:'start',size:11,fill:'var(--text-muted)'});
 
+  // --- os mesmos graficos da Visao geral, agora com os numeros desta obra ----
+  const temCron=!!o.cronograma;
+  const temMes=temCron&&(o.serie||[]).some(x=>x.k===MES_HOJE());
+  $('tvMetaBox').style.display=temMes?'':'none';
+  $('tvGraf').style.display=temCron?'':'none';
+  if(temCron){
+    if(temMes){ try{ alvoDoMes($('tvMeta'),o.serie); }catch(e){ $('tvMeta').innerHTML=''; } }
+    try{ barras($('tvBarras'),o.serie,220,true); }catch(e){ $('tvBarras').innerHTML=''; }
+    try{ curva($('tvCurva'),o.serie,o.valor); }catch(e){ $('tvCurva').innerHTML=''; }
+  }
+
   $('tvNota').innerHTML=o.cronograma
     ? 'Barra cheia: aprovado pela FDE. Hachurada: lançado e ainda em tramitação. '+
       'O traço vertical é onde o cronograma do Relatório de Vistoria manda a obra estar em <b>'+mesAno(MES_REF)+'</b>.'
@@ -1928,6 +2001,78 @@ function tvIniciar(obras){
   const j=TV.lista.findIndex(o=>o.cod===antes);
   TV.i=j>=0?j:0;
   tvMostrar(); tvAgenda();
+}
+
+/* Faixa de titulo + os cinco cartoes da pagina da obra. */
+function topoObra(o,prevHoje,desvioF){
+  const sal=Math.max(o.valor-o.medido-(o.tramitacao||0),0);
+  const pSal=o.valor?sal/o.valor:0;
+  const hoje=new Date(); hoje.setHours(0,0,0,0);
+  const d=o.fimPrev?Math.round((new Date(o.fimPrev)-hoje)/86400000):null;
+
+  const partes=[`<b>${o.cod}</b> · ${esc(o.unidade||'')}`];
+  if(o.cronograma) partes.push(Math.abs(desvioF)<0.005?'em dia com o cronograma'
+      :(desvioF>0?`adiantada em <b>${pct(desvioF)}</b>`:`atrasada em <b>${pct(Math.abs(desvioF))}</b>`));
+  else partes.push('<b>sem cronograma no CTR</b>');
+  if(d!==null) partes.push(d<0?`prazo vencido há <b>${-d}</b> dias`:`vence em <b>${d}</b> dias`);
+  $('foTexto').innerHTML=partes.join(' · ').replace(/·([^·]*)$/,'e$1');
+  $('foSub').textContent=[o.cidade,(o.engs||[]).join(' · '),o.empreiteira,
+      'contrato '+(o.contrato||'—'),'PI '+(o.pi||'—'),o.status].filter(Boolean).join('  ·  ');
+  $('faixaObra').style.borderLeftColor =
+    (!o.cronograma||desvioF<-0.15||(d!==null&&d<0))?'var(--critical)'
+    :(desvioF<-0.05||(d!==null&&d<=15))?'var(--warning)':'var(--good)';
+
+  $('oKpiTopo').innerHTML=
+    cartaoTopo({titulo:'Contratado',chave:'',bruto:0,
+      valor:brl(o.valor), sub:'contrato '+(o.contratoAta||'—')+(o.lote?' · lote '+o.lote:'')})+
+    cartaoTopo({titulo:'Aprovado pela FDE',chave:'',bruto:0,
+      valor:brl(o.medido), sub:pct(o.valor?o.medido/o.valor:0)+' do contrato'})+
+    cartaoTopo({titulo:'Em tramitação',chave:'',bruto:0,
+      valor:o.tramitacao?brl(o.tramitacao):'—',
+      sub:o.tramitacao?'lançado e aguardando a FDE':'nada aguardando aprovação'})+
+    cartaoTopo({titulo:'Saldo a medir',chave:'saldoObra',bruto:pSal,
+      valor:brl(sal), sub:pct(pSal)+' do contrato ainda por medir'})+
+    cartaoTopo({titulo:'Desvio contra o cronograma',chave:'desvObra',bruto:o.cronograma?desvioF:0,
+      valor:o.cronograma?((desvioF>=0?'+':'−')+pct(Math.abs(desvioF))):'–',
+      sub:o.cronograma?('cronograma manda '+pct(o.valor?prevHoje/o.valor:0)+' até '+mesAno(MES_REF)):'sem linha de previsto'});
+}
+
+/* Faixa de titulo + os cinco cartoes da aba de conferencia. */
+function topoAlerta(ALERTAS,SEMCRON){
+  const porTipo={};
+  ALERTAS.forEach(a=>{porTipo[a.tipo]=(porTipo[a.tipo]||0)+1;});
+  const tipos=Object.entries(porTipo).sort((a,b)=>b[1]-a[1]);
+  const vSem=SEMCRON.reduce((a,o)=>a+(o.valor||0),0);
+  const semData=(D.receb&&D.receb.semData)?D.receb.semData.length:0;
+  const vSemData=(D.receb&&D.receb.semData)?D.receb.semData.reduce((a,m)=>a+(m.v||0),0):0;
+
+  const partes=[];
+  partes.push(ALERTAS.length?`<b>${ALERTAS.length}</b> ponto${ALERTAS.length>1?'s':''} a conferir no CTR`
+                            :'Nenhum ponto a conferir no CTR');
+  if(SEMCRON.length) partes.push(`<b>${SEMCRON.length}</b> obra${SEMCRON.length>1?'s':''} em andamento sem cronograma`);
+  if(semData) partes.push(`<b>${semData}</b> medições aprovadas sem data`);
+  $('faTexto').innerHTML=partes.join(' · ').replace(/·([^·]*)$/,'e$1');
+  $('faSub').textContent = tipos.length
+    ? 'por tipo: '+tipos.map(([t,n])=>t+' ('+n+')').join(' · ')
+    : 'o controle fechou em todos os testes desta geração';
+  $('faixaAlerta').style.borderLeftColor =
+    (ALERTAS.length>=6||semData>=50)?'var(--critical)':(ALERTAS.length||SEMCRON.length)?'var(--warning)':'var(--good)';
+
+  $('aKpiTopo').innerHTML=
+    cartaoTopo({titulo:'Pontos a conferir',chave:'pontos',bruto:ALERTAS.length,
+      valor:ALERTAS.length, sub:tipos.length?('maior grupo: '+tipos[0][0]+' ('+tipos[0][1]+')'):'nada a ajustar'})+
+    cartaoTopo({titulo:'Obras sem cronograma',chave:'pontos',bruto:SEMCRON.length,
+      valor:SEMCRON.length, sub:SEMCRON.length?brl(vSem)+' de contrato fora das metas':'todas as obras têm cronograma'})+
+    cartaoTopo({titulo:'Aprovadas sem data',chave:'semData',bruto:semData,
+      valor:semData, sub:semData?brl(vSemData)+' fora do calendário de recebimento':'nenhuma pendência'})+
+    cartaoTopo({titulo:'Obras no controle',chave:'',bruto:0,
+      valor:D.obras.length, sub:D.comCron+' com cronograma'})+
+    cartaoTopo({titulo:'Gerado em',chave:'',bruto:0,
+      valor:D.gerado.slice(8,10)+'/'+D.gerado.slice(5,7),
+      sub:'a conferência roda a cada geração do painel'});
+
+  const q1=$('aQt1'); if(q1) q1.textContent=' · '+ALERTAS.length+' pontos';
+  const q2=$('aQt2'); if(q2) q2.textContent=' · '+SEMCRON.length+' obras';
 }
 
 function barrasEmp(el,lista){
@@ -2124,6 +2269,7 @@ function renderObra(cod){
     </div>
   </div>`;
 
+  topoObra(o,prevHoje,desvioF);
   $('btInfoObra').onclick=()=>$('rodapeObra').classList.toggle('aberto');
 
   barras($('oBar'),o.serie,240,true);
@@ -2928,6 +3074,7 @@ function renderAlerta(){
   if($('aNota')) $('aNota').textContent=msVals('aFiscal').length
     ? `${ALERTAS.length} de ${ALERTAS_T.length} pontos e ${SEMCRON.length} de ${SEMCRON_T.length} obras sem cronograma neste fiscal.`
     : `${ALERTAS_T.length} pontos a conferir · ${SEMCRON_T.length} obras em andamento sem cronograma.`;
+  topoAlerta(ALERTAS,SEMCRON);
   $('tabAlerta').innerHTML='<thead><tr><th>Tipo</th><th>Obra</th><th>Contrato FDE / PI</th>'+
     '<th>O que está estranho</th></tr></thead><tbody>'+
     (ALERTAS.length?ALERTAS.map(a=>`<tr><td style="color:var(--warning)">${a.tipo}</td>`+
@@ -3455,16 +3602,32 @@ $('tvPlay').onclick=function(){
   tvAgenda();};
 $('tvSeg').onchange=tvAgenda;
 $('tvOrd').onchange=()=>{TV.i=0; TV.lista=tvOrdenar(filtradas()); tvMostrar(); tvAgenda();};
-$('btTv').onclick=function(){
-  const lig=!document.body.classList.contains('tv');
-  document.body.classList.toggle('tv',lig);
-  this.textContent=lig?'sair do modo TV':'modo TV';
-  if(lig){ TV.pausado=false; $('tvPlay').textContent='⏸ pausar'; tvAgenda();
-    if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{}); }
-  else if(document.exitFullscreen&&document.fullscreenElement) document.exitFullscreen().catch(()=>{});
-  window.scrollTo(0,0);};
+/* Dois modos de TV: a visao geral da carteira, ou o rodizio obra a obra. */
+function tvEntrar(modo){
+  mostra('cart');
+  document.body.classList.add('tv');
+  document.body.classList.toggle('tvgeral',modo==='geral');
+  document.body.classList.toggle('tvobras',modo==='obras');
+  if(modo==='obras'){ TV.pausado=false; $('tvPlay').textContent='⏸ pausar'; tvAgenda(); }
+  else { clearInterval(TV.timer); clearInterval(TV.tick); }
+  if(document.documentElement.requestFullscreen&&!document.fullscreenElement)
+    document.documentElement.requestFullscreen().catch(()=>{});
+  window.scrollTo(0,0);
+}
+function tvSair(){
+  document.body.classList.remove('tv','tvgeral','tvobras');
+  tvAgenda();
+  if(document.exitFullscreen&&document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+  window.scrollTo(0,0);
+}
+$('btTvGeral').onclick=()=>tvEntrar('geral');
+$('btTvObras').onclick=()=>tvEntrar('obras');
+$('btTvSair').onclick =tvSair;
+$('btTv').onclick     =()=>tvEntrar('obras');
+document.addEventListener('fullscreenchange',()=>{
+  if(!document.fullscreenElement&&document.body.classList.contains('tv')) tvSair();});
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&document.body.classList.contains('tv')) $('btTv').click();
+  if(e.key==='Escape'&&document.body.classList.contains('tv')) tvSair();
   if($('secCarteira').classList.contains('oculto')) return;
   if(e.key==='ArrowRight'){tvProx(1); tvAgenda();}
   if(e.key==='ArrowLeft'){tvProx(-1); tvAgenda();}});
