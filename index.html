@@ -62,6 +62,103 @@
   .kpi .v{font-size:clamp(13px,1.15vw,21px);font-weight:600;line-height:1.15;display:block;
           white-space:nowrap;letter-spacing:-.2px}
   .kpi .l{font-size:11px;color:var(--text-secondary);margin-top:3px;display:block}
+
+  /* --- Regiao 2/3: cartoes do topo com faixa de alerta --------------------- */
+  .kpis5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px}
+  @media(max-width:900px){.kpis5{grid-template-columns:repeat(2,1fr)}}
+  .kpiA{position:relative;overflow:hidden;padding:14px 14px 15px;text-align:left}
+  .kpiA .t{font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-muted);
+    display:flex;align-items:center;gap:5px}
+  .kpiA .v{font-size:clamp(19px,1.9vw,30px);font-weight:650;line-height:1.1;display:block;margin:5px 0 2px}
+  .kpiA .s{font-size:11px;color:var(--text-secondary);display:block;line-height:1.35}
+  .kpiA .faixa{position:absolute;left:0;right:0;bottom:0;height:3px}
+  .kpiA[data-nv="ok"]    .faixa{background:var(--good)}
+  .kpiA[data-nv="at"]    .faixa{background:var(--warning)}
+  .kpiA[data-nv="al"]    .faixa{background:var(--critical)}
+  .kpiA[data-nv="al"]{border-color:color-mix(in srgb,var(--critical) 45%,var(--line))}
+  .kpiA .rg{font-size:10px;color:var(--text-muted);margin-top:6px;display:block;line-height:1.3}
+
+  /* --- Regiao 1: faixa de titulo ------------------------------------------ */
+  #faixaTit{margin:0 0 10px;padding:13px 16px;border-radius:10px;
+    background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--terceiro)}
+  #faixaTit .ft{font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)}
+  #faixaTit .fs{font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block}
+
+  /* --- secundarios recolhiveis -------------------------------------------- */
+  #cCurva{max-width:1140px;margin:0 auto}
+
+  /* --- rodizio de obras: o painel fica numa TV, entao ele passa sozinho ---- */
+  #cardTv h2{margin-bottom:2px}
+  #tvBarra{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0 4px}
+  #tvBarra .bt{background:var(--surface-2);border:1px solid var(--line);color:var(--text-secondary);
+    border-radius:7px;padding:5px 11px;font-size:12px;cursor:pointer;font-family:inherit}
+  #tvBarra .bt:hover{border-color:var(--terceiro);color:var(--text-primary)}
+  #tvBarra select{background:var(--surface-2);border:1px solid var(--line);color:var(--text-secondary);
+    border-radius:7px;padding:5px 8px;font-size:12px;font-family:inherit}
+  #tvProg{flex:1 1 120px;height:3px;border-radius:2px;background:var(--trilho);overflow:hidden;min-width:80px}
+  #tvProg i{display:block;height:100%;width:0;background:var(--terceiro);transition:width .25s linear}
+  #tvNome{font-size:clamp(17px,1.8vw,27px);font-weight:650;line-height:1.2;color:var(--text-primary)}
+  #tvSub{font-size:12px;color:var(--text-muted);margin-top:3px;display:block}
+  #tvNums{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:12px 0 6px}
+  @media(max-width:900px){#tvNums{grid-template-columns:repeat(2,1fr)}}
+  #tvNums div{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+  #tvNums .tl{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);display:block}
+  #tvNums .tv{font-size:clamp(14px,1.35vw,20px);font-weight:600;display:block;margin-top:3px}
+
+  /* modo TV: some com filtro e navegacao, aumenta tudo */
+  body.tv header .tab:not(.btpdf){display:none}
+  body.tv #barraFiltros,body.tv #maisNum,body.tv #proc,body.tv .foot{display:none !important}
+  body.tv #secCarteira>.card:not(#cardTv),body.tv #secCarteira>.grid2,
+  body.tv #secCarteira>details{display:none !important}
+  body.tv #cardTv{min-height:84vh;display:flex;flex-direction:column;justify-content:center;gap:4px}
+  body.tv #tvNums{grid-template-columns:repeat(5,1fr);margin:22px 0 10px}
+  body.tv #tvNums div{padding:16px 18px}
+  body.tv #tvNums .tl{font-size:13px}
+  body.tv #tvNums .tv{font-size:clamp(22px,2.1vw,34px)}
+  body.tv #tvNome{font-size:clamp(26px,3.1vw,52px)}
+  body.tv #tvSub{font-size:16px;margin-top:6px}
+  body.tv #tvBarra{margin-bottom:14px}
+  body.tv #tvNota{font-size:13px;margin-top:14px}
+  body.tv #faixaTit .ft{font-size:clamp(19px,2vw,30px)}
+  body.tv .kpiA .v{font-size:clamp(22px,2.2vw,36px)}
+  body.tv #btTv{display:inline-block}
+
+  /* --- Regiao 6: o rodape de procedencia ---------------------------------- */
+  #proc{display:flex;flex-wrap:wrap;gap:6px 22px;align-items:center;
+    margin:16px 0 0;padding:9px 14px;border-radius:8px;
+    background:var(--surface-1);border:1px solid var(--line);
+    font-size:11px;color:var(--text-muted);line-height:1.5}
+  #proc b{color:var(--text-secondary);font-weight:600}
+  #proc .pc{display:flex;align-items:center;gap:6px;white-space:nowrap}
+  #proc .pc:before{content:'';width:5px;height:5px;border-radius:50%;
+    background:var(--terceiro);flex:none}
+  #proc .pc.larga{white-space:normal}
+
+  /* --- Regiao 7: o espaco vazio nao e sobra, e decisao -------------------- */
+  .grid2{gap:14px}
+  section>.card{margin-bottom:14px}
+  section>.grid2{margin-bottom:14px}
+  .kpis5{margin-bottom:16px}
+  #faixaTit{margin-bottom:14px}
+
+  /* --- Regiao 5: o detalhe existe, so nao compete na primeira camada ------ */
+  details.drill{background:var(--surface-1);border:1px solid var(--line);
+    border-radius:10px;padding:0 14px;margin-bottom:14px}
+  details.drill>summary{cursor:pointer;list-style:none;user-select:none;
+    padding:12px 0;font-size:13px;font-weight:600;letter-spacing:.02em;
+    text-transform:uppercase;color:var(--text-secondary)}
+  details.drill>summary::-webkit-details-marker{display:none}
+  details.drill>summary:before{content:'▸ ';color:var(--terceiro)}
+  details.drill[open]>summary:before{content:'▾ '}
+  details.drill>summary .qt{text-transform:none;font-weight:400;color:var(--text-muted);
+    font-size:11.5px;margin-left:6px}
+  details.drill>div:last-child{padding-bottom:14px}
+  #maisNum{margin:0 0 10px}
+  #maisNum>summary{cursor:pointer;font-size:11.5px;color:var(--text-secondary);
+    list-style:none;padding:5px 0;user-select:none}
+  #maisNum>summary::-webkit-details-marker{display:none}
+  #maisNum>summary:before{content:'▸ ';color:var(--terceiro)}
+  #maisNum[open]>summary:before{content:'▾ '}
   /* ---- Caixa: dois blocos com titulo, para nao misturar dinheiro firme com estimativa */
   .cxbloco{padding-top:6px}
   .cxgrupo{margin-bottom:6px}
@@ -255,6 +352,14 @@
     svg text{fill:#000 !important}
     .obs{display:block !important}
     .foot{border-top:1px solid #9a9a94}
+    /* a faixa de alerta e o rodape de procedencia precisam sair na impressao */
+    .kpiA .faixa{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .kpiA{background:#fff !important;border:1px solid #9a9a94 !important}
+    #proc{background:#fff !important;border:1px solid #9a9a94 !important;color:#444 !important}
+    #faixaTit,#faixaEmp{background:#fff !important;border:1px solid #9a9a94 !important;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+    details.drill{background:#fff !important;border:1px solid #9a9a94 !important;break-inside:avoid}
+    details.drill>summary{color:#333 !important}
     .legend i{border:1px solid #000}
     table.tbl th,table.tbl td{border-color:#9a9a94 !important}
     tr[style*="background:#20201d"]{background:#eeeee8 !important}
@@ -311,6 +416,7 @@
     <h1><span class="logo"><i style="height:10px"></i><i style="height:16px"></i><i style="height:22px"></i></span>GESTÃO DE OBRAS - SEDE ALPHAVILLE BARUERI</h1>
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" id="tCart" aria-selected="true">Visão geral</button>
+      <button class="tab" role="tab" id="tLista" aria-selected="false">Contrato das obras</button>
       <button class="tab" role="tab" id="tObra" aria-selected="false">Página da obra</button>
       <button class="tab" role="tab" id="tEmpr" aria-selected="false">Empreiteiros</button>
       <button class="tab" role="tab" id="tPrev" aria-selected="false">Previsão do mês</button>
@@ -344,17 +450,63 @@
 
   <!-- ============================ CARTEIRA ============================ -->
   <section id="secCarteira">
-    <div class="kpis">
-      <div class="card kpi"><span class="v" id="kObras">–</span><span class="l">Obras</span></div>
-      <div class="card kpi"><span class="v" id="kCtr">–</span><span class="l">Contratado</span></div>
-      <div class="card kpi"><span class="v" id="kMed">–</span><span class="l">Medido aprovado pela FDE</span></div>
-      <div class="card kpi"><span class="v" id="kTra">–</span><span class="l">Em tramitação (não aprovado)</span></div>
-      <div class="card kpi"><span class="v" id="kSaldo">–</span><span class="l">Saldo a medir (contrato − aprovado)</span></div>
-      <div class="card kpi"><span class="v" id="kSaldoAtivo">–</span><span class="l">Saldo das obras ativas</span></div>
-      <div class="card kpi"><span class="v" id="kPct">–</span><span class="l">% financeiro aprovado</span></div>
-      <div class="card kpi"><span class="v" id="kAtr">–</span><span class="l">Atrasadas</span></div>
-      <div class="card kpi"><span class="v" id="kCron">–</span><span class="l">Com cronograma real</span></div>
+    <div id="faixaTit"><span class="ft" id="ftTexto">–</span><span class="fs" id="ftSub"></span></div>
+
+    <div class="kpis5" id="kpiTopo"></div>
+
+    <details id="maisNum">
+      <summary>mais números da carteira</summary>
+      <div class="kpis">
+        <div class="card kpi"><span class="v" id="kObras">–</span><span class="l">Obras</span></div>
+        <div class="card kpi"><span class="v" id="kCtr">–</span><span class="l">Contratado</span></div>
+        <div class="card kpi"><span class="v" id="kMed">–</span><span class="l">Medido aprovado pela FDE</span></div>
+        <div class="card kpi"><span class="v" id="kTra">–</span><span class="l">Em tramitação (não aprovado)</span></div>
+        <div class="card kpi"><span class="v" id="kSaldo">–</span><span class="l">Saldo a medir (contrato − aprovado)</span></div>
+        <div class="card kpi"><span class="v" id="kSaldoAtivo">–</span><span class="l">Saldo das obras ativas</span></div>
+        <div class="card kpi"><span class="v" id="kPct">–</span><span class="l">% financeiro aprovado</span></div>
+        <div class="card kpi"><span class="v" id="kAtr">–</span><span class="l">Atrasadas</span></div>
+        <div class="card kpi"><span class="v" id="kCron">–</span><span class="l">Com cronograma real</span></div>
+      </div>
+    </details>
+
+    <div class="card" id="cardTv" style="margin-bottom:14px">
+      <div id="tvBarra">
+        <button class="bt" id="tvAnt" title="obra anterior">‹</button>
+        <button class="bt" id="tvPlay" title="pausar/continuar">⏸ pausar</button>
+        <button class="bt" id="tvProx" title="próxima obra">›</button>
+        <select id="tvSeg" title="tempo em cada obra">
+          <option value="10">10 s</option>
+          <option value="15" selected>15 s</option>
+          <option value="20">20 s</option>
+          <option value="30">30 s</option>
+          <option value="60">1 min</option>
+        </select>
+        <select id="tvOrd" title="ordem do rodízio">
+          <option value="atraso">as mais atrasadas primeiro</option>
+          <option value="prazo">as que vencem primeiro</option>
+          <option value="saldo">maior saldo a medir</option>
+          <option value="cod">número da obra</option>
+        </select>
+        <span id="tvPos" style="font-size:11.5px;color:var(--text-muted)"></span>
+        <span id="tvProg"><i></i></span>
+        <button class="bt btpdf" id="btTv" title="tela cheia para a TV">modo TV</button>
+      </div>
+      <div id="tvNome">–</div><span id="tvSub"></span>
+      <div id="tvNums"></div>
+      <div id="tvBar"></div>
+      <p style="font-size:11px;color:var(--text-muted);margin:8px 0 0;line-height:1.5" id="tvNota"></p>
     </div>
+
+    <div class="card" style="margin-bottom:10px">
+      <h2>Curva S — valor planejado x agregado</h2>
+      <p class="escopo" style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px"></p>
+      <div class="legend"><span><i style="background:var(--previsto)"></i>Planejado (PV)</span><span><i style="background:var(--realizado)"></i>Agregado (EV)</span><span><i style="background:var(--terceiro)"></i>Projeção no ritmo atual</span></div>
+      <div id="cCurva"></div>
+      <p style="font-size:11px;color:var(--text-muted);margin:8px 0 0;line-height:1.5">
+        O <b>agregado</b> para na data de status — não existe medição no futuro. Daí para
+        frente a linha tracejada projeta o ritmo medido até aqui (SPI). O vão entre ela e o
+        planejado é o que a carteira deixa de entregar se nada mudar.</p>
+      </div>
 
     <div class="card" style="margin-bottom:10px">
       <h2>Meta do mês corrente</h2>
@@ -375,25 +527,14 @@
           marcado na barra.</p>
       </div>
       <div class="card">
-        <h2>Curva S — valor planejado x agregado</h2>
+        <h2>SPI — índice de desempenho de prazo</h2>
         <p class="escopo" style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px"></p>
-        <div class="legend"><span><i style="background:var(--previsto)"></i>Planejado (PV)</span><span><i style="background:var(--realizado)"></i>Agregado (EV)</span><span><i style="background:var(--terceiro)"></i>Projeção no ritmo atual</span></div>
-        <div id="cCurva"></div>
+        <div class="legend"><span><i style="background:var(--realizado)"></i>SPI contando tramitação</span><span><i style="background:var(--text-secondary)"></i>SPI só do aprovado</span><span><i style="background:var(--terceiro);opacity:.35"></i>Faixa aceitável 0,95–1,05</span></div>
+        <div id="cSpi"></div>
         <p style="font-size:11px;color:var(--text-muted);margin:8px 0 0;line-height:1.5">
-          O <b>agregado</b> para na data de status — não existe medição no futuro. Daí para
-          frente a linha tracejada projeta o ritmo medido até aqui (SPI). O vão entre ela e o
-          planejado é o que a carteira deixa de entregar se nada mudar.</p>
+          Acima de 1,00 a carteira está adiantada. A distância entre as duas linhas é o gargalo
+          de aprovação da FDE: obra feita, medição lançada, pagamento ainda parado na fila.</p>
       </div>
-    </div>
-
-    <div class="card" style="margin-top:10px">
-      <h2>SPI — índice de desempenho de prazo</h2>
-      <p class="escopo" style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px"></p>
-      <div class="legend"><span><i style="background:var(--realizado)"></i>SPI contando tramitação</span><span><i style="background:var(--text-secondary)"></i>SPI só do aprovado</span><span><i style="background:var(--terceiro);opacity:.35"></i>Faixa aceitável 0,95–1,05</span></div>
-      <div id="cSpi"></div>
-      <p style="font-size:11px;color:var(--text-muted);margin:8px 0 0;line-height:1.5">
-        Acima de 1,00 a carteira está adiantada. A distância entre as duas linhas é o gargalo
-        de aprovação da FDE: obra feita, medição lançada, pagamento ainda parado na fila.</p>
     </div>
 
     <div class="card" style="margin-top:10px">
@@ -410,58 +551,122 @@
       </details>
     </div>
 
-    <div class="card" style="margin-top:10px">
-      <h2>Obras — clique para abrir a página da obra</h2>
-      <div style="max-height:460px;overflow:auto"><table class="tbl" id="tabObras"></table></div>
+  </section>
+
+  <!-- ============================ CONTRATO DAS OBRAS ============================
+       A lista que antes vivia no fim da Visao geral, unida a lista de prazo:
+       uma linha por obra, com contrato, medicao e prazo lado a lado. Clique na
+       linha abre a pagina da obra. A Visao geral ficou so com grafico e KPI. -->
+  <section id="secLista" class="oculto">
+    <div id="faixaLista" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
+      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--terceiro)">
+      <span id="flTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+      <span id="flSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
     </div>
 
-    <div class="card" style="margin-top:10px">
+    <div class="kpis5" id="lKpiTopo"></div>
+
+    <div class="card">
       <h2>Prazo — obras que vencem em até 60 dias</h2>
       <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px" id="prazoNota"></p>
-      <div class="kpis" id="prazoKpis" style="margin-bottom:10px"></div>
       <div class="legend" id="prazoLeg"></div>
       <div id="prazoBar"></div>
-      <table class="tbl" id="tabPrazo" style="margin-top:6px"></table>
+    </div>
+
+    <div class="card">
+      <h2>Contrato das obras — clique na linha para abrir a página da obra</h2>
+      <div class="filtros" style="padding:0;border:0;background:none;margin:-2px 0 10px">
+        <div><label class="f">Mostrar</label>
+          <select id="lFiltro">
+            <option value="todas">todas as obras do filtro</option>
+            <option value="ativas">só as em andamento</option>
+            <option value="prazo">só as que vencem em até 60 dias</option>
+            <option value="vencidas">só as com prazo vencido</option>
+            <option value="atrasadas">só as atrasadas no cronograma</option>
+            <option value="semcron">só as sem cronograma</option>
+          </select></div>
+        <div><label class="f">Ordenar por</label>
+          <select id="lOrdem">
+            <option value="cod">número da obra</option>
+            <option value="dias">prazo — o que vence primeiro</option>
+            <option value="saldo">saldo a medir — maior primeiro</option>
+            <option value="valor">valor do contrato — maior primeiro</option>
+            <option value="unidade">nome da unidade</option>
+          </select></div>
+        <div style="flex:1 1 220px"><label class="f">&nbsp;</label>
+          <span id="lQt" style="font-size:11px;color:var(--text-muted);display:block;line-height:2.4"></span></div>
+      </div>
+      <div style="max-height:70vh;overflow:auto"><table class="tbl" id="tabLista"></table></div>
     </div>
   </section>
 
   <!-- ============================ EMPREITEIROS ============================ -->
   <section id="secEmpr" class="oculto">
-    <div class="kpis" id="eKpis"></div>
+    <div id="faixaEmp" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
+      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--terceiro)">
+      <span class="ft" id="feTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+      <span class="fs" id="feSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+    </div>
 
-    <div class="card" style="margin-top:10px">
-      <h2>Empreita — o que é do empreiteiro</h2>
+    <div class="kpis5" id="eKpiTopo"></div>
+
+    <details id="eMaisNum" style="margin:0 0 14px">
+      <summary style="cursor:pointer;font-size:11.5px;color:var(--text-secondary);list-style:none;padding:5px 0">
+        ▸ mais números da empreita</summary>
+      <div class="kpis" id="eKpis"></div>
+    </details>
+
+    <div class="card">
+      <h2>Empreita por empreiteiro — o que é do empreiteiro</h2>
       <span class="base emp">números em valor de EMPREITA (o que a ATLÂNTICA paga ao empreiteiro)</span>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px" id="eNota1"></p>
       <div class="legend">
         <span><i style="background:var(--terceiro)"></i>Valor de empreita (vai para o empreiteiro)</span>
         <span><i style="background:var(--surface-2);border:1px solid var(--line)"></i>Margem (obra − empreita)</span>
       </div>
       <div id="eBar"></div>
-      <table class="tbl" id="eTab" style="margin-top:6px"></table>
+      <details class="drill" style="margin:12px 0 0;padding:0 12px">
+        <summary>tabela completa por empreiteiro<span class="qt" id="eQt"></span></summary>
+        <div><table class="tbl" id="eTab"></table>
+        <p style="font-size:11px;color:var(--text-muted);margin:10px 0 0;line-height:1.55" id="eNota1"></p></div>
+      </details>
     </div>
 
-    <div class="card" style="margin-top:10px">
-      <h2>Carteira do empreiteiro — no valor cheio do contrato</h2>
-      <span class="base ctr">números em valor de CONTRATO COM A FDE (a obra inteira, não só a empreita)</span>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px" id="empNota"></p>
-      <div class="legend" id="empLeg"></div>
-      <div id="empBar"></div>
-      <table class="tbl" id="tabEmp" style="margin-top:6px"></table>
-    </div>
+    <details class="drill">
+      <summary>Carteira do empreiteiro — no valor cheio do contrato<span class="qt"> · obra inteira, não só a empreita</span></summary>
+      <div>
+        <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 10px" id="empNota"></p>
+        <div class="legend" id="empLeg"></div>
+        <div id="empBar"></div>
+        <table class="tbl" id="tabEmp" style="margin-top:6px"></table>
+      </div>
+    </details>
 
-    <div class="card" style="margin-top:10px">
-      <h2>Obra a obra — valor da obra, valor de empreita e %</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px" id="eNota2"></p>
-      <div style="max-height:520px;overflow:auto"><table class="tbl" id="eTabObras"></table></div>
-    </div>
+    <details class="drill">
+      <summary>Obra a obra — valor da obra, valor de empreita e %<span class="qt" id="eQtObras"></span></summary>
+      <div>
+        <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 10px" id="eNota2"></p>
+        <div style="max-height:520px;overflow:auto"><table class="tbl" id="eTabObras"></table></div>
+      </div>
+    </details>
   </section>
 
   <!-- ============================ PREVISÃO DO MÊS ============================ -->
   <section id="secPrev" class="oculto">
-    <div class="kpis" id="pKpis"></div>
+    <div id="faixaPrev" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
+      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--terceiro)">
+      <span id="fpTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+      <span id="fpSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+    </div>
 
-    <div class="card" style="margin-top:10px">
+    <div class="kpis5" id="pKpiTopo"></div>
+
+    <details id="pMaisNum" style="margin:0 0 14px">
+      <summary style="cursor:pointer;font-size:11.5px;color:var(--text-secondary);list-style:none;padding:5px 0">
+        ▸ mais números da previsão</summary>
+      <div class="kpis" id="pKpis"></div>
+    </details>
+
+    <div class="card">
       <h2 id="pTit">Previsão de medição do mês</h2>
       <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px" id="pNota"></p>
       <div class="legend">
@@ -472,11 +677,13 @@
       <div id="pBar"></div>
     </div>
 
-    <div class="card" style="margin-top:10px">
-      <h2>Obra a obra — o que fecha o mês</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px" id="pNota2"></p>
-      <div style="max-height:560px;overflow:auto"><table class="tbl" id="pTab"></table></div>
-    </div>
+    <details class="drill">
+      <summary>Obra a obra — o que fecha o mês<span class="qt" id="pQt"></span></summary>
+      <div>
+        <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 10px" id="pNota2"></p>
+        <div style="max-height:560px;overflow:auto"><table class="tbl" id="pTab"></table></div>
+      </div>
+    </details>
 
     <!-- ---------- Previsão × Lançado: mesmo assunto da aba, por isso vive aqui ----------
          Relatorio de conferencia pedido pelo Luis em 27/08 e juntado a esta aba em 28/08.
@@ -512,17 +719,21 @@
 
       <div class="kpis" id="cKpis" style="margin-top:10px"></div>
 
-      <div class="card" id="cardComp41" style="margin-top:10px">
-      <h2 id="cTit41">Lote 41</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px" id="cNota41"></p>
-      <div style="max-height:620px;overflow:auto"><table class="tbl" id="cTab41"></table></div>
-    </div>
+      <details class="drill" id="cardComp41" style="margin-top:10px">
+        <summary><span id="cTit41">Lote 41</span></summary>
+        <div>
+          <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 10px" id="cNota41"></p>
+          <div style="max-height:620px;overflow:auto"><table class="tbl" id="cTab41"></table></div>
+        </div>
+      </details>
 
-      <div class="card" id="cardComp42" style="margin-top:10px">
-        <h2 id="cTit42">Lote 42</h2>
-        <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px" id="cNota42"></p>
-        <div style="max-height:620px;overflow:auto"><table class="tbl" id="cTab42"></table></div>
-      </div>
+      <details class="drill" id="cardComp42" style="margin-top:10px">
+        <summary><span id="cTit42">Lote 42</span></summary>
+        <div>
+          <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 10px" id="cNota42"></p>
+          <div style="max-height:620px;overflow:auto"><table class="tbl" id="cTab42"></table></div>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -541,6 +752,12 @@
 
   <!-- ==================== MEDIÇÃO E RECEBIMENTO ==================== -->
   <section id="secReceb" class="oculto">
+    <div id="faixaReceb" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
+      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--terceiro)">
+      <span id="frTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+      <span id="frSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+    </div>
+
     <div class="filtros card">
       <div><label class="f">Mês da medição (competência)</label><div class="ms" id="rMes"></div></div>
       <div><label class="f">&nbsp;</label>
@@ -608,8 +825,10 @@
       <table class="tbl" id="rTabMeta"></table>
     </div>
 
-    <div class="card" style="margin-top:10px">
-      <h2>Mês a mês do recebimento</h2>
+    <details class="drill" open>
+      <summary>Mês a mês do recebimento<span class="qt"> · quando o dinheiro entra na conta</span></summary>
+      <div>
+      <h2 style="display:none">Mês a mês do recebimento</h2>
       <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px;line-height:1.6">
         Cada linha é <b>o mês em que o dinheiro entra</b> — quem manda nele é a
         <b>data de aprovação</b>, não a competência: aprovação + <b id="rLegPag0"></b> dias.
@@ -624,14 +843,17 @@
         do mês pelo Relatório de Vistoria.
       </p>
       <table class="tbl" id="rTabMes"></table>
-    </div>
+      </div>
+    </details>
 
-    <div class="card" style="margin-top:10px">
-      <h2 id="rTitMes">Medições aprovadas no mês</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px">
-        Data de aprovação no portal da FDE e o pagamento previsto <b><span id="lgPag2">30</span> dias</b> depois.</p>
-      <div style="max-height:520px;overflow:auto"><table class="tbl" id="rTabMed"></table></div>
-    </div>
+    <details class="drill">
+      <summary><span id="rTitMes">Medições aprovadas no mês</span><span class="qt" id="rQtMed"></span></summary>
+      <div>
+        <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 8px">
+          Data de aprovação no portal da FDE e o pagamento previsto <b><span id="lgPag2">30</span> dias</b> depois.</p>
+        <div style="max-height:520px;overflow:auto"><table class="tbl" id="rTabMed"></table></div>
+      </div>
+    </details>
 
     <div class="card" style="margin-top:10px">
       <h2>Meta × previsão lançada × portal — estou atingindo?</h2>
@@ -697,6 +919,13 @@
       <table class="tbl" id="tabSemCron"></table>
     </div>
   </section>
+
+  <div id="proc">
+    <span class="pc"><b>Fonte:</b>&nbsp;<span id="pcFonte">CTR FDE Barueri</span></span>
+    <span class="pc"><b>Recorte:</b>&nbsp;<span id="pcPeriodo">–</span></span>
+    <span class="pc"><b>Atualizado:</b>&nbsp;<span id="pcAtu">–</span></span>
+    <span class="pc larga"><b>Fora da conta:</b>&nbsp;<span id="pcExcl">–</span></span>
+  </div>
 
   <div class="foot" id="rodape">
     <button type="button" class="maisInfo" id="btInfo">fonte dos dados e critérios</button>
@@ -1041,6 +1270,52 @@ function filtradas(exceto){
     (!b||String(o.cod).includes(b)||(o.unidade||'').toLowerCase().includes(b)));
 }
 
+/* ---------------------------------------------------------------------------
+   Regiao 2 e 3 do painel: cartao do topo com faixa de alerta.
+   O corte de cada cartao e definido AQUI, antes de ver o numero da semana —
+   faixa criada depois vira justificativa.
+   nivel: 'ok' (verde) | 'at' (amarelo) | 'al' (vermelho)
+--------------------------------------------------------------------------- */
+const CORTES={
+  atrasadas:{at:1, al:4,  rg:'0 · 1–3 · 4+'},
+  ''       :{rg:''},
+  spi      :{at:.95,al:.85,rg:'≥ 0,95 · 0,85–0,95 · < 0,85', menor:true},
+  d15      :{at:1, al:6,  rg:'0 · 1–5 · 6+'},
+  venc     :{at:1, al:3,  rg:'0 · 1–2 · 3+'},
+  meta     :{at:.25,al:.60,rg:'≤ 25% · 25–60% · > 60%'},
+  // --- aba dos empreiteiros ---
+  empPct   :{at:.55,al:.62,rg:'≤ 55% · 55–62% · > 62%'},           // empreita sobre a obra
+  margem   :{at:.45,al:.38,rg:'≥ 45% · 38–45% · < 38%', menor:true},
+  desvEmp  :{at:-.05,al:-.20,rg:'≥ −5% · −5 a −20% · < −20%', menor:true},
+  tramEmp  :{at:.30,al:.50,rg:'≤ 30% · 30–50% · > 50%'},
+  concentr :{at:.30,al:.40,rg:'≤ 30% · 30–40% · > 40%'},
+  // --- aba da previsao do mes ---
+  atrasoAc :{at:.20,al:.50,rg:'≤ 20% · 20–50% · > 50%'},   // atraso vindo de tras ÷ meta
+  lancado  :{at:.60,al:.30,rg:'≥ 60% · 30–60% · < 30%', menor:true},
+  ppc      :{at:.80,al:.60,rg:'≥ 80% · 60–80% · < 60%', menor:true},
+  esforco  :{at:1.3,al:1.8,rg:'≤ 1,3× · 1,3–1,8× · > 1,8×'},// previsao do mes ÷ meta do cronograma
+  // --- aba de medicao e recebimento ---
+  vencido  :{at:1,   al:500000,rg:'R$ 0 · até R$ 500 mil · acima'},
+  semData  :{at:1,   al:50,   rg:'0 · 1–49 · 50+'},
+  tramPar  :{at:.25, al:.45,  rg:'≤ 25% · 25–45% · > 45%'}
+};
+function nivelDe(chave,v){
+  const c=CORTES[chave]; if(!c||v===null||v===undefined||isNaN(v)) return 'ok';
+  if(c.menor) return v<c.al?'al':(v<c.at?'at':'ok');
+  return v>=c.al?'al':(v>=c.at?'at':'ok');
+}
+function cartaoTopo({icone,titulo,valor,sub,chave,bruto}){
+  const nv=nivelDe(chave,bruto);
+  const cor=nv==='al'?'var(--critical)':nv==='at'?'var(--warning)':'var(--good)';
+  return `<div class="card kpiA" data-nv="${nv}">`+
+    `<span class="t">${icone||''} ${titulo}</span>`+
+    `<span class="v" style="color:${cor}">${valor}</span>`+
+    `<span class="s">${sub||''}</span>`+
+    `<span class="rg">corte: ${(CORTES[chave]||{}).rg||''} <span style="color:var(--good)">■</span>`+
+      `<span style="color:var(--warning)">■</span><span style="color:var(--critical)">■</span></span>`+
+    `<span class="faixa"></span></div>`;
+}
+
 function renderCarteira(){
   const obras=filtradas();
   const vt=obras.reduce((a,b)=>a+b.valor,0), mt=obras.reduce((a,b)=>a+b.medido,0);
@@ -1099,6 +1374,11 @@ function renderCarteira(){
     'São '+atr.length+' obras atrasadas'+(atr.length?', e alcançar o cronograma em todas custaria <b>'+brl(somaAtr)+'</b>':'')+'. '+
     (atr.length>12?'O placar mostra as 12 piores; a lista completa está logo abaixo.':'');
   rankingAtraso($('cAtraso'),atr.slice(0,12));
+
+  // ---- Regiao 1: faixa de titulo — conclui, nao descreve --------------------
+  // ---- Regiao 2/3: os cinco cartoes com faixa de alerta --------------------
+  topoDePrazo(obras,comCron,serie);
+  tvIniciar(obras);
   $('tabAtraso').innerHTML='<thead><tr><th>#</th><th>Nº</th><th>Unidade</th><th>Cidade</th>'+
     '<th>Empreiteira</th><th class="num">Deveria estar</th><th class="num">Está em</th>'+
     '<th class="num">Pontos atrás</th><th class="num">Falta medir</th>'+
@@ -1116,72 +1396,6 @@ function renderCarteira(){
   // ---- prazo: dashboard das obras que vencem em ate 60 dias -----------------
   const HJ=D.gerado;
   const diasDe=o=>o.fimPrev?Math.round((new Date(o.fimPrev)-new Date(HJ))/86400000):null;
-  const FAIXAS=[
-    {id:'venc', rot:'Prazo vencido',      cor:'var(--critical)', tst:d=>d<0},
-    {id:'d15',  rot:'Vence em até 15 dias',cor:'var(--serious)',  tst:d=>d>=0&&d<=15},
-    {id:'d30',  rot:'16 a 30 dias',        cor:'var(--warning)',  tst:d=>d>15&&d<=30},
-    {id:'d60',  rot:'31 a 60 dias',        cor:'var(--good)',     tst:d=>d>30&&d<=60}];
-  const faixaDe=d=>FAIXAS.find(f=>f.tst(d));
-  const radar=obras.filter(o=>ATIVA(o)&&o.fimPrev).map(o=>({o,d:diasDe(o)}))
-                   .filter(x=>x.d<=60).sort((a,b)=>a.d-b.d);
-  const salDe=o=>Math.max(o.valor-o.medido,0);
-
-  $('prazoNota').textContent='Obras em execução, atenção ou atrasadas cujo término previsto '+
-    '(início + prazo do CTR) já passou ou cai nos próximos 60 dias. Respeita os filtros acima.';
-
-  // números do topo
-  const cont=f=>radar.filter(x=>faixaDe(x.d)&&faixaDe(x.d).id===f).length;
-  const somaSal=lst=>lst.reduce((a,x)=>a+salDe(x.o),0);
-  $('prazoKpis').innerHTML=
-    `<div class="card kpi"><span class="v">${radar.length}</span><span class="l">Obras no radar (60 dias)</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--critical)">${cont('venc')}</span><span class="l">Com prazo vencido</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--serious)">${cont('d15')}</span><span class="l">Vencem em até 15 dias</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--previsto)">${brl(somaSal(radar))}</span><span class="l">Saldo a medir nessas obras</span></div>`;
-
-  $('prazoLeg').innerHTML=FAIXAS.map(f=>{
-    const n=cont(f.id);
-    return `<span><i style="background:${f.cor}"></i>${f.rot} <span style="color:var(--text-muted)">(${n})</span></span>`;
-  }).join('');
-
-  barrasPrazo($('prazoBar'),radar);
-
-  $('tabPrazo').innerHTML='<thead><tr><th>Nº</th><th>Unidade</th><th>Cidade</th><th>Engenheiro</th>'+
-    '<th>Empreiteira</th><th>Término previsto</th><th class="num">Dias</th>'+
-    '<th class="num">Contratado</th><th class="num">Saldo a medir</th><th class="num">% real.</th></tr></thead><tbody>'+
-    (radar.length?radar.map(({o,d})=>{
-      const fx=faixaDe(d)||{cor:'var(--text-primary)',rot:''};
-      return `<tr class="clic" data-cod="${o.cod}"><td>${o.cod}</td><td>${o.unidade||''}</td>`+
-        `<td>${o.cidade||''}</td><td>${(o.engs||[]).join(' · ')||'—'}</td>`+
-        `<td>${o.empreiteira||'—'}</td><td>${dbr(o.fimPrev)}</td>`+
-        `<td class="num" style="color:${fx.cor}"><b>${d<0?('vencido há '+(-d)):d}</b></td>`+
-        `<td class="num">${brl(o.valor)}</td>`+
-        `<td class="num" style="color:${salDe(o)>0?'var(--previsto)':'var(--good)'}"><b>${brl(salDe(o))}</b></td>`+
-        `<td class="num">${pct(o.valor?o.medido/o.valor:0)}</td></tr>`;
-    }).join(''):'<tr><td colspan="10" style="color:var(--text-muted)">Nenhuma obra ativa vencendo nos próximos 60 dias no filtro.</td></tr>')+'</tbody>';
-  $('tabPrazo').querySelectorAll('tr.clic').forEach(tr=>tr.onclick=()=>abrirObra(+tr.dataset.cod));
-
-  $('tabObras').innerHTML='<thead><tr><th>Nº</th><th>Lote</th><th>Unidade</th><th>Cidade</th><th>Contrato / PI</th><th>Status</th>'+
-    '<th class="num">Contratado</th><th class="num">Aprovado</th><th class="num">Em tramitação</th>'+
-    '<th class="num">Saldo a medir</th>'+
-    '<th class="num">% real.</th><th class="num">% prev.</th><th>Cronograma</th></tr></thead><tbody>'+
-    obras.map(o=>{
-      const pa=o.serie.length?o.serie[o.serie.length-1].pa:0;
-      const hoje=MES_REF;
-      const prevHoje=o.serie.filter(s=>s.k<=hoje).reduce((a,b)=>a+b.p,0);
-      return `<tr class="clic" data-cod="${o.cod}"><td>${o.cod}</td>`+
-      `<td><span class="lote">${o.lote?('L'+o.lote):(o.contratoAta||'—')}</span></td><td>${o.unidade||''}</td>`+
-      `<td>${o.cidade||''}</td><td class="mono">${o.contrato||'—'}<br><span style="color:var(--text-muted)">PI ${o.pi||'—'}</span></td>`+
-      `<td style="color:${COR[o.status]}">${o.status}</td>`+
-      `<td class="num">${brl(o.valor)}</td><td class="num">${brl(o.medido)}</td>`+
-      `<td class="num" style="color:${o.tramitacao?'var(--warning)':'var(--text-muted)'}">${o.tramitacao?brl(o.tramitacao):'—'}</td>`+
-      `<td class="num"><b>${brl(Math.max(o.valor-o.medido,0))}</b></td>`+
-      `<td class="num">${pct(o.valor?o.medido/o.valor:0)}</td>`+
-      `<td class="num">${o.cronograma?pct(o.valor?prevHoje/o.valor:0):'–'}</td>`+
-      `<td style="color:${o.cronograma?'var(--text-secondary)':'var(--warning)'}">`+
-      `${o.cronograma?(o.cronograma.origem==='RV'?'<b style="color:var(--good)">Relatório de Vistoria</b>':'<span style="color:var(--warning)">planilha M001 — sem RV</span>'):'<span style="color:var(--critical)">sem cronograma</span>'}</td></tr>`;
-    }).join('')+'</tbody>';
-  $('tabObras').querySelectorAll('tr.clic').forEach(tr=>
-    tr.addEventListener('click',()=>{abrirObra(+tr.dataset.cod);}));
 }
 
 
@@ -1191,6 +1405,61 @@ function renderCarteira(){
    spiChart : SPI acumulado com faixa de tolerância
    alvoDoMes: barra-alvo do mês corrente (meta ajustada x medido)
    Executado = aprovado + em tramitação em todos eles.                                    */
+
+/* Faixa de titulo + os cinco cartoes do topo (foco em prazo). */
+function topoDePrazo(obras,comCron,serie){
+  const kH=MES_HOJE(), cur=(serie||[]).find(r=>r.k===kH);
+  const meta=cur?Math.max(cur.a!==undefined?cur.a:cur.p,0):0;
+  const feito=cur?(cur.m+(cur.t||0)):0;
+  const falta=Math.max(meta-feito,0), pFalta=meta?falta/meta:0;
+
+  const at=obras.filter(o=>o.status==='Atrasado').length;
+
+  // SPI da carteira ate o mes de referencia, contando o que esta em tramitacao
+  let pv=0,ev=0;
+  comCron.forEach(o=>(o.serie||[]).forEach(x=>{ if(x.k<=MES_REF){ pv+=x.p; ev+=x.m+(x.t||0); } }));
+  const spi=pv?ev/pv:null;
+
+  // prazo: obras ativas cujo termino previsto ja passou ou cai em ate 15 dias
+  const ATIVA=o=>['Execução','Atenção','Atrasado'].includes(o.status);
+  const hoje=new Date(); hoje.setHours(0,0,0,0);
+  const dias=o=>Math.round((new Date(o.fimPrev)-hoje)/86400000);
+  const radar=obras.filter(o=>ATIVA(o)&&o.fimPrev).map(o=>({o,d:dias(o)}));
+  const venc=radar.filter(x=>x.d<0), d15=radar.filter(x=>x.d>=0&&x.d<=15);
+  const salDe=o=>Math.max(o.valor-o.medido,0);
+  const somaSal=l=>l.reduce((a,x)=>a+salDe(x.o),0);
+
+  // --- a faixa de titulo: um numero, uma linha, e se piorou ela diz ---------
+  const partes=[];
+  if(at)              partes.push(`<b>${at}</b> obra${at>1?'s':''} atrasada${at>1?'s':''}`);
+  if(venc.length)     partes.push(`<b>${venc.length}</b> com prazo vencido`);
+  if(falta>0)         partes.push(`faltam <b>${brl(falta)}</b> para a meta de ${mesAno(kH)}`);
+  const txtT = partes.length
+      ? partes.join(' · ').replace(/·([^·]*)$/,'e$1')
+      : `Carteira em dia — meta de ${mesAno(kH)} cumprida e nenhuma obra atrasada`;
+  $('ftTexto').innerHTML=txtT;
+  $('ftSub').textContent=
+    `${obras.length} obra${obras.length>1?'s':''} no filtro · ${comCron.length} com cronograma · `+
+    `SPI ${spi===null?'–':spi.toFixed(2).replace('.',',')} até ${mesAno(MES_REF)}`;
+  $('faixaTit').style.borderLeftColor =
+    (at||venc.length)?'var(--critical)':(pFalta>=.60?'var(--warning)':'var(--good)');
+
+  // --- os cinco cartoes ----------------------------------------------------
+  $('kpiTopo').innerHTML=
+    cartaoTopo({titulo:'Obras atrasadas',chave:'atrasadas',bruto:at,
+      valor:at, sub:at?'contra a linha de base do cronograma':'nenhuma obra fora do cronograma'})+
+    cartaoTopo({titulo:'SPI da carteira',chave:'spi',bruto:spi===null?1:spi,
+      valor: spi===null?'–':spi.toFixed(2).replace('.',','),
+      sub: spi===null?'sem cronograma no filtro'
+         : (spi>=1?'adiantada em relação ao planejado':'entregou '+pct(1-spi)+' menos que o planejado')})+
+    cartaoTopo({titulo:'Vencem em até 15 dias',chave:'d15',bruto:d15.length,
+      valor:d15.length, sub: d15.length?brl(somaSal(d15))+' ainda a medir nelas':'nenhuma vence nos próximos 15 dias'})+
+    cartaoTopo({titulo:'Com prazo vencido',chave:'venc',bruto:venc.length,
+      valor:venc.length, sub: venc.length?brl(somaSal(venc))+' ainda a medir nelas':'nenhum prazo estourado'})+
+    cartaoTopo({titulo:'Falta medir para a meta',chave:'meta',bruto:pFalta,
+      valor: meta?brl(falta):'–',
+      sub: meta?pct(feito/meta)+' da meta de '+mesAno(kH)+' já medido':'sem meta para o mês no filtro'});
+}
 
 function _exec(d){ return d.m+(d.t||0); }
 function _spiStatus(dados){          // SPI acumulado até a data de status
@@ -1355,6 +1624,310 @@ function alvoDoMes(el,dados){
   txt(s,ml,mt+bh+20,pct(meta?feito/meta:0)+' da meta · falta medir '+brl(falta),
     {anchor:'start',size:12,fill:'var(--text-primary)'});
   txt(s,W-mr,mt+bh+20,'alvo do mês',{anchor:'end',size:10,fill:'var(--terceiro)'});
+}
+
+/* Faixa de titulo + os cinco cartoes da aba de empreiteiros. */
+function topoEmpreita(lista,com,t){
+  const pctE = t.vO? t.vE/t.vO : 0;                 // empreita sobre a obra
+  const pctM = t.vE? t.vM/t.vO : 0;                 // margem sobre a obra
+  const desv = t.vMeta? t.vDesv/t.vMeta : 0;        // adiantado(+)/atrasado(-) relativo
+  const feito= t.vAc + t.vTr;
+  const pctT = feito? t.vTr/feito : 0;              // quanto do medido ainda nao foi aprovado
+  const maior= lista.length?lista[0]:null;
+  const conc = (maior&&t.vE)? maior.empreita/t.vE : 0;
+
+  // --- faixa de titulo: conclui ---------------------------------------------
+  const partes=[];
+  if(maior) partes.push(`<b>${esc(maior.nome)}</b> concentra ${pct(conc)} da empreita`);
+  if(t.vDesv<0) partes.push(`a carteira está <b>${brl(Math.abs(t.vDesv))}</b> atrás da meta`);
+  else if(t.vDesv>0) partes.push(`a carteira está <b>${brl(t.vDesv)}</b> à frente da meta`);
+  $('feTexto').innerHTML = partes.join(' · ')+`, com margem de <b>${pct(pctM)}</b>`;
+  $('feSub').textContent =
+    `${com.length} obra${com.length>1?'s':''} com valor de empreita no filtro · `+
+    `${lista.length} empreiteiro${lista.length>1?'s':''} · empreita de ${brl(t.vE)} sobre ${brl(t.vO)} de contrato`;
+  $('faixaEmp').style.borderLeftColor =
+    (desv<=-0.20||pctM<0.38)?'var(--critical)':(desv<=-0.05||pctM<0.45)?'var(--warning)':'var(--good)';
+
+  // --- os cinco cartoes ------------------------------------------------------
+  $('eKpiTopo').innerHTML=
+    cartaoTopo({titulo:'Empreita contratada',chave:'empPct',bruto:pctE,
+      valor:brl(t.vE), sub:pct(pctE)+' do contrato com a FDE'})+
+    cartaoTopo({titulo:'Margem da ATLÂNTICA',chave:'margem',bruto:pctM,
+      valor:brl(t.vM), sub:pct(pctM)+' do valor das obras'})+
+    cartaoTopo({titulo:t.vDesv>=0?'Adiantado vs. meta':'Atrasado vs. meta',chave:'desvEmp',bruto:desv,
+      valor:(t.vDesv>=0?'+':'−')+brl(Math.abs(t.vDesv)),
+      sub:t.vMeta?pct(Math.abs(desv))+' da meta de empreita até '+mesAno(MES_REF):'sem meta no filtro'})+
+    cartaoTopo({titulo:'Empreita em tramitação',chave:'tramEmp',bruto:pctT,
+      valor:brl(t.vTr), sub:feito?pct(pctT)+' do que já foi medido ainda não aprovado':'nada medido ainda'})+
+    cartaoTopo({titulo:'Concentração no maior',chave:'concentr',bruto:conc,
+      valor:pct(conc), sub:maior?esc(maior.nome)+' · '+brl(maior.empreita)+' em '+maior.n+' obra'+(maior.n>1?'s':''):'—'});
+
+  const q=$('eQt'); if(q) q.textContent=' · '+lista.length+' empreiteiros';
+  const q2=$('eQtObras'); if(q2) q2.textContent=' · '+com.length+' obras';
+}
+
+/* Faixa de titulo + os cinco cartoes da aba de previsao do mes. */
+function topoPrevisao(t){
+  const MES=t.MES;
+  const pAtr = t.vMeta? t.vAtrT/t.vMeta : 0;          // quanto da meta e divida velha
+  const pLanc= t.vTotT? t.vLanc/t.vTotT : 0;          // quanto do que precisa medir ja saiu
+  const esf  = t.vMeta? t.vTotT/t.vMeta : 1;          // esforco do mes sobre o cronograma
+  const falta= Math.max(t.vTotT - t.vLanc, 0);
+
+  const partes=[];
+  partes.push(`${mesAno(MES)} precisa de <b>${brl(t.vTotT)}</b>`);
+  partes.push(t.vLanc>0 ? `<b>${brl(t.vLanc)}</b> já lançado` : 'nada lançado ainda');
+  if(t.vAtrT>0) partes.push(`<b>${brl(t.vAtrT)}</b> vieram de atraso`);
+  $('fpTexto').innerHTML = partes.join(' · ').replace(/·([^·]*)$/,'e$1');
+  $('fpSub').textContent =
+    `${t.linhas.length} obras precisam medir · meta do cronograma ${brl(t.vMeta)} · `+
+    `faltam ${brl(falta)} para fechar o mês`;
+  $('faixaPrev').style.borderLeftColor =
+    (pLanc<.30)?'var(--critical)':(pLanc<.60)?'var(--warning)':'var(--good)';
+
+  $('pKpiTopo').innerHTML=
+    cartaoTopo({titulo:'Precisa medir em '+mesAno(MES),chave:'esforco',bruto:esf,
+      valor:brl(t.vTotT), sub:pct(esf)+' da meta do cronograma ('+brl(t.vMeta)+')'})+
+    cartaoTopo({titulo:'Já lançado no mês',chave:'lancado',bruto:pLanc,
+      valor:brl(t.vLanc), sub:pct(pLanc)+' do que o mês precisa · aprovado + tramitação'})+
+    cartaoTopo({titulo:'Falta lançar',chave:'lancado',bruto:1-pLanc>1?0:pLanc,
+      valor:brl(falta), sub:t.linhas.length+' obras precisam medir neste mês'})+
+    cartaoTopo({titulo:'Atraso vindo de trás',chave:'atrasoAc',bruto:pAtr,
+      valor:brl(t.vAtrT), sub:pct(pAtr)+' da meta do mês é dívida dos meses anteriores'})+
+    cartaoTopo({titulo:'Se só valer o aprovado',chave:'esforco',bruto:t.vMeta?t.vTotA/t.vMeta:1,
+      valor:brl(t.vTotA), sub:'desconsidera o que está em tramitação na FDE'});
+
+  const q=$('pQt'); if(q) q.textContent=' · '+t.linhas.length+' obras';
+}
+
+/* ===========================================================================
+   CONTRATO DAS OBRAS — a lista unica.
+   Junta o que antes eram duas tabelas separadas no fim da Visao geral: a lista
+   de obras (contrato, medido, saldo) e a lista de prazo (termino previsto,
+   dias, faixa). Uma linha por obra; clicar abre a pagina da obra.
+   =========================================================================== */
+const LFAIXAS=[
+  {id:'venc', rot:'Prazo vencido',       cor:'var(--critical)', tst:d=>d<0},
+  {id:'d15',  rot:'Vence em até 15 dias',cor:'var(--serious)',  tst:d=>d>=0&&d<=15},
+  {id:'d30',  rot:'16 a 30 dias',        cor:'var(--warning)',  tst:d=>d>15&&d<=30},
+  {id:'d60',  rot:'31 a 60 dias',        cor:'var(--good)',     tst:d=>d>30&&d<=60}];
+const lFaixaDe=d=>(d===null?null:LFAIXAS.find(f=>f.tst(d)));
+
+function renderLista(){
+  const obras=filtradas();
+  const ATIVA=o=>['Execução','Atenção','Atrasado'].includes(o.status);
+  const hoje=new Date(); hoje.setHours(0,0,0,0);
+  const diasDe=o=>o.fimPrev?Math.round((new Date(o.fimPrev)-hoje)/86400000):null;
+  const salDe=o=>Math.max(o.valor-o.medido,0);
+
+  const linhas=obras.map(o=>{
+    const d=diasDe(o), fx=lFaixaDe(d);
+    const prevHoje=(o.serie||[]).filter(x=>x.k<=MES_REF).reduce((a,b)=>a+b.p,0);
+    return {o,d,fx,sal:salDe(o),prevHoje,ativa:ATIVA(o),
+            noRadar:ATIVA(o)&&d!==null&&d<=60};
+  });
+
+  // --- o grafico de prazo continua aqui, so com quem entra no radar de 60 dias
+  const radar=linhas.filter(x=>x.noRadar).sort((a,b)=>a.d-b.d).map(x=>({o:x.o,d:x.d}));
+  const cont=f=>radar.filter(x=>lFaixaDe(x.d)&&lFaixaDe(x.d).id===f).length;
+  $('prazoNota').textContent='Obras em execução, atenção ou atrasadas cujo término previsto '+
+    '(início + prazo do CTR) já passou ou cai nos próximos 60 dias. Respeita os filtros do topo.';
+  $('prazoLeg').innerHTML=LFAIXAS.map(f=>{
+    const n=cont(f.id);
+    return `<span><i style="background:${f.cor}"></i>${f.rot} <span style="color:var(--text-muted)">(${n})</span></span>`;
+  }).join('');
+  barrasPrazo($('prazoBar'),radar);
+
+  // --- faixa de titulo e os cinco cartoes
+  const venc=linhas.filter(x=>x.noRadar&&x.d<0), d15=linhas.filter(x=>x.noRadar&&x.d>=0&&x.d<=15);
+  const atrasadas=obras.filter(o=>o.status==='Atrasado');
+  const semCron=obras.filter(o=>!o.cronograma&&ATIVA(o));
+  const vTot=obras.reduce((a,o)=>a+o.valor,0), vSal=linhas.reduce((a,x)=>a+x.sal,0);
+  const somaSal=l=>l.reduce((a,x)=>a+x.sal,0);
+  const partes=[];
+  partes.push(`<b>${obras.length}</b> obra${obras.length>1?'s':''} no filtro`);
+  if(radar.length) partes.push(`<b>${radar.length}</b> vencem em até 60 dias`);
+  partes.push(`saldo a medir de <b>${brl(vSal)}</b>`);
+  $('flTexto').innerHTML=partes.join(' · ').replace(/·([^·]*)$/,'e$1');
+  $('flSub').textContent=
+    `${obras.filter(ATIVA).length} em andamento · contrato somado ${brl(vTot)} · `+
+    `clique em qualquer linha para abrir a página da obra`;
+  $('faixaLista').style.borderLeftColor =
+    venc.length?'var(--critical)':(d15.length?'var(--warning)':'var(--good)');
+
+  $('lKpiTopo').innerHTML=
+    cartaoTopo({titulo:'Obras no filtro',chave:'',bruto:0,
+      valor:obras.length, sub:obras.filter(ATIVA).length+' em andamento · '+brl(vTot)+' de contrato'})+
+    cartaoTopo({titulo:'Com prazo vencido',chave:'venc',bruto:venc.length,
+      valor:venc.length, sub:venc.length?brl(somaSal(venc))+' ainda a medir nelas':'nenhum prazo estourado'})+
+    cartaoTopo({titulo:'Vencem em até 15 dias',chave:'d15',bruto:d15.length,
+      valor:d15.length, sub:d15.length?brl(somaSal(d15))+' ainda a medir nelas':'nenhuma vence nos próximos 15 dias'})+
+    cartaoTopo({titulo:'Atrasadas no cronograma',chave:'atrasadas',bruto:atrasadas.length,
+      valor:atrasadas.length, sub:atrasadas.length?'contra a linha de base do RV':'nenhuma fora do cronograma'})+
+    cartaoTopo({titulo:'Saldo a medir',chave:'',bruto:0,
+      valor:brl(vSal), sub:pct(vTot?vSal/vTot:0)+' do contrato somado ainda por medir'});
+
+  // --- a tabela unica
+  const f=$('lFiltro')?$('lFiltro').value:'todas';
+  let L=linhas.filter(x=>
+      f==='ativas'   ? x.ativa
+    : f==='prazo'    ? x.noRadar
+    : f==='vencidas' ? (x.noRadar&&x.d<0)
+    : f==='atrasadas'? x.o.status==='Atrasado'
+    : f==='semcron'  ? (!x.o.cronograma&&x.ativa)
+    : true);
+  const ord=$('lOrdem')?$('lOrdem').value:'cod';
+  L.sort((a,b)=>
+      ord==='dias'   ? ((a.d===null)-(b.d===null))||((a.d??1e9)-(b.d??1e9))
+    : ord==='saldo'  ? b.sal-a.sal
+    : ord==='valor'  ? b.o.valor-a.o.valor
+    : ord==='unidade'? ordPt(a.o.unidade||'',b.o.unidade||'')
+    : (+a.o.cod)-(+b.o.cod));
+  $('lQt').textContent=L.length+' de '+linhas.length+' obras nesta lista';
+
+  $('tabLista').innerHTML='<thead><tr>'+
+    '<th>Nº</th><th>Unidade</th><th>Lote</th><th>Cidade</th><th>Engenheiro</th>'+
+    '<th>Empreiteira</th><th>Contrato / PI</th><th>Status</th>'+
+    '<th>Término previsto</th><th class="num">Dias</th>'+
+    '<th class="num">Contratado</th><th class="num">Aprovado</th>'+
+    '<th class="num">Em tramitação</th><th class="num">Saldo a medir</th>'+
+    '<th class="num">% real.</th><th class="num">% prev.</th><th>Cronograma</th>'+
+    '</tr></thead><tbody>'+
+    (L.length?L.map(({o,d,fx,sal,prevHoje})=>
+      `<tr class="clic" data-cod="${o.cod}">`+
+      `<td><b>${o.cod}</b></td>`+
+      `<td><span style="border-bottom:1px dotted var(--terceiro)">${esc(o.unidade||'')}</span></td>`+
+      `<td><span class="lote">${o.lote?('L'+o.lote):(o.contratoAta||'—')}</span></td>`+
+      `<td>${esc(o.cidade||'')}</td><td>${esc((o.engs||[]).join(' · ')||'—')}</td>`+
+      `<td>${esc(o.empreiteira||'—')}</td>`+
+      `<td class="mono">${o.contrato||'—'}<br><span style="color:var(--text-muted)">PI ${o.pi||'—'}</span></td>`+
+      `<td style="color:${COR[o.status]}">${o.status}</td>`+
+      `<td>${o.fimPrev?dbr(o.fimPrev):'—'}</td>`+
+      `<td class="num" style="color:${fx?fx.cor:'var(--text-muted)'}">`+
+        `${d===null?'—':(d<0?('<b>vencido há '+(-d)+'</b>'):('<b>'+d+'</b>'))}</td>`+
+      `<td class="num">${brl(o.valor)}</td><td class="num">${brl(o.medido)}</td>`+
+      `<td class="num" style="color:${o.tramitacao?'var(--warning)':'var(--text-muted)'}">${o.tramitacao?brl(o.tramitacao):'—'}</td>`+
+      `<td class="num" style="color:${sal>0?'var(--previsto)':'var(--good)'}"><b>${brl(sal)}</b></td>`+
+      `<td class="num">${pct(o.valor?o.medido/o.valor:0)}</td>`+
+      `<td class="num">${o.cronograma?pct(o.valor?prevHoje/o.valor:0):'–'}</td>`+
+      `<td style="font-size:10.5px">${o.cronograma?(o.cronograma.origem==='RV'
+          ?'<span style="color:var(--good)">Relatório de Vistoria</span>'
+          :'<span style="color:var(--warning)">M001 — sem RV</span>')
+        :'<span style="color:var(--critical)">sem cronograma</span>'}</td></tr>`).join('')
+      :'<tr><td colspan="17" style="color:var(--text-muted)">Nenhuma obra neste recorte.</td></tr>')+'</tbody>';
+  $('tabLista').querySelectorAll('tr.clic').forEach(tr=>{
+    tr.style.cursor='pointer';
+    tr.addEventListener('click',()=>abrirObra(+tr.dataset.cod));});
+  classificarTabelas();
+}
+
+/* ===========================================================================
+   RODIZIO DE OBRAS — o painel vive numa TV, entao ele passa sozinho.
+   A cada N segundos troca de obra e redesenha o quadro. Qualquer clique nos
+   controles pausa; o botao "modo TV" esconde filtro e navegacao e ocupa a tela.
+   =========================================================================== */
+const TV={i:0,timer:null,tick:null,pausado:false,lista:[],t0:0};
+
+function tvOrdenar(obras){
+  const ord=$('tvOrd')?$('tvOrd').value:'atraso';
+  const hoje=new Date(); hoje.setHours(0,0,0,0);
+  const dias=o=>o.fimPrev?Math.round((new Date(o.fimPrev)-hoje)/86400000):9e9;
+  const ATIVA=o=>['Execução','Atenção','Atrasado'].includes(o.status);
+  const base=obras.filter(ATIVA);
+  const desvio=o=>{
+    if(!o.cronograma) return 0;
+    let pv=0,ev=0; (o.serie||[]).forEach(x=>{if(x.k<=MES_REF){pv+=x.p; ev+=x.m+(x.t||0);}});
+    return (o.valor?(ev-pv)/o.valor:0);
+  };
+  const c=base.slice();
+  if(ord==='prazo')      c.sort((a,b)=>dias(a)-dias(b));
+  else if(ord==='saldo') c.sort((a,b)=>Math.max(b.valor-b.medido,0)-Math.max(a.valor-a.medido,0));
+  else if(ord==='cod')   c.sort((a,b)=>(+a.cod)-(+b.cod));
+  else                   c.sort((a,b)=>desvio(a)-desvio(b));   // mais atrasada primeiro
+  return c;
+}
+
+/* Quadro de uma obra: barra do contrato com o marcador do previsto + barras do mes. */
+function tvQuadro(o){
+  const hoje=new Date(); hoje.setHours(0,0,0,0);
+  const d=o.fimPrev?Math.round((new Date(o.fimPrev)-hoje)/86400000):null;
+  const sal=Math.max(o.valor-o.medido-(o.tramitacao||0),0);
+  let pv=0; (o.serie||[]).forEach(x=>{if(x.k<=MES_REF)pv+=x.p;});
+  const feito=o.medido+(o.tramitacao||0);
+  const dev=o.valor?(feito-pv)/o.valor:0;
+
+  $('tvNome').innerHTML=`<span style="color:var(--terceiro)">${o.cod}</span> · ${esc(o.unidade||'')}`;
+  $('tvSub').textContent=[o.cidade,(o.engs||[]).join(' · '),o.empreiteira,o.status]
+      .filter(Boolean).join('  ·  ');
+
+  const cel=(t,v,cor)=>`<div><span class="tl">${t}</span><span class="tv"${cor?` style="color:${cor}"`:''}>${v}</span></div>`;
+  $('tvNums').innerHTML=
+    cel('Contratado',brl(o.valor))+
+    cel('Aprovado pela FDE',brl(o.medido),'var(--realizado)')+
+    cel('Em tramitação',o.tramitacao?brl(o.tramitacao):'—',o.tramitacao?'var(--warning)':'var(--text-muted)')+
+    cel('Saldo a medir',brl(sal),'var(--previsto)')+
+    cel(d===null?'Sem prazo no CTR':(d<0?'Prazo vencido há':'Vence em'),
+        d===null?'—':(Math.abs(d)+' dias'),
+        d===null?'var(--text-muted)':(d<0?'var(--critical)':d<=15?'var(--serious)':d<=30?'var(--warning)':'var(--good)'));
+
+  // --- desenho: uma barra so, com o marcador de onde o cronograma manda estar
+  const el=$('tvBar'); el.innerHTML='';
+  const W=1140,H=132,ml=10,mr=10,y=34,bh=40,s=svgEl(W,H); el.appendChild(s);
+  const iw=W-ml-mr, xx=v=>ml+(o.valor?Math.min(Math.max(v,0)/o.valor,1):0)*iw;
+  add(s,'rect',{x:ml,y:y,width:iw,height:bh,rx:8,fill:'var(--trilho)'});
+  if(o.medido>0) add(s,'rect',{x:ml,y:y,width:Math.max(xx(o.medido)-ml,2),height:bh,rx:8,fill:'var(--realizado)'});
+  if(o.tramitacao>0) add(s,'rect',{x:xx(o.medido),y:y,width:Math.max(xx(feito)-xx(o.medido),2),height:bh,rx:8,
+      fill:'var(--realizado)','fill-opacity':.34,stroke:'var(--realizado)','stroke-width':1.5,'stroke-dasharray':'5 4'});
+  if(o.cronograma){
+    const xp=xx(pv);
+    add(s,'line',{x1:xp,x2:xp,y1:y-9,y2:y+bh+9,stroke:'var(--terceiro)','stroke-width':2.5});
+    txt(s,xp,y-14,'cronograma manda estar em '+pct(o.valor?pv/o.valor:0),
+        {anchor:xp>W*0.6?'end':'start',size:11,fill:'var(--terceiro)'});
+  }
+  txt(s,ml,y+bh+22,pct(o.valor?o.medido/o.valor:0)+' medido e aprovado',
+      {anchor:'start',size:13,fill:'var(--text-primary)'});
+  if(o.cronograma)
+    txt(s,W-mr,y+bh+22, Math.abs(dev)<0.005 ? 'em dia com o cronograma'
+          : (dev>0?'adiantada em ':'atrasada em ')+pct(Math.abs(dev))+' do contrato',
+        {anchor:'end',size:13,fill:Math.abs(dev)<0.005?'var(--good)':(dev>0?'var(--good)':'var(--critical)')});
+  txt(s,ml,20,'Quanto da obra já foi medido',{anchor:'start',size:11,fill:'var(--text-muted)'});
+
+  $('tvNota').innerHTML=o.cronograma
+    ? 'Barra cheia: aprovado pela FDE. Hachurada: lançado e ainda em tramitação. '+
+      'O traço vertical é onde o cronograma do Relatório de Vistoria manda a obra estar em <b>'+mesAno(MES_REF)+'</b>.'
+    : '<span style="color:var(--warning)">Esta obra não tem cronograma no CTR</span> — sem linha de previsto, não dá para dizer se está adiantada ou atrasada.';
+}
+
+function tvMostrar(){
+  if(!TV.lista.length){
+    $('tvNome').textContent='Nenhuma obra em andamento no filtro';
+    $('tvSub').textContent=''; $('tvNums').innerHTML=''; $('tvBar').innerHTML='';
+    $('tvPos').textContent=''; return;
+  }
+  TV.i=((TV.i%TV.lista.length)+TV.lista.length)%TV.lista.length;
+  tvQuadro(TV.lista[TV.i]);
+  $('tvPos').textContent=(TV.i+1)+' de '+TV.lista.length;
+  TV.t0=Date.now();
+}
+function tvProx(d){ TV.i+=(d||1); tvMostrar(); }
+function tvAgenda(){
+  clearInterval(TV.timer); clearInterval(TV.tick);
+  const seg=+($('tvSeg')?$('tvSeg').value:15);
+  const barra=$('tvProg').firstElementChild;
+  if(TV.pausado){ barra.style.width='0'; return; }
+  TV.t0=Date.now();
+  TV.timer=setInterval(()=>{ tvProx(1); TV.t0=Date.now(); }, seg*1000);
+  TV.tick=setInterval(()=>{
+    const f=Math.min((Date.now()-TV.t0)/(seg*1000),1);
+    barra.style.width=(f*100).toFixed(1)+'%';
+  },250);
+}
+function tvIniciar(obras){
+  const antes=TV.lista.length?TV.lista[TV.i].cod:null;
+  TV.lista=tvOrdenar(obras);
+  const j=TV.lista.findIndex(o=>o.cod===antes);
+  TV.i=j>=0?j:0;
+  tvMostrar(); tvAgenda();
 }
 
 function barrasEmp(el,lista){
@@ -1613,7 +2186,7 @@ function abrirObra(cod){
   window.scrollTo(0,0);
 }
 function mostra(qual){
-  const map={cart:['tCart','secCarteira'],obra:['tObra','secObra'],
+  const map={cart:['tCart','secCarteira'],lista:['tLista','secLista'],obra:['tObra','secObra'],
              empr:['tEmpr','secEmpr'], prev:['tPrev','secPrev'],
              receb:['tReceb','secReceb'],alerta:['tAlerta','secAlerta']};
   for(const k in map){
@@ -1622,7 +2195,7 @@ function mostra(qual){
   }
   // os filtros valem para a Carteira e para a pagina dos Empreiteiros
   $('barraFiltros').classList.toggle('oculto',
-     !(qual==='cart'||qual==='empr'||qual==='prev'||qual==='obra'||qual==='receb'));
+     !(qual==='cart'||qual==='lista'||qual==='empr'||qual==='prev'||qual==='obra'||qual==='receb'));
   classificarTabelas();
 }
 function irEmpr(){ mostra('empr'); renderEmpr(); window.scrollTo(0,0); }
@@ -1760,6 +2333,7 @@ function renderEmpr(){
     'o quanto disso já foi medido e aprovado e o que falta. Em ordem crescente pelo número da obra. '+
     'Clique no número para abrir a página da obra.';
   const ord=obras.slice().sort((a,b)=>(+a.cod||0)-(+b.cod||0));
+  topoEmpreita(lista,com,{vO,vE,vM,vMeta,vTr,vAc,vSal,vDesv});
   $('eTabObras').innerHTML='<thead>'+
     '<tr><th class="grp vazio" colspan="4"></th><th class="grp ctr">contrato FDE</th>'+
     '<th class="grp emp" colspan="6">valor de empreita — a parte do empreiteiro</th>'+
@@ -1845,9 +2419,47 @@ const FTOPO=[
   {id:'fStatus',  val:o=>[o.status]},      {id:'fAno',   val:o=>[String(o.ano)]},
 ];
 
+/* ---------------------------------------------------------------------------
+   Regiao 6 — o rodape. Quatro linhas em corpo 8: de onde vem o numero, que
+   recorte esta na tela, quando foi atualizado e o que ficou de fora.
+   Filtro nao declarado e a causa n.1 de discussao em reuniao: se esta escrito,
+   nao tem discussao, tem consulta.
+--------------------------------------------------------------------------- */
+function rodapeProcedencia(){
+  const rot={fContrato:'contrato',fLote:'lote',fCidade:'cidade',fEng:'engenheiro',
+             fEmp:'empreiteira',fFiscal:'fiscal',fStatus:'status',fAno:'ano'};
+  const ativos=[];
+  Object.keys(rot).forEach(id=>{
+    const v=(typeof msVals==='function')?msVals(id):[];
+    if(v.length) ativos.push(rot[id]+' '+(v.length<=2?v.join(' e '):v.length+' selecionados'));
+  });
+  const cron=$('fCron')&&$('fCron').value;
+  if(cron==='1') ativos.push('só com cronograma');
+  if(cron==='0') ativos.push('só sem cronograma');
+  const b=($('fBusca').value||'').trim();
+  if(b) ativos.push('busca "'+b+'"');
+  $('pcPeriodo').textContent =
+    'referência '+mesAno(MES_REF)+(ativos.length?' · '+ativos.join(' · '):' · sem filtro de recorte');
+
+  const g=D.gerado, dt=g.slice(8,10)+'/'+g.slice(5,7)+'/'+g.slice(0,4);
+  const dias=Math.round((new Date().setHours(0,0,0,0)-new Date(g+'T00:00:00'))/86400000);
+  $('pcAtu').innerHTML = dt + (dias>0?' <span style="color:var(--warning)">('+dias+' dia'+(dias>1?'s':'')+' atrás)</span>':' (hoje)');
+
+  const fora=[];
+  const sem=(D.receb&&D.receb.semData)?D.receb.semData.length:0;
+  if(sem) fora.push(sem+' medições aprovadas sem data de aprovação (fora do calendário de recebimento)');
+  const nc=(D.semCron||[]).length;
+  if(nc) fora.push(nc+' obras em andamento sem cronograma (fora das metas, da curva S e do SPI)');
+  fora.push('obras fora das cidades do CTR');
+  $('pcExcl').textContent = fora.join(' · ');
+  $('pcFonte').textContent = 'CTR FDE Barueri (planilha OBRAS e MEDIÇÕES) + portal SMV/FDE';
+}
+
 function aoFiltrar(){
   cascata(FTOPO, id=>filtradas(id), D.obras);
   renderCarteira();
+  rodapeProcedencia();
+  if(!$('secLista').classList.contains('oculto')) renderLista();
   if(!$('secEmpr').classList.contains('oculto')) renderEmpr();
   if(!$('secPrev').classList.contains('oculto')) renderPrev();
   if(!$('secReceb').classList.contains('oculto')) renderReceb();
@@ -2080,6 +2692,7 @@ function renderPrev(){
   const vMeta=S(x=>x.metaM), vLanc=S(x=>x.aprM+x.traM), vAprM=S(x=>x.aprM),
         vAtrT=S(x=>x.atrasoT), vAtrA=S(x=>x.atrasoA), vTotT=S(x=>x.totalT), vTotA=S(x=>x.totalA);
   $('pTit').textContent='Previsão de medição de '+mesAno(MES);
+  topoPrevisao({linhas,vMeta,vLanc,vAtrT,vTotT,vTotA,vPv,vAprM,MES});
   $('pKpis').innerHTML=
     `<div class="card kpi"><span class="v">${linhas.length}</span><span class="l">Obras que precisam medir em ${mesAno(MES)}</span></div>`+
     `<div class="card kpi"><span class="v" style="color:var(--previsto)">${brl(vMeta)}</span><span class="l">Meta do mês pelo cronograma</span></div>`+
@@ -2298,6 +2911,7 @@ function barrasPrev(el,lista){
 }
 
 function irCarteira(){ mostra('cart'); }
+function irLista(){ mostra('lista'); renderLista(); window.scrollTo(0,0); }
 function irAlertas(){ mostra('alerta'); renderAlerta(); window.scrollTo(0,0); }
 
 // Conferencia: a barra do topo nao vale aqui (a lista tem de continuar mostrando
@@ -2545,6 +3159,24 @@ function renderReceb(){
     (semK.length?`${semK.length} medições fora do calendário — falta a data no CTR`
               :'nenhuma pendência')+`</span>`;
   $('cxIncertoTot').textContent=brl(soma(tramK)+soma(prevK)+soma(semK));
+
+  // ---- Regiao 1 da aba: a faixa que conclui -------------------------------
+  (function(){
+    const firme=soma(venc)+soma(j30)+soma(j60), incerto=soma(tramK)+soma(prevK)+soma(semK);
+    const partes=[];
+    if(soma(j30)>0) partes.push(`<b>${brl(soma(j30))}</b> entram em até 30 dias`);
+    if(soma(venc)>0) partes.push(`<b>${brl(soma(venc))}</b> já venceu`);
+    if(semK.length)  partes.push(`<b>${semK.length}</b> aprovadas sem data ficam fora do calendário`);
+    if(!partes.length) partes.push('Nada a receber nas competências selecionadas');
+    $('frTexto').innerHTML=partes.join(' · ').replace(/·([^·]*)$/,'e$1');
+    $('frSub').textContent=
+      `${escopoMes()} · dinheiro firme ${brl(firme)} · depende de aprovação ${brl(incerto)} · `+
+      `ciclo medido ${RC.lag} dias para aprovar + ${RC.pag} para pagar`;
+    $('faixaReceb').style.borderLeftColor =
+      (soma(venc)>500000||semK.length>=50)?'var(--critical)'
+      :(soma(venc)>0||semK.length)?'var(--warning)':'var(--good)';
+    const q=$('rQtMed'); if(q) q.textContent=' · '+doMes.length+' medições';
+  })();
 
 
   // ---- série mensal do recebimento
@@ -2812,6 +3444,32 @@ function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
 
 $('tReceb').onclick=irReceb;
 $('tCart').onclick=irCarteira;
+$('tLista').onclick=irLista;
+
+// --- controles do rodizio ---------------------------------------------------
+$('tvAnt').onclick =()=>{tvProx(-1); tvAgenda();};
+$('tvProx').onclick=()=>{tvProx(1);  tvAgenda();};
+$('tvPlay').onclick=function(){
+  TV.pausado=!TV.pausado;
+  this.textContent=TV.pausado?'▶ continuar':'⏸ pausar';
+  tvAgenda();};
+$('tvSeg').onchange=tvAgenda;
+$('tvOrd').onchange=()=>{TV.i=0; TV.lista=tvOrdenar(filtradas()); tvMostrar(); tvAgenda();};
+$('btTv').onclick=function(){
+  const lig=!document.body.classList.contains('tv');
+  document.body.classList.toggle('tv',lig);
+  this.textContent=lig?'sair do modo TV':'modo TV';
+  if(lig){ TV.pausado=false; $('tvPlay').textContent='⏸ pausar'; tvAgenda();
+    if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{}); }
+  else if(document.exitFullscreen&&document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+  window.scrollTo(0,0);};
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&document.body.classList.contains('tv')) $('btTv').click();
+  if($('secCarteira').classList.contains('oculto')) return;
+  if(e.key==='ArrowRight'){tvProx(1); tvAgenda();}
+  if(e.key==='ArrowLeft'){tvProx(-1); tvAgenda();}});
+$('lFiltro').onchange=renderLista;
+$('lOrdem').onchange=renderLista;
 $('tEmpr').onclick=irEmpr;
 $('tPrev').onclick=irPrev;
 $('cFiltro').onchange=renderPxL;
