@@ -140,6 +140,15 @@
   body.tv .kpiA .v{font-size:clamp(22px,2.2vw,36px)}
   body.tv #btTv{display:inline-block}
 
+  #fichaObra{display:flex;flex-wrap:wrap;gap:6px 22px;align-items:center;
+    margin:0 0 4px;padding:9px 14px;border-radius:8px;
+    background:var(--surface-1);border:1px solid var(--line);
+    font-size:11.5px;color:var(--text-muted);line-height:1.5}
+  #fichaObra b{color:var(--text-secondary);font-weight:600}
+  #fichaObra .pc{display:flex;align-items:center;gap:6px;white-space:nowrap}
+  #fichaObra .pc:before{content:'';width:5px;height:5px;border-radius:50%;
+    background:var(--terceiro);flex:none}
+
   /* --- Regiao 6: o rodape de procedencia ---------------------------------- */
   #proc{display:flex;flex-wrap:wrap;gap:6px 22px;align-items:center;
     margin:16px 0 0;padding:9px 14px;border-radius:8px;
@@ -485,8 +494,7 @@
         <div class="card kpi"><span class="v" id="kSaldo">–</span><span class="l">Saldo a medir (contrato − aprovado)</span></div>
         <div class="card kpi"><span class="v" id="kSaldoAtivo">–</span><span class="l">Saldo das obras ativas</span></div>
         <div class="card kpi"><span class="v" id="kPct">–</span><span class="l">% financeiro aprovado</span></div>
-        <div class="card kpi"><span class="v" id="kAtr">–</span><span class="l">Atrasadas</span></div>
-        <div class="card kpi"><span class="v" id="kCron">–</span><span class="l">Com cronograma real</span></div>
+          <div class="card kpi"><span class="v" id="kCron">–</span><span class="l">Com cronograma real</span></div>
       </div>
     </details>
 
@@ -838,21 +846,13 @@
         <div class="cxtit"><span class="pt firme"></span>DINHEIRO FIRME — a FDE já aprovou, o pagamento sai 30 dias depois
           <span id="cxFirmeEsc" style="font-weight:400;color:var(--text-muted)"></span>
           <b id="cxFirmeTot">–</b></div>
-        <div class="kpis">
-          <div class="card kpi"><span class="v" id="rkAtraso">–</span><span class="l" id="rkAtrasoL">Já venceu · deve estar na conta</span></div>
-          <div class="card kpi"><span class="v" id="rk30">–</span><span class="l" id="rk30L">Entra em até 30 dias</span></div>
-          <div class="card kpi"><span class="v" id="rk60">–</span><span class="l" id="rk60L">Entra entre 31 e 60 dias</span></div>
-        </div>
+        <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkFirme"></div>
       </div>
       <div class="cxgrupo">
         <div class="cxtit"><span class="pt incerto"></span>AINDA NÃO É CAIXA — só vira dinheiro se for aprovado
           <span id="cxIncertoEsc" style="font-weight:400;color:var(--text-muted)"></span>
           <b id="cxIncertoTot">–</b></div>
-        <div class="kpis">
-          <div class="card kpi"><span class="v" id="rkTram">–</span><span class="l" id="rkTramL">Em tramitação no portal</span></div>
-          <div class="card kpi"><span class="v" id="rkPrev">–</span><span class="l" id="rkPrevL">Previsão lançada · ainda não está no portal</span></div>
-          <div class="card kpi"><span class="v" id="rkSem">–</span><span class="l" id="rkSemL">Aprovado sem data de aprovação</span></div>
-        </div>
+        <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkIncerto"></div>
       </div>
       <div class="cxgrupo cxmes">
         <div class="cxtit"><span class="pt neutro"></span>TOTAL LANÇADO NA COMPETÊNCIA — é a soma dos dois blocos acima</div>
@@ -1392,14 +1392,15 @@ function renderCarteira(){
   const saldo=obras.reduce((a,b)=>a+Math.max(b.valor-b.medido,0),0);
   const saldoAtivo=obras.filter(ATIVA).reduce((a,b)=>a+Math.max(b.valor-b.medido,0),0);
   $('kSaldo').textContent=brl(saldo);
+  // os dois saldos coincidem sempre que o filtro de status ja deixa so as ativas —
+  // mostrar o mesmo numero duas vezes confunde, entao o segundo some nesse caso.
   $('kSaldoAtivo').textContent=brl(saldoAtivo);
   $('kSaldoAtivo').style.color='var(--previsto)';
+  $('kSaldoAtivo').closest('.kpi').style.display=(Math.abs(saldo-saldoAtivo)<1)?'none':'';
   $('kMed').textContent=brl(mt);
   $('kTra').textContent=brl(tr);
   $('kTra').style.color=tr?'var(--warning)':'var(--text-secondary)';
   $('kPct').textContent=pct(vt?mt/vt:0);
-  const at=obras.filter(o=>o.status==='Atrasado').length;
-  $('kAtr').textContent=at; $('kAtr').style.color=at?'var(--critical)':'var(--good)';
   const cc=obras.filter(o=>o.cronograma).length;
   $('kCron').textContent=cc+'/'+obras.length;
 
@@ -1755,8 +1756,8 @@ function topoPrevisao(t){
       valor:brl(t.vTotT), sub:pct(esf)+' da meta do cronograma ('+brl(t.vMeta)+')'})+
     cartaoTopo({titulo:'Já lançado no mês',chave:'lancado',bruto:pLanc,
       valor:brl(t.vLanc), sub:pct(pLanc)+' do que o mês precisa · aprovado + tramitação'})+
-    cartaoTopo({titulo:'Falta lançar',chave:'lancado',bruto:1-pLanc>1?0:pLanc,
-      valor:brl(falta), sub:t.linhas.length+' obras precisam medir neste mês'})+
+    cartaoTopo({titulo:'Obras que precisam medir',chave:'',bruto:0,
+      valor:t.linhas.length, sub:'ainda falta lançar '+brl(falta)+' no mês'})+
     cartaoTopo({titulo:'Atraso vindo de trás',chave:'atrasoAc',bruto:pAtr,
       valor:brl(t.vAtrT), sub:pct(pAtr)+' da meta do mês é dívida dos meses anteriores'})+
     cartaoTopo({titulo:'Se só valer o aprovado',chave:'esforco',bruto:t.vMeta?t.vTotA/t.vMeta:1,
@@ -1917,7 +1918,7 @@ function tvOrdenar(obras){
 function tvQuadro(o){
   const hoje=new Date(); hoje.setHours(0,0,0,0);
   const d=o.fimPrev?Math.round((new Date(o.fimPrev)-hoje)/86400000):null;
-  const sal=Math.max(o.valor-o.medido-(o.tramitacao||0),0);
+  const sal=Math.max(o.valor-o.medido,0);
   let pv=0; (o.serie||[]).forEach(x=>{if(x.k<=MES_REF)pv+=x.p;});
   const feito=o.medido+(o.tramitacao||0);
   const dev=o.valor?(feito-pv)/o.valor:0;
@@ -2013,7 +2014,9 @@ function tvIniciar(obras){
 
 /* Faixa de titulo + os cinco cartoes da pagina da obra. */
 function topoObra(o,prevHoje,desvioF){
-  const sal=Math.max(o.valor-o.medido-(o.tramitacao||0),0);
+  // mesma conta do resto do painel: contrato - aprovado. O que esta em tramitacao
+  // ainda nao foi aprovado, entao continua dentro do saldo.
+  const sal=Math.max(o.valor-o.medido,0);
   const pSal=o.valor?sal/o.valor:0;
   const hoje=new Date(); hoje.setHours(0,0,0,0);
   const d=o.fimPrev?Math.round((new Date(o.fimPrev)-hoje)/86400000):null;
@@ -2039,7 +2042,7 @@ function topoObra(o,prevHoje,desvioF){
       valor:o.tramitacao?brl(o.tramitacao):'—',
       sub:o.tramitacao?'lançado e aguardando a FDE':'nada aguardando aprovação'})+
     cartaoTopo({titulo:'Saldo a medir',chave:'saldoObra',bruto:pSal,
-      valor:brl(sal), sub:pct(pSal)+' do contrato ainda por medir'})+
+      valor:brl(sal), sub:pct(pSal)+' do contrato ainda por medir'+(o.tramitacao?' (inclui o que está em tramitação)':'')})+
     cartaoTopo({titulo:'Desvio contra o cronograma',chave:'desvObra',bruto:o.cronograma?desvioF:0,
       valor:o.cronograma?((desvioF>=0?'+':'−')+pct(Math.abs(desvioF))):'–',
       sub:o.cronograma?('cronograma manda '+pct(o.valor?prevHoje/o.valor:0)+' até '+mesAno(MES_REF)):'sem linha de previsto'});
@@ -2210,27 +2213,16 @@ function renderObra(cod){
   const el=$('paginaObra');
   el.innerHTML=`
   <div class="pagina-obra stack">
-    <div class="card">
-      <p class="obratit">${o.cod} — ${o.unidade||''}</p>
-      <div class="obrasub">
-        ${[o.cidade,o.bairro,o.servico].filter(Boolean).join(' · ')}<br>
-        Contrato: <b>${o.contratoAta||'—'}</b>${o.lote?` · <span class="lote">Lote ${o.lote}</span>`:''}<br>
-        Empreiteira: <b>${o.empreiteira||'—'}</b> · Eng.: ${o.eng||'—'} · Fiscal: ${o.fiscal||'—'}<br>
-        Contrato FDE: ${o.contrato||'—'} · PI: ${o.pi||'—'} · Situação no CTR: ${o.situacao||'—'}<br>
-        Início <b>${dbr(o.ini)}</b> · Prazo ${o.prazo||'—'} dias · Término previsto <b>${dbr(o.fimPrev)}</b>
-        <span class="pill" style="color:${COR[o.status]};margin-left:8px">${o.status}</span>
-      </div>
-    </div>
-
-    <div class="kpis">
-      <div class="card kpi"><span class="v">${brl(o.valor)}</span><span class="l">Contratado</span></div>
-      <div class="card kpi"><span class="v">${brl(o.medido)}</span><span class="l">Medido aprovado</span></div>
-      <div class="card kpi"><span class="v" style="color:var(--previsto)">${brl(Math.max(o.valor-o.medido,0))}</span><span class="l">Saldo a medir</span></div>
-      <div class="card kpi"><span class="v" style="color:${o.tramitacao?'var(--warning)':'var(--text-muted)'}">${o.tramitacao?brl(o.tramitacao):'—'}</span><span class="l">Em tramitação</span></div>
-      <div class="card kpi"><span class="v">${pct(o.valor?o.medido/o.valor:0)}</span><span class="l">% financeiro realizado</span></div>
-      <div class="card kpi"><span class="v">${o.cronograma?pct(o.valor?prevHoje/o.valor:0):'–'}</span><span class="l">% previsto até hoje</span></div>
-      <div class="card kpi"><span class="v" style="color:${desvioF<-0.05?'var(--critical)':desvioF<0?'var(--warning)':'var(--good)'}">${o.cronograma?pct(desvioF):'–'}</span><span class="l">Desvio financeiro</span></div>
-      <div class="card kpi"><span class="v" style="color:${(o.desvio??0)<0?'var(--critical)':'var(--good)'}">${nm(o.desvio)}</span><span class="l">Desvio de prazo (meses)</span></div>
+    <!-- A identificacao e os numeros da obra ficam na faixa e nos 5 cartoes acima.
+         Aqui fica so o que NAO esta la, para nao repetir nada. -->
+    <div id="fichaObra">
+      <span class="pc"><b>Serviço:</b>&nbsp;${esc([o.bairro,o.servico].filter(Boolean).join(' · ')||'—')}</span>
+      <span class="pc"><b>Fiscal:</b>&nbsp;${esc(o.fiscal||'—')}</span>
+      <span class="pc"><b>Situação no CTR:</b>&nbsp;${esc(o.situacao||'—')}</span>
+      <span class="pc"><b>Início:</b>&nbsp;${dbr(o.ini)}</span>
+      <span class="pc"><b>Prazo:</b>&nbsp;${o.prazo||'—'} dias</span>
+      <span class="pc"><b>Término previsto:</b>&nbsp;${dbr(o.fimPrev)}</span>
+      <span class="pc"><b>Desvio de prazo:</b>&nbsp;<span style="color:${(o.desvio??0)<0?'var(--critical)':'var(--good)'}">${nm(o.desvio)} ${Math.abs(o.desvio||0)===1?'mês':'meses'}</span></span>
     </div>
 
     <div class="grid3">
@@ -2375,16 +2367,13 @@ function renderEmpr(){
         vM=Math.max(vO-vE,0), vAc=som(com,o=>o.empMedido), vTr=som(com,o=>o.empTram),
         vSal=com.reduce((a,o)=>a+Math.max(o.empreita-(o.empMedido||0)-(o.empTram||0),0),0);
 
+  // Empreita contratada, margem, desvio vs meta e tramitacao ja estao nos cinco
+  // cartoes do topo — aqui ficam so os numeros que NAO estao la.
   $('eKpis').innerHTML=
     `<div class="card kpi"><span class="v">${com.length}</span><span class="l">Obras com valor de empreita</span></div>`+
     `<div class="card kpi"><span class="v">${brl(vO)}</span><span class="l">Contrato FDE destas obras</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--terceiro)">${brl(vE)}</span><span class="l">Valor de empreita</span></div>`+
-    `<div class="card kpi"><span class="v">${pct(vO?vE/vO:0)}</span><span class="l">% de empreita sobre a obra</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--realizado)">${brl(vM)}</span><span class="l">Margem da ATLÂNTICA (obra − empreita)</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--previsto)">${brl(vMeta)}</span><span class="l">Meta de empreita até hoje (cronograma)</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:${vDesv>=0?'var(--good)':'var(--critical)'}">${vDesv>=0?'+':'−'}${brl(Math.abs(vDesv))}</span><span class="l">${vDesv>=0?'adiantado':'atrasado'} em relação à meta</span></div>`+
+    `<div class="card kpi"><span class="v" style="color:var(--previsto)">${brl(vMeta)}</span><span class="l">Meta de empreita até ${mesAno(MES_REF)} (cronograma)</span></div>`+
     `<div class="card kpi"><span class="v" style="color:var(--realizado)">${brl(vAc)}</span><span class="l">Empreita já aprovada pela FDE</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--warning)">${brl(vTr)}</span><span class="l">Empreita em tramitação</span></div>`+
     `<div class="card kpi"><span class="v" style="color:var(--previsto)">${brl(vSal)}</span><span class="l">Saldo de empreita a medir</span></div>`;
 
   // ---- por empreiteiro: empreita x margem
@@ -2773,14 +2762,14 @@ function renderPxL(){
   $('cTit').textContent='desempenho de prazo até '+ANT+' e previsão × lançado em '+mesAno(MES)+
     ' — posição de '+new Date(D.gerado+'T12:00:00').toLocaleDateString('pt-BR');
   $('cKpis').innerHTML=
-    `<div class="card kpi"><span class="v">${tudo.length}</span><span class="l">Obras em andamento no relatório</span></div>`+
+    `<div class="card kpi"><span class="v">${tudo.length}</span><span class="l">Obras em andamento no relatório<br><span style="color:var(--text-muted)">escopo fechado: ignora os filtros do topo</span></span></div>`+
     `<div class="card kpi"><span class="v" style="color:${pxlCorSPI(spi)}">${pxlN2(spi)}</span><span class="l">SPI da carteira até ${ANT} (só aprovado)</span></div>`+
     `<div class="card kpi"><span class="v" style="color:${pxlCorSPI(spiT)}">${pxlN2(spiT)}</span><span class="l">SPI contando o que está em tramitação</span></div>`+
     `<div class="card kpi"><span class="v" style="color:${sv>=0?'var(--good)':'var(--critical)'}">${sv===null?'—':(sv>=0?'+':'−')+brl(Math.abs(sv))}</span><span class="l">Desvio de prazo em R$ (SV = EV − PV)</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--previsto)">${brl(vC)}</span><span class="l">Previsto pelo cronograma em ${mesAno(MES)}</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--terceiro)">${brl(vP)}</span><span class="l">Previsão que você lançou no CTR</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:${vA>0.5?'var(--good)':'var(--text-muted)'}">${brl(vA)}</span><span class="l">Já aprovado pela FDE no mês</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--warning)">${brl(vT)}</span><span class="l">Lançado mas ainda não aprovado</span></div>`+
+    `<div class="card kpi"><span class="v" style="color:var(--previsto)">${brl(vC)}</span><span class="l">Previsto pelo cronograma em ${mesAno(MES)}<br><span style="color:var(--text-muted)">neste relatório</span></span></div>`+
+    `<div class="card kpi"><span class="v" style="color:var(--terceiro)">${brl(vP)}</span><span class="l">Previsão que você lançou no CTR<br><span style="color:var(--text-muted)">neste relatório</span></span></div>`+
+    `<div class="card kpi"><span class="v" style="color:${vA>0.5?'var(--good)':'var(--text-muted)'}">${brl(vA)}</span><span class="l">Já aprovado pela FDE no mês<br><span style="color:var(--text-muted)">neste relatório</span></span></div>`+
+    `<div class="card kpi"><span class="v" style="color:var(--warning)">${brl(vT)}</span><span class="l">Lançado mas ainda não aprovado<br><span style="color:var(--text-muted)">neste relatório</span></span></div>`+
     `<div class="card kpi"><span class="v" style="color:${com.length&&ok/com.length>=0.8?'var(--good)':'var(--warning)'}">${com.length?ok+'/'+com.length:'—'}</span><span class="l">PPC — obras que já cumpriram a previsão de ${mesAno(MES)}</span></div>`+
     `<div class="card kpi"><span class="v" style="color:${vR>=vP?'var(--good)':'var(--warning)'}">${pct(vP?vR/vP:0)}</span><span class="l">Aderência financeira à previsão</span></div>`;
   $('cLeg').innerHTML=
@@ -2847,13 +2836,11 @@ function renderPrev(){
         vAtrT=S(x=>x.atrasoT), vAtrA=S(x=>x.atrasoA), vTotT=S(x=>x.totalT), vTotA=S(x=>x.totalA);
   $('pTit').textContent='Previsão de medição de '+mesAno(MES);
   topoPrevisao({linhas,vMeta,vLanc,vAtrT,vTotT,vTotA,vPv,vAprM,MES});
+  // O que precisa medir, o lancado, o que falta, o atraso de tras e o cenario "so
+  // aprovado" ja estao nos cinco cartoes do topo — aqui ficam so os complementares.
   $('pKpis').innerHTML=
-    `<div class="card kpi"><span class="v">${linhas.length}</span><span class="l">Obras que precisam medir em ${mesAno(MES)}</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--previsto)">${brl(vMeta)}</span><span class="l">Meta do mês pelo cronograma</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--realizado)">${brl(vLanc)}</span><span class="l">Já lançado neste mês (aprovado + tramitação)</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--critical)">${brl(vAtrT)}</span><span class="l">Atraso trazido dos meses anteriores</span></div>`+
-    `<div class="card kpi"><span class="v"><b>${brl(vTotT)}</b></span><span class="l">PREVISÃO DO MÊS — contando a tramitação como aprovada</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:var(--warning)">${brl(vTotA)}</span><span class="l">Se só valer o que a FDE já aprovou</span></div>`+
+    `<div class="card kpi"><span class="v" style="color:var(--realizado)">${brl(vAprM)}</span><span class="l">Já aprovado pela FDE em ${mesAno(MES)}</span></div>`+
+    `<div class="card kpi"><span class="v" style="color:var(--warning)">${brl(vLanc-vAprM)}</span><span class="l">Lançado e ainda em tramitação</span></div>`+
     (vPv>0?`<div class="card kpi"><span class="v" style="color:var(--terceiro)">${brl(vPv)}</span><span class="l">Previsão que você lançou no CTR (0. PREVISÃO)</span></div>`:'');
   // a explicação longa saiu do corpo do card e virou um "como ler" recolhido: quem já
   // conhece a tela não precisa reler três parágrafos toda vez que abre a aba.
@@ -3284,35 +3271,25 @@ function renderReceb(){
   const j30=medsK.filter(m=>m.p>HOJE_ISO&&m.p<=D30), j60=medsK.filter(m=>m.p>D30&&m.p<=D60);
   const venc=medsK.filter(m=>m.p<=HOJE_ISO);
   // ---- bloco 1: DINHEIRO FIRME (aprovado, data de aprovação conhecida)
-  $('rkAtraso').textContent=brl(soma(venc));
-  $('rkAtraso').style.color=soma(venc)?'var(--realizado)':'var(--text-secondary)';
-  $('rkAtrasoL').innerHTML=`Já venceu · deve estar na conta<br>`+
-    `<span style="color:var(--text-muted)">${venc.length} medições aprovadas há mais de ${RC.pag||30} dias</span>`;
-  $('rk30').textContent=brl(soma(j30));
-  $('rk30').style.color=soma(j30)?'var(--realizado)':'var(--text-secondary)';
-  $('rk30L').innerHTML=`Entra em até 30 dias · até ${dbr(D30)}<br>`+
-    `<span style="color:var(--text-muted)">${j30.length} medições</span>`;
-  $('rk60').textContent=brl(soma(j60));
-  $('rk60').style.color=soma(j60)?'var(--realizado)':'var(--text-secondary)';
-  $('rk60L').innerHTML=`Entra entre 31 e 60 dias · até ${dbr(D60)}<br>`+
-    `<span style="color:var(--text-muted)">${j60.length} medições</span>`;
+  $('rkFirme').innerHTML=
+    cartaoTopo({titulo:'Já venceu · deve estar na conta',chave:'vencido',bruto:soma(venc),
+      valor:brl(soma(venc)),
+      sub:venc.length?`${venc.length} medições aprovadas há mais de ${RC.pag||30} dias`:'nada em atraso de pagamento'})+
+    cartaoTopo({titulo:`Entra em até 30 dias · até ${dbr(D30)}`,chave:'',bruto:0,
+      valor:brl(soma(j30)), sub:`${j30.length} medições aprovadas aguardando o prazo`})+
+    cartaoTopo({titulo:`Entra entre 31 e 60 dias · até ${dbr(D60)}`,chave:'',bruto:0,
+      valor:brl(soma(j60)), sub:`${j60.length} medições`});
   $('cxFirmeTot').textContent=brl(soma(venc)+soma(j30)+soma(j60));
 
   // ---- bloco 2: AINDA NÃO É CAIXA
-  $('rkTram').textContent=brl(soma(tramK));
-  $('rkTram').style.color=soma(tramK)?'var(--warning)':'var(--text-secondary)';
-  $('rkTramL').innerHTML=`Em tramitação no portal · aguardando a FDE<br>`+
-    `<span style="color:var(--text-muted)">${tramK.length} medições lançadas e enviadas</span>`;
-  $('rkPrev').textContent=brl(soma(prevK));
-  $('rkPrev').style.color='var(--text-secondary)';
-  $('rkPrevL').innerHTML=`Previsão lançada · ainda não está no portal<br>`+
-    `<span style="color:var(--text-muted)">${prevK.length} medições em 0. PREVISÃO / 1. ESTUDO</span>`;
-  $('rkSem').textContent=brl(soma(semK));
-  $('rkSem').style.color=semK.length?'var(--critical)':'var(--good)';
-  $('rkSemL').innerHTML=`Aprovado sem data de aprovação<br>`+
-    `<span style="color:${semK.length?'var(--critical)':'var(--text-muted)'}">`+
-    (semK.length?`${semK.length} medições fora do calendário — falta a data no CTR`
-              :'nenhuma pendência')+`</span>`;
+  $('rkIncerto').innerHTML=
+    cartaoTopo({titulo:'Em tramitação no portal',chave:'',bruto:0,
+      valor:brl(soma(tramK)), sub:`${tramK.length} medições lançadas e aguardando a FDE`})+
+    cartaoTopo({titulo:'Previsão lançada · fora do portal',chave:'',bruto:0,
+      valor:brl(soma(prevK)), sub:`${prevK.length} medições em 0. PREVISÃO / 1. ESTUDO`})+
+    cartaoTopo({titulo:'Aprovado sem data de aprovação',chave:'semData',bruto:semK.length,
+      valor:brl(soma(semK)),
+      sub:semK.length?`${semK.length} medições fora do calendário — falta a data no CTR`:'nenhuma pendência'});
   $('cxIncertoTot').textContent=brl(soma(tramK)+soma(prevK)+soma(semK));
 
   // ---- Regiao 1 da aba: a faixa que conclui -------------------------------
