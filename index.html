@@ -408,8 +408,6 @@
     table.tbl tr{break-inside:avoid}
     table.tbl th{position:static !important}
     /* etiquetas com fundo escuro ficam ilegíveis no papel */
-    .lote,.pill,.base{background:#fff !important;color:#000 !important;border:1px solid #9a9a94 !important}
-    svg text{fill:#000 !important}
     .obs{display:block !important}
     .foot{border-top:1px solid #9a9a94}
     /* a faixa de alerta e o rodape de procedencia precisam sair na impressao */
@@ -420,7 +418,6 @@
       -webkit-print-color-adjust:exact;print-color-adjust:exact}
     details.drill{background:#fff !important;border:1px solid #9a9a94 !important;break-inside:avoid}
     details.drill>summary{color:#333 !important}
-    .legend i{border:1px solid #000}
     table.tbl th,table.tbl td{border-color:#9a9a94 !important}
     tr[style*="background:#20201d"]{background:#eeeee8 !important}
     /* Relatorio Previsao x Lancado: no papel tem de caber em duas folhas A4 deitadas,
@@ -450,7 +447,6 @@
     table.tbl thead th{background:#e4e4dd !important;border-bottom:1.2px solid #000 !important}
     table.tbl td,table.tbl th{border-color:#b0b0a8 !important}
     /* numero sempre preto e firme; a cor vira so um reforco */
-    table.tbl td.num{color:#000 !important;font-variant-numeric:tabular-nums}
     /* contorno fino em toda barra/area: em P&B e o que separa uma serie da outra */
     svg rect[fill^="var("],svg path[fill^="var("]{stroke:#000 !important;stroke-width:.4}
     svg rect[fill="var(--trilho)"],svg rect[fill="var(--marca)"]{stroke:#9a9a94 !important}
@@ -752,19 +748,18 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   /* --- regras gerais do bloco no papel ------------------------------------ */
   .orc .filtros,.orc .seg,.orc .btimp,.orc .leg,.orc nav{display:none !important}
   .orc .rol{overflow:visible !important;max-height:none !important}
-  .orc .bloco{break-inside:avoid;border:1px solid #9a9a94 !important;box-shadow:none}
-  .orc .bloco>header{border-bottom:1px solid #9a9a94 !important}
+  .orc .bloco{break-inside:avoid;border:1px solid var(--line) !important;box-shadow:none}
+  .orc .bloco>header{border-bottom:1px solid var(--grade) !important}
   .orc table{font-size:7.8pt}
-  .orc td,.orc th{padding:2px 5px;border-color:#b0b0a8 !important}
-  .orc th{position:static !important;background:#e4e4dd !important;
-    border-bottom:1.2px solid #000 !important}
-  .orc tfoot td{position:static !important;background:#e4e4dd !important}
-  .orc tbody tr:nth-child(even) td{background:#f2f2ee !important}
+  .orc td,.orc th{padding:2px 5px;border-color:var(--grade) !important}
+  .orc th{position:static !important;background:var(--surface-2) !important;
+    border-bottom:1px solid var(--line) !important}
+  .orc tfoot td{position:static !important;background:var(--surface-2) !important}
   .orc tr{break-inside:avoid}
   .orc thead{display:table-header-group}
-  .orc .pill{background:#fff !important;color:#000 !important;border:1px solid #9a9a94 !important}
-  .orc svg text{fill:#000 !important}
-  .orc .cifras div,.orc .nota{border-color:#b0b0a8 !important}
+  /* a pílula mantém a cor da tela: classe ABC, reduzido, quantidade a mais */
+  .orc svg text:not([fill]){fill:var(--text-secondary)}
+  .orc .cifras div,.orc .nota{border-color:var(--grade) !important}
   .orc .trunc{max-width:none;white-space:normal}
   .orc #o_tabServ td:nth-child(3){max-width:none;width:auto}
 
@@ -774,8 +769,8 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   body.obraCompleta #orcBox section{display:block !important;padding-top:0;break-before:page}
   body.obraCompleta #orcBox section[hidden]{display:none !important}
   body.obraCompleta #orcBox .tituloImp{display:block;font-size:12.5pt;font-weight:700;
-    color:#000;border-bottom:1.5pt solid #000;padding-bottom:3px;margin:0 0 9px;
-    break-after:avoid}
+    color:var(--text-primary);border-bottom:1.5pt solid var(--previsto);padding-bottom:3px;
+    margin:0 0 9px;break-after:avoid}
   /* a listagem de serviços e a de insumos podem passar de uma folha */
   body.obraCompleta #orcBox .bloco{break-inside:auto}
   body.obraCompleta #orcBox .bloco>header{break-after:avoid}
@@ -829,8 +824,8 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
 @media print{
   body.obraCompleta #o_sComp .md{display:none !important}
   body.obraCompleta #o_insImp{display:block !important;break-inside:auto}
-  body.obraCompleta #o_insImp tr.grp td{background:#e4e4dd !important;
-    border-top:1.2px solid #000 !important;font-size:8.4pt}
+  body.obraCompleta #o_insImp tr.grp td{background:var(--surface-2) !important;
+    border-top:1px solid var(--line) !important;font-size:8.4pt}
   body.obraCompleta #o_requisicoes .req{display:block !important;break-before:page;
     border:0;box-shadow:none}
   body.obraCompleta #o_requisicoes .req[hidden]{display:none !important}
@@ -864,13 +859,13 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   table.tbl thead th{background:var(--surface-1) !important;color:var(--text-secondary) !important;
     border-bottom:1px solid var(--line) !important}
   table.tbl tbody tr:nth-child(even) td{background:transparent !important}
-  table.tbl td.num{color:inherit !important}
   tr[style*="background:#20201d"]{background:#20201d !important}
-  .lote,.pill,.base{background:var(--surface-2) !important;color:inherit !important;
-    border:1px solid currentColor !important}
+  /* pílula fica exatamente como na tela — a regra que a pintava de branco foi
+     removida do bloco acima, então o estilo inline dela volta a valer */
+  .lote{background:var(--surface-2) !important;border:1px solid var(--line) !important}
   .barra-fundo,.trilho{background:var(--trilho) !important;border:0 !important}
-  .legend i{border:0 !important}
-  svg text{fill:var(--text-secondary) !important}
+  /* o rótulo do SVG só recebe cor quando não tem a sua própria */
+  svg text:not([fill]){fill:var(--text-secondary)}
   /* o contorno preto e as texturas existiam só para o papel em P&B */
   svg rect[fill^="var("],svg path[fill^="var("],
   svg rect[fill="var(--trilho)"],svg rect[fill="var(--marca)"]{stroke:none !important}
@@ -886,7 +881,6 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
     border-bottom:1px solid var(--line) !important}
   .orc td,.orc th{border-color:var(--grade) !important}
   .orc tbody tr:nth-child(even) td{background:transparent !important}
-  .orc .pill{background:var(--surface-2) !important;color:inherit !important}
   .orc svg text{fill:var(--text-secondary) !important}
   .orc #o_insImp tr.grp td{background:var(--surface-2) !important;
     border-top:1px solid var(--line) !important}
