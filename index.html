@@ -836,6 +836,94 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   body.obraCompleta #o_requisicoes .req[hidden]{display:none !important}
 }
 
+
+/* ===================================================================
+   IMPRESSÃO FIEL AO PAINEL — 14/09
+   O bloco @media print acima converte tudo para papel branco com letra
+   preta. Este vem depois e desfaz essa conversão: mesmas cores da tela.
+   Também corrige o que estava quebrando no PDF: valor cortado no cartão,
+   quadro partido entre páginas e folha em branco no fim.
+   =================================================================== */
+@media print{
+  /* --- 1. as cores do painel voltam --------------------------------- */
+  :root{
+    --plane:#0d0d0d; --surface-1:#1a1a19; --surface-2:#232322; --line:#33332f;
+    --text-primary:#fff; --text-secondary:#c3c2b7; --text-muted:#8b8a80;
+    --previsto:#d95926; --realizado:#3987e5; --terceiro:#199e70;
+    --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+    --trilho:#2a2a28; --grade:#2a2a28; --marca:#3a3a36;
+  }
+  html,body{background:var(--plane) !important;color:var(--text-primary) !important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .card,.kpiA,details.drill,#proc,#faixaTit,#faixaEmp,#faixaObra,#faixaLista{
+    background:var(--surface-1) !important;border:1px solid var(--line) !important}
+  #proc{color:var(--text-muted) !important}
+  details.drill>summary{color:var(--text-secondary) !important}
+  .obs,.card .escopo{color:var(--text-muted) !important}
+  table.tbl th,table.tbl td{border-color:var(--grade) !important}
+  table.tbl thead th{background:var(--surface-1) !important;color:var(--text-secondary) !important;
+    border-bottom:1px solid var(--line) !important}
+  table.tbl tbody tr:nth-child(even) td{background:transparent !important}
+  table.tbl td.num{color:inherit !important}
+  tr[style*="background:#20201d"]{background:#20201d !important}
+  .lote,.pill,.base{background:var(--surface-2) !important;color:inherit !important;
+    border:1px solid currentColor !important}
+  .barra-fundo,.trilho{background:var(--trilho) !important;border:0 !important}
+  .legend i{border:0 !important}
+  svg text{fill:var(--text-secondary) !important}
+  /* o contorno preto e as texturas existiam só para o papel em P&B */
+  svg rect[fill^="var("],svg path[fill^="var("],
+  svg rect[fill="var(--trilho)"],svg rect[fill="var(--marca)"]{stroke:none !important}
+  .legend i[style*="critical"],.legend i[style*="realizado"]{background-image:none !important}
+  body.umQuadro #impressao .mdc,body.umQuadro #impressao .mdcorpo{
+    background:var(--surface-1) !important}
+  .mdc tfoot td,.orc tfoot td{background:var(--surface-2) !important}
+
+  /* --- 2. o bloco de orçamento acompanha ----------------------------- */
+  .orc .bloco{background:var(--surface-1) !important;border:1px solid var(--line) !important}
+  .orc .bloco>header{border-bottom:1px solid var(--grade) !important}
+  .orc th{background:var(--surface-2) !important;color:var(--text-secondary) !important;
+    border-bottom:1px solid var(--line) !important}
+  .orc td,.orc th{border-color:var(--grade) !important}
+  .orc tbody tr:nth-child(even) td{background:transparent !important}
+  .orc .pill{background:var(--surface-2) !important;color:inherit !important}
+  .orc svg text{fill:var(--text-secondary) !important}
+  .orc #o_insImp tr.grp td{background:var(--surface-2) !important;
+    border-top:1px solid var(--line) !important}
+  body.obraCompleta #orcBox .tituloImp{color:var(--text-primary) !important;
+    border-bottom:1.5pt solid var(--previsto) !important}
+
+  /* --- 3. o valor do cartão não pode ser cortado --------------------- */
+  /* clamp() usa vw: no papel a "largura da janela" é a da folha e o número
+     de 8 dígitos passava da borda do cartão. No papel, tamanho fixo. */
+  .kpiA .v{font-size:13.5pt !important;letter-spacing:-.3px;white-space:nowrap;
+    overflow:visible}
+  .kpiA .t{font-size:8pt !important}
+  .kpiA .s{font-size:8pt !important;line-height:1.3}
+  .kpiA .rg{font-size:7pt !important}
+  .kpiA{padding:9px 10px !important}
+  #faixaTit .ft,#foTexto,#flTexto{font-size:15pt !important;line-height:1.25}
+  #faixaTit .fs,#foSub,#flSub{font-size:8.5pt !important}
+  #tvNome{font-size:15pt !important}
+
+  /* --- 4. quadro não parte no meio ----------------------------------- */
+  /* a regra antiga só pegava ".wrap section > .card"; na Página da obra os
+     quadros ficam dentro de .pagina-obra, então o gráfico partia ao meio. */
+  .pagina-obra>.card,.pagina-obra>.grid2,.pagina-obra>.grid3,
+  .pagina-obra>.stack>.card,.stack>.grid2,.stack>.grid3,
+  .kpis5,#resumoObra{break-inside:avoid}
+  .grid2>.card,.grid3>.card{break-inside:avoid}
+
+  /* --- 5. sem folha em branco no fim --------------------------------- */
+  /* .pagina-obra{break-after:page} existe para o PDF de TODAS as obras;
+     numa obra só, ele criava uma folha vazia no fim. */
+  .pagina-obra{break-after:auto}
+  body.imprimindo .pagina-obra,body.imprimindo #impressao .folha{break-after:page}
+  body.imprimindo #impressao .folha:last-child,
+  .wrap>*:last-child,.pagina-obra>*:last-child{break-after:avoid}
+  .foot{break-inside:avoid}
+}
+
 </style>
 </head>
 <body>
