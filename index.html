@@ -796,16 +796,44 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   .orc .req th,.orc .req td{padding:3px 6px}
   .orc .req tr{break-inside:avoid}
 }
+@media print{
+  /* no dossiê o total sai uma vez, no fim — tfoot repete em toda página */
+  body.obraCompleta #orcBox tfoot{display:table-row-group}
+}
 
-/* a lista consolidada de insumos só existe no PDF da obra */
+/* ============ seletor de seções do PDF da obra ============ */
+#pdfSel{position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.68);
+  display:flex;align-items:flex-start;justify-content:center;padding:48px 16px}
+#pdfSel.oculto{display:none}
+#pdfSel .pdfCx{width:min(560px,100%);padding:18px 20px 16px;max-height:calc(100vh - 96px);
+  overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+#pdfSel h3{margin:0 0 4px;font-size:15.5px;font-weight:650;color:var(--text-primary)}
+#pdfSel .pdfSub{margin:0 0 12px;font-size:11.5px;color:var(--text-muted);line-height:1.5}
+#pdfSel .pdfLista{display:flex;flex-direction:column;gap:2px}
+#pdfSel label{display:flex;gap:9px;align-items:flex-start;padding:8px 9px;border-radius:7px;
+  cursor:pointer;border:1px solid transparent}
+#pdfSel label:hover{background:var(--surface-2);border-color:var(--line)}
+#pdfSel label.off{opacity:.4;cursor:default}
+#pdfSel label input{appearance:auto;-webkit-appearance:checkbox;width:14px;height:14px;
+  margin:2px 0 0;padding:0;border:0;background:none;accent-color:var(--previsto);flex:none}
+#pdfSel label b{display:block;font-size:12.5px;font-weight:600;color:var(--text-primary)}
+#pdfSel label i{display:block;font-style:normal;font-size:11px;color:var(--text-muted);
+  line-height:1.4;margin-top:1px}
+#pdfSel .pdfBts{display:flex;gap:8px;align-items:center;margin-top:14px;
+  border-top:1px solid var(--line);padding-top:12px}
+#pdfSel .btpdf{background:var(--previsto);border-color:var(--previsto);color:#fff;font-weight:600}
+@media print{ #pdfSel{display:none !important} }
+
+/* a lista consolidada de insumos e as folhas de requisição só existem no papel */
 .orc #o_insImp{display:none}
 @media print{
   body.obraCompleta #o_sComp .md{display:none !important}
   body.obraCompleta #o_insImp{display:block !important;break-inside:auto}
-  /* no dossiê o total sai uma vez, no fim — tfoot repete em toda página */
-  body.obraCompleta #orcBox tfoot{display:table-row-group}
   body.obraCompleta #o_insImp tr.grp td{background:#e4e4dd !important;
     border-top:1.2px solid #000 !important;font-size:8.4pt}
+  body.obraCompleta #o_requisicoes .req{display:block !important;break-before:page;
+    border:0;box-shadow:none}
+  body.obraCompleta #o_requisicoes .req[hidden]{display:none !important}
 }
 
 </style>
@@ -5412,30 +5440,89 @@ function obraPainel(p){
   if(p!=='acomp'&&__ORCOK__&&typeof orcIr==='function') orcIr(p);
 }
 /* ---------------------------------------------------------------------------
-   PDF DESTA OBRA — sai o dossie inteiro, nao so o Acompanhamento.
-   Uma secao por pagina: Acompanhamento · Orcamento e curva ABC · Composicoes e
-   insumos · Cronograma e caixa · Adequacao. O mapa de compras fica de fora: ele
-   tem os proprios botoes de impressao, que geram uma folha por mes.
+   PDF DESTA OBRA — o botao abre um seletor: cada secao da obra e uma caixinha,
+   e sai no papel so o que estiver marcado. A escolha fica guardada no navegador
+   (localStorage), entao da segunda vez ja vem do jeito que ele deixou.
+   A identificacao da obra (faixa + 5 cartoes) sai sempre, em qualquer combinacao.
    --------------------------------------------------------------------------- */
-const PDF_SECOES=[['Abc','Orçamento e curva ABC'],['Comp','Composições e insumos'],
-                  ['Cron','Cronograma e caixa'],['Adeq','Adequação orçamentária']];
-/* No papel, a aba Composicoes mostraria a lista de servicos e a composicao de UM
-   deles — inutil num dossie. No lugar entra a lista consolidada de insumos da
-   obra: o que precisa ser comprado e quanto se pode pagar por cada coisa. */
+const PDF_ITENS=[
+  ['acomp','Acompanhamento','resumo, gráficos, mês a mês e as medições do CTR',true],
+  ['Abc','Orçamento e curva ABC','capítulos, Pareto e a planilha contrato × adequação × medido',true],
+  ['Comp','Insumos','lista consolidada: quantidade total e preço-limite de cada insumo',false],
+  ['Cron','Cronograma e caixa','cronograma por capítulo, empreita × margem e curva de caixa',true],
+  ['Compras','Requisições de compra','uma folha por mês, com as colunas do fornecedor em branco',false],
+  ['Adeq','Adequação','a conta da adequação e os itens ainda em aberto',true]
+];
+const PDF_CHAVE='pdfObraSecoes';
+function pdfEscolha(){
+  let g=null;
+  try{ g=JSON.parse(localStorage.getItem(PDF_CHAVE)||'null'); }catch(e){}
+  const m={}; PDF_ITENS.forEach(it=>m[it[0]] = g&&typeof g[it[0]]==='boolean' ? g[it[0]] : it[3]);
+  return m;
+}
+function pdfGuarda(m){ try{ localStorage.setItem(PDF_CHAVE,JSON.stringify(m)); }catch(e){} }
+
+function pdfDialogo(){
+  let d=document.getElementById('pdfSel');
+  if(d) return d;
+  d=document.createElement('div');
+  d.id='pdfSel'; d.className='oculto';
+  d.innerHTML='<div class="pdfCx card" role="dialog" aria-modal="true" aria-labelledby="pdfTit">'+
+    '<h3 id="pdfTit">O que entra no PDF desta obra</h3>'+
+    '<p class="pdfSub">O número, o nome e os cinco cartões da obra saem sempre. '+
+    'Cada seção marcada começa em uma página nova.</p>'+
+    '<div class="pdfLista">'+PDF_ITENS.map(it=>
+      '<label data-k="'+it[0]+'"><input type="checkbox" data-k="'+it[0]+'">'+
+      '<span><b>'+it[1]+'</b><i>'+it[2]+'</i></span></label>').join('')+'</div>'+
+    '<div class="pdfBts"><button type="button" class="tab" id="pdfTodas">marcar todas</button>'+
+    '<span style="flex:1"></span>'+
+    '<button type="button" class="tab" id="pdfCancela">Cancelar</button>'+
+    '<button type="button" class="tab btpdf" id="pdfOk">Gerar PDF</button></div></div>';
+  document.body.appendChild(d);
+  d.addEventListener('click',e=>{ if(e.target===d) d.classList.add('oculto'); });
+  document.getElementById('pdfCancela').onclick=()=>d.classList.add('oculto');
+  document.getElementById('pdfTodas').onclick=()=>{
+    d.querySelectorAll('input[type=checkbox]').forEach(c=>{ if(!c.disabled) c.checked=true; });};
+  document.getElementById('pdfOk').onclick=()=>{
+    const m={}; d.querySelectorAll('input[type=checkbox]').forEach(c=>m[c.dataset.k]=c.checked);
+    if(!Object.values(m).some(Boolean)){ d.querySelector('.pdfSub').innerHTML=
+      '<b style="color:var(--critical)">Marque pelo menos uma seção.</b>'; return; }
+    pdfGuarda(m); d.classList.add('oculto'); imprimirDossie(m);
+  };
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&!d.classList.contains('oculto')) d.classList.add('oculto');});
+  return d;
+}
+function pdfObra(){
+  const d=pdfDialogo(), m=pdfEscolha();
+  d.querySelectorAll('input[type=checkbox]').forEach(c=>{
+    const soOrc = c.dataset.k!=='acomp';
+    c.disabled = soOrc && !__ORCOK__;
+    c.checked  = !!m[c.dataset.k] && !c.disabled;
+    const l=c.closest('label'); if(l) l.classList.toggle('off',c.disabled);
+  });
+  d.querySelector('.pdfSub').innerHTML = __ORCOK__
+    ? 'O número, o nome e os cinco cartões da obra saem sempre. Cada seção marcada começa em uma página nova.'
+    : '<b>Esta obra não tem orçamento analítico</b> — só o Acompanhamento pode ser impresso.';
+  d.classList.remove('oculto');
+}
+
+/* No papel a aba Insumos nao pode ser a lista de servicos com o detalhe de UM
+   deles: vira a explosao das composicoes da obra inteira, que e o que serve
+   para comprar. A tabela so existe na hora de imprimir. */
 function montarInsumos(){
   const sec=document.getElementById('o_sComp');
   if(!sec||sec.querySelector('#o_insImp')) return;
   const D=window.__ORCD__; if(!D||!D.ins) return;
-  const brl=(v,d)=>(v<0?'−':'')+'R$ '+Math.abs(v).toLocaleString('pt-BR',
-    {minimumFractionDigits:d==null?0:d,maximumFractionDigits:d==null?0:d});
-  const nmq=(v,d)=>v.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const brl=(v,dc)=>(v<0?'−':'')+'R$ '+Math.abs(v).toLocaleString('pt-BR',
+    {minimumFractionDigits:dc==null?0:dc,maximumFractionDigits:dc==null?0:dc});
+  const nmq=(v,dc)=>v.toLocaleString('pt-BR',{minimumFractionDigits:dc,maximumFractionDigits:dc});
   const DISC={UN:1,CJ:1,PC:1,'PÇ':1,JG:1,PAR:1,KIT:1};
   const qu=(q,un)=>DISC[un]?Math.max(1,Math.ceil(q-1e-9)):q;
-  const GR=[['mat','Material'],['mo','Mão de obra'],['eq','Equipamento']];
   const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   let corpo='', geral=0;
-  GR.forEach(function(g){
+  [['mat','Material'],['mo','Mão de obra'],['eq','Equipamento']].forEach(function(g){
     const L=D.ins.filter(x=>x.g===g[0])
       .map(x=>Object.assign({},x,{q:qu(x.qtd,x.un),v:(x.lim||0)*qu(x.qtd,x.un)}))
       .sort((a,b)=>b.v-a.v);
@@ -5446,49 +5533,45 @@ function montarInsumos(){
     L.forEach(function(x){
       corpo+='<tr><td class="mono">'+x.cod+'</td><td>'+esc(x.nome)+'</td><td>'+esc(x.un)+
         '</td><td class="n">'+nmq(x.q,DISC[x.un]?0:2)+'</td><td class="n">'+brl(x.lim||0,2)+
-        '</td><td class="n"><b>'+brl(x.v,2)+'</b></td><td>'+(x.conf||'')+'</td></tr>';
-    });
+        '</td><td class="n"><b>'+brl(x.v,2)+'</b></td><td>'+(x.conf||'')+'</td></tr>';});
   });
   const bl=document.createElement('div');
   bl.className='bloco'; bl.id='o_insImp';
   bl.innerHTML='<header><h2>Insumos da obra — quantidade e preço-limite</h2>'+
-    '<p>Explosão das composições de todos os serviços contratados. O <b>teto</b> é o máximo '+
-    'que se pode pagar sem estourar a composição da FDE — não é orçamento de compra.</p></header>'+
+    '<p>Explosão das composições de todos os serviços contratados.</p></header>'+
     '<div class="rol"><table><thead><tr><th>Código</th><th>Insumo</th><th>Un</th>'+
     '<th class="n">Qtde total</th><th class="n">Preço-limite</th><th class="n">Teto</th>'+
     '<th>Certeza</th></tr></thead><tbody>'+corpo+
-    '</tbody><tfoot><tr><td colspan="5">Soma dos tetos</td><td class="n">'+
-    brl(geral,2)+'</td><td></td></tr></tfoot></table></div>'+
+    '</tbody><tfoot><tr><td colspan="5">Soma dos tetos</td><td class="n">'+brl(geral,2)+
+    '</td><td></td></tr></tfoot></table></div>'+
     '<p class="nota">A soma dos tetos ('+brl(geral)+') fica <b>acima</b> do custo direto do '+
     'contrato ('+brl(D.total/(D.bdi||1.23))+' = contrato ÷ 1,23): cada teto é um limite '+
-    'independente, e somar limites superiores sempre estoura. O número vale <b>linha a '+
-    'linha</b>, na hora de fechar preço com o fornecedor, nunca como orçamento total da obra.</p>';
+    'independente, e somar limites superiores sempre estoura. O número vale <b>linha a linha</b>, '+
+    'na hora de fechar preço com o fornecedor, nunca como orçamento total da obra.</p>';
   const md=sec.querySelector('.md');
-  if(md&&md.parentNode) md.parentNode.insertBefore(bl,md.nextSibling);
-  else sec.appendChild(bl);
+  if(md&&md.parentNode) md.parentNode.insertBefore(bl,md.nextSibling); else sec.appendChild(bl);
 }
 
-function pdfObra(){
+function imprimirDossie(m){
   const box=document.getElementById('orcBox');
   const nav=document.getElementById('obraNav');
   const bAtivo=nav?nav.querySelector('button[aria-selected="true"]'):null;
   const abaAtual=bAtivo?bAtivo.dataset.p:'acomp';
+  document.body.classList.add('obraCompleta');
+  document.getElementById('paginaObra').classList.toggle('oculto',!m.acomp);
   if(__ORCOK__){
-    document.body.classList.add('obraCompleta');
-    document.getElementById('paginaObra').classList.remove('oculto');
     box.hidden=false;
-    PDF_SECOES.forEach(function(p){
-      const s=document.getElementById('o_s'+p[0]); if(!s) return;
-      s.hidden=false;
+    PDF_ITENS.filter(it=>it[0]!=='acomp').forEach(function(it){
+      const s=document.getElementById('o_s'+it[0]); if(!s) return;
+      s.hidden=!m[it[0]];
+      if(!m[it[0]]) return;
       let t=s.querySelector('.tituloImp');
-      if(!t){ t=document.createElement('div'); t.className='tituloImp';
-              s.insertBefore(t,s.firstChild); }
-      t.textContent=p[1];
+      if(!t){ t=document.createElement('div'); t.className='tituloImp'; s.insertBefore(t,s.firstChild); }
+      t.textContent=it[1];
     });
-    const c=document.getElementById('o_sCompras'); if(c) c.hidden=true;
-    montarInsumos();
-    document.querySelectorAll('#orcBox .foot,#paginaObra .foot')
-      .forEach(f=>f.classList.add('aberto'));
+    if(m.Comp) montarInsumos();
+    if(m.Compras) document.querySelectorAll('#o_requisicoes .req').forEach(r=>{r.hidden=false;});
+    document.querySelectorAll('#orcBox .foot,#paginaObra .foot').forEach(f=>f.classList.add('aberto'));
   }
   const limpar=()=>{
     document.body.classList.remove('obraCompleta');
