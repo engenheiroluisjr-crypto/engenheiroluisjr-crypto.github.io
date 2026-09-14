@@ -918,6 +918,35 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   .foot{break-inside:avoid}
 }
 
+/* ===================================================================
+   IMPRESSÃO — correção de quebra e moldura (14/09, 2ª rodada)
+   O Chrome ignora break-inside:avoid dentro de container FLEX ou GRID.
+   A Página da obra é `.pagina-obra.stack` (flex) com `.grid3` (grid)
+   dentro — por isso o gráfico continuava partindo ao meio mesmo com a
+   regra aplicada. No papel os dois viram bloco.
+   =================================================================== */
+@media print{
+  /* fundo escuro até a borda da folha */
+  @page{size:A4 landscape;margin:0}
+  .wrap{padding:9mm 8mm !important;max-width:none}
+
+  /* flex e grid viram bloco: aí o break-inside passa a valer */
+  .pagina-obra.stack,.stack{display:block !important}
+  .pagina-obra.stack>*+*{margin-top:10px}
+  /* font-size:0 no container mata o espaço em branco entre os inline-block —
+     sem isso os dois cartões de 50% não cabem na mesma linha e empilham */
+  .grid2,.grid3{display:block !important;font-size:0 !important}
+  .grid2>.card,.grid3>.card{
+    display:inline-block !important;vertical-align:top;font-size:13px !important;
+    width:49.5% !important;margin:0 0 10px !important;
+    break-inside:avoid !important;page-break-inside:avoid !important}
+  .grid3>.card:first-child,.grid2>.card:first-child{margin-right:1% !important}
+  .pagina-obra>.card,#resumoObra,.kpis5,.foot,
+  .grid2,.grid3{break-inside:avoid !important;page-break-inside:avoid !important}
+  /* o gráfico nunca passa da altura útil da folha */
+  .card svg,.orc svg{max-height:165mm}
+}
+
 </style>
 </head>
 <body>
