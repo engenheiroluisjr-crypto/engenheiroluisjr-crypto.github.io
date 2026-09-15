@@ -5559,5 +5559,114 @@ $('btInfo').onclick=()=>$('rodape').classList.toggle('aberto');
 MS_ORIGEM=null;
 aoFiltrar();
 </script>
+
+<!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
+<script>
+const FECH_DADOS={"195":{"num":195,"uni":"E.E Mario Joaquim Escobar de Andrade","cid":"BARUERI","emp":"LEONARDO ZANAO","sit":"5. CONCLUÍDA","contrato":235271.25,"taxa":0.06,"empreita":14116.27,"ap":212526.4,"tr":7207.92,"emp_ap":12751.58,"emp_tot":13184.06,"mat":0.0,"serv":0.0,"npedidos":0,"top":[]},"199":{"num":199,"uni":"EE SEBASTIAO DE MORAES CARDOSO","cid":"ITAPECERICA DA SERRA","emp":"REINALDO","sit":"5. CONCLUÍDA","contrato":186643.95,"taxa":0.2,"empreita":37328.79,"ap":131576.49,"tr":12451.6,"emp_ap":26315.3,"emp_tot":28805.62,"mat":0.0,"serv":0.0,"npedidos":0,"top":[]},"200":{"num":200,"uni":"EE OREDO RODRIGUES DA CRUZ","cid":"JUQUITIBA","emp":"ANTONIO CABELO","sit":"5. CONCLUÍDA","contrato":171519.72,"taxa":0.2,"empreita":34303.94,"ap":130434.87,"tr":0.0,"emp_ap":26086.97,"emp_tot":26086.97,"mat":0.0,"serv":0.0,"npedidos":0,"top":[]},"223":{"num":223,"uni":"ETEC Antonio furlan","cid":"BARUERI","emp":"REINALDO","sit":"4. EXECUÇÃO","contrato":1935375.91,"taxa":0.538489,"empreita":1042178.64,"ap":413291.43,"tr":273284.71,"emp_ap":222552.89,"emp_tot":369713.7,"mat":127178.11,"serv":19199.0,"npedidos":18,"top":[["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)","m²",731.4,23331.66],["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET","m2",450.0,17946.0],["Torneira de acionamento manual e com ciclo de ","un",18.0,17457.3],["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ","un",30.0,14830.5],["Tinta esmalte cinza médio 3,6 LT","gl",50.0,5781.0],["PORTA DE MADEIRA COMPLETA 0,92X2,10","un",6.0,4296.0],["TELA Q-92 2X3 M","un",60.0,3996.0],["Divisoria de Granilite frontal (DV-03) 0,40x1,","un",25.0,3802.5],["FERRO CHATO 5/8 X 3/16","br",90.0,3780.0],["LUMINÁRIA IL-45 - COM LÂMPADA LED","un",42.0,3766.14],["PR-09 C=2MM","un",12.0,2808.0],["Tinta Esmalte base d'água Branco 18l","lt",20.0,2500.0],["Esmalte Brilhante Branco Coralit 3, 6l","gl",20.0,2500.0],["TINTA ESMALTE BASE ÁGUA CINZA","lt",20.0,2361.2],["Coral Rende Muito Branco Neve 18l","lt",6.0,2010.0],["TINTA PISO CINZA MÉDIO 18L","lt",5.0,1725.0],["DV-04 C=1,2M","un",3.0,1368.9],["Divisórias de granilite 0,35 X 1,80 Conforme D","un",10.0,1331.1],["Cabo flex 6mm² preto","rol",2.0,1295.0],["Cabo flex 4mm² preto","rol",2.0,864.8]]},"224":{"num":224,"uni":"ELIZA DE OLIVEIRA RIBEIRO","cid":"ITAPEVI","emp":"ANTONIO CABELO","sit":"4. EXECUÇÃO","contrato":1486645.35,"taxa":null,"empreita":null,"ap":486290.92,"tr":274008.61,"emp_ap":null,"emp_tot":null,"mat":2852.39,"serv":0.0,"npedidos":5,"top":[]},"230":{"num":230,"uni":"EE MARIA ANTONIETA MARTINS","cid":"EMBU DAS ARTES","emp":"RAFAEL","sit":"4. EXECUÇÃO","contrato":1979042.22,"taxa":null,"empreita":null,"ap":1083172.19,"tr":179925.01,"emp_ap":null,"emp_tot":null,"mat":1976.74,"serv":0.0,"npedidos":9,"top":[]},"231":{"num":231,"uni":"EE MARIA JOSE ANTUNES FERRAZ","cid":"TABOÃO DA SERRA","emp":"RAFAEL","sit":"4. EXECUÇÃO","contrato":1912108.62,"taxa":null,"empreita":null,"ap":776720.04,"tr":58057.26,"emp_ap":null,"emp_tot":null,"mat":712.0,"serv":0.0,"npedidos":7,"top":[]},"232":{"num":232,"uni":"EE NEIDE CELESTINA DE OLIVEIRA","cid":"EMBU GUAÇU","emp":"CRISTIAN GUIDO","sit":"4. EXECUÇÃO","contrato":1394560.14,"taxa":null,"empreita":null,"ap":500062.77,"tr":68313.36,"emp_ap":null,"emp_tot":null,"mat":2080.0,"serv":0.0,"npedidos":4,"top":[]},"269":{"num":269,"uni":"EE JD CAMPESTRE","cid":"EMBU GUAÇU","emp":"RENILDO","sit":"4. EXECUÇÃO","contrato":1328935.74,"taxa":null,"empreita":null,"ap":661977.78,"tr":45518.87,"emp_ap":null,"emp_tot":null,"mat":1113.72,"serv":0.0,"npedidos":2,"top":[]},"274":{"num":274,"uni":"ETEC EMBU","cid":"EMBU DAS ARTES","emp":"RAFAEL","sit":"4. EXECUÇÃO","contrato":1568182.98,"taxa":null,"empreita":null,"ap":104600.06,"tr":468976.52,"emp_ap":null,"emp_tot":null,"mat":1410.0,"serv":0.0,"npedidos":2,"top":[]},"278":{"num":278,"uni":"EE GERTRUDES EDER","cid":"ITAPECERICA DA SERRA","emp":"LEONARDO ZANAO","sit":"4. EXECUÇÃO","contrato":2152584.69,"taxa":null,"empreita":null,"ap":156359.02,"tr":57537.42,"emp_ap":null,"emp_tot":null,"mat":4272.3,"serv":0.0,"npedidos":2,"top":[]},"284":{"num":284,"uni":"EE PROFA IGNES AMELIA OLIVEIRA MACHADO","cid":"ITAPEVI","emp":"ANTONIO CABELO","sit":"4. EXECUÇÃO","contrato":114889.32,"taxa":0.46,"empreita":52849.09,"ap":3522.17,"tr":45000.54,"emp_ap":1620.2,"emp_tot":22320.45,"mat":0.0,"serv":0.0,"npedidos":0,"top":[]},"287":{"num":287,"uni":"EEPROF LAERT ALMEIDA SÃO BERNARDO","cid":"TABOÃO DA SERRA","emp":"PEDRO","sit":"4. EXECUÇÃO","contrato":1950390.3,"taxa":null,"empreita":null,"ap":32747.41,"tr":273322.99,"emp_ap":null,"emp_tot":null,"mat":1088.58,"serv":0.0,"npedidos":5,"top":[]},"288":{"num":288,"uni":"EE EDUARDO VAZ","cid":"EMBU DAS ARTES","emp":"ANTONIO CABELO","sit":"4. EXECUÇÃO","contrato":1756795.6,"taxa":null,"empreita":null,"ap":2378.4,"tr":156047.64,"emp_ap":null,"emp_tot":null,"mat":8399.5,"serv":0.0,"npedidos":4,"top":[]}};
+(function(){
+  var atual=null;
+  function brl(v){ return v==null?'—':'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function pct(v){ return v==null?'—':(v*100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%'; }
+  function caixa(){
+    var b=document.getElementById('fechBox');
+    if(b) return b;
+    b=document.createElement('div'); b.id='fechBox'; b.hidden=true;
+    var alvo=document.getElementById('paginaObra');
+    if(alvo&&alvo.parentNode) alvo.parentNode.insertBefore(b,alvo.nextSibling);
+    else document.body.appendChild(b);
+    return b;
+  }
+  function botao(){
+    var nav=document.getElementById('obraNav');
+    if(!nav||nav.querySelector('[data-p="Fech"]')) return;
+    var bt=document.createElement('button');
+    bt.className='tab'; bt.setAttribute('role','tab'); bt.setAttribute('aria-selected','false');
+    bt.dataset.p='Fech'; bt.textContent='Fechamento de empreiteiro';
+    nav.appendChild(bt);
+  }
+  window.renderFech=function(cod){
+    var b=caixa(); var d=FECH_DADOS[String(cod)];
+    if(!d){ b.innerHTML='<div class="card" style="margin-bottom:12px">Esta obra ainda não tem dados de fechamento. Faltam a planilha <b>- EMPREITA</b> em 01. PLANILHA e o relatório de pedidos do Sienge em 04. RELATÓRIOS.</div>'; return; }
+    var medido=(d.ap||0)+(d.tr||0);
+    var saldoCom = (d.emp_tot==null)?null:(d.emp_tot-(d.mat||0));
+    var linhas=[
+      ['Contrato da obra (FDE)', brl(d.contrato), ''],
+      ['Taxa de empreita', pct(d.taxa), 'lida da planilha - EMPREITA da obra'],
+      ['Valor total da empreita', brl(d.empreita), 'contrato x taxa'],
+      ['SEP',null,null],
+      ['Medido aprovado', brl(d.ap), ''],
+      ['Medido em tramitação', brl(d.tr), ''],
+      ['Medido total', brl(medido), 'aprovado + tramitação'],
+      ['SEP',null,null],
+      ['Empreita sobre o aprovado', brl(d.emp_ap), 'o que já está fechado'],
+      ['Empreita sobre o medido total', brl(d.emp_tot), 'incluindo o que a FDE ainda analisa'],
+      ['SEP',null,null],
+      ['Material comprado pela Atlântica', brl(d.mat), d.npedidos?(d.npedidos+' pedidos no Sienge'):''],
+      ['Mão de obra e serviços no relatório de compras', brl(d.serv), 'não é material'],
+      ['SEP',null,null],
+      ['Empreita sobre o medido total menos o material', brl(saldoCom), 'se o material for abatido do empreiteiro'],
+      ['Empreita sobre o medido total, sem abater material', brl(d.emp_tot), 'se o material for por conta da Atlântica']
+    ];
+    var h='';
+    h+='<div class="bloco"><header><h2>Fechamento com '+(d.emp||'o empreiteiro')+'</h2>'+
+       '<p>Obra '+d.num+' — '+d.uni+' ('+d.cid+'). Os dois resultados no fim da tabela são as duas leituras possíveis: com e sem abater o material comprado pela Atlântica. A regra de abatimento é decisão do contrato com o empreiteiro.</p></header>';
+    h+='<table class="tb"><tbody>';
+    linhas.forEach(function(l){
+      if(l[0]==='SEP'){ h+='<tr><td colspan="3" style="height:6px;border:0"></td></tr>'; return; }
+      var forte=/^Empreita sobre o medido total/.test(l[0])||l[0].indexOf('Valor total')===0;
+      h+='<tr><td'+(forte?' style="font-weight:650"':'')+'>'+l[0]+'</td>'+
+         '<td style="text-align:right;white-space:nowrap'+(forte?';font-weight:650':'')+'">'+l[1]+'</td>'+
+         '<td style="color:var(--text-muted)">'+(l[2]||'')+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+    if(d.top&&d.top.length){
+      h+='<div class="bloco"><header><h2>Material comprado — os maiores</h2>'+
+         '<p>Consolidado por insumo, do relatório de pedidos do Sienge.</p></header>'+
+         '<table class="tb"><thead><tr><th>Insumo</th><th>Un</th><th style="text-align:right">Qtde</th><th style="text-align:right">Valor</th></tr></thead><tbody>';
+      d.top.forEach(function(t){
+        h+='<tr><td>'+t[0]+'</td><td>'+t[1]+'</td><td style="text-align:right">'+Number(t[2]).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'</td><td style="text-align:right;white-space:nowrap">'+brl(t[3])+'</td></tr>';
+      });
+      h+='</tbody></table></div>';
+    }
+    h+='<div class="card" style="margin-top:12px"><b>De onde vem cada número.</b> Contrato e medições saem do CTR. A taxa de empreita é o desconto registrado na planilha <b>- EMPREITA</b> da obra. O material sai do relatório de pedidos de compra do Sienge. Nenhum número aqui é digitado à mão.</div>';
+    b.innerHTML=h;
+  };
+  var _abrir=window.abrirObra;
+  if(typeof _abrir==='function'){
+    window.abrirObra=function(cod){ atual=cod; botao(); var r=_abrir.apply(this,arguments); try{renderFech(cod);}catch(e){} return r; };
+  }
+  var _orc=window.orcRender;
+  if(typeof _orc==='function'){
+    window.orcRender=function(cod){ atual=cod; var r=_orc.apply(this,arguments); try{renderFech(cod);}catch(e){} return r; };
+  }
+  var _painel=window.obraPainel;
+  window.obraPainel=function(p){
+    botao();
+    var b=caixa();
+    if(p==='Fech'){
+      var nav=document.getElementById('obraNav');
+      if(nav) nav.querySelectorAll('button').forEach(function(x){
+        var on=x.dataset.p==='Fech';
+        x.setAttribute('aria-selected',on?'true':'false');
+      });
+      var pg=document.getElementById('paginaObra'); if(pg) pg.classList.add('oculto');
+      var ob=document.getElementById('orcBox'); if(ob) ob.hidden=true;
+      b.hidden=false;
+      if(atual!=null) renderFech(atual);
+      return;
+    }
+    b.hidden=true;
+    if(typeof _painel==='function') return _painel.apply(this,arguments);
+  };
+  document.addEventListener('DOMContentLoaded',function(){ botao(); caixa(); });
+  botao(); caixa();
+  // a aba do fechamento nunca fica desabilitada
+  setInterval(function(){
+    var nav=document.getElementById('obraNav'); if(!nav) return;
+    var bt=nav.querySelector('[data-p="Fech"]');
+    if(bt&&atual!=null&&FECH_DADOS[String(atual)]){ bt.disabled=false; bt.style.opacity=''; }
+  },800);
+})();
+</script>
 </body>
 </html>
