@@ -1357,6 +1357,8 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
             font-weight:700;letter-spacing:.4px;text-transform:uppercase"></select>
           <span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)">
             · por data de aprovação, qualquer competência</span>
+          <button class="tab btpdf" id="btImprimirApMes" type="button"
+            style="margin-left:8px;font-size:10px;padding:2px 9px;letter-spacing:.3px">Imprimir este mês</button>
           <b id="apMesTot">–</b></div>
         <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkApMes"></div>
       </div>
@@ -4158,9 +4160,13 @@ function renderReceb(){
     (aprovMes[k]=aprovMes[k]||{})[am]=(aprovMes[k][am]||0)+(m.v||0);});
   const chipAp=k=>{
     const o=aprovMes[k]; if(!o) return '<span style="color:var(--text-muted)">—</span>';
+    // 18/09: o chip virou botao — leva direto ao BALANCO DO MES daquele mes de
+    // aprovacao, que e onde estao as medicoes que geraram esse dinheiro.
     return Object.entries(o).sort((x,y)=>y[1]-x[1]).slice(0,3).map(([am,v])=>
-      `<span class="lote" style="border-color:var(--realizado);color:var(--realizado)" `+
-      `title="aprovado em ${mesAno(am)} — ${brl(v)}">${mesAno(am)}</span>`).join(' ');};
+      `<span class="lote chipApMes" data-apmes="${am}" role="button" tabindex="0" `+
+      `style="border-color:var(--realizado);color:var(--realizado);cursor:pointer" `+
+      `title="aprovado em ${mesAno(am)} — ${brl(v)} · clique para ver o balanço deste mês">`+
+      `${mesAno(am)} &rsaquo;</span>`).join(' ');};
   let ac=0;
   const chip=(c,o)=>{
     const cor=o.m>=o.t&&o.m>=o.p?'var(--realizado)':(o.t>=o.p?'var(--warning)':'var(--previsto)');
@@ -4243,6 +4249,52 @@ function renderReceb(){
   (function(){
     const sel=$('rMesAp'); if(!sel) return;
     const mesDe=m=>(m.a||'').slice(0,7);
+
+    // -- chips 'Aprovado em' da tabela mes a mes levam para ca (delegado, uma vez)
+    const tabMes=$('rTabMes');
+    if(tabMes&&!tabMes.__ligAp){ tabMes.__ligAp=1;
+      const irAp=el=>{ const k=el.getAttribute('data-apmes'); if(!k) return;
+        MES_AP=k; renderReceb();
+        const d=$('drApMes'); if(d) d.open=true;
+        const card=$('cardApMes');
+        if(card) card.scrollIntoView({behavior:'smooth',block:'start'}); };
+      tabMes.addEventListener('click',ev=>{
+        const c=ev.target.closest('.chipApMes'); if(c){ ev.preventDefault(); irAp(c); }});
+      tabMes.addEventListener('keydown',ev=>{
+        if(ev.key!=='Enter'&&ev.key!==' ') return;
+        const c=ev.target.closest&&ev.target.closest('.chipApMes');
+        if(c){ ev.preventDefault(); irAp(c); }});
+    }
+
+    // -- imprimir so o aprovado do mes (mesmo molde do 'Imprimir so esta lista')
+    if($('btImprimirApMes')) $('btImprimirApMes').onclick=()=>{
+      const card=$('cardApMes'), det=$('drApMes'), imp=$('impressao');
+      if(!card||!imp) return window.print();
+      imp.innerHTML='';
+      const cab=document.createElement('div');
+      cab.style.cssText='font-size:11px;margin:0 0 6px';
+      cab.textContent='ATA FDE · medições aprovadas em '+mesAno(MES_AP)+
+        ' · por data de aprovação, qualquer competência · gerado em '+
+        new Date().toLocaleDateString('pt-BR');
+      imp.appendChild(cab);
+      const cl=card.cloneNode(true);
+      cl.querySelectorAll('button').forEach(e=>e.remove());
+      // o <select> imprime como caixinha de formulario — troca por texto
+      cl.querySelectorAll('select').forEach(s=>{const t=document.createElement('b');
+        t.textContent=mesAno(MES_AP);
+        t.style.cssText='font-size:14px;letter-spacing:0;margin:0 4px'; s.replaceWith(t);});
+      imp.appendChild(cl);
+      if(det){ const cd=det.cloneNode(true); cd.open=true;
+        cd.querySelectorAll('div').forEach(d=>{
+          if((d.getAttribute('style')||'').includes('overflow')){
+            d.style.maxHeight='none'; d.style.overflow='visible'; }});
+        imp.appendChild(cd); }
+      document.body.classList.add('umQuadro');
+      const limpar=()=>{document.body.classList.remove('umQuadro'); imp.innerHTML='';
+        window.removeEventListener('afterprint',limpar);};
+      window.addEventListener('afterprint',limpar);
+      setTimeout(()=>{window.print(); setTimeout(limpar,1500);},60);
+    };
     const anterior=k=>{let y=+k.slice(0,4), n=+k.slice(5,7)-1;
       if(n<1){n=12;y--;} return y+'-'+String(n).padStart(2,'0');};
     const meses=[...new Set(meds.map(mesDe).filter(Boolean))].sort().reverse();
