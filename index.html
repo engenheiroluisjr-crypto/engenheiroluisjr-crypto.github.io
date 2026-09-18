@@ -759,8 +759,7 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <button class="tab" role="tab" id="tObra" aria-selected="false">Página da obra</button>
       <button class="tab" role="tab" id="tEmpr" aria-selected="false">Empreiteiros</button>
       <button class="tab" role="tab" id="tPrev" aria-selected="false">Previsão do mês</button>
-      <button class="tab" role="tab" id="tMed" aria-selected="false">Medição</button>
-      <button class="tab" role="tab" id="tAprov" aria-selected="false">Aprovação</button>
+      <button class="tab" role="tab" id="tMed" aria-selected="false">Medição e aprovação</button>
       <button class="tab" role="tab" id="tReceb" aria-selected="false">Recebimento</button>
       <button class="tab" role="tab" id="tAlerta" aria-selected="false">Conferência <span id="nAlerta"></span></button>
       <button class="tab" role="tab" id="tAdeq" aria-selected="false">Adequação <span id="nAdeq"></span></button>
@@ -1336,6 +1335,7 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   </div>
 
   <!-- ==================== 1. MEDIÇÃO (por competência) ==================== -->
+  <!-- ============ 1. MEDIÇÃO E APROVAÇÃO (competência + esteira) ============ -->
   <section id="secMed" class="oculto">
     <div id="faixaMed" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
       background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--previsto)">
@@ -1343,6 +1343,14 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <span id="fmSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
     </div>
 
+    <div id="faixaAprov" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
+      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--warning)">
+      <span id="faTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+      <span id="faSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+    </div>
+
+
+    <div class="cxtit" style="margin:24px 0 10px;padding-bottom:7px"><span class="pt neutro"></span>O QUE FOI MEDIDO<span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)"> · por competência — o mês da medição</span></div>
     <div class="card cxbloco">
       <div class="cxgrupo cxmes">
         <div class="cxtit"><span class="pt neutro"></span>TOTAL LANÇADO NA COMPETÊNCIA
@@ -1389,20 +1397,12 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
         <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 8px">
           Aprovadas cuja <b>competência</b> cai no mês escolhido acima; o pagamento sai
           <b><span id="lgPag2">30</span> dias</b> depois da aprovação. Para ver o que a FDE aprovou
-          <b>dentro</b> de um mês, qualquer competência, use a aba <b>Aprovação</b>.</p>
+          <b>dentro</b> de um mês, qualquer competência, use a aba <b>Medição e aprovação</b>.</p>
         <div style="max-height:520px;overflow:auto"><table class="tbl" id="rTabMed"></table></div>
       </div>
     </details>
-  </section>
 
-  <!-- ==================== 2. APROVAÇÃO (a esteira do portal) ==================== -->
-  <section id="secAprov" class="oculto">
-    <div id="faixaAprov" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
-      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--warning)">
-      <span id="faTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
-      <span id="faSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
-    </div>
-
+    <div class="cxtit" style="margin:24px 0 10px;padding-bottom:7px"><span class="pt incerto"></span>O QUE ESTÁ NA MÃO DA FDE<span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)"> · a esteira de aprovação</span></div>
     <div class="card cxbloco">
       <div class="cxgrupo">
         <div class="cxtit"><span class="pt incerto"></span>AINDA NÃO É CAIXA — só vira dinheiro se for aprovado
@@ -1421,6 +1421,24 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <div id="gEsteira"></div>
     </div>
 
+    <div class="card" id="cardTram" style="margin-top:10px">
+      <h2 id="cxTramTit">Em tramitação — vira recebimento quando a FDE aprovar</h2>
+      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px">
+        Sem data de pagamento: enquanto a FDE não aprovar não há prazo a contar — a estimativa
+        (competência + <b><span id="lgLag">–</span> dias</b> para aprovar + <b><span id="lgPag3">30</span> dias</b> para pagar)
+        só vale depois da aprovação e aparece na aba <b>Recebimento</b>.<br>
+        <b>Ordem da lista:</b> pela <b>competência da medição</b>, da mais antiga para a mais nova
+        (empatou, a que está parada há mais tempo vem primeiro).<br>
+        Quando a medição existe só do lado da <b>empreiteira</b> e a FDE ainda não abriu, o valor
+        aprovado não existe — a linha mostra o <b>valor apresentado</b>, em cinza, e ele entra num
+        total separado, porque ainda não é promessa de caixa.</p>
+      <label style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);margin:0 0 8px;cursor:pointer"><input type="checkbox" id="cxTramTodas"> mostrar todas as competências</label>
+      <button class="tab btpdf" id="btImprimirTram" style="margin:0 0 8px 12px">Imprimir só esta lista</button>
+      <div style="max-height:420px;overflow:auto"><table class="tbl" id="rTabTram"></table></div>
+    </div>
+
+
+    <div class="cxtit" style="margin:24px 0 10px;padding-bottom:7px"><span class="pt firme"></span>O QUE JÁ FOI APROVADO<span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)"> · por data de aprovação — vira promessa de caixa</span></div>
     <!-- BALANCO DO MES: por data de aprovacao, qualquer competencia -->
     <div class="card cxbloco" id="cardApMes" style="margin-top:10px">
       <div class="cxgrupo">
@@ -1468,22 +1486,6 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <h2>Quem puxou o aprovado do mês</h2>
       <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px" id="rkRankSub"></p>
       <div class="grid2r" id="gRank"></div>
-    </div>
-
-    <div class="card" id="cardTram" style="margin-top:10px">
-      <h2 id="cxTramTit">Em tramitação — vira recebimento quando a FDE aprovar</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px">
-        Sem data de pagamento: enquanto a FDE não aprovar não há prazo a contar — a estimativa
-        (competência + <b><span id="lgLag">–</span> dias</b> para aprovar + <b><span id="lgPag3">30</span> dias</b> para pagar)
-        só vale depois da aprovação e aparece na aba <b>Recebimento</b>.<br>
-        <b>Ordem da lista:</b> pela <b>competência da medição</b>, da mais antiga para a mais nova
-        (empatou, a que está parada há mais tempo vem primeiro).<br>
-        Quando a medição existe só do lado da <b>empreiteira</b> e a FDE ainda não abriu, o valor
-        aprovado não existe — a linha mostra o <b>valor apresentado</b>, em cinza, e ele entra num
-        total separado, porque ainda não é promessa de caixa.</p>
-      <label style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);margin:0 0 8px;cursor:pointer"><input type="checkbox" id="cxTramTodas"> mostrar todas as competências</label>
-      <button class="tab btpdf" id="btImprimirTram" style="margin:0 0 8px 12px">Imprimir só esta lista</button>
-      <div style="max-height:420px;overflow:auto"><table class="tbl" id="rTabTram"></table></div>
     </div>
 
     <div class="foot" id="rodapeSem">
@@ -1546,7 +1548,7 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
         Por isso, numa linha aprovada, a aprovação caiu em regra no mês anterior ao do recebimento.
         A coluna <b>Medido em</b> é outra coisa: diz de qual <b>competência</b> (mês da medição)
         aquele dinheiro veio — passe o mouse na etiqueta para ver o valor de cada origem.
-        Os chips de <b>Aprovado em</b> levam ao balanço daquele mês, na aba Aprovação.<br>
+        Os chips de <b>Aprovado em</b> levam ao balanço daquele mês, na aba Medição e aprovação.<br>
         <span style="color:var(--realizado)">■ Aprovado</span> é firme: a FDE já aprovou, o pagamento sai
         <b id="rLegPag"></b> dias depois da aprovação.
         <span style="color:var(--warning)">■ Em tramitação</span> já foi lançado mas ainda não aprovado —
@@ -1561,7 +1563,7 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
     <div class="foot">
       <p style="font-size:11px;color:var(--text-muted);margin:6px 0 0">
         Para ver o que está parado na esteira da FDE, e o balanço do que foi aprovado no mês,
-        use a aba <b>Aprovação</b>. Para o que foi medido por competência, a aba <b>Medição</b>.</p>
+        use a aba <b>Medição e aprovação</b>. Para o que foi medido por competência, a aba <b>Medição</b>.</p>
     </div>
   </section>
 
@@ -3180,7 +3182,7 @@ function renderObra(cod){
       const cor=d==null?'var(--text-muted)':(d>=10?'var(--critical)':(d>=6?'var(--warning)':'var(--text-muted)'));
       return `<tr><td>${m.n||''}</td><td>${dbr(m.ref)}</td><td>${dbr(m.ap)}</td>`+
       `<td style="color:${m.ok?'var(--good)':'var(--warning)'}">${m.sit||'—'}</td>`+
-      `<td style="color:${m.sp==='Aprovada'?'var(--good)':'var(--warning)'}">${m.sp||'—'}</td>`+
+      `<td style="color:${spDe(m,spPad(m))==='Aprovada'?'var(--good)':'var(--warning)'}">${spDe(m,spPad(m))}</td>`+
       `<td style="color:var(--text-secondary)">${dbr(m.dpa)}</td>`+
       `<td class="num" style="color:${cor}">${(m.sp&&m.sp!=='Aprovada'&&d!=null)?d:'—'}</td>`+
       `<td style="font-size:11px;color:var(--text-muted)">${m.sei||'—'}</td>`+
@@ -3199,7 +3201,7 @@ function abrirObra(cod){
 function mostra(qual){
   const map={cart:['tCart','secCarteira'],lista:['tLista','secLista'],obra:['tObra','secObra'],
              empr:['tEmpr','secEmpr'], prev:['tPrev','secPrev'],
-             med:['tMed','secMed'], aprov:['tAprov','secAprov'],
+             med:['tMed','secMed'],
              receb:['tReceb','secReceb'],alerta:['tAlerta','secAlerta'],
              adeq:['tAdeq','secAdeq']};
   for(const k in map){
@@ -3207,7 +3209,7 @@ function mostra(qual){
     $(map[k][1]).classList.toggle('oculto', k!==qual);
   }
   // os filtros valem para a Carteira e para a pagina dos Empreiteiros
-  const trio = (qual==='med'||qual==='aprov'||qual==='receb');
+  const trio = (qual==='med'||qual==='receb');
   $('barraFiltros').classList.toggle('oculto',
      !(qual==='cart'||qual==='lista'||qual==='empr'||qual==='prev'||qual==='obra'||trio));
   // a barra de competencia/status e a mesma para as tres abas de medicao
@@ -3514,8 +3516,7 @@ function aoFiltrar(){
   if(!$('secEmpr').classList.contains('oculto')) renderEmpr();
   if(!$('secPrev').classList.contains('oculto')) renderPrev();
   if(!($('secReceb').classList.contains('oculto')
-     && $('secMed').classList.contains('oculto')
-     && $('secAprov').classList.contains('oculto'))) renderReceb();
+     && $('secMed').classList.contains('oculto'))) renderReceb();
   classificarTabelas();
   const l=encherSelObra();
   if(!$('secObra').classList.contains('oculto')){
@@ -4528,7 +4529,7 @@ function renderReceb(){
       const cor=d==null?'var(--text-muted)':(d>=10?'var(--critical)':(d>=6?'var(--warning)':'var(--text-muted)'));
       return `<tr><td>${m.c}</td><td>${o.unidade||''}</td><td>${contratoPI(m.c)}</td>`+
         `<td class="num">${m.n||''}</td><td>${dbr(m.r)}</td>`+
-        `<td style="color:var(--warning)">${m.sit||'—'}</td><td>${m.sp||'—'}</td>`+
+        `<td style="color:var(--warning)">${m.sit||'—'}</td><td>${spDe(m,spPad(m))}</td>`+
         `<td style="color:var(--text-secondary)">${dbr(m.dpa)}</td>`+
         `<td class="num" style="color:${cor}">${d==null?'—':d}</td>`+
         celValor(m)+`</tr>`;}).join('')
@@ -4812,8 +4813,7 @@ function barrasReceb(el,dados){
 }
 
 function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
-function irMed(){   mostra('med');   renderReceb(); window.scrollTo(0,0); }
-function irAprov(){ mostra('aprov'); renderReceb(); window.scrollTo(0,0); }
+function irMed(){ mostra('med'); renderReceb(); window.scrollTo(0,0); }
 
 // monta os controles da aba
 (function(){
@@ -4868,7 +4868,6 @@ function irAprov(){ mostra('aprov'); renderReceb(); window.scrollTo(0,0); }
 
 $('tReceb').onclick=irReceb;
 $('tMed').onclick=irMed;
-$('tAprov').onclick=irAprov;
 $('tCart').onclick=irCarteira;
 $('tLista').onclick=irLista;
 
