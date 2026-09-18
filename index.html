@@ -199,6 +199,28 @@
   .cxtit .pt.firme{background:var(--realizado)}
   .cxtit .pt.incerto{background:var(--warning)}
   .cxtit .pt.neutro{background:var(--text-muted)}
+  /* ---- graficos e listas das abas Medicao / Aprovacao / Recebimento (18/09) */
+  .bh{display:grid;grid-template-columns:210px 1fr 190px;gap:10px;align-items:center;padding:4px 0}
+  .bh-l{font-size:11.5px;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bh-t{background:var(--trilho);border-radius:4px;height:14px}
+  .bh-f{height:14px;border-radius:0 4px 4px 0;min-width:2px}
+  .bh-v{text-align:right;font-variant-numeric:tabular-nums;font-size:11.5px;white-space:nowrap}
+  @media(max-width:760px){.bh{grid-template-columns:120px 1fr 120px;gap:6px}}
+  .grid2r .bh{grid-template-columns:105px 1fr 118px;gap:7px}
+  .cols{display:flex;align-items:flex-end;gap:10px;height:180px;padding:6px 2px 0}
+  .cols .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;height:100%}
+  .cols .col .cv{font-size:10.5px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+  .cols .col .cb{width:100%;background:var(--trilho);border-radius:4px 4px 0 0;min-height:2px}
+  .cols .col.at .cb{background:var(--realizado)}
+  .cols .col.at .cv{color:var(--text-primary)}
+  .cols .col .cl{font-size:10.5px;color:var(--text-muted);padding-top:3px;border-top:1px solid var(--grade);
+    width:100%;text-align:center}
+  .cols .col.clicMes{cursor:pointer}
+  .cols .col.clicMes:hover .cb{opacity:.75;background:var(--realizado)}
+  .grid2r{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:1000px){.grid2r{grid-template-columns:1fr}}
+  .rtit{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);
+    margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
   .cxmes .kpis{grid-template-columns:1fr}
   .cxmes .kpi{text-align:left}
   @media(max-width:640px){
@@ -737,7 +759,9 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <button class="tab" role="tab" id="tObra" aria-selected="false">Página da obra</button>
       <button class="tab" role="tab" id="tEmpr" aria-selected="false">Empreiteiros</button>
       <button class="tab" role="tab" id="tPrev" aria-selected="false">Previsão do mês</button>
-      <button class="tab" role="tab" id="tReceb" aria-selected="false">Medição e recebimento</button>
+      <button class="tab" role="tab" id="tMed" aria-selected="false">Medição</button>
+      <button class="tab" role="tab" id="tAprov" aria-selected="false">Aprovação</button>
+      <button class="tab" role="tab" id="tReceb" aria-selected="false">Recebimento</button>
       <button class="tab" role="tab" id="tAlerta" aria-selected="false">Conferência <span id="nAlerta"></span></button>
       <button class="tab" role="tab" id="tAdeq" aria-selected="false">Adequação <span id="nAdeq"></span></button>
       <span style="width:1px;height:22px;background:var(--line);margin:0 3px"></span>
@@ -1293,61 +1317,111 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   </section>
 
   <!-- ==================== MEDIÇÃO E RECEBIMENTO ==================== -->
-  <section id="secReceb" class="oculto">
-    <div id="faixaReceb" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
-      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--terceiro)">
-      <span id="frTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
-      <span id="frSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+  <!-- ===== barra de filtro compartilhada pelas tres abas de medicao/caixa ===== -->
+  <div class="filtros card oculto" id="barraReceb" style="margin-top:0">
+    <div><label class="f">Mês da medição (competência)</label><div class="ms" id="rMes"></div></div>
+    <div><label class="f">&nbsp;</label>
+      <label style="font-size:11px;display:flex;align-items:center;gap:5px;white-space:nowrap">
+        <input type="checkbox" id="cxTodasComp"> todas as competências</label></div>
+    <div><label class="f">Status no portal</label><div class="ms" id="rPortal"></div></div>
+    <!-- contrato, lote, fiscal e busca continuam no DOM, ocultos, para msVals()/msInit()
+         seguirem funcionando e devolverem sempre vazio. A barra do topo ja cobre isso. -->
+    <div style="display:none"><div class="ms" id="rContrato"></div><div class="ms" id="rLote"></div>
+      <div class="ms" id="rFiscal"></div><input id="rBusca"></div>
+    <div style="flex:1 1 220px"><label class="f">&nbsp;</label>
+      <span style="font-size:11px;color:var(--text-muted);line-height:1.5;display:block">
+        Pode marcar vários meses na competência; nenhum marcado = todas.<br/>
+        Contrato, lote, cidade, fiscal, empreiteira e busca: use os filtros do topo.</span></div>
+    <div><label class="f">&nbsp;</label><button class="tab" id="btImprimirReceb">Imprimir</button></div>
+  </div>
+
+  <!-- ==================== 1. MEDIÇÃO (por competência) ==================== -->
+  <section id="secMed" class="oculto">
+    <div id="faixaMed" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
+      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--previsto)">
+      <span id="fmTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+      <span id="fmSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
     </div>
 
-    <div class="filtros card">
-      <div><label class="f">Mês da medição (competência)</label><div class="ms" id="rMes"></div></div>
-      <div><label class="f">&nbsp;</label>
-        <label style="font-size:11px;display:flex;align-items:center;gap:5px;white-space:nowrap">
-          <input type="checkbox" id="cxTodasComp"> todas as competências</label></div>
-      <div><label class="f">Status no portal</label><div class="ms" id="rPortal"></div></div>
-      <!-- 04/09: contrato, lote, fiscal e busca sairam daqui. Duplicavam a barra do topo,
-           que esta tela ja respeita (rFiltro/obrasCaixa intersectam com filtradas()).
-           Os elementos continuam no DOM, ocultos, para msVals()/msInit() seguirem
-           funcionando e devolverem sempre vazio. -->
-      <div style="display:none"><div class="ms" id="rContrato"></div><div class="ms" id="rLote"></div>
-        <div class="ms" id="rFiscal"></div><input id="rBusca"></div>
-      <div style="flex:1 1 240px"><label class="f">&nbsp;</label>
-        <span style="font-size:11px;color:var(--text-muted);line-height:1.5;display:block">
-          Pode marcar vários meses na competência; nenhum marcado = todas.<br/>
-          Contrato, lote, cidade, fiscal, empreiteira e busca: use os filtros do topo.</span></div>
-      <div><label class="f">&nbsp;</label><button class="tab" id="btImprimirReceb">Imprimir</button></div>
-    </div>
-
-    <!-- Os seis KPIs viviam soltos numa grade só, misturando dinheiro firme com
-         dinheiro que depende de aprovacao. Agora sao dois blocos com titulo e
-         total proprio, na ordem em que o dinheiro chega. -->
-    <div class="card cxbloco" style="margin-top:10px">
-      <div class="cxgrupo">
-        <div class="cxtit"><span class="pt firme"></span>DINHEIRO FIRME — a FDE já aprovou, o pagamento sai 30 dias depois
-          <span id="cxFirmeEsc" style="font-weight:400;color:var(--text-muted)"></span>
-          <b id="cxFirmeTot">–</b></div>
-        <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkFirme"></div>
-      </div>
-      <div class="cxgrupo">
-        <div class="cxtit"><span class="pt incerto"></span>AINDA NÃO É CAIXA — só vira dinheiro se for aprovado
-          <span id="cxIncertoEsc" style="font-weight:400;color:var(--text-muted)"></span>
-          <b id="cxIncertoTot">–</b></div>
-        <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkIncerto"></div>
-      </div>
+    <div class="card cxbloco">
       <div class="cxgrupo cxmes">
-        <div class="cxtit"><span class="pt neutro"></span>TOTAL LANÇADO NA COMPETÊNCIA — é a soma dos dois blocos acima</div>
+        <div class="cxtit"><span class="pt neutro"></span>TOTAL LANÇADO NA COMPETÊNCIA
+          <span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)">
+            · o que foi para o portal no mês da medição</span></div>
         <div class="kpis">
           <div class="card kpi"><span class="v" id="rkMes">–</span><span class="l" id="rkMesL">Lançado no mês</span></div>
         </div>
       </div>
     </div>
 
-    <!-- 18/09: BALANCO DO MES. Tudo nesta aba e por competencia; uma medicao de
-         competencia jul/26 aprovada em set/26 nao aparecia em lugar nenhum e o
-         balanco do mes ficava invisivel. Esta secao ignora o filtro de
-         competencia de proposito - os filtros do topo e o status continuam
-         valendo. -->
+    <div class="card" style="margin-top:10px">
+      <h2>Curva de medição — meta × medido × aprovado</h2>
+      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px;line-height:1.6">
+        Por <b>competência</b>. <b>Meta</b> é o previsto do cronograma do Relatório de Vistoria.
+        <b>Aprovado</b> e <b>em tramitação</b> somados são o que de fato entrou no portal naquele mês.
+        A linha responde a pergunta que importa: <i>estou medindo o que prometi?</i></p>
+      <div class="legend">
+        <span><i style="background:var(--previsto)"></i>Meta do cronograma</span>
+        <span><i style="background:var(--realizado)"></i>Aprovado</span>
+        <span><i style="background:var(--warning)"></i>Em tramitação</span></div>
+      <div id="gMeta"></div>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>Meta × previsão lançada × portal — estou atingindo?</h2>
+      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px;line-height:1.6">
+        <b>Previsão lançada</b> é o que está em <b>0. PREVISÃO / 1. ESTUDO</b> — sua intenção de medir,
+        que ainda não foi para o portal. <b>No portal</b> é o que realmente entrou: aprovado + tramitação.<br>
+        A meta muda quando o cronograma é antecipado — por isso a comparação é mês a mês, e não
+        contra um número fixo.</p>
+      <div style="max-height:460px;overflow:auto"><table class="tbl" id="rTabComp"></table></div>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>Meta de cada mês — o que ainda falta medir</h2>
+      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px" class="rescopo2"></p>
+      <table class="tbl" id="rTabMeta"></table>
+    </div>
+
+    <details class="drill">
+      <summary><span id="rTitMes">Medições aprovadas no mês</span><span class="qt" id="rQtMed"></span></summary>
+      <div>
+        <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 8px">
+          Aprovadas cuja <b>competência</b> cai no mês escolhido acima; o pagamento sai
+          <b><span id="lgPag2">30</span> dias</b> depois da aprovação. Para ver o que a FDE aprovou
+          <b>dentro</b> de um mês, qualquer competência, use a aba <b>Aprovação</b>.</p>
+        <div style="max-height:520px;overflow:auto"><table class="tbl" id="rTabMed"></table></div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ==================== 2. APROVAÇÃO (a esteira do portal) ==================== -->
+  <section id="secAprov" class="oculto">
+    <div id="faixaAprov" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
+      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--warning)">
+      <span id="faTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+      <span id="faSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+    </div>
+
+    <div class="card cxbloco">
+      <div class="cxgrupo">
+        <div class="cxtit"><span class="pt incerto"></span>AINDA NÃO É CAIXA — só vira dinheiro se for aprovado
+          <span id="cxIncertoEsc" style="font-weight:400;color:var(--text-muted)"></span>
+          <b id="cxIncertoTot">–</b></div>
+        <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkIncerto"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>Esteira do portal — onde o dinheiro está parado</h2>
+      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px;line-height:1.6">
+        Cada passo é uma situação no portal da FDE, na ordem em que a medição caminha. A barra é o
+        <b>valor</b> parado ali; o número ao lado é a <b>quantidade de medições</b>. É onde se vê qual
+        etapa está segurando a carteira.</p>
+      <div id="gEsteira"></div>
+    </div>
+
+    <!-- BALANCO DO MES: por data de aprovacao, qualquer competencia -->
     <div class="card cxbloco" id="cardApMes" style="margin-top:10px">
       <div class="cxgrupo">
         <div class="cxtit"><span class="pt firme"></span>
@@ -1365,9 +1439,9 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <div class="cxgrupo">
         <div class="cxtit"><span class="pt neutro"></span>DE QUAL COMPETÊNCIA VEIO ESSE DINHEIRO</div>
         <p style="font-size:11px;color:var(--text-muted);margin:-4px 0 8px;line-height:1.6">
-          A FDE aprova no mês medições de vários meses de competência. As outras seções desta aba
-          são todas por <b>competência</b>; esta é a única por <b>data de aprovação</b> — é o
-          balanço do que de fato saiu aprovado no mês e virou promessa de caixa.</p>
+          A FDE aprova no mês medições de vários meses de competência. A aba <b>Medição</b> é toda por
+          <b>competência</b>; esta é por <b>data de aprovação</b> — é o balanço do que de fato saiu
+          aprovado no mês e virou promessa de caixa.</p>
         <table class="tbl" id="rTabApComp"></table>
       </div>
     </div>
@@ -1383,61 +1457,17 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
     </details>
 
     <div class="card" style="margin-top:10px">
-      <h2>Recebimento por mês</h2>
-      <p class="rescopo" style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px"></p>
-      <div class="legend">
-        <span><i style="background:var(--realizado)"></i>Aprovado — pagamento firme (aprovação + <b id="lgPag">30</b> dias)</span>
-        <span><i style="background:var(--realizado);opacity:.4"></i>Em tramitação — estimado</span>
-        <span><i style="background:var(--previsto)"></i>Previsão — lançada em 0. PREVISÃO ou vinda do cronograma</span></div>
-      <div id="rBar"></div>
+      <h2>Aprovado por mês de aprovação</h2>
+      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px">
+        Quanto a FDE aprovou em cada mês, independente da competência. Clique numa barra para levar o
+        balanço acima para aquele mês.</p>
+      <div id="gAprovMes"></div>
     </div>
 
     <div class="card" style="margin-top:10px">
-      <h2>Meta de cada mês — o que ainda falta medir</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px" class="rescopo2"></p>
-      <table class="tbl" id="rTabMeta"></table>
-    </div>
-
-    <details class="drill" open>
-      <summary>Mês a mês do recebimento<span class="qt"> · quando o dinheiro entra na conta</span></summary>
-      <div>
-      <h2 style="display:none">Mês a mês do recebimento</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px;line-height:1.6">
-        Cada linha é <b>o mês em que o dinheiro entra</b> — quem manda nele é a
-        <b>data de aprovação</b>, não a competência: aprovação + <b id="rLegPag0"></b> dias.
-        Por isso, numa linha aprovada, a aprovação caiu em regra no mês anterior ao do recebimento.
-        A coluna <b>Medido em</b> é outra coisa: diz de qual <b>competência</b> (mês da medição)
-        aquele dinheiro veio — passe o mouse na etiqueta para ver o valor de cada origem.<br>
-        <span style="color:var(--realizado)">■ Aprovado</span> é firme: a FDE já aprovou, o pagamento sai
-        <b id="rLegPag"></b> dias depois da aprovação.
-        <span style="color:var(--warning)">■ Em tramitação</span> já foi lançado mas ainda não aprovado —
-        entra pela competência mais o ciclo de <b id="rLegCiclo"></b> dias.
-        <span style="color:var(--previsto)">■ Previsão do cronograma</span> ainda nem foi medido: é a meta
-        do mês pelo Relatório de Vistoria.
-      </p>
-      <table class="tbl" id="rTabMes"></table>
-      </div>
-    </details>
-
-    <details class="drill">
-      <summary><span id="rTitMes">Medições aprovadas no mês</span><span class="qt" id="rQtMed"></span></summary>
-      <div>
-        <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 8px">
-          Data de aprovação no portal da FDE e o pagamento previsto <b><span id="lgPag2">30</span> dias</b> depois.</p>
-        <div style="max-height:520px;overflow:auto"><table class="tbl" id="rTabMed"></table></div>
-      </div>
-    </details>
-
-    <div class="card" style="margin-top:10px">
-      <h2>Meta × previsão lançada × portal — estou atingindo?</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px;line-height:1.6">
-        Por <b>competência</b> (mês da medição). <b>Meta</b> é o previsto do cronograma do Relatório
-        de Vistoria. <b>Previsão lançada</b> é o que está em <b>0. PREVISÃO / 1. ESTUDO</b> — sua
-        intenção de medir, que ainda não foi para o portal. <b>No portal</b> é o que realmente
-        entrou: aprovado + em tramitação.<br>
-        A meta muda quando o cronograma é antecipado — por isso a comparação é mês a mês, e não
-        contra um número fixo.</p>
-      <div style="max-height:460px;overflow:auto"><table class="tbl" id="rTabComp"></table></div>
+      <h2>Quem puxou o aprovado do mês</h2>
+      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px" id="rkRankSub"></p>
+      <div class="grid2r" id="gRank"></div>
     </div>
 
     <div class="card" id="cardTram" style="margin-top:10px">
@@ -1445,7 +1475,7 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px">
         Sem data de pagamento: enquanto a FDE não aprovar não há prazo a contar — a estimativa
         (competência + <b><span id="lgLag">–</span> dias</b> para aprovar + <b><span id="lgPag3">30</span> dias</b> para pagar)
-        só vale depois da aprovação e aparece na lista de recebimento.<br>
+        só vale depois da aprovação e aparece na aba <b>Recebimento</b>.<br>
         <b>Ordem da lista:</b> pela <b>competência da medição</b>, da mais antiga para a mais nova
         (empatou, a que está parada há mais tempo vem primeiro).<br>
         Quando a medição existe só do lado da <b>empreiteira</b> e a FDE ainda não abriu, o valor
@@ -1464,6 +1494,74 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
         preencher a coluna <b>DATA APROVAÇÃO (portal)</b> na aba MEDIÇÕES do CTR.</p>
         <div style="max-height:420px;overflow:auto"><table class="tbl" id="rTabSem"></table></div>
       </div>
+    </div>
+  </section>
+
+  <!-- ==================== 3. RECEBIMENTO (o caixa) ==================== -->
+  <section id="secReceb" class="oculto">
+    <div id="faixaReceb" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
+      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--terceiro)">
+      <span id="frTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+      <span id="frSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+    </div>
+
+    <div class="card cxbloco">
+      <div class="cxgrupo">
+        <div class="cxtit"><span class="pt firme"></span>DINHEIRO FIRME — a FDE já aprovou, o pagamento sai 30 dias depois
+          <span id="cxFirmeEsc" style="font-weight:400;color:var(--text-muted)"></span>
+          <b id="cxFirmeTot">–</b></div>
+        <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkFirme"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>Fluxo de caixa acumulado — previsto × realizado</h2>
+      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px;line-height:1.6">
+        Linha cheia = dinheiro <b>firme</b> acumulado (aprovado, pagamento 30 dias depois da aprovação).
+        Linha tracejada = acumulado <b>com a estimativa</b> (tramitação e previsão do cronograma).
+        A distância entre as duas é o que depende da FDE aprovar.</p>
+      <div class="legend">
+        <span><i style="background:var(--realizado)"></i>Firme acumulado</span>
+        <span><i style="background:var(--terceiro)"></i>Com estimativa acumulado</span></div>
+      <div id="gCaixa"></div>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>Recebimento por mês</h2>
+      <p class="rescopo" style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px"></p>
+      <div class="legend">
+        <span><i style="background:var(--realizado)"></i>Aprovado — pagamento firme (aprovação + <b id="lgPag">30</b> dias)</span>
+        <span><i style="background:var(--realizado);opacity:.4"></i>Em tramitação — estimado</span>
+        <span><i style="background:var(--previsto)"></i>Previsão — lançada em 0. PREVISÃO ou vinda do cronograma</span></div>
+      <div id="rBar"></div>
+    </div>
+
+    <details class="drill" open>
+      <summary>Mês a mês do recebimento<span class="qt"> · quando o dinheiro entra na conta</span></summary>
+      <div>
+      <h2 style="display:none">Mês a mês do recebimento</h2>
+      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px;line-height:1.6">
+        Cada linha é <b>o mês em que o dinheiro entra</b> — quem manda nele é a
+        <b>data de aprovação</b>, não a competência: aprovação + <b id="rLegPag0"></b> dias.
+        Por isso, numa linha aprovada, a aprovação caiu em regra no mês anterior ao do recebimento.
+        A coluna <b>Medido em</b> é outra coisa: diz de qual <b>competência</b> (mês da medição)
+        aquele dinheiro veio — passe o mouse na etiqueta para ver o valor de cada origem.
+        Os chips de <b>Aprovado em</b> levam ao balanço daquele mês, na aba Aprovação.<br>
+        <span style="color:var(--realizado)">■ Aprovado</span> é firme: a FDE já aprovou, o pagamento sai
+        <b id="rLegPag"></b> dias depois da aprovação.
+        <span style="color:var(--warning)">■ Em tramitação</span> já foi lançado mas ainda não aprovado —
+        entra pela competência mais o ciclo de <b id="rLegCiclo"></b> dias.
+        <span style="color:var(--previsto)">■ Previsão do cronograma</span> ainda nem foi medido: é a meta
+        do mês pelo Relatório de Vistoria.
+      </p>
+      <table class="tbl" id="rTabMes"></table>
+      </div>
+    </details>
+
+    <div class="foot">
+      <p style="font-size:11px;color:var(--text-muted);margin:6px 0 0">
+        Para ver o que está parado na esteira da FDE, e o balanço do que foi aprovado no mês,
+        use a aba <b>Aprovação</b>. Para o que foi medido por competência, a aba <b>Medição</b>.</p>
     </div>
   </section>
 
@@ -3101,6 +3199,7 @@ function abrirObra(cod){
 function mostra(qual){
   const map={cart:['tCart','secCarteira'],lista:['tLista','secLista'],obra:['tObra','secObra'],
              empr:['tEmpr','secEmpr'], prev:['tPrev','secPrev'],
+             med:['tMed','secMed'], aprov:['tAprov','secAprov'],
              receb:['tReceb','secReceb'],alerta:['tAlerta','secAlerta'],
              adeq:['tAdeq','secAdeq']};
   for(const k in map){
@@ -3108,8 +3207,11 @@ function mostra(qual){
     $(map[k][1]).classList.toggle('oculto', k!==qual);
   }
   // os filtros valem para a Carteira e para a pagina dos Empreiteiros
+  const trio = (qual==='med'||qual==='aprov'||qual==='receb');
   $('barraFiltros').classList.toggle('oculto',
-     !(qual==='cart'||qual==='lista'||qual==='empr'||qual==='prev'||qual==='obra'||qual==='receb'));
+     !(qual==='cart'||qual==='lista'||qual==='empr'||qual==='prev'||qual==='obra'||trio));
+  // a barra de competencia/status e a mesma para as tres abas de medicao
+  if($('barraReceb')) $('barraReceb').classList.toggle('oculto', !trio);
   classificarTabelas();
 }
 function irEmpr(){ mostra('empr'); renderEmpr(); window.scrollTo(0,0); }
@@ -3411,7 +3513,9 @@ function aoFiltrar(){
   if(!$('secLista').classList.contains('oculto')) renderLista();
   if(!$('secEmpr').classList.contains('oculto')) renderEmpr();
   if(!$('secPrev').classList.contains('oculto')) renderPrev();
-  if(!$('secReceb').classList.contains('oculto')) renderReceb();
+  if(!($('secReceb').classList.contains('oculto')
+     && $('secMed').classList.contains('oculto')
+     && $('secAprov').classList.contains('oculto'))) renderReceb();
   classificarTabelas();
   const l=encherSelObra();
   if(!$('secObra').classList.contains('oculto')){
@@ -3904,7 +4008,17 @@ const D30 = mais(HOJE_ISO,30), D60 = mais(HOJE_ISO,60);
 const ORDEM_PORTAL=['Edição','Análise Fiscal','Aprovação Supervisor','Análise SCM',
   'Aprovação Gerente','Aprovação Diretor','Aprovada','não está no portal','sem status no portal'];
 const ehPrevM=m=>/^[01]\./.test(String(m.sit||''))||(m.pv===true&&!m.sit);
-function spDe(it,pad){return String(it.sp||'').trim()||pad||'sem status no portal';}
+// 18/09: a coluna SITUAÇÃO NO PORTAL do CTR quase nunca vem preenchida — 71 das 92
+// medições em tramitação estavam vazias — e todas caíam em "sem status no portal",
+// escondendo que a fila de verdade está em Análise Fiscal. Quando ela falta, o status
+// sai da coluna SITUAÇÃO, que é a mesma informação com outro rótulo.
+const SP_DE_SIT={'4. APROVADO':'Aprovada','3.1 ANÁLISE SCM':'Análise SCM',
+  '3. ANÁLISE FISCAL':'Análise Fiscal','3.4 APROVAÇÃO GERENTE':'Aprovação Gerente',
+  '3.3 APROVAÇÃO SUPERVISOR':'Aprovação Supervisor','3.5 APROVAÇÃO DIRETOR':'Aprovação Diretor',
+  '3.6 EDIÇÃO FISCAL':'Edição','0. PREVISÃO':'não está no portal','1. ESTUDO':'não está no portal'};
+function spDe(it,pad){return String(it.sp||'').trim()
+  || SP_DE_SIT[String(it.sit||'').trim()]
+  || pad || 'sem status no portal';}
 function spPad(it){return ehPrevM(it)?'não está no portal':null;}
 function spOrd(a,b){const i=ORDEM_PORTAL.indexOf(a),j=ORDEM_PORTAL.indexOf(b);
   return (i<0?99:i)-(j<0?99:j)||a.localeCompare(b,'pt');}
@@ -4437,6 +4551,228 @@ function renderReceb(){
       :'<tr><td colspan="6" style="color:var(--good)">Nenhuma.</td></tr>')+'</tbody>';
 
   renderComp();
+
+  // ====== graficos das tres abas ============================================
+  // Todos saem dos agregados que esta funcao ja calculou. Nenhum recalcula nada
+  // por conta propria, para os numeros do grafico e da tabela nunca divergirem.
+  (function(){
+    // 1) MEDICAO — meta x aprovado x tramitacao, por competencia
+    const ag={};
+    obrasCaixa().forEach(o=>(o.serie||[]).forEach(x=>{
+      const a=ag[x.k]=ag[x.k]||{k:x.k,meta:0,ap:0,tr:0};
+      a.meta+=(x.p||0); a.ap+=(x.m||0); a.tr+=(x.t||0);}));
+    const lm=Object.values(ag).filter(a=>a.meta+a.ap+a.tr>0.005)
+      .sort((a,b)=>a.k<b.k?-1:1).slice(-14);
+    if($('gMeta')) gBarrasMeta($('gMeta'), lm);
+    if($('fmTexto')){
+      const mh=lm.find(a=>a.k===MES_REF);
+      const falta=mh?Math.max(0,mh.meta-(mh.ap+mh.tr)):0;
+      const pct=(mh&&mh.meta)?100*(mh.ap+mh.tr)/mh.meta:null;
+      $('fmTexto').innerHTML = !mh
+        ? 'Sem meta de cronograma para '+mesAno(MES_REF)+' no filtro'
+        : (falta>0 ? 'Faltam <b>'+brl(falta)+'</b> para a meta de '+mesAno(MES_REF)
+                   : 'Meta de '+mesAno(MES_REF)+' atingida — <b>'+brl(mh.ap+mh.tr)+'</b> lançados');
+      $('fmSub').textContent = mh
+        ? 'meta '+brl(mh.meta)+' · aprovado '+brl(mh.ap)+' · em tramitação '+brl(mh.tr)+
+          (pct===null?'':' · '+pct.toFixed(0)+'% da meta')
+        : 'a meta vem do cronograma do Relatório de Vistoria';
+      $('faixaMed').style.borderLeftColor =
+        !mh?'var(--text-muted)':(pct>=100?'var(--good)':pct>=60?'var(--warning)':'var(--critical)');
+    }
+
+    // 2) APROVACAO — esteira do portal
+    const pas={};
+    tram.forEach(m=>{const n=spDe(m,spPad(m));
+      (pas[n]=pas[n]||{n:n,q:0,v:0}); pas[n].q++; pas[n].v+=(m.v||0);});
+    prevl.forEach(m=>{const n='não está no portal';
+      (pas[n]=pas[n]||{n:n,q:0,v:0}); pas[n].q++; pas[n].v+=(m.v||0);});
+    const lp=Object.values(pas).sort((a,b)=>spOrd(a.n,b.n));
+    const totPas=lp.reduce((a,p)=>a+p.v,0);
+    if($('gEsteira')) gEsteiraPassos($('gEsteira'), lp, totPas);
+    if($('faTexto')){
+      const maior=lp.slice().sort((a,b)=>b.v-a.v)[0];
+      $('faTexto').innerHTML = totPas>0
+        ? '<b>'+brl(totPas)+'</b> parados na esteira da FDE'
+        : 'Nada parado na esteira da FDE';
+      $('faSub').textContent = maior
+        ? lp.reduce((a,p)=>a+p.q,0)+' medições · o passo que mais segura é '+maior.n+
+          ' ('+brl(maior.v)+', '+maior.q+' medições) · ciclo medido '+RC.lag+' dias para aprovar'
+        : 'nenhuma medição aguardando aprovação no filtro atual';
+      $('faixaAprov').style.borderLeftColor =
+        totPas>5000000?'var(--critical)':totPas>0?'var(--warning)':'var(--good)';
+    }
+
+    // 3) RECEBIMENTO — caixa acumulado (firme x com estimativa)
+    if($('gCaixa')) gCaixaAcum($('gCaixa'), serie);
+
+    // 4) APROVACAO — aprovado por mes de aprovacao (colunas clicaveis)
+    const pm={};
+    meds.forEach(m=>{const k=(m.a||'').slice(0,7); if(!k) return;
+      (pm[k]=pm[k]||{k:k,q:0,v:0}); pm[k].q++; pm[k].v+=(m.v||0);});
+    const lpm=Object.values(pm).sort((a,b)=>a.k<b.k?-1:1).slice(-12);
+    if($('gAprovMes')){
+      gAprovPorMes($('gAprovMes'), lpm, MES_AP);
+      const g=$('gAprovMes');
+      if(!g.__lig){ g.__lig=1;
+        const vai=el=>{const k=el.getAttribute('data-apmes'); if(!k) return;
+          MES_AP=k; renderReceb();
+          const c=$('cardApMes'); if(c) c.scrollIntoView({behavior:'smooth',block:'start'});};
+        g.addEventListener('click',ev=>{const c=ev.target.closest('.clicMes');
+          if(c){ ev.preventDefault(); vai(c); }});
+        g.addEventListener('keydown',ev=>{ if(ev.key!=='Enter'&&ev.key!==' ') return;
+          const c=ev.target.closest&&ev.target.closest('.clicMes');
+          if(c){ ev.preventDefault(); vai(c); }});
+      }
+    }
+
+    // 5) APROVACAO — rankings do mes escolhido
+    if($('gRank')){
+      const LM=meds.filter(m=>(m.a||'').slice(0,7)===MES_AP);
+      const por=campo=>{const g={};
+        LM.forEach(m=>{const o=OBRA[m.c]||{};
+          const k=String(o[campo]||'').trim().toUpperCase()||'SEM CADASTRO';
+          (g[k]=g[k]||{k:k,q:0,v:0}); g[k].q++; g[k].v+=(m.v||0);});
+        return Object.values(g).sort((a,b)=>b.v-a.v);};
+      gRankings($('gRank'),[
+        {titulo:'Por engenheiro',    itens:por('eng')},
+        {titulo:'Por fiscal da FDE', itens:por('fiscal')},
+        {titulo:'Por empreiteira',   itens:por('empreiteira')}]);
+      if($('rkRankSub')) $('rkRankSub').textContent =
+        'Aprovado em '+(MES_AP?mesAno(MES_AP):'—')+' · '+LM.length+' medições · '+
+        brl(LM.reduce((a,m)=>a+(m.v||0),0))+' · nomes normalizados (maiúsculas, sem espaço sobrando)';
+    }
+  })();
+}
+
+/* ===========================================================================
+   GRAFICOS das abas Medicao / Aprovacao / Recebimento (18/09/2026)
+   Usam os mesmos ajudantes do resto do painel: svgEl/add/txt/kfmt/showTip.
+   Nenhum deles inventa dado: todos recebem agregados prontos de renderReceb.
+   =========================================================================== */
+
+// barra horizontal em HTML, usada na esteira e nos rankings
+function barraH(rot, v, q, max, cor, dica){
+  const pc = max? Math.max(100*v/max, v>0?1.2:0) : 0;
+  return `<div class="bh" title="${dica||''}">`+
+    `<div class="bh-l">${rot}</div>`+
+    `<div class="bh-t"><div class="bh-f" style="width:${pc.toFixed(1)}%;background:${cor}"></div></div>`+
+    `<div class="bh-v">${brl(v)}${q==null?'':` <span style="color:var(--text-muted)">· ${q}</span>`}</div></div>`;
+}
+
+// 1) MEDICAO — meta x aprovado x em tramitacao, por competencia
+function gBarrasMeta(el, dados){
+  el.innerHTML='';
+  if(!dados.length){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Sem competência no filtro.</p>';return;}
+  const W=1140,H=240,ml=64,mr=10,mt=12,mb=34,s=svgEl(W,H); el.appendChild(s);
+  const iw=W-ml-mr, ih=H-mt-mb;
+  const max=Math.max(...dados.map(d=>Math.max(d.meta, d.ap+d.tr)),1);
+  const passo=iw/dados.length, bw=Math.min(passo/2-4, 26);
+  const yy=v=>mt+ih-(v/max)*ih;
+  [0,.25,.5,.75,1].forEach(f=>{const y=mt+ih-f*ih;
+    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:'var(--grade)'});
+    txt(s,ml-8,y+3,kfmt(max*f),{anchor:'end',size:9});});
+  dados.forEach((d,i)=>{
+    const cx=ml+passo*i+passo/2, destaque=d.k===MES_REF;
+    // meta (esquerda)
+    if(d.meta>0){
+      const y=yy(d.meta);
+      add(s,'rect',{x:cx-bw-1,y:y,width:bw,height:mt+ih-y,rx:3,fill:'var(--previsto)','fill-opacity':.85});
+    }
+    // portal: aprovado + tramitacao empilhados (direita), 2px de respiro entre eles
+    let base=mt+ih;
+    if(d.ap>0){ const h=(d.ap/max)*ih;
+      add(s,'rect',{x:cx+1,y:base-h,width:bw,height:h,rx:3,fill:'var(--realizado)'}); base-=h; }
+    if(d.tr>0){ const h=(d.tr/max)*ih;
+      add(s,'rect',{x:cx+1,y:base-h-2,width:bw,height:Math.max(h-2,1),rx:3,fill:'var(--warning)'}); }
+    const alvo=add(s,'rect',{x:ml+passo*i,y:mt,width:passo,height:ih,fill:'transparent'});
+    alvo.addEventListener('mousemove',e=>showTip(e,
+      `<b>${mesAno(d.k)}</b>${destaque?' · mês atual':''}`+
+      `<br><span class="k">Meta:</span> ${brl(d.meta)}`+
+      `<br><span class="k">Aprovado:</span> ${brl(d.ap)}`+
+      `<br><span class="k">Em tramitação:</span> ${brl(d.tr)}`+
+      `<br><span class="k">Atingido:</span> ${d.meta?((100*(d.ap+d.tr)/d.meta).toFixed(0)+'%'):'—'}`));
+    alvo.addEventListener('mouseleave',hideTip);
+    txt(s,cx,H-12,mesAno(d.k),{size:9,fill:destaque?'var(--text-primary)':'var(--text-secondary)'});
+  });
+}
+
+// 2) APROVACAO — esteira: quanto esta parado em cada passo do portal
+function gEsteiraPassos(el, passos, total){
+  if(!passos.length){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Nada em tramitação no filtro.</p>';return;}
+  const max=Math.max(...passos.map(p=>p.v),1);
+  const COR={'Edição':'var(--text-muted)','Análise Fiscal':'var(--warning)',
+    'Aprovação Supervisor':'var(--serious)','Análise SCM':'var(--warning)',
+    'Aprovação Gerente':'var(--serious)','Aprovação Diretor':'var(--realizado)',
+    'não está no portal':'var(--previsto)'};
+  el.innerHTML=passos.map((p,i)=>barraH(
+      `<span style="color:var(--text-muted)">${i+1}.</span> ${p.n}`, p.v, p.q, max,
+      COR[p.n]||'var(--warning)',
+      `${p.n} — ${p.q} medições · ${brl(p.v)} · ${total?(100*p.v/total).toFixed(0):0}% do que está parado`)).join('')
+    + `<div class="bh" style="border-top:1px solid var(--line);margin-top:6px;padding-top:7px">`
+    + `<div class="bh-l"><b>total parado</b></div><div class="bh-t"></div>`
+    + `<div class="bh-v"><b>${brl(total)}</b> <span style="color:var(--text-muted)">· ${passos.reduce((a,p)=>a+p.q,0)}</span></div></div>`;
+}
+
+// 3) RECEBIMENTO — caixa acumulado: firme x com estimativa
+function gCaixaAcum(el, serie){
+  el.innerHTML='';
+  if(!serie.length){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Nada a receber no filtro.</p>';return;}
+  const W=1140,H=250,ml=64,mr=14,mt=14,mb=34,s=svgEl(W,H); el.appendChild(s);
+  const iw=W-ml-mr, ih=H-mt-mb;
+  let af=0, at=0;
+  const pts=serie.map(d=>{af+=d.m; at+=d.m+d.t+d.p; return {k:d.k,f:af,t:at,d:d};});
+  const max=Math.max(...pts.map(p=>p.t),1);
+  const xx=i=>ml+(pts.length===1?iw/2:iw*i/(pts.length-1));
+  const yy=v=>mt+ih-(v/max)*ih;
+  [0,.25,.5,.75,1].forEach(f=>{const y=mt+ih-f*ih;
+    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:'var(--grade)'});
+    txt(s,ml-8,y+3,kfmt(max*f),{anchor:'end',size:9});});
+  const linha=(campo,cor,dash)=>{
+    const d=pts.map((p,i)=>(i?'L':'M')+xx(i)+' '+yy(p[campo])).join(' ');
+    add(s,'path',Object.assign({d:d,fill:'none',stroke:cor,'stroke-width':2,
+      'stroke-linejoin':'round','stroke-linecap':'round'}, dash?{'stroke-dasharray':'6 4'}:{}));
+    pts.forEach((p,i)=>add(s,'circle',{cx:xx(i),cy:yy(p[campo]),r:3.2,fill:cor,
+      stroke:'var(--surface-1)','stroke-width':2}));};
+  linha('t','var(--terceiro)',true);
+  linha('f','var(--realizado)',false);
+  pts.forEach((p,i)=>{
+    const destaque=p.k===MES_REF;
+    const alvo=add(s,'rect',{x:xx(i)-iw/(2*Math.max(pts.length-1,1)),y:mt,
+      width:iw/Math.max(pts.length-1,1),height:ih,fill:'transparent'});
+    alvo.addEventListener('mousemove',e=>showTip(e,
+      `<b>${mesAno(p.k)}</b>${destaque?' · mês atual':''}`+
+      `<br><span class="k">Firme acumulado:</span> ${brl(p.f)}`+
+      `<br><span class="k">Com estimativa:</span> ${brl(p.t)}`+
+      `<br><span class="k">No mês:</span> ${brl(p.d.m)} firme` +
+      (p.d.t?` · ${brl(p.d.t)} em tramitação`:'') + (p.d.p?` · ${brl(p.d.p)} previsão`:'')));
+    alvo.addEventListener('mouseleave',hideTip);
+    if(pts.length<=14||i%2===0)
+      txt(s,xx(i),H-12,mesAno(p.k),{size:9,fill:destaque?'var(--text-primary)':'var(--text-secondary)'});
+  });
+}
+
+// 4) APROVACAO — aprovado por mes de aprovacao (colunas clicaveis)
+function gAprovPorMes(el, dados, sel){
+  if(!dados.length){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Nenhuma aprovação com data no filtro.</p>';return;}
+  const max=Math.max(...dados.map(d=>d.v),1);
+  el.innerHTML='<div class="cols">'+dados.map(d=>{
+    const at=d.k===sel;
+    return `<div class="col${at?' at':''} clicMes" data-apmes="${d.k}" role="button" tabindex="0" `+
+      `title="${mesAno(d.k)} — ${d.q} medições · ${brl(d.v)} · clique para ver o balanço deste mês">`+
+      `<div class="cv">${kfmt(d.v)}</div>`+
+      `<div class="cb" style="height:${(100*d.v/max).toFixed(1)}%"></div>`+
+      `<div class="cl">${mesAno(d.k)}</div></div>`;}).join('')+'</div>';
+}
+
+// 5) APROVACAO — rankings do mes escolhido
+function gRankings(el, grupos){
+  el.innerHTML=grupos.map(g=>{
+    const max=g.itens.length?g.itens[0].v:0;
+    return `<div><div class="rtit">${g.titulo}</div>`+
+      (g.itens.length? g.itens.slice(0,8).map(it=>barraH(it.k, it.v, it.q, max,'var(--realizado)',
+          `${it.k} — ${it.q} medições · ${brl(it.v)}`)).join('')
+        : '<p style="color:var(--text-muted);font-size:11.5px">sem dados</p>')+
+      '</div>';}).join('');
 }
 
 function barrasReceb(el,dados){
@@ -4476,6 +4812,8 @@ function barrasReceb(el,dados){
 }
 
 function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
+function irMed(){   mostra('med');   renderReceb(); window.scrollTo(0,0); }
+function irAprov(){ mostra('aprov'); renderReceb(); window.scrollTo(0,0); }
 
 // monta os controles da aba
 (function(){
@@ -4529,6 +4867,8 @@ function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
 })();
 
 $('tReceb').onclick=irReceb;
+$('tMed').onclick=irMed;
+$('tAprov').onclick=irAprov;
 $('tCart').onclick=irCarteira;
 $('tLista').onclick=irLista;
 
