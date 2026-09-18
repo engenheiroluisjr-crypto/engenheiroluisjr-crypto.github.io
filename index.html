@@ -1343,6 +1343,43 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       </div>
     </div>
 
+    <!-- 18/09: BALANCO DO MES. Tudo nesta aba e por competencia; uma medicao de
+         competencia jul/26 aprovada em set/26 nao aparecia em lugar nenhum e o
+         balanco do mes ficava invisivel. Esta secao ignora o filtro de
+         competencia de proposito - os filtros do topo e o status continuam
+         valendo. -->
+    <div class="card cxbloco" id="cardApMes" style="margin-top:10px">
+      <div class="cxgrupo">
+        <div class="cxtit"><span class="pt firme"></span>
+          BALANÇO DO MÊS — o que a FDE aprovou em
+          <select id="rMesAp" style="background:var(--surface-2);color:var(--text-primary);
+            border:1px solid var(--line);border-radius:5px;padding:2px 6px;font-size:11px;
+            font-weight:700;letter-spacing:.4px;text-transform:uppercase"></select>
+          <span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)">
+            · por data de aprovação, qualquer competência</span>
+          <b id="apMesTot">–</b></div>
+        <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkApMes"></div>
+      </div>
+      <div class="cxgrupo">
+        <div class="cxtit"><span class="pt neutro"></span>DE QUAL COMPETÊNCIA VEIO ESSE DINHEIRO</div>
+        <p style="font-size:11px;color:var(--text-muted);margin:-4px 0 8px;line-height:1.6">
+          A FDE aprova no mês medições de vários meses de competência. As outras seções desta aba
+          são todas por <b>competência</b>; esta é a única por <b>data de aprovação</b> — é o
+          balanço do que de fato saiu aprovado no mês e virou promessa de caixa.</p>
+        <table class="tbl" id="rTabApComp"></table>
+      </div>
+    </div>
+
+    <details class="drill" id="drApMes">
+      <summary><span id="rTitApMes">Aprovadas no mês</span><span class="qt" id="rQtApMes"></span></summary>
+      <div>
+        <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 8px">
+          Ordenadas pela data de aprovação. A coluna <b>Competência</b> mostra de qual mês de
+          medição veio cada uma.</p>
+        <div style="max-height:520px;overflow:auto"><table class="tbl" id="rTabApMed"></table></div>
+      </div>
+    </details>
+
     <div class="card" style="margin-top:10px">
       <h2>Recebimento por mês</h2>
       <p class="rescopo" style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px"></p>
@@ -3993,6 +4030,9 @@ function opcoesPortal(){
   return Object.keys(n).sort(spOrd).map(sp=>[sp,n[sp]]);
 }
 
+// mes escolhido no BALANCO DO MES (por data de aprovacao). Vazio = usa o mes de
+// HOJE_ISO; fica fora de renderReceb para sobreviver a cada re-render dos filtros.
+let MES_AP='';
 function renderReceb(){
   cascata(FCAIXA, id=>obrasCaixa(id), D.obras);
   if(MS['rPortal']) MS['rPortal'].ord=spOrd;
@@ -4195,6 +4235,101 @@ function renderReceb(){
       :'<tr><td colspan="11" style="color:var(--text-muted)">Nenhuma medição aprovada com competência neste mês.</td></tr>')+
     (doMes.length?`<tr><td colspan="8" style="text-align:right;color:var(--text-secondary)"><b>total</b></td>`+
       `<td class="num"><b>${brl2(soma(doMes))}</b></td><td colspan="2"></td></tr>`:'')+'</tbody>';
+
+  // ---- BALANCO DO MES: aprovadas por DATA DE APROVACAO, qualquer competencia -----
+  // 'meds' ja vem com os filtros do topo e o status aplicados; de proposito NAO
+  // passa por naCompSel -- o objetivo e justamente enxergar o que foi aprovado no
+  // mes vindo de competencias antigas.
+  (function(){
+    const sel=$('rMesAp'); if(!sel) return;
+    const mesDe=m=>(m.a||'').slice(0,7);
+    const anterior=k=>{let y=+k.slice(0,4), n=+k.slice(5,7)-1;
+      if(n<1){n=12;y--;} return y+'-'+String(n).padStart(2,'0');};
+    const meses=[...new Set(meds.map(mesDe).filter(Boolean))].sort().reverse();
+    const mesHoje=HOJE_ISO.slice(0,7);
+    if(!meses.length){
+      sel.innerHTML='<option>—</option>';
+      $('apMesTot').textContent=brl(0);
+      $('rkApMes').innerHTML='';
+      $('rTabApComp').innerHTML='<tbody><tr><td style="color:var(--text-muted)">'+
+        'Nenhuma medição aprovada com data, dentro dos filtros do topo.</td></tr></tbody>';
+      $('rTabApMed').innerHTML='';
+      $('rTitApMes').textContent='Aprovadas no mês';
+      $('rQtApMes').textContent='';
+      return;
+    }
+    if(!MES_AP||!meses.includes(MES_AP))
+      MES_AP = meses.includes(mesHoje)?mesHoje:meses[0];
+    sel.innerHTML=meses.map(k=>`<option value="${k}"${k===MES_AP?' selected':''}>`+
+      mesAno(k)+(k===mesHoje?' (mês atual)':'')+'</option>').join('');
+    if(!sel.__lig){ sel.__lig=1;
+      sel.addEventListener('change',()=>{ MES_AP=sel.value; renderReceb(); }); }
+
+    const L   = meds.filter(m=>mesDe(m)===MES_AP);
+    const Lant= meds.filter(m=>mesDe(m)===anterior(MES_AP));
+    const tot=soma(L), totAnt=soma(Lant);
+    const obrasN=new Set(L.map(m=>m.c)).size;
+    const daComp = L.filter(m=>(m.r||'').slice(0,7)===MES_AP);   // competencia = o proprio mes
+    const deOutras = L.filter(m=>(m.r||'').slice(0,7)!==MES_AP);
+    const compsOutras=new Set(deOutras.map(m=>(m.r||'').slice(0,7)).filter(Boolean)).size;
+    const varPc = totAnt?((tot/totAnt-1)*100):null;
+
+    $('apMesTot').textContent=brl(tot);
+    $('rkApMes').innerHTML=
+      cartaoTopo({titulo:'Aprovado em '+mesAno(MES_AP),chave:'',bruto:0,
+        cor:'var(--realizado)', valor:brl(tot),
+        sub:`${L.length} medições em ${obrasN} obra${obrasN===1?'':'s'} · `+
+            `ticket médio ${L.length?brl(tot/L.length):brl(0)}`})+
+      cartaoTopo({titulo:'Veio de competência anterior',chave:'',bruto:0,
+        cor:deOutras.length?'var(--warning)':'var(--text-muted)',
+        valor:brl(soma(deOutras)),
+        sub:deOutras.length
+          ? `${deOutras.length} de ${L.length} medições · ${tot?(100*soma(deOutras)/tot).toFixed(0):0}% do mês · `+
+            `competência ${[...new Set(deOutras.map(m=>(m.r||'').slice(0,7)).filter(Boolean))]
+              .sort().map(mesAno).join(', ')} — nenhuma aparece no filtro de competência acima`
+          : 'tudo que foi aprovado no mês é da competência do próprio mês'})+
+      cartaoTopo({titulo:'Contra '+mesAno(anterior(MES_AP)),chave:'',bruto:0,
+        cor: varPc===null?'var(--text-muted)':(varPc>=0?'var(--good)':'var(--critical)'),
+        valor: varPc===null?'—':(varPc>=0?'+':'')+varPc.toFixed(0)+'%',
+        sub: totAnt
+          ? `${mesAno(anterior(MES_AP))}: ${brl(totAnt)} em ${Lant.length} medições`
+          : 'sem aprovação no mês anterior para comparar'});
+
+    // ---- de qual competencia veio
+    const porC={};
+    L.forEach(m=>{const k=(m.r||'').slice(0,7)||'—';
+      (porC[k]=porC[k]||{q:0,v:0,p:[]}).q++; porC[k].v+=m.v||0;
+      if(m.p) porC[k].p.push(m.p);});
+    const chaves=Object.keys(porC).sort();
+    $('rTabApComp').innerHTML='<thead><tr><th>Competência</th><th class="num">Medições</th>'+
+      '<th class="num">Valor aprovado</th><th class="num">% do mês</th>'+
+      '<th>Pagamento previsto</th></tr></thead><tbody>'+
+      chaves.map(k=>{const c=porC[k], prop=k===MES_AP;
+        const ps=c.p.slice().sort();
+        return `<tr><td>${k==='—'?'—':mesAno(k)}`+
+          (prop?' <span style="font-size:10px;color:var(--text-muted)">(competência do próprio mês)</span>'
+               :' <span style="font-size:10px;color:var(--warning)">(fora do mês)</span>')+'</td>'+
+          `<td class="num">${c.q}</td>`+
+          `<td class="num"><b>${brl2(c.v)}</b></td>`+
+          `<td class="num">${tot?(100*c.v/tot).toFixed(1).replace('.',',')+'%':'—'}</td>`+
+          `<td style="color:var(--text-muted)">${ps.length?(ps[0]===ps[ps.length-1]
+              ? dbr(ps[0]) : dbr(ps[0])+' a '+dbr(ps[ps.length-1])):'—'}</td></tr>`;}).join('')+
+      `<tr><td><b>total</b></td><td class="num"><b>${L.length}</b></td>`+
+      `<td class="num"><b>${brl2(tot)}</b></td><td class="num"><b>100%</b></td><td></td></tr>`+
+      '</tbody>';
+
+    // ---- lista detalhada (mesmas colunas da lista por competencia)
+    $('rTitApMes').textContent='Aprovadas em '+mesAno(MES_AP)+' — lista';
+    $('rQtApMes').textContent=` · ${L.length} medições · ${brl(tot)}`;
+    $('rTabApMed').innerHTML='<thead><tr><th>Nº</th><th>Unidade</th><th>Contrato FDE / PI</th>'+
+      '<th>Empreiteira</th><th class="num">Med.</th><th>Competência</th><th>Aprovação</th>'+
+      '<th>Pagamento previsto</th><th class="num">Aprovado</th><th class="num">Apresentada</th>'+
+      '<th>Nº SEI</th></tr></thead><tbody>'+
+      (L.length?L.slice().sort((a,b)=>a.a<b.a?-1:a.a>b.a?1:(a.c-b.c)).map(linhaMed).join('')
+        :'<tr><td colspan="11" style="color:var(--text-muted)">Nenhuma medição aprovada neste mês.</td></tr>')+
+      (L.length?`<tr><td colspan="8" style="text-align:right;color:var(--text-secondary)"><b>total</b></td>`+
+        `<td class="num"><b>${brl2(tot)}</b></td><td colspan="2"></td></tr>`:'')+'</tbody>';
+  })();
 
   // ---- em tramitação
   // Quando a medicao existe so do lado da EMPREITEIRA (a FDE nem abriu), o valor aprovado
