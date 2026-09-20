@@ -513,6 +513,11 @@
   --shadow:none;
   display:block; margin-top:12px; font-size:13px;
 }
+/* 20/09: o `display:block` acima vencia o [hidden] do navegador (regra de autor ganha
+   da folha do agente), entao o #orcBox continuava na tela — e no PDF — mesmo na aba
+   Acompanhamento. As secoes internas escondiam certo; so o container nao. */
+[hidden]{display:none !important}
+.orc[hidden]{display:none !important}
 .orc *{box-sizing:border-box}
 .orc h2,.orc h3{font-family:inherit;margin:0;text-wrap:balance}
 /* a barra de seções segue o padrão das abas do painel */
@@ -1426,9 +1431,6 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <div class="gsub gsep">Aprovado por mês de aprovação
         <span class="dim">· clique numa barra para levar todo o bloco acima para aquele mês</span></div>
       <div id="gAprovMes"></div>
-      <div class="gsub gsep">Quem puxou o aprovado do mês</div>
-      <p style="font-size:11px;color:var(--text-muted);margin:-4px 0 8px" id="rkRankSub"></p>
-      <div class="grid2r" id="gRank"></div>
     </div>
 
     <h2>Listas</h2>
