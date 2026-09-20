@@ -5099,13 +5099,22 @@ var saldo=OB.valor-aprov-tram;
 
 /* ---------- avisos que exigem decisão ---------- */
 var avisos=[];
-if(OB.plan_inicio!==OB.inicio){
+/* 20/09: o portal manda. A planilha as vezes vem sem data de inicio, ou com lixo do
+   Excel (29/05/1900), e o aviso citava essa data como se fosse real. Agora so avisa
+   quando a planilha tem data valida de verdade — e nunca cita data que nao existe. */
+function dataOk(s){ s=String(s||''); return /^\d{4}-\d{2}-\d{2}$/.test(s) && s.slice(0,4)>='2015'; }
+if(dataOk(OB.plan_inicio) && OB.plan_inicio!==OB.inicio){
+  var difM = Math.round(
+    (new Date(OB.inicio) - new Date(OB.plan_inicio)) / (1000*60*60*24*30.44));
+  var quanto = Math.abs(difM)<1 ? 'poucos dias'
+    : (Math.abs(difM)===1 ? 'cerca de 1 mês' : 'cerca de '+Math.abs(difM)+' meses');
   avisos.push(['crit','Datas divergentes entre a planilha e o contrato',
-    'A planilha orçamentária foi montada para começar em <b>'+dbr(OB.plan_inicio)+
-    '</b> e terminar em <b>'+dbr(OB.plan_fim)+'</b>. O contrato no portal começou em <b>'+
-    dbr(OB.inicio)+'</b>, o que empurra o término para <b>'+dbr(OB.fim)+
-    '</b>. Todo o cronograma desta página usa a data do contrato — a da planilha ficaria '+
-    'quase quatro meses adiantada.']);
+    'A planilha orçamentária foi montada para começar em <b>'+dbr(OB.plan_inicio)+'</b>'+
+    (dataOk(OB.plan_fim) ? ' e terminar em <b>'+dbr(OB.plan_fim)+'</b>' : '')+
+    '. O contrato no portal começou em <b>'+dbr(OB.inicio)+'</b>'+
+    (dataOk(OB.fim) ? ', o que empurra o término para <b>'+dbr(OB.fim)+'</b>' : '')+
+    '. Todo o cronograma desta página usa a data do contrato — a da planilha ficaria '+
+    quanto+(difM>0?' adiantada.':' atrasada.')]);
 }
 var perfis={}; D.caps.forEach(function(c){perfis[c.cron.join('|')]=1;});
 if(Object.keys(perfis).length===1){
