@@ -225,6 +225,34 @@
   .gsub{font-size:11.5px;color:var(--text-secondary);font-weight:600;margin:0 0 8px;line-height:1.6}
   .gsub .dim{font-weight:400;color:var(--text-muted)}
   .gsub.gsep{margin-top:20px;border-top:1px solid var(--line);padding-top:14px}
+  /* ---- aba Medicao: UM MES, TRES NUMEROS (20/09) -------------------------
+     Antes a aba tinha cinco filtros (competencia multipla, "todas as competencias",
+     status no portal, "todas" da tramitacao e o mes de aprovacao) e tres faixas de
+     cartoes em que o mesmo valor aparecia ate tres vezes. Agora: um seletor de mes
+     e tres numeros, na ordem da vida real — lancei, esta preso, recebi. */
+  .mesCab{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .mesCab h2{font-size:clamp(15px,1.5vw,19px);font-weight:650;margin:0}
+  .mesCab .mesRot{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--text-muted);font-weight:700}
+  .mesCab select{background:var(--surface-2);color:var(--text-primary);border:1px solid var(--line);
+    border-radius:8px;padding:6px 12px;font:inherit;font-size:clamp(14px,1.4vw,18px);
+    font-weight:650;cursor:pointer}
+  .mesCab select:hover{border-color:var(--text-muted)}
+  .mesCab .btpdf{margin-left:auto}
+  .mesSub{font-size:11.5px;color:var(--text-muted);margin:5px 0 0;line-height:1.55}
+  .tres{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:13px}
+  @media(max-width:900px){.tres{grid-template-columns:1fr}}
+  .n3{position:relative;padding:13px 15px 14px;border-radius:10px;background:var(--surface-1);
+    border:1px solid var(--line);border-top:3px solid var(--line)}
+  .n3 .p{position:absolute;top:11px;right:13px;font-size:15px;font-weight:700;
+    color:var(--text-muted);opacity:.45;line-height:1}
+  .n3 .t{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;
+    color:var(--text-secondary);display:block;padding-right:18px}
+  .n3 .v{font-size:clamp(19px,2vw,29px);font-weight:650;line-height:1.12;display:block;margin:8px 0 5px}
+  .n3 .s{font-size:11.5px;color:var(--text-muted);display:block;line-height:1.5}
+  .mesNota{font-size:11.5px;color:var(--text-secondary);margin:13px 0 0;line-height:1.55;
+    border-top:1px solid var(--line);padding-top:11px}
+  .mesNota b{color:var(--text-primary)}
   .rtit{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);
     margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
   .cxmes .kpis{grid-template-columns:1fr}
@@ -497,6 +525,41 @@
     body.imprimindo #impressao{display:block !important}
     #impressao .folha{break-after:page}
     #impressao .folha:last-child{break-after:auto}
+    /* ===== 20/09: BORDA DIREITA CORTADA NO PDF =================================
+       Medido no Chromium: a folha RETRATO A4 com margem de 10mm tem 718px uteis,
+       e a tabela MEDICOES LANCADAS NO CTR (11 colunas, celulas .num em nowrap)
+       pedia 772px. O documento inteiro ficava 783px de largura e o Chrome cortava
+       os 65px que sobravam — sempre pela direita, onde fica a borda do quadro.
+       Em A4 PAISAGEM (1062px uteis) nao sobra nada: por isso o painel declara
+       paisagem no @page. As duas regras abaixo garantem que, venha a folha que
+       vier, nada passe da largura dela. ========================================= */
+    html,body{overflow-x:hidden !important}
+    .wrap,#impressao,#impressao .folha,.pagina-obra,
+    .card,.grid2,.grid3,.kpis,.kpis5,.faixaDupla{max-width:100% !important}
+    /* folga de 1mm na direita: absorve o arredondamento de pixel do Chrome quando
+       a escala nao e 100% (ele mede a folha em pontos e o layout em px). */
+    #impressao,.wrap{padding-right:1mm !important}
+  }
+
+  /* ===== FOLHA ESTREITA (retrato) ===========================================
+     O painel foi desenhado para A4 PAISAGEM. Quando a folha vem mais estreita
+     — retrato, Carta retrato, escala reduzida — o layout se REORGANIZA em vez
+     de vazar: graficos em coluna unica e tabela num corpo menor, com as colunas
+     de texto livres para quebrar. Assim o PDF fecha em qualquer configuracao do
+     dialogo de impressao. ==================================================== */
+  @media print and (max-width:900px){
+    .grid2,.grid3{grid-template-columns:1fr !important}
+    table.tbl{font-size:6.6pt !important;table-layout:auto}
+    table.tbl.t-media{font-size:6.2pt !important}
+    table.tbl.t-larga{font-size:5.6pt !important}
+    table.tbl.t-mini,table.tbl.t-micro{font-size:5pt !important}
+    table.tbl td,table.tbl th{padding:1.5px 3px !important;
+      overflow-wrap:break-word;word-break:normal}
+    table.tbl td:first-child,table.tbl th:first-child{white-space:normal !important}
+    table.tbl th{font-size:6.2pt !important}
+    .kpis{grid-template-columns:repeat(auto-fit,minmax(92px,1fr)) !important}
+    .kpi .v{font-size:11.5px !important}
+    .card{padding:6px 8px}
   }
 
 /* ===== orçamento por obra (escopado em .orc) ===== */
@@ -1328,21 +1391,22 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
 
   <!-- ==================== MEDIÇÃO E RECEBIMENTO ==================== -->
   <!-- ===== barra de filtro compartilhada pelas tres abas de medicao/caixa ===== -->
-  <div class="filtros card oculto" id="barraReceb" style="margin-top:0">
-    <div><label class="f">Mês da medição (competência)</label><div class="ms" id="rMes"></div></div>
-    <div><label class="f">&nbsp;</label>
-      <label style="font-size:11px;display:flex;align-items:center;gap:5px;white-space:nowrap">
-        <input type="checkbox" id="cxTodasComp"> todas as competências</label></div>
-    <div><label class="f">Status no portal</label><div class="ms" id="rPortal"></div></div>
-    <!-- contrato, lote, fiscal e busca continuam no DOM, ocultos, para msVals()/msInit()
-         seguirem funcionando e devolverem sempre vazio. A barra do topo ja cobre isso. -->
-    <div style="display:none"><div class="ms" id="rContrato"></div><div class="ms" id="rLote"></div>
-      <div class="ms" id="rFiscal"></div><input id="rBusca"></div>
-    <div style="flex:1 1 220px"><label class="f">&nbsp;</label>
-      <span style="font-size:11px;color:var(--text-muted);line-height:1.5;display:block">
-        Pode marcar vários meses na competência; nenhum marcado = todas.<br/>
-        Contrato, lote, cidade, fiscal, empreiteira e busca: use os filtros do topo.</span></div>
-    <div><label class="f">&nbsp;</label><button class="tab" id="btImprimirReceb">Imprimir</button></div>
+  <!-- ===== UM FILTRO SÓ (20/09) =============================================
+       Eram cinco controles de recorte nesta barra e dentro da página. O mês é
+       escolhido uma vez, no cabeçalho do quadro abaixo, e vale para a aba inteira.
+       rMes, rPortal, rContrato, rLote, rFiscal, rBusca e as duas caixas de "todas
+       as competências" continuam no DOM, ocultos, para msInit()/msVals() seguirem
+       funcionando e devolverem sempre "tudo". ============================= -->
+  <div class="filtros oculto" id="barraReceb" style="margin:0 0 10px;padding:0;background:none;border:0">
+    <div style="flex:1 1 320px">
+      <span style="font-size:11.5px;color:var(--text-muted);line-height:1.5;display:block">
+        O <b>mês</b> se escolhe no cabeçalho do quadro abaixo e vale para a página toda.
+        Contrato, lote, cidade, engenheiro, fiscal e empreiteira: filtros do topo.</span></div>
+    <div style="display:none"><div class="ms" id="rMes"></div><div class="ms" id="rPortal"></div>
+      <div class="ms" id="rContrato"></div><div class="ms" id="rLote"></div>
+      <div class="ms" id="rFiscal"></div><input id="rBusca">
+      <input type="checkbox" id="cxTodasComp"><input type="checkbox" id="cxTramTodas" checked></div>
+    <div><button class="tab" id="btImprimirReceb">Imprimir</button></div>
   </div>
 
   <!-- ==================== 1. MEDIÇÃO (por competência) ==================== -->
@@ -1350,49 +1414,33 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
        o que foi medido (competência) · o que está parado na FDE · o que já foi aprovado ============ -->
   <section id="secMed" class="oculto">
 
-    <div class="faixaDupla">
-      <div id="faixaMed" style="padding:13px 16px;border-radius:10px;background:var(--surface-1);
-        border:1px solid var(--line);border-left:3px solid var(--previsto)">
-        <span id="fmTexto" style="font-size:clamp(14px,1.3vw,19px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
-        <span id="fmSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+    <!-- ===== O MÊS EM TRÊS NÚMEROS ==========================================
+         Um seletor de mês, três números, na ordem em que a coisa acontece:
+         (1) o que eu lancei no portal com competência deste mês,
+         (2) o que está parado esperando a FDE — de qualquer competência,
+         (3) o que a FDE aprovou dentro deste mês — de qualquer competência.
+         Os três não se somam e não se repetem: são três perguntas diferentes.
+         =================================================================== -->
+    <div class="card" id="cardApMes">
+      <div class="mesCab">
+        <label class="mesRot" for="rMesUni">Mês</label>
+        <select id="rMesUni" aria-label="Mês do painel"></select>
+        <span id="cmTit" style="display:none"></span>
+        <button class="tab btpdf" id="btImprimirApMes" type="button">Imprimir este mês</button>
       </div>
-      <div id="faixaAprov" style="padding:13px 16px;border-radius:10px;background:var(--surface-1);
-        border:1px solid var(--line);border-left:3px solid var(--warning)">
-        <span id="faTexto" style="font-size:clamp(14px,1.3vw,19px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
-        <span id="faSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
-      </div>
+      <p class="mesSub" id="cmSub"></p>
+      <div class="tres" id="rkTres"></div>
+      <p class="mesNota" id="cmNota" style="display:none"></p>
     </div>
 
-    <div class="card cxbloco" id="cardApMes" style="margin-top:12px">
-      <div class="cxgrupo cxmes">
-        <div class="cxtit"><span class="pt neutro"></span>LANÇADO NA COMPETÊNCIA
-          <span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)">
-            · o que foi para o portal no mês da medição</span></div>
-        <div class="kpis">
-          <div class="card kpi"><span class="v" id="rkMes">–</span><span class="l" id="rkMesL">Lançado no mês</span></div>
-        </div>
-      </div>
-
-      <div class="cxgrupo">
-        <div class="cxtit"><span class="pt incerto"></span>AINDA NÃO É CAIXA — depende da FDE aprovar
-          <span id="cxIncertoEsc" style="font-weight:400;color:var(--text-muted)"></span>
-          <b id="cxIncertoTot">–</b></div>
-        <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkIncerto"></div>
-      </div>
-
-      <div class="cxgrupo">
-        <div class="cxtit"><span class="pt firme"></span>
-          JÁ APROVADO EM
-          <select id="rMesAp" style="background:var(--surface-2);color:var(--text-primary);
-            border:1px solid var(--line);border-radius:5px;padding:2px 6px;font-size:11px;
-            font-weight:700;letter-spacing:.4px;text-transform:uppercase"></select>
-          <span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)">
-            · por data de aprovação, qualquer competência</span>
-          <button class="tab btpdf" id="btImprimirApMes" type="button"
-            style="margin-left:8px;font-size:10px;padding:2px 9px;letter-spacing:.3px">Imprimir este mês</button>
-          <b id="apMesTot">–</b></div>
-        <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkApMes"></div>
-      </div>
+    <!-- ids que o resto do código ainda escreve; ficam fora da vista para o
+         render não quebrar e para nada aparecer duas vezes na tela -->
+    <div style="display:none">
+      <span id="rkMes"></span><span id="rkMesL"></span>
+      <div id="rkIncerto"></div><div id="rkApMes"></div>
+      <b id="apMesTot"></b><span id="cxIncertoEsc"></span><b id="cxIncertoTot"></b>
+      <div id="faixaMed"><span id="fmTexto"></span><span id="fmSub"></span></div>
+      <div id="faixaAprov"><span id="faTexto"></span><span id="faSub"></span></div>
     </div>
 
     <div class="card" style="margin-top:10px">
@@ -1447,7 +1495,6 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
           Quando a medição existe só do lado da <b>empreiteira</b> e a FDE ainda não abriu, o valor
           aprovado não existe — a linha mostra o <b>valor apresentado</b>, em cinza, e ele entra num
           total separado, porque ainda não é promessa de caixa.</p>
-        <label style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);margin:0 0 8px;cursor:pointer"><input type="checkbox" id="cxTramTodas"> mostrar todas as competências</label>
         <button class="tab btpdf" id="btImprimirTram" style="margin:0 0 8px 12px">Imprimir só esta lista</button>
         <div style="max-height:420px;overflow:auto"><table class="tbl" id="rTabTram"></table></div>
       </div>
@@ -1829,7 +1876,8 @@ function curva(el,dados,total){
     stroke:'var(--realizado)','stroke-width':2,fill:'none'});
   pts.forEach((d,i)=>{
     add(s,'circle',{cx:xx(i),cy:yy(d.r),r:4,fill:'var(--realizado)',stroke:'var(--surface-1)','stroke-width':2});
-    const hit=add(s,'rect',{x:xx(i)-iw/pts.length/2,y:mt,width:iw/pts.length,height:ih,fill:'transparent'});
+    const hx0=Math.max(ml,xx(i)-iw/pts.length/2), hx1=Math.min(W-mr,xx(i)+iw/pts.length/2);
+    const hit=add(s,'rect',{x:hx0,y:mt,width:Math.max(0,hx1-hx0),height:ih,fill:'transparent'});
     hit.addEventListener('mousemove',e=>showTip(e,`<b>${mesAno(d.k)}</b><br>`+
       `<span class="k">Previsto acum. (RV):</span> ${pct(d.p)}`+
       `<br><span class="k" style="color:var(--terceiro)">Ajustado acum.:</span> ${pct(d.a)}`+
@@ -2401,7 +2449,8 @@ function curvaS(el,dados,total){
   if(fim.pr<fim.pv*.995) txt(s,W-mr+5,yy(fim.pr)+14,pct(fim.pr/total),
     {anchor:'start',size:11,fill:'var(--terceiro)'});
   pts.forEach(q=>{
-    const hit=add(s,'rect',{x:xx(q.i)-iw/pts.length/2,y:mt,width:iw/pts.length,height:ih,fill:'transparent'});
+    const hx0=Math.max(ml,xx(q.i)-iw/pts.length/2), hx1=Math.min(W-mr,xx(q.i)+iw/pts.length/2);
+    const hit=add(s,'rect',{x:hx0,y:mt,width:Math.max(0,hx1-hx0),height:ih,fill:'transparent'});
     hit.addEventListener('mousemove',e=>showTip(e,`<b>${mesAno(q.k)}</b>`+(q.n?` · mês ${q.n}`:'')+
       `<br><span class="k">Planejado (PV):</span> ${pct(q.pv/total)} · ${brl(q.pv)}`+
       (q.ev!==null
@@ -2476,7 +2525,8 @@ function spiChart(el,dados){
   d.forEach(q=>{
     add(s,'circle',{cx:xx(q.i),cy:yy(q.spi),r:q.aberto?5:3.5,
       fill:'var(--realizado)',stroke:'var(--surface-1)','stroke-width':2});
-    const hit=add(s,'rect',{x:xx(q.i)-iw/d.length/2,y:mt,width:iw/d.length,height:ih,fill:'transparent'});
+    const hx0=Math.max(ml,xx(q.i)-iw/d.length/2), hx1=Math.min(W-mr,xx(q.i)+iw/d.length/2);
+    const hit=add(s,'rect',{x:hx0,y:mt,width:Math.max(0,hx1-hx0),height:ih,fill:'transparent'});
     hit.addEventListener('mousemove',e=>showTip(e,`<b>${mesAno(q.k)}</b>`+
       (q.aberto?' · <span style="color:var(--warning)">mês ainda aberto</span>':'')+
       `<br><span class="k">SPI c/ tramitação:</span> ${q.spi.toFixed(2)}`+
@@ -3064,7 +3114,14 @@ function renderObra(cod){
     <div class="card" id="resumoObra">
       <span class="rtit">Resumo da obra</span>
       <div class="rgrid">
-        <div><span class="rl">Unidade</span><span class="rv">${esc([o.cidade,o.bairro,o.servico].filter(Boolean).join(' · ')||'—')}</span></div>
+        <!-- 20/09: no PDF a faixa com o numero e o nome da escola nao vai junto
+             (o clone e so o .pagina-obra), entao a folha saia sem dizer de que
+             escola era. O nome da unidade escolar passa a abrir o resumo. -->
+        <div style="grid-column:1/-1"><span class="rl">Unidade escolar</span>
+          <span class="rv"><b>${o.cod} · ${esc(o.unidade||'—')}</b>${
+            [o.cidade,o.bairro,o.servico].filter(Boolean).length
+              ? ` <span style="color:var(--text-muted);font-weight:400">— ${esc([o.cidade,o.bairro,o.servico].filter(Boolean).join(' · '))}</span>`
+              : ''}</span></div>
         <div><span class="rl">Contrato</span><span class="rv"><b>${esc(o.contratoAta||'—')}</b>${o.lote?` <span class="lote">Lote ${o.lote}</span>`:''}</span></div>
         <div><span class="rl">Contrato FDE · PI</span><span class="rv mono">${o.contrato||'—'} · ${o.pi||'—'}</span></div>
         <div><span class="rl">Situação no CTR</span><span class="rv">${esc(o.situacao||'—')}
@@ -4109,7 +4166,19 @@ const FCAIXA=[
 // ---- competencia: passou a ser MULTIPLA (10/09). Nenhuma marcada = todas.
 // mesRef() devolve o mes unico quando so um esta marcado -- os KPIs e titulos que
 // falam de "a competencia" usam ele; com varios marcados o texto vira "N competencias".
-function mesesSel(){ return (typeof MS!=='undefined'&&MS['rMes'])?msVals('rMes'):[]; }
+// 20/09: UM FILTRO SÓ. O mês escolhido no cabeçalho da aba (MES_AP) e a
+// competência passaram a ser a mesma coisa; rMes continua no DOM, oculto, só
+// para msInit()/msVals() não quebrarem.
+function mesesSel(){ return (typeof MES_AP!=='undefined'&&MES_AP)?[MES_AP]:[]; }
+// todos os meses que o painel conhece: competência das medições E mês de
+// aprovação. Sai de RC (sem os filtros do topo) para a lista não encolher
+// quando o Luis filtra uma obra só.
+function mesesDoPainel(){
+  const c=m=>(m.r||'').slice(0,7), a=m=>(m.a||'').slice(0,7);
+  return [...new Set([].concat(
+    (RC.meds||[]).map(a),(RC.meds||[]).map(c),
+    (RC.tram||[]).map(c),(RC.semData||[]).map(c)).filter(Boolean))].sort().reverse();
+}
 function mesRef(){ const a=mesesSel(); return a.length===1?a[0]:''; }
 function naCompSel(m){ const a=mesesSel(); return !a.length||a.includes((m.r||'').slice(0,7)); }
 function escopoMes(){ const a=mesesSel();
@@ -4347,7 +4416,7 @@ function renderReceb(){
   // passa por naCompSel -- o objetivo e justamente enxergar o que foi aprovado no
   // mes vindo de competencias antigas.
   (function(){
-    const sel=$('rMesAp'); if(!sel) return;
+    const sel=$('rMesUni'); if(!sel) return;
     const mesDe=m=>(m.a||'').slice(0,7);
 
     // -- chips 'Aprovado em' da tabela mes a mes levam para ca (delegado, uma vez)
@@ -4397,7 +4466,7 @@ function renderReceb(){
     };
     const anterior=k=>{let y=+k.slice(0,4), n=+k.slice(5,7)-1;
       if(n<1){n=12;y--;} return y+'-'+String(n).padStart(2,'0');};
-    const meses=[...new Set(meds.map(mesDe).filter(Boolean))].sort().reverse();
+    const meses=mesesDoPainel();
     const mesHoje=HOJE_ISO.slice(0,7);
     if(!meses.length){
       sel.innerHTML='<option>—</option>';
@@ -4413,7 +4482,7 @@ function renderReceb(){
     if(!MES_AP||!meses.includes(MES_AP))
       MES_AP = meses.includes(mesHoje)?mesHoje:meses[0];
     sel.innerHTML=meses.map(k=>`<option value="${k}"${k===MES_AP?' selected':''}>`+
-      mesAno(k)+(k===mesHoje?' (mês atual)':'')+'</option>').join('');
+      mesAno(k)+(k===mesHoje?' (mês atual)':(k>mesHoje?' (futuro)':''))+'</option>').join('');
     if(!sel.__lig){ sel.__lig=1;
       sel.addEventListener('change',()=>{ MES_AP=sel.value; renderReceb(); }); }
 
@@ -4425,6 +4494,69 @@ function renderReceb(){
     const deOutras = L.filter(m=>(m.r||'').slice(0,7)!==MES_AP);
     const compsOutras=new Set(deOutras.map(m=>(m.r||'').slice(0,7)).filter(Boolean)).size;
     const varPc = totAnt?((tot/totAnt-1)*100):null;
+
+    // ===== OS TRÊS NÚMEROS DO MÊS =======================================
+    // (1) lancei  (2) esperando a FDE  (3) a FDE aprovou. Sem valor repetido,
+    // sem cartão zerado ocupando o mesmo espaço de um de sete milhões.
+    (function(){
+      const cx=$('rkTres'); if(!cx) return;
+      const med=n=>n+' mediç'+(n===1?'ão':'ões');
+      const n3=(p,t,v,cor,sub)=>`<div class="n3" style="border-top-color:${cor}">`+
+        `<span class="p">${p}</span><span class="t">${t}</span>`+
+        `<span class="v" style="color:${cor}">${v}</span><span class="s">${sub}</span></div>`;
+      const vLanc=soma(doMes)+soma(tramMes)+soma(pvMes);
+      // 1. ESTUDO com valor zero é linha aberta no CTR, não medição lançada:
+      // contar como "2 medições" ao lado de um R$ 0 fazia o cartão parecer errado.
+      const comValor=m=>(m.v>0.005)||(m.e>0.005);
+      const nLanc=doMes.length+tramMes.length+pvMes.filter(comValor).length;
+      const nEstudo=pvMes.filter(m=>!comValor(m)).length;
+      // quando a FDE ainda nao abriu a medição, o valor aprovado não existe e só
+      // há o que a empreiteira apresentou: dizer "R$ 0" sem explicar parece erro.
+      const apresLanc=[].concat(doMes,tramMes,pvMes)
+        .filter(m=>!(m.v>0.005)&&(m.e>0.005)).reduce((a,m)=>a+m.e,0);
+      const vFila=soma(tram), nFila=tram.length;
+      // a idade da fila sai da COMPETÊNCIA (dado do portal), nunca de data que o
+      // portal não expõe — o passo atual não tem data lá.
+      const compsFila=tram.map(m=>(m.r||'')).filter(Boolean).sort();
+      const maisVelha=compsFila.length?compsFila[0].slice(0,7):null;
+      const compsAp=[...new Set(deOutras.map(m=>(m.r||'').slice(0,7)).filter(Boolean))].sort();
+      cx.innerHTML=
+        n3('1','Lancei no portal', brl(vLanc), vLanc?'var(--text-primary)':'var(--text-muted)',
+           !nLanc?`nenhuma medição lançada com competência de ${mesAno(MES_AP)}`+
+                  (nEstudo?` · ${nEstudo} obra${nEstudo===1?'':'s'} com estudo aberto, ainda sem valor`:'')
+           :(vLanc>0.005
+             ? `${med(nLanc)} com competência de ${mesAno(MES_AP)}`
+             : (apresLanc
+                 ? `${med(nLanc)} lançada${nLanc===1?'':'s'}, a FDE ainda não abriu — `+
+                   `${brl(apresLanc)} apresentado pela empreiteira`
+                 : `${med(nLanc)} lançada${nLanc===1?'':'s'}, ainda sem valor no portal`)))+
+        n3('2','Esperando a FDE', brl(vFila), vFila?'var(--warning)':'var(--good)',
+           nFila?`${med(nFila)} paradas, de qualquer competência`+
+                 (maisVelha?` · a mais antiga é competência ${mesAno(maisVelha)}`:'')
+                :'nada parado na fila da FDE')+
+        n3('3','A FDE aprovou', brl(tot), tot?'var(--realizado)':'var(--text-muted)',
+           L.length?`${med(L.length)} em ${obrasN} obra${obrasN===1?'':'s'}, `+
+                    `aprovadas dentro de ${mesAno(MES_AP)}`
+                   :`nenhuma aprovação registrada em ${mesAno(MES_AP)}`);
+      if($('cmTit')) $('cmTit').textContent=mesAno(MES_AP);
+      const nota=$('cmNota');
+      if(nota){
+        const partes=[];
+        if(deOutras.length) partes.push(
+          `<b>${brl(soma(deOutras))}</b> do que a FDE aprovou em ${mesAno(MES_AP)} veio de `+
+          `competência anterior (${compsAp.map(mesAno).join(', ')}) — é dinheiro de mês passado `+
+          `entrando agora, e por isso não aparece no número 1.`);
+        if(soma(pvMes)) partes.push(
+          `<b>${brl(soma(pvMes))}</b> do número 1 ainda é <b>previsão</b>: está em 0. PREVISÃO / `+
+          `1. ESTUDO e não foi para o portal.`);
+        if(totAnt) partes.push(
+          `Em ${mesAno(anterior(MES_AP))} a FDE aprovou ${brl(totAnt)} em ${Lant.length} medições `+
+          `(${varPc>=0?'+':''}${varPc===null?'—':varPc.toFixed(0)}% de um mês para o outro)`+
+          (MES_AP===HOJE_ISO.slice(0,7)?' — mas ${MES_AP} ainda está correndo, a comparação só fecha no fim do mês'.replace('${MES_AP}',mesAno(MES_AP)):'')+'.');
+        nota.innerHTML=partes.join('<br>');
+        nota.style.display=partes.length?'':'none';
+      }
+    })();
 
     $('apMesTot').textContent=brl(tot);
     $('rkApMes').innerHTML=
@@ -4554,13 +4686,20 @@ function renderReceb(){
       .sort((a,b)=>a.k<b.k?-1:1).slice(-14);
     if($('gMeta')) gBarrasMeta($('gMeta'), lm);
     if($('fmTexto')){
-      const mh=lm.find(a=>a.k===MES_REF);
+      const mh=lm.find(a=>a.k===MES_AP);
       const falta=mh?Math.max(0,mh.meta-(mh.ap+mh.tr)):0;
       const pct=(mh&&mh.meta)?100*(mh.ap+mh.tr)/mh.meta:null;
       $('fmTexto').innerHTML = !mh
-        ? 'Sem meta de cronograma para '+mesAno(MES_REF)+' no filtro'
-        : (falta>0 ? 'Faltam <b>'+brl(falta)+'</b> para a meta de '+mesAno(MES_REF)
-                   : 'Meta de '+mesAno(MES_REF)+' atingida — <b>'+brl(mh.ap+mh.tr)+'</b> lançados');
+        ? 'Sem meta de cronograma para '+mesAno(MES_AP)+' no filtro'
+        : (falta>0 ? 'Faltam <b>'+brl(falta)+'</b> para a meta de '+mesAno(MES_AP)
+                   : 'Meta de '+mesAno(MES_AP)+' atingida — <b>'+brl(mh.ap+mh.tr)+'</b> lançados');
+      // a mesma leitura, em uma linha só, logo abaixo do nome do mês
+      if($('cmSub')) $('cmSub').innerHTML = !mh
+        ? 'Sem meta de cronograma para este mês no filtro atual.'
+        : 'Meta do cronograma para o mês: <b>'+brl(mh.meta)+'</b> · já no portal: <b>'+
+          brl(mh.ap+mh.tr)+'</b>'+(pct===null?'':' ('+pct.toFixed(0)+'%)')+
+          (falta>0?' · <b style="color:var(--critical)">faltam '+brl(falta)+'</b>'
+                  :' · <b style="color:var(--good)">meta atingida</b>');
       $('fmSub').textContent = mh
         ? 'meta '+brl(mh.meta)+' · aprovado '+brl(mh.ap)+' · em tramitação '+brl(mh.tr)+
           (pct===null?'':' · '+pct.toFixed(0)+'% da meta')
@@ -4812,6 +4951,10 @@ function irMed(){ mostra('med'); renderReceb(); window.scrollTo(0,0); }
   const comAprov=[...new Set(RC.meds.map(m=>(m.r||'').slice(0,7)).filter(Boolean))].sort().reverse();
   // ignora competencia no futuro (erro de digitacao no CTR) na hora de escolher o mes
   const alvo=comAprov.find(k=>k<=HOJE_ISO.slice(0,7))||comAprov[0]||comp[0]||'';
+  // o mês único precisa existir ANTES do primeiro renderReceb: mesesSel() lê
+  // MES_AP, e com ele vazio a primeira pintura sairia com todas as competências.
+  (function(){ const ms=mesesDoPainel(), h=HOJE_ISO.slice(0,7);
+    MES_AP = ms.includes(h) ? h : (ms[0]||''); })();
   msInit('rMes',comp,'todas as competências',
     k=>mesAno(k)+(comAprov.includes(k)?'':' (só tramitação)'),renderReceb);
   if(alvo&&MS['rMes']){ MS['rMes'].sel.add(alvo);
