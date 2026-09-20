@@ -219,6 +219,12 @@
   .cols .col.clicMes:hover .cb{opacity:.75;background:var(--realizado)}
   .grid2r{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   @media(max-width:1000px){.grid2r{grid-template-columns:1fr}}
+  /* faixa dupla e subtitulos internos da aba Medicao e aprovacao (18/09) */
+  .faixaDupla{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:900px){.faixaDupla{grid-template-columns:1fr}}
+  .gsub{font-size:11.5px;color:var(--text-secondary);font-weight:600;margin:0 0 8px;line-height:1.6}
+  .gsub .dim{font-weight:400;color:var(--text-muted)}
+  .gsub.gsep{margin-top:20px;border-top:1px solid var(--line);padding-top:14px}
   .rtit{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);
     margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
   .cxmes .kpis{grid-template-columns:1fr}
@@ -1335,115 +1341,43 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   </div>
 
   <!-- ==================== 1. MEDIÇÃO (por competência) ==================== -->
-  <!-- ============ 1. MEDIÇÃO E APROVAÇÃO (competência + esteira) ============ -->
+  <!-- ============ MEDIÇÃO E APROVAÇÃO — uma página só, três leituras do mesmo mês:
+       o que foi medido (competência) · o que está parado na FDE · o que já foi aprovado ============ -->
   <section id="secMed" class="oculto">
-    <div id="faixaMed" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
-      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--previsto)">
-      <span id="fmTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
-      <span id="fmSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+
+    <div class="faixaDupla">
+      <div id="faixaMed" style="padding:13px 16px;border-radius:10px;background:var(--surface-1);
+        border:1px solid var(--line);border-left:3px solid var(--previsto)">
+        <span id="fmTexto" style="font-size:clamp(14px,1.3vw,19px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+        <span id="fmSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+      </div>
+      <div id="faixaAprov" style="padding:13px 16px;border-radius:10px;background:var(--surface-1);
+        border:1px solid var(--line);border-left:3px solid var(--warning)">
+        <span id="faTexto" style="font-size:clamp(14px,1.3vw,19px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
+        <span id="faSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
+      </div>
     </div>
 
-    <div id="faixaAprov" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
-      background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--warning)">
-      <span id="faTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
-      <span id="faSub" style="font-size:11.5px;color:var(--text-muted);margin-top:4px;display:block"></span>
-    </div>
-
-
-    <div class="cxtit" style="margin:24px 0 10px;padding-bottom:7px"><span class="pt neutro"></span>O QUE FOI MEDIDO<span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)"> · por competência — o mês da medição</span></div>
-    <div class="card cxbloco">
+    <div class="card cxbloco" id="cardApMes" style="margin-top:12px">
       <div class="cxgrupo cxmes">
-        <div class="cxtit"><span class="pt neutro"></span>TOTAL LANÇADO NA COMPETÊNCIA
+        <div class="cxtit"><span class="pt neutro"></span>LANÇADO NA COMPETÊNCIA
           <span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)">
             · o que foi para o portal no mês da medição</span></div>
         <div class="kpis">
           <div class="card kpi"><span class="v" id="rkMes">–</span><span class="l" id="rkMesL">Lançado no mês</span></div>
         </div>
       </div>
-    </div>
 
-    <div class="card" style="margin-top:10px">
-      <h2>Curva de medição — meta × medido × aprovado</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px;line-height:1.6">
-        Por <b>competência</b>. <b>Meta</b> é o previsto do cronograma do Relatório de Vistoria.
-        <b>Aprovado</b> e <b>em tramitação</b> somados são o que de fato entrou no portal naquele mês.
-        A linha responde a pergunta que importa: <i>estou medindo o que prometi?</i></p>
-      <div class="legend">
-        <span><i style="background:var(--previsto)"></i>Meta do cronograma</span>
-        <span><i style="background:var(--realizado)"></i>Aprovado</span>
-        <span><i style="background:var(--warning)"></i>Em tramitação</span></div>
-      <div id="gMeta"></div>
-    </div>
-
-    <div class="card" style="margin-top:10px">
-      <h2>Meta × previsão lançada × portal — estou atingindo?</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px;line-height:1.6">
-        <b>Previsão lançada</b> é o que está em <b>0. PREVISÃO / 1. ESTUDO</b> — sua intenção de medir,
-        que ainda não foi para o portal. <b>No portal</b> é o que realmente entrou: aprovado + tramitação.<br>
-        A meta muda quando o cronograma é antecipado — por isso a comparação é mês a mês, e não
-        contra um número fixo.</p>
-      <div style="max-height:460px;overflow:auto"><table class="tbl" id="rTabComp"></table></div>
-    </div>
-
-    <div class="card" style="margin-top:10px">
-      <h2>Meta de cada mês — o que ainda falta medir</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px" class="rescopo2"></p>
-      <table class="tbl" id="rTabMeta"></table>
-    </div>
-
-    <details class="drill">
-      <summary><span id="rTitMes">Medições aprovadas no mês</span><span class="qt" id="rQtMed"></span></summary>
-      <div>
-        <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 8px">
-          Aprovadas cuja <b>competência</b> cai no mês escolhido acima; o pagamento sai
-          <b><span id="lgPag2">30</span> dias</b> depois da aprovação. Para ver o que a FDE aprovou
-          <b>dentro</b> de um mês, qualquer competência, use a aba <b>Medição e aprovação</b>.</p>
-        <div style="max-height:520px;overflow:auto"><table class="tbl" id="rTabMed"></table></div>
-      </div>
-    </details>
-
-    <div class="cxtit" style="margin:24px 0 10px;padding-bottom:7px"><span class="pt incerto"></span>O QUE ESTÁ NA MÃO DA FDE<span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)"> · a esteira de aprovação</span></div>
-    <div class="card cxbloco">
       <div class="cxgrupo">
-        <div class="cxtit"><span class="pt incerto"></span>AINDA NÃO É CAIXA — só vira dinheiro se for aprovado
+        <div class="cxtit"><span class="pt incerto"></span>AINDA NÃO É CAIXA — depende da FDE aprovar
           <span id="cxIncertoEsc" style="font-weight:400;color:var(--text-muted)"></span>
           <b id="cxIncertoTot">–</b></div>
         <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkIncerto"></div>
       </div>
-    </div>
 
-    <div class="card" style="margin-top:10px">
-      <h2>Esteira do portal — onde o dinheiro está parado</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px;line-height:1.6">
-        Cada passo é uma situação no portal da FDE, na ordem em que a medição caminha. A barra é o
-        <b>valor</b> parado ali; o número ao lado é a <b>quantidade de medições</b>. É onde se vê qual
-        etapa está segurando a carteira.</p>
-      <div id="gEsteira"></div>
-    </div>
-
-    <div class="card" id="cardTram" style="margin-top:10px">
-      <h2 id="cxTramTit">Em tramitação — vira recebimento quando a FDE aprovar</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px">
-        Sem data de pagamento: enquanto a FDE não aprovar não há prazo a contar — a estimativa
-        (competência + <b><span id="lgLag">–</span> dias</b> para aprovar + <b><span id="lgPag3">30</span> dias</b> para pagar)
-        só vale depois da aprovação e aparece na aba <b>Recebimento</b>.<br>
-        <b>Ordem da lista:</b> pela <b>competência da medição</b>, da mais antiga para a mais nova
-        (empatou, a que está parada há mais tempo vem primeiro).<br>
-        Quando a medição existe só do lado da <b>empreiteira</b> e a FDE ainda não abriu, o valor
-        aprovado não existe — a linha mostra o <b>valor apresentado</b>, em cinza, e ele entra num
-        total separado, porque ainda não é promessa de caixa.</p>
-      <label style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);margin:0 0 8px;cursor:pointer"><input type="checkbox" id="cxTramTodas"> mostrar todas as competências</label>
-      <button class="tab btpdf" id="btImprimirTram" style="margin:0 0 8px 12px">Imprimir só esta lista</button>
-      <div style="max-height:420px;overflow:auto"><table class="tbl" id="rTabTram"></table></div>
-    </div>
-
-
-    <div class="cxtit" style="margin:24px 0 10px;padding-bottom:7px"><span class="pt firme"></span>O QUE JÁ FOI APROVADO<span style="font-weight:400;letter-spacing:0;text-transform:none;color:var(--text-muted)"> · por data de aprovação — vira promessa de caixa</span></div>
-    <!-- BALANCO DO MES: por data de aprovacao, qualquer competencia -->
-    <div class="card cxbloco" id="cardApMes" style="margin-top:10px">
       <div class="cxgrupo">
         <div class="cxtit"><span class="pt firme"></span>
-          BALANÇO DO MÊS — o que a FDE aprovou em
+          JÁ APROVADO EM
           <select id="rMesAp" style="background:var(--surface-2);color:var(--text-primary);
             border:1px solid var(--line);border-radius:5px;padding:2px 6px;font-size:11px;
             font-weight:700;letter-spacing:.4px;text-transform:uppercase"></select>
@@ -1454,39 +1388,88 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
           <b id="apMesTot">–</b></div>
         <div class="kpis5" style="grid-template-columns:repeat(3,1fr)" id="rkApMes"></div>
       </div>
-      <div class="cxgrupo">
-        <div class="cxtit"><span class="pt neutro"></span>DE QUAL COMPETÊNCIA VEIO ESSE DINHEIRO</div>
-        <p style="font-size:11px;color:var(--text-muted);margin:-4px 0 8px;line-height:1.6">
-          A FDE aprova no mês medições de vários meses de competência. A aba <b>Medição</b> é toda por
-          <b>competência</b>; esta é por <b>data de aprovação</b> — é o balanço do que de fato saiu
-          aprovado no mês e virou promessa de caixa.</p>
-        <table class="tbl" id="rTabApComp"></table>
-      </div>
     </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>Como o mês está andando</h2>
+      <div class="gsub">Meta × medido × aprovado, por competência
+        <span class="dim">· a meta vem do cronograma do Relatório de Vistoria; aprovado e em tramitação somados
+        são o que de fato entrou no portal naquele mês</span></div>
+      <div class="legend">
+        <span><i style="background:var(--previsto)"></i>Meta do cronograma</span>
+        <span><i style="background:var(--realizado)"></i>Aprovado</span>
+        <span><i style="background:var(--warning)"></i>Em tramitação</span></div>
+      <div id="gMeta"></div>
+      <div class="gsub gsep">Onde o dinheiro está parado na FDE
+        <span class="dim">· cada passo é uma situação no portal, na ordem em que a medição caminha;
+        a barra é o valor parado ali e o número ao lado a quantidade de medições</span></div>
+      <div id="gEsteira"></div>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>Estou atingindo a meta?</h2>
+      <div class="gsub">Meta × previsão lançada × portal, por competência
+        <span class="dim">· <b>previsão lançada</b> é o que está em 0. PREVISÃO / 1. ESTUDO — intenção de medir
+        que ainda não foi para o portal; <b>no portal</b> é aprovado + tramitação</span></div>
+      <div style="max-height:420px;overflow:auto"><table class="tbl" id="rTabComp"></table></div>
+      <div class="gsub gsep">O que ainda falta medir, mês a mês</div>
+      <p style="font-size:11px;color:var(--text-muted);margin:-4px 0 8px" class="rescopo2"></p>
+      <table class="tbl" id="rTabMeta"></table>
+    </div>
+
+    <div class="card" style="margin-top:10px">
+      <h2>O que a FDE aprovou no mês</h2>
+      <div class="gsub">De qual competência veio esse dinheiro
+        <span class="dim">· a FDE aprova no mês medições de vários meses de competência — este é o único
+        recorte por <b>data de aprovação</b>, e é o que vira promessa de caixa</span></div>
+      <table class="tbl" id="rTabApComp"></table>
+      <div class="gsub gsep">Aprovado por mês de aprovação
+        <span class="dim">· clique numa barra para levar todo o bloco acima para aquele mês</span></div>
+      <div id="gAprovMes"></div>
+      <div class="gsub gsep">Quem puxou o aprovado do mês</div>
+      <p style="font-size:11px;color:var(--text-muted);margin:-4px 0 8px" id="rkRankSub"></p>
+      <div class="grid2r" id="gRank"></div>
+    </div>
+
+    <h2>Listas</h2>
+
+    <details class="drill" open>
+      <summary><span id="cxTramTit">Em tramitação</span></summary>
+      <div class="card" id="cardTram" style="margin:0;border:0;padding:0;background:transparent">
+        <p style="font-size:11px;color:var(--text-muted);margin:2px 0 8px">
+          Sem data de pagamento: enquanto a FDE não aprovar não há prazo a contar — a estimativa
+          (competência + <b><span id="lgLag">–</span> dias</b> para aprovar + <b><span id="lgPag3">30</span> dias</b> para pagar)
+          só vale depois da aprovação e aparece na aba <b>Recebimento</b>.<br>
+          <b>Ordem da lista:</b> pela <b>competência da medição</b>, da mais antiga para a mais nova
+          (empatou, a que está parada há mais tempo vem primeiro).<br>
+          Quando a medição existe só do lado da <b>empreiteira</b> e a FDE ainda não abriu, o valor
+          aprovado não existe — a linha mostra o <b>valor apresentado</b>, em cinza, e ele entra num
+          total separado, porque ainda não é promessa de caixa.</p>
+        <label style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text-secondary);margin:0 0 8px;cursor:pointer"><input type="checkbox" id="cxTramTodas"> mostrar todas as competências</label>
+        <button class="tab btpdf" id="btImprimirTram" style="margin:0 0 8px 12px">Imprimir só esta lista</button>
+        <div style="max-height:420px;overflow:auto"><table class="tbl" id="rTabTram"></table></div>
+      </div>
+    </details>
 
     <details class="drill" id="drApMes">
       <summary><span id="rTitApMes">Aprovadas no mês</span><span class="qt" id="rQtApMes"></span></summary>
       <div>
         <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 8px">
-          Ordenadas pela data de aprovação. A coluna <b>Competência</b> mostra de qual mês de
-          medição veio cada uma.</p>
+          Por <b>data de aprovação</b>, qualquer competência. A coluna <b>Competência</b> mostra de qual mês
+          de medição veio cada uma.</p>
         <div style="max-height:520px;overflow:auto"><table class="tbl" id="rTabApMed"></table></div>
       </div>
     </details>
 
-    <div class="card" style="margin-top:10px">
-      <h2>Aprovado por mês de aprovação</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px">
-        Quanto a FDE aprovou em cada mês, independente da competência. Clique numa barra para levar o
-        balanço acima para aquele mês.</p>
-      <div id="gAprovMes"></div>
-    </div>
-
-    <div class="card" style="margin-top:10px">
-      <h2>Quem puxou o aprovado do mês</h2>
-      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 8px" id="rkRankSub"></p>
-      <div class="grid2r" id="gRank"></div>
-    </div>
+    <details class="drill">
+      <summary><span id="rTitMes">Aprovadas com competência no mês</span><span class="qt" id="rQtMed"></span></summary>
+      <div>
+        <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 8px">
+          Por <b>competência</b> (o mês da medição); o pagamento sai
+          <b><span id="lgPag2">30</span> dias</b> depois da aprovação.</p>
+        <div style="max-height:520px;overflow:auto"><table class="tbl" id="rTabMed"></table></div>
+      </div>
+    </details>
 
     <div class="foot" id="rodapeSem">
       <button type="button" class="maisInfo" id="btSem">aprovadas sem data de aprovação — fora do calendário</button>
@@ -4510,6 +4493,9 @@ function renderReceb(){
   if($('cxTramTit')) $('cxTramTit').textContent='Em tramitação — '+
     (tudoTram?'todas as competências':escopoMes())+
     ' · vira recebimento quando a FDE aprovar';
+  // o cardTram agora vive dentro de um <details> sem moldura propria: o clone da
+  // impressao precisa do titulo junto, senao sai uma tabela sem cabecalho.
+  if($('cardTram') && !$('cardTram').dataset.tit){ $('cardTram').dataset.tit='1'; }
   const soApres=tramL.filter(m=>!(m.v>0.005)&&(m.e>0.005)).reduce((a,m)=>a+m.e,0);
   const celValor=(m)=>{
     if(m.v>0.005) return `<td class="num">${brl2(m.v)}</td>`;
