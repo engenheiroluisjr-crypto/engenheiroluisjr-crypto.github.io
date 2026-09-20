@@ -374,7 +374,13 @@
       /* o trilho da meta saia como um bloco PRETO: no papel parecia 100% cheio */
       --trilho:#e6e6e0; --grade:#c2c2ba; --marca:#b8b8b0;
     }
-    @page{size:A4 landscape;margin:8mm}
+    /* 20/09: FOLHA DEITADA, TRAVADA, COM MARGEM MAIOR.
+       Declarar 'A4 landscape' nao bastava: o Chrome deixava o dialogo sobrepor com
+       Retrato, e em retrato a tabela de medicoes (11 colunas) pedia 772px numa folha
+       de 718 — era dai que vinha a borda direita cortada. Com a folha em MEDIDAS
+       (297mm x 210mm) o seletor de orientacao fica desabilitado e o PDF sai deitado
+       de qualquer jeito. Margem de 12mm (era 8) a pedido do Luis. */
+    @page{size:297mm 210mm;margin:12mm}
     html,body{background:#fff !important;color:#000 !important;
       -webkit-print-color-adjust:exact;print-color-adjust:exact}
     .wrap{max-width:none;padding:0}
@@ -548,7 +554,9 @@
      de texto livres para quebrar. Assim o PDF fecha em qualquer configuracao do
      dialogo de impressao. ==================================================== */
   @media print and (max-width:900px){
-    .grid2,.grid3{grid-template-columns:1fr !important}
+    /* os graficos CONTINUAM lado a lado mesmo na folha estreita: a dupla em duas
+       colunas e o que faz a folha de obra caber. Quem estourava era a tabela, e e
+       nela que se mexe. */
     table.tbl{font-size:6.6pt !important;table-layout:auto}
     table.tbl.t-media{font-size:6.2pt !important}
     table.tbl.t-larga{font-size:5.6pt !important}
