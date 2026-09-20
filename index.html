@@ -374,13 +374,18 @@
       /* o trilho da meta saia como um bloco PRETO: no papel parecia 100% cheio */
       --trilho:#e6e6e0; --grade:#c2c2ba; --marca:#b8b8b0;
     }
-    /* 20/09: FOLHA DEITADA, TRAVADA, COM MARGEM MAIOR.
-       Declarar 'A4 landscape' nao bastava: o Chrome deixava o dialogo sobrepor com
-       Retrato, e em retrato a tabela de medicoes (11 colunas) pedia 772px numa folha
-       de 718 — era dai que vinha a borda direita cortada. Com a folha em MEDIDAS
-       (297mm x 210mm) o seletor de orientacao fica desabilitado e o PDF sai deitado
-       de qualquer jeito. Margem de 12mm (era 8) a pedido do Luis. */
-    @page{size:297mm 210mm;margin:12mm}
+    /* ===== 20/09, SEGUNDA LICAO: NUNCA FIXAR O TAMANHO DA FOLHA =============
+       Tentei travar a paisagem com `size:297mm 210mm`. O tiro saiu pela culatra:
+       o Chrome usa a medida do @page para MONTAR o layout, mas imprime no papel
+       que o dialogo mandou. Com o dialogo em Retrato (595x842pt, conferido no PDF
+       que o Luis mandou) a pagina era montada com 297mm de largura e impressa numa
+       folha de 210mm — os 87mm da direita, quase 30%, sumiam. Era por isso que a
+       tabela MES A MES perdia as duas ultimas colunas e a de medicoes perdia
+       Apresentada e Aprovada FDE.
+       Sem `size`, o layout nasce com a largura do papel de verdade, seja ele qual
+       for, e o bloco @media print and (max-width:900px) logo abaixo cuida de
+       encaixar a folha estreita. So a margem fica declarada. ==================== */
+    @page{margin:12mm}
     html,body{background:#fff !important;color:#000 !important;
       -webkit-print-color-adjust:exact;print-color-adjust:exact}
     .wrap{max-width:none;padding:0}
