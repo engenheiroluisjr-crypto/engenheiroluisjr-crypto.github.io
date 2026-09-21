@@ -225,6 +225,29 @@
   .gsub{font-size:11.5px;color:var(--text-secondary);font-weight:600;margin:0 0 8px;line-height:1.6}
   .gsub .dim{font-weight:400;color:var(--text-muted)}
   .gsub.gsep{margin-top:20px;border-top:1px solid var(--line);padding-top:14px}
+  /* ---- aba Relatórios (20/09) ---- */
+  .relEsc{font-size:12px;color:var(--text-secondary);line-height:1.6;margin:8px 0 0;
+    background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:10px 13px}
+  .relEsc b{color:var(--text-primary)}
+  .relGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px;margin-top:12px}
+  @media(max-width:760px){.relGrid{grid-template-columns:1fr}}
+  .relCard{background:var(--surface-1);border:1px solid var(--line);border-radius:10px;
+    padding:15px 16px 14px;display:flex;flex-direction:column;gap:9px}
+  .relCard h3{margin:0;font-size:14.5px;font-weight:650;color:var(--text-primary)}
+  .relCard .fmt{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);
+    font-weight:700}
+  .relCard .exp{font-size:11.5px;color:var(--text-muted);line-height:1.5;flex:1}
+  .relCard .cont{font-size:12.5px;color:var(--text-primary);font-weight:600}
+  .relCard .cont.vazio{color:var(--text-muted);font-weight:400}
+  .relBts{display:flex;gap:8px;flex-wrap:wrap}
+  .relBt{background:var(--surface-2);color:var(--text-primary);border:1px solid var(--line);
+    border-radius:7px;padding:7px 14px;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+  .relBt:hover:not(:disabled){border-color:var(--text-muted)}
+  .relBt.pdf{border-color:var(--previsto);color:var(--previsto)}
+  .relBt.xls{border-color:var(--terceiro);color:var(--terceiro)}
+  .relBt:disabled{opacity:.4;cursor:default}
+  .relBt.ocupado{opacity:.6;cursor:progress}
+  .relRod{font-size:11px;color:var(--text-muted);margin-top:14px;line-height:1.5}
   /* ---- aba Medicao: UM MES, TRES NUMEROS (20/09) -------------------------
      Antes a aba tinha cinco filtros (competencia multipla, "todas as competencias",
      status no portal, "todas" da tramitacao e o mes de aprovacao) e tres faixas de
@@ -848,6 +871,7 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <button class="tab" role="tab" id="tPrev" aria-selected="false">Previsão do mês</button>
       <button class="tab" role="tab" id="tMed" aria-selected="false">Medição e aprovação</button>
       <button class="tab" role="tab" id="tReceb" aria-selected="false">Recebimento</button>
+      <button class="tab" role="tab" id="tRel" aria-selected="false">Relatórios</button>
       <button class="tab" role="tab" id="tAlerta" aria-selected="false">Conferência <span id="nAlerta"></span></button>
       <button class="tab" role="tab" id="tAdeq" aria-selected="false">Adequação <span id="nAdeq"></span></button>
       <span style="width:1px;height:22px;background:var(--line);margin:0 3px"></span>
@@ -1613,6 +1637,24 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   </section>
 
   <!-- ============================ CONFERÊNCIA ============================ -->
+
+  <!-- ==================== RELATÓRIOS ====================
+       20/09: o diálogo de impressão saiu do caminho. Cada relatório é montado
+       aqui dentro, com a folha, a orientação e a margem escritas no código, e
+       baixado pronto. Papel, escala e margem do diálogo deixam de existir como
+       fonte de erro. ================================================== -->
+  <section id="secRel" class="oculto">
+    <div class="card">
+      <h2>Relatórios prontos</h2>
+      <div class="gsub">O arquivo é montado pelo painel e baixado pronto
+        <span class="dim">· folha, orientação e margem definidas em cada relatório; o diálogo de
+        impressão não participa, então escala e papel não têm como cortar nada</span></div>
+      <p class="relEsc" id="relEscopo">–</p>
+    </div>
+    <div class="relGrid" id="relLista"></div>
+    <p class="relRod" id="relRod"></p>
+  </section>
+
   <section id="secAdeq" class="oculto">
     <div id="faixaAdeq" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
       background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--critical)">
@@ -3257,7 +3299,8 @@ function mostra(qual){
   const map={cart:['tCart','secCarteira'],lista:['tLista','secLista'],obra:['tObra','secObra'],
              empr:['tEmpr','secEmpr'], prev:['tPrev','secPrev'],
              med:['tMed','secMed'],
-             receb:['tReceb','secReceb'],alerta:['tAlerta','secAlerta'],
+             receb:['tReceb','secReceb'],rel:['tRel','secRel'],
+             alerta:['tAlerta','secAlerta'],
              adeq:['tAdeq','secAdeq']};
   for(const k in map){
     $(map[k][0]).setAttribute('aria-selected', k===qual?'true':'false');
@@ -3266,7 +3309,8 @@ function mostra(qual){
   // os filtros valem para a Carteira e para a pagina dos Empreiteiros
   const trio = (qual==='med'||qual==='receb');
   $('barraFiltros').classList.toggle('oculto',
-     !(qual==='cart'||qual==='lista'||qual==='empr'||qual==='prev'||qual==='obra'||trio));
+     !(qual==='cart'||qual==='lista'||qual==='empr'||qual==='prev'||qual==='obra'
+       ||qual==='rel'||trio));
   // a barra de competencia/status e a mesma para as tres abas de medicao
   if($('barraReceb')) $('barraReceb').classList.toggle('oculto', !trio);
   classificarTabelas();
@@ -5010,6 +5054,373 @@ function irMed(){ mostra('med'); renderReceb(); window.scrollTo(0,0); }
   $('lgLag').textContent=RC.lag;
 })();
 
+
+/* ===========================================================================
+   ABA RELATÓRIOS — 20/09/2026
+   O painel monta o PDF ele mesmo (jsPDF + autoTable) em vez de pedir ao
+   navegador que imprima a tela. Folha, orientação e margem ficam escritas em
+   cada relatório; papel, escala e margem do diálogo de impressão deixam de
+   existir como fonte de erro — era de onde vinham todos os cortes de borda.
+   O Excel do mesmo recorte sai pelo SheetJS.
+   As bibliotecas são carregadas SÓ quando a aba abre: o painel não engorda
+   para quem nunca gera relatório, e uma falha de rede não derruba o resto.
+   =========================================================================== */
+const REL = (function(){
+  const LIBS = ['libs/jspdf.umd.min.js','libs/jspdf.plugin.autotable.min.js','libs/xlsx.mini.min.js'];
+  let carregando = null;
+
+  function carregar(){
+    if(carregando) return carregando;
+    carregando = LIBS.reduce((p,src)=>p.then(()=>new Promise((ok,erro)=>{
+      // já presente (recarga da aba) — não baixa de novo
+      if((src.indexOf('jspdf.umd')>=0 && window.jspdf) ||
+         (src.indexOf('autotable')>=0 && window.jspdf && window.jspdf.jsPDF &&
+          window.jspdf.jsPDF.API && window.jspdf.jsPDF.API.autoTable) ||
+         (src.indexOf('xlsx')>=0 && window.XLSX)) return ok();
+      const s=document.createElement('script');
+      s.src=src; s.onload=()=>ok(); s.onerror=()=>erro(new Error('não carregou '+src));
+      document.head.appendChild(s);
+    })), Promise.resolve());
+    return carregando;
+  }
+
+  // ---- formatação (própria do relatório: no PDF não existe HTML) -----------
+  const n2 = v => (v==null||isNaN(v)) ? '' : Number(v).toLocaleString('pt-BR',
+                   {minimumFractionDigits:2, maximumFractionDigits:2});
+  const dt = s => (s && /^\d{4}-\d{2}-\d{2}/.test(s)) ? s.slice(0,10).split('-').reverse().join('/') : '—';
+  const mA = k => (k && k.length>=7) ? MESES[+k.slice(5,7)-1]+'/'+k.slice(2,4) : '—';
+  const hoje = () => new Date().toLocaleDateString('pt-BR');
+  // "No portal": a coluna 30 do CTR vem vazia na maioria das medicoes em
+  // tramitacao. O painel ja resolve isso com spDe()/spPad(); o relatorio usa o
+  // mesmo caminho, senao a coluna sai inteira com travessao.
+  const noPortal = (m, padrao) => {
+    try{ if(typeof spDe==='function')
+      return spDe(m, (typeof spPad==='function') ? spPad(m) : (padrao||'')); }catch(e){}
+    return m.sp || padrao || '\u2014';
+  };
+  const nomeArq = base => base+'_'+new Date().toISOString().slice(0,10).split('-').reverse().join('')+'.';
+
+  // ---- escopo: o texto que explica QUAIS obras entraram ---------------------
+  function escopo(){
+    const partes=[];
+    const p=(id,rot)=>{ const v=(typeof msVals==='function'&&MS[id])?msVals(id):[];
+      if(v.length) partes.push(rot+': '+v.join(', ')); };
+    p('fContrato','contrato'); p('fLote','lote'); p('fCidade','cidade');
+    p('fEng','engenheiro'); p('fFiscal','fiscal'); p('fEmp','empreiteira');
+    p('fStatus','status'); p('fAno','ano');
+    const b=($('fBusca')&&$('fBusca').value||'').trim();
+    if(b) partes.push('busca: '+b);
+    return partes.length ? partes.join(' · ') : 'todas as obras da carteira';
+  }
+
+  // ---- o conjunto de obras e de medições que cada relatório enxerga ---------
+  const obras = () => filtradas().slice().sort((a,b)=>a.cod-b.cod);
+  const codsNoFiltro = () => new Set(obras().map(o=>o.cod));
+  function medsDoMes(){
+    const cods=codsNoFiltro(), k=MES_AP;
+    return (RC.meds||[]).filter(m=>cods.has(m.c) && (m.a||'').slice(0,7)===k)
+      .sort((a,b)=>(a.a<b.a?-1:a.a>b.a?1:a.c-b.c));
+  }
+  function tramitando(){
+    const cods=codsNoFiltro();
+    const ehPrev=(typeof ehPrevM==='function')?ehPrevM:(m=>/^0\./.test(m.sit||''));
+    return (RC.tram||[]).filter(m=>cods.has(m.c) && !ehPrev(m))
+      .sort((a,b)=>{const x=a.r||'9999-99-99', y=b.r||'9999-99-99';
+        if(x!==y) return x<y?-1:1; return (b.dp||0)-(a.dp||0);});
+  }
+
+  /* ======================= CHROME DO PDF ==================================
+     Cabeçalho e rodapé iguais em todo relatório, e a numeração de páginas
+     escrita no fim, quando já se sabe o total. ============================= */
+  function novo(orient){
+    const {jsPDF}=window.jspdf;
+    return new jsPDF({orientation:orient, unit:'mm', format:'a4', compress:true});
+  }
+  const MARGEM = 12;
+  function cabecalho(doc, titulo, sub){
+    const L = doc.internal.pageSize.getWidth();
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(20);
+    doc.text(titulo, MARGEM, 14);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(110);
+    doc.text('ATLÂNTICA · gestão de obras · gerado em '+hoje(), L-MARGEM, 14, {align:'right'});
+    if(sub){ doc.setFontSize(8); doc.setTextColor(80);
+      doc.text(doc.splitTextToSize(sub, L-2*MARGEM), MARGEM, 19); }
+    doc.setDrawColor(200); doc.line(MARGEM, 22.5, L-MARGEM, 22.5);
+  }
+  function rodape(doc, fonte){
+    const n = doc.internal.getNumberOfPages();
+    for(let i=1;i<=n;i++){
+      doc.setPage(i);
+      const L=doc.internal.pageSize.getWidth(), A=doc.internal.pageSize.getHeight();
+      doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(130);
+      doc.text(fonte||'', MARGEM, A-7, {maxWidth:L-2*MARGEM-30});
+      doc.text('Página '+i+' de '+n, L-MARGEM, A-7, {align:'right'});
+    }
+  }
+  const ESTILO = {
+    theme:'grid',
+    styles:{font:'helvetica', fontSize:7.2, cellPadding:1.5, lineColor:[205,205,200],
+            lineWidth:.1, textColor:[25,25,25], overflow:'linebreak', valign:'middle'},
+    headStyles:{fillColor:[238,238,232], textColor:[40,40,40], fontStyle:'bold', fontSize:6.9},
+    alternateRowStyles:{fillColor:[250,250,247]},
+    margin:{left:MARGEM, right:MARGEM, top:26, bottom:14}
+  };
+
+  /* ================= 1. FOLHA DE OBRA — A4 RETRATO ======================== */
+  function folhaObra(){
+    const L = obras();
+    if(!L.length) return null;
+    const doc = novo('p');
+    const LW = doc.internal.pageSize.getWidth();
+    L.forEach((o,idx)=>{
+      if(idx) doc.addPage();
+      cabecalho(doc, o.cod+' · '+(o.unidade||'—'),
+        [o.cidade,o.bairro,o.servico].filter(Boolean).join(' · '));
+      let y = 27;
+
+      // --- identificação, em duas colunas de rótulo+valor
+      const campos = [
+        ['Contrato', (o.contratoAta||'—')+(o.lote?'  (Lote '+o.lote+')':'')],
+        ['Contrato FDE · PI', (o.contrato||'—')+' · '+(o.pi||'—')],
+        ['Situação no CTR', o.situacao||'—'],
+        ['Empreiteira', o.empreiteira||'—'],
+        ['Engenheiro · Fiscal', (o.eng||'—')+' · '+(o.fiscal||'—')],
+        ['Início · Prazo', dt(o.ini)+' · '+(o.prazo||'—')+' dias'],
+        ['Término previsto', dt(o.fimPrev)+(o.desvio!=null?'  ('+(o.desvio>0?'+':'')+
+            Number(o.desvio).toLocaleString('pt-BR',{maximumFractionDigits:1})+' meses)':'')],
+        ['Valor do contrato', 'R$ '+n2(o.valor)]
+      ];
+      const colL = (LW-2*MARGEM)/2;
+      doc.setFontSize(7);
+      campos.forEach((c,i)=>{
+        const x = MARGEM + (i%2)*colL, yy = y + Math.floor(i/2)*9;
+        doc.setTextColor(120); doc.setFont('helvetica','normal'); doc.text(c[0], x, yy);
+        doc.setTextColor(20); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+        doc.text(String(c[1]), x, yy+4.2, {maxWidth:colL-4});
+        doc.setFontSize(7);
+      });
+      y += Math.ceil(campos.length/2)*9 + 3;
+
+      // --- gráfico de barras: previsto x aprovado x tramitação, mês a mês.
+      // Desenhado com primitivas do jsPDF (vetor, nítido em qualquer zoom) em
+      // vez de rasterizar o SVG da tela — o SVG usa var(--cor) do CSS e viraria
+      // um PNG sem cor dentro de uma <img>.
+      const serie = (o.serie||[]).filter(s=>(s.p||0)+(s.m||0)+(s.t||0)>0.005);
+      if(serie.length){
+        const gW = LW-2*MARGEM, gH = 34, x0 = MARGEM, y0 = y;
+        const max = Math.max.apply(null, serie.map(s=>Math.max(s.p||0,(s.m||0)+(s.t||0))))||1;
+        const passo = gW/serie.length, bw = Math.min(5.5, passo/3.2);
+        doc.setFontSize(6.4); doc.setTextColor(120);
+        doc.setDrawColor(215); doc.line(x0, y0+gH, x0+gW, y0+gH);
+        serie.forEach((s,i)=>{
+          const cx = x0 + i*passo + passo/2;
+          const hp = ((s.p||0)/max)*gH, hm = ((s.m||0)/max)*gH, ht = ((s.t||0)/max)*gH;
+          doc.setFillColor(180,69,26); doc.rect(cx-bw-0.6, y0+gH-hp, bw, hp, 'F');
+          if(hm>0.1){ doc.setFillColor(31,95,174); doc.rect(cx+0.6, y0+gH-hm, bw, hm, 'F'); }
+          if(ht>0.1){ doc.setFillColor(250,178,25); doc.rect(cx+0.6, y0+gH-hm-ht-0.4, bw, ht, 'F'); }
+          doc.setTextColor(120); doc.text(mA(s.k), cx, y0+gH+3.2, {align:'center'});
+        });
+        doc.setFontSize(6.2);
+        doc.setFillColor(180,69,26); doc.rect(x0, y0-3.6, 2, 2, 'F');
+        doc.setTextColor(90); doc.text('previsto no cronograma', x0+3, y0-2);
+        doc.setFillColor(31,95,174); doc.rect(x0+42, y0-3.6, 2, 2, 'F');
+        doc.text('aprovado pela FDE', x0+45, y0-2);
+        doc.setFillColor(250,178,25); doc.rect(x0+80, y0-3.6, 2, 2, 'F');
+        doc.text('em tramitação', x0+83, y0-2);
+        y = y0 + gH + 8;
+      }
+
+      // --- mês a mês
+      const linhasM = (o.serie||[]).map(s=>{
+        const meta = metaDoMes(o.serie||[], s.k), med=(s.m||0)+(s.t||0);
+        return [mA(s.k), 'R$ '+n2(s.p), meta>0.5?('R$ '+n2(meta)):'—', 'R$ '+n2(med),
+                (med-s.p>=0?'+':'-')+'R$ '+n2(Math.abs(med-(s.p||0)))];
+      });
+      if(linhasM.length){
+        doc.autoTable(Object.assign({}, ESTILO, {
+          startY:y, head:[['Mês','Previsto','Meta do mês','Medido','Diferença']],
+          body:linhasM,
+          columnStyles:{0:{cellWidth:22},1:{halign:'right'},2:{halign:'right'},
+                        3:{halign:'right'},4:{halign:'right'}},
+          didDrawPage:()=>{}
+        }));
+        y = doc.lastAutoTable.finalY + 6;
+      }
+
+      // --- medições lançadas
+      const md = (o.meds||[]).map(m=>[m.n||'', dt(m.ref), m.sit||'—', noPortal(m),
+        m.ap?dt(m.ap):'—', m.sei||'—', 'R$ '+n2(m.vemp), 'R$ '+n2(m.vfde)]);
+      if(md.length){
+        doc.autoTable(Object.assign({}, ESTILO, {
+          startY:y, head:[['Med.','Competência','Situação no CTR','No portal','Aprovação',
+                           'Nº SEI','Apresentada','Aprovada FDE']],
+          body:md,
+          columnStyles:{0:{cellWidth:11},6:{halign:'right'},7:{halign:'right'}}
+        }));
+      }
+    });
+    rodape(doc,'Fonte: CTR FDE Barueri e cronograma do Relatório de Vistoria. '+
+               'Situação conforme o portal SMV/FDE.');
+    return doc;
+  }
+
+  /* ============ 2. MEDIÇÕES APROVADAS NO MÊS — A4 PAISAGEM ================ */
+  function aprovadasMes(){
+    const L = medsDoMes();
+    const doc = novo('l');
+    cabecalho(doc, 'Medições aprovadas em '+mA(MES_AP),
+      'Por data de aprovação, qualquer competência · '+escopo());
+    const corpo = L.map(m=>{ const o=OBRA[m.c]||{};
+      return [m.c, o.unidade||'', (o.contrato||'—')+' · '+(o.pi||'—'), o.empreiteira||'—',
+              m.n||'', dt(m.r), dt(m.a), dt(m.p), 'R$ '+n2(m.v), m.s||'—']; });
+    const tot = L.reduce((a,m)=>a+(m.v||0),0);
+    corpo.push([{content:'total — '+L.length+' medições', colSpan:8,
+                 styles:{halign:'right', fontStyle:'bold'}},
+                {content:'R$ '+n2(tot), styles:{halign:'right', fontStyle:'bold'}}, '']);
+    doc.autoTable(Object.assign({}, ESTILO, {
+      startY:26,
+      head:[['Nº','Unidade de ensino','Contrato FDE · PI','Empreiteira','Med.',
+             'Competência','Aprovação','Pagamento previsto','Aprovado','Nº SEI']],
+      body:corpo,
+      columnStyles:{0:{cellWidth:10},4:{cellWidth:11},5:{cellWidth:19},6:{cellWidth:17},
+                    7:{cellWidth:20},8:{halign:'right',cellWidth:26}}
+    }));
+    rodape(doc,'Fonte: CTR FDE Barueri, coluna APROVADA e DATA APROVAÇÃO (portal SMV/FDE).');
+    return doc;
+  }
+
+  /* ============ 3. EM TRAMITAÇÃO / FILA DA FDE — A4 PAISAGEM ============== */
+  function fila(){
+    const L = tramitando();
+    const doc = novo('l');
+    cabecalho(doc, 'Em tramitação na FDE',
+      'Todas as competências, na ordem da mais antiga · '+escopo());
+    const corpo = L.map(m=>{ const o=OBRA[m.c]||{};
+      return [m.c, o.unidade||'', (o.contrato||'—')+' · '+(o.pi||'—'), m.n||'', dt(m.r),
+              m.sit||'—', noPortal(m), (m.dp==null?'—':String(m.dp)),
+              'R$ '+n2(m.v>0.005 ? m.v : m.e)]; });
+    const tot  = L.reduce((a,m)=>a+(m.v>0.005?m.v:0),0);
+    const apre = L.filter(m=>!(m.v>0.005)&&m.e>0.005).reduce((a,m)=>a+m.e,0);
+    corpo.push([{content:'total aprovado pela FDE — '+L.length+' medições', colSpan:8,
+                 styles:{halign:'right', fontStyle:'bold'}},
+                {content:'R$ '+n2(tot), styles:{halign:'right', fontStyle:'bold'}}]);
+    if(apre) corpo.push([{content:'+ apresentado pela empreiteira, a FDE ainda não avaliou',
+                 colSpan:8, styles:{halign:'right', textColor:[120,120,120]}},
+                {content:'R$ '+n2(apre), styles:{halign:'right', textColor:[120,120,120]}}]);
+    doc.autoTable(Object.assign({}, ESTILO, {
+      startY:26,
+      head:[['Nº','Unidade de ensino','Contrato FDE · PI','Med.','Competência',
+             'Situação no CTR','No portal','Dias parada','Valor']],
+      body:corpo,
+      columnStyles:{0:{cellWidth:10},3:{cellWidth:11},7:{halign:'right',cellWidth:16},
+                    8:{halign:'right'}}
+    }));
+    rodape(doc,'Dias parada conta desde a data registrada no CTR; o portal não expõe a data do passo atual.');
+    return doc;
+  }
+
+  /* ========================= EXCEL ======================================== */
+  function planilha(aoa, larguras, nome, aba){
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws['!cols'] = larguras.map(w=>({wch:w}));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, aba||'Relatório');
+    XLSX.writeFile(wb, nome);
+  }
+  const xlsObra = () => {
+    const aoa=[['Nº','Unidade de ensino','Cidade','Contrato ATA','Lote','Contrato FDE','PI',
+      'Empreiteira','Engenheiro','Fiscal','Situação','Início','Prazo (dias)','Término previsto',
+      'Contrato (R$)','Medido (R$)','Saldo a medir (R$)','% medido']];
+    obras().forEach(o=>{ const med=o.medido_total||0;
+      aoa.push([o.cod,o.unidade||'',o.cidade||'',o.contratoAta||'',o.lote||'',o.contrato||'',o.pi||'',
+        o.empreiteira||'',o.eng||'',o.fiscal||'',o.situacao||'',o.ini||'',o.prazo||'',o.fimPrev||'',
+        o.valor||0, med, (o.valor||0)-med, o.valor?med/o.valor:0]); });
+    planilha(aoa,[7,34,16,13,6,20,12,16,14,12,20,11,11,14,15,15,16,9],
+      nomeArq('RELATORIO_OBRAS')+'xlsx','Obras');
+  };
+  const xlsAprov = () => {
+    const aoa=[['Nº','Unidade de ensino','Contrato FDE','PI','Empreiteira','Med.',
+      'Competência','Aprovação','Pagamento previsto','Aprovado (R$)','Apresentada (R$)','Nº SEI']];
+    medsDoMes().forEach(m=>{ const o=OBRA[m.c]||{};
+      aoa.push([m.c,o.unidade||'',o.contrato||'',o.pi||'',o.empreiteira||'',m.n||'',
+        m.r||'',m.a||'',m.p||'',m.v||0,m.e||0,m.s||'']); });
+    planilha(aoa,[7,34,20,12,16,7,12,12,16,15,15,22],
+      nomeArq('MEDICOES-APROVADAS_'+MES_AP)+'xlsx','Aprovadas');
+  };
+  const xlsFila = () => {
+    const aoa=[['Nº','Unidade de ensino','Contrato FDE','PI','Med.','Competência',
+      'Situação no CTR','No portal','Neste passo desde','Dias parada',
+      'Aprovado (R$)','Apresentada (R$)','Nº SEI']];
+    tramitando().forEach(m=>{ const o=OBRA[m.c]||{};
+      aoa.push([m.c,o.unidade||'',o.contrato||'',o.pi||'',m.n||'',m.r||'',m.sit||'',noPortal(m),
+        m.dpa||'',(m.dp==null?'':m.dp),m.v||0,m.e||0,m.s||'']); });
+    planilha(aoa,[7,34,20,12,7,12,24,20,16,11,15,15,22],
+      nomeArq('EM-TRAMITACAO')+'xlsx','Tramitação');
+  };
+
+  /* ========================= OS TRÊS RELATÓRIOS =========================== */
+  const DEFS = [
+    {id:'obra', nome:'Folha de obra', fmt:'A4 retrato · uma página por obra',
+     exp:'Identificação, previsto × medido mês a mês em gráfico e tabela, e todas as medições '+
+         'lançadas no CTR com a situação do portal.',
+     conta:()=>{const n=obras().length; return n?n+' obra'+(n===1?'':'s')+' no filtro · '+n+' página'+(n===1?'':'s'):'';},
+     pdf:folhaObra, pdfNome:()=>nomeArq('FOLHA-DE-OBRA')+'pdf', xls:xlsObra},
+    {id:'aprov', nome:'Medições aprovadas no mês', fmt:'A4 paisagem',
+     exp:'Por data de aprovação, de qualquer competência, com o pagamento previsto e o total '+
+         'do mês. O mês é o que está escolhido na aba Medição e aprovação.',
+     conta:()=>{const l=medsDoMes(); return l.length
+        ? l.length+' medições em '+mA(MES_AP)+' · R$ '+n2(l.reduce((a,m)=>a+(m.v||0),0)) : '';},
+     pdf:aprovadasMes, pdfNome:()=>nomeArq('MEDICOES-APROVADAS_'+MES_AP)+'pdf', xls:xlsAprov},
+    {id:'fila', nome:'Em tramitação na FDE', fmt:'A4 paisagem',
+     exp:'Tudo que está parado esperando a FDE, da competência mais antiga para a mais nova, '+
+         'com o passo do portal, os dias parados e o valor.',
+     conta:()=>{const l=tramitando(); return l.length
+        ? l.length+' medições paradas · R$ '+n2(l.reduce((a,m)=>a+(m.v>0.005?m.v:0),0)) : '';},
+     pdf:fila, pdfNome:()=>nomeArq('EM-TRAMITACAO')+'pdf', xls:xlsFila}
+  ];
+
+  function render(){
+    if($('relEscopo')) $('relEscopo').innerHTML =
+      'Recorte de agora: <b>'+escopo()+'</b>. Todo relatório desta aba obedece a esses filtros — '+
+      'mude no topo da página e gere de novo.';
+    const cx=$('relLista'); if(!cx) return;
+    cx.innerHTML = DEFS.map(d=>{
+      const c=d.conta(), tem=!!c;
+      return '<div class="relCard" data-rel="'+d.id+'">'+
+        '<span class="fmt">'+d.fmt+'</span>'+
+        '<h3>'+d.nome+'</h3>'+
+        '<span class="exp">'+d.exp+'</span>'+
+        '<span class="cont'+(tem?'':' vazio')+'">'+(tem?c:'nada neste recorte')+'</span>'+
+        '<div class="relBts">'+
+          '<button class="relBt pdf" data-ac="pdf"'+(tem?'':' disabled')+'>Baixar PDF</button>'+
+          '<button class="relBt xls" data-ac="xls"'+(tem?'':' disabled')+'>Baixar Excel</button>'+
+        '</div></div>';
+    }).join('');
+    if($('relRod')) $('relRod').textContent =
+      'Os arquivos são montados pelo próprio painel: a folha, a orientação e a margem estão '+
+      'definidas em cada relatório, então não há configuração de impressão que possa cortar '+
+      'o conteúdo. Gerado a partir do CTR FDE Barueri de '+(D.gerado?dt(D.gerado):'—')+'.';
+    if(!cx.__lig){ cx.__lig=1; cx.addEventListener('click', ev=>{
+      const bt=ev.target.closest('.relBt'); if(!bt||bt.disabled) return;
+      const card=bt.closest('.relCard'), def=DEFS.find(d=>d.id===card.dataset.rel);
+      if(!def) return;
+      const txt=bt.textContent; bt.textContent='montando…'; bt.classList.add('ocupado'); bt.disabled=true;
+      carregar().then(()=>{
+        if(bt.dataset.ac==='pdf'){ const doc=def.pdf(); if(doc) doc.save(def.pdfNome()); }
+        else def.xls();
+      }).catch(e=>{
+        alert('Não consegui montar o arquivo: '+e.message+
+              '\n\nAs bibliotecas ficam na pasta libs/ ao lado do painel.');
+      }).finally(()=>{ bt.textContent=txt; bt.classList.remove('ocupado'); bt.disabled=false; });
+    }); }
+  }
+
+  return {render:render, carregar:carregar};
+})();
+
+function irRel(){ mostra('rel'); REL.render(); window.scrollTo(0,0); }
+
+$('tRel').onclick=irRel;
 $('tReceb').onclick=irReceb;
 $('tMed').onclick=irMed;
 $('tCart').onclick=irCarteira;
