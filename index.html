@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0d0d0d">
+<script>
+/* aplica o tema antes de pintar a pagina — senao ela pisca no escuro e so depois clareia */
+(function(){var t;try{t=localStorage.getItem('painelTema');}catch(e){}
+ if(t!=='claro'&&t!=='escuro'){t=(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'claro':'escuro';}
+ document.documentElement.setAttribute('data-tema',t);
+ var m=document.querySelector('meta[name="theme-color"]');
+ if(m)m.setAttribute('content',t==='claro'?'#f2f2ee':'#0d0d0d');})();
+</script>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icone-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icone-192.png">
@@ -18,6 +26,28 @@
     --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
     --trilho:#2a2a28; --grade:#2a2a28; --marca:#3a3a36;
   }
+  /* Tema claro. Todo o painel le cor pelas variaveis acima — e o mesmo truque que o
+     @media print usa —, entao trocar o data-tema do <html> repinta a pagina inteira.
+     Abaixo do bloco ficam so as poucas cores que estavam fixas no CSS. */
+  html[data-tema="claro"]{
+    --plane:#f2f2ee; --surface-1:#ffffff; --surface-2:#e9e9e2; --line:#d3d3ca;
+    --text-primary:#161612; --text-secondary:#4c4c44; --text-muted:#6f6f65;
+    --previsto:#c2501f; --realizado:#1f5fae; --terceiro:#0f7a55;
+    --good:#0a7a0a; --warning:#96620a; --serious:#a54c22; --critical:#b52b2b;
+    --trilho:#e3e3db; --grade:#d9d9d0; --marca:#c3c3ba;
+  }
+  html[data-tema="claro"] table.tbl td{border-bottom-color:#e5e5dd}
+  html[data-tema="claro"] table.tbl th.grp.emp{background:#e3f1ea}
+  html[data-tema="claro"] table.tbl th.grp.ctr{background:#e5edf8}
+  html[data-tema="claro"] .base.emp{background:#e3f1ea;color:#0b6547}
+  html[data-tema="claro"] .base.ctr{background:#e5edf8;color:#1a4f91}
+  html[data-tema="claro"] table.tbl tr.clic:hover td{background:#f0f0e9}
+  html[data-tema="claro"] .tip{background:#ffffff;color:var(--text-primary);
+    box-shadow:0 4px 14px rgba(0,0,0,.14)}
+  html[data-tema="claro"] .aviso{background:#fdf4dd;border-color:#e2c98d;color:#6b4d12}
+  html[data-tema="claro"] .lote{background:#e9e9e2}
+  html[data-tema="claro"] .ms.on>button.tg{color:var(--previsto)}
+  #btTema{font-variant-numeric:tabular-nums;min-width:118px}
   *{box-sizing:border-box}
   body{margin:0;background:var(--plane);color:var(--text-primary);
     font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;font-size:13px}
@@ -927,6 +957,8 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <button class="tab bttv" id="btTvGeral" title="tela cheia com a visão geral da carteira">▣ TV · visão geral</button>
       <button class="tab bttv" id="btTvObras" title="tela cheia passando obra a obra">▶ TV · todas as obras</button>
       <button class="tab bttv" id="btTvSair" style="display:none">✕ sair da TV</button>
+      <span style="width:1px;height:22px;background:var(--line);margin:0 3px"></span>
+      <button class="tab" type="button" id="btTema" aria-pressed="false" title="mudar para fundo claro">☀ Fundo claro</button>
     </div>
   </header>
 
@@ -7664,6 +7696,43 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
   if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
     navigator.serviceWorker.register('sw.js').catch(function(){});
   }
+})();
+</script>
+
+<script>
+/* Botao de tema (escuro x claro).
+   A troca e so o atributo data-tema do <html>: o CSS inteiro passa pelas variaveis.
+   Os graficos SVG do orcamento leem a cor na hora de desenhar (funcao cor()), por isso
+   a aba ativa e redesenhada depois da troca, preservando a posicao da rolagem. */
+(function(){
+  var H=document.documentElement, B=document.getElementById('btTema');
+  if(!B) return;
+  function rotulo(t){
+    B.textContent = t==='claro' ? '☾ Fundo escuro' : '☀ Fundo claro';
+    B.title       = t==='claro' ? 'voltar ao fundo escuro' : 'mudar para fundo claro';
+    B.setAttribute('aria-pressed', t==='claro' ? 'true' : 'false');
+  }
+  rotulo(H.getAttribute('data-tema')==='claro'?'claro':'escuro');
+  B.onclick=function(){
+    var t = H.getAttribute('data-tema')==='claro' ? 'escuro' : 'claro';
+    H.setAttribute('data-tema',t);
+    var m=document.querySelector('meta[name="theme-color"]');
+    if(m) m.setAttribute('content', t==='claro' ? '#f2f2ee' : '#0d0d0d');
+    rotulo(t);
+    try{ localStorage.setItem('painelTema',t); }catch(e){}
+    try{
+      var at=document.querySelector('header .tabs .tab[role="tab"][aria-selected="true"]');
+      if(at && typeof at.onclick==='function'){
+        /* as funcoes ir*() terminam com scrollTo(0,0). Como aqui o objetivo e so
+           repintar, o scrollTo fica neutralizado durante o redesenho e a posicao
+           de antes e devolvida no fim. */
+        var y=window.scrollY, real=window.scrollTo;
+        window.scrollTo=function(){};
+        try{ at.onclick(); }
+        finally{ setTimeout(function(){ window.scrollTo=real; real.call(window,0,y); },400); }
+      }
+    }catch(e){}
+  };
 })();
 </script>
 
