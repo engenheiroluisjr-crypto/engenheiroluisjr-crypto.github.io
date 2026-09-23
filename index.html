@@ -244,6 +244,10 @@
   .bh-t{background:var(--trilho);border-radius:4px;height:14px}
   .bh-f{height:14px;border-radius:0 4px 4px 0;min-width:2px}
   .bh-v{text-align:right;font-variant-numeric:tabular-nums;font-size:11.5px;white-space:nowrap}
+  /* passo da esteira que abre a lista das medicoes paradas ali */
+  .bh.clic{cursor:pointer;border-radius:6px;padding:4px 6px;margin:0 -6px;transition:background .1s}
+  .bh.clic:hover,.bh.clic:focus-visible{background:var(--surface-2);outline:none}
+  .bh.clic .bh-l::after{content:" \203A";color:var(--text-muted);font-weight:700}
   @media(max-width:760px){.bh{grid-template-columns:120px 1fr 120px;gap:6px}}
   .grid2r .bh{grid-template-columns:105px 1fr 118px;gap:7px}
   .cols{display:flex;align-items:flex-end;gap:10px;height:180px;padding:6px 2px 0}
@@ -4853,10 +4857,11 @@ function renderReceb(){
 
     // 2) APROVACAO — esteira do portal
     const pas={};
+    // 'it' guarda as medicoes de cada passo para a janela que a barra abre
     tram.forEach(m=>{const n=spDe(m,spPad(m));
-      (pas[n]=pas[n]||{n:n,q:0,v:0}); pas[n].q++; pas[n].v+=(m.v||0);});
+      (pas[n]=pas[n]||{n:n,q:0,v:0,it:[]}); pas[n].q++; pas[n].v+=(m.v||0); pas[n].it.push(m);});
     prevl.forEach(m=>{const n='não está no portal';
-      (pas[n]=pas[n]||{n:n,q:0,v:0}); pas[n].q++; pas[n].v+=(m.v||0);});
+      (pas[n]=pas[n]||{n:n,q:0,v:0,it:[]}); pas[n].q++; pas[n].v+=(m.v||0); pas[n].it.push(m);});
     const lp=Object.values(pas).sort((a,b)=>spOrd(a.n,b.n));
     const totPas=lp.reduce((a,p)=>a+p.v,0);
     if($('gEsteira')) gEsteiraPassos($('gEsteira'), lp, totPas);
@@ -4922,9 +4927,11 @@ function renderReceb(){
    =========================================================================== */
 
 // barra horizontal em HTML, usada na esteira e nos rankings
-function barraH(rot, v, q, max, cor, dica){
+function barraH(rot, v, q, max, cor, dica, idx){
   const pc = max? Math.max(100*v/max, v>0?1.2:0) : 0;
-  return `<div class="bh" title="${dica||''}">`+
+  // com idx a barra vira botao: abre a janela com as medicoes daquele passo
+  const at = idx==null ? '' : ` data-passo="${idx}" role="button" tabindex="0"`;
+  return `<div class="bh${idx==null?'':' clic'}" title="${dica||''}"${at}>`+
     `<div class="bh-l">${rot}</div>`+
     `<div class="bh-t"><div class="bh-f" style="width:${pc.toFixed(1)}%;background:${cor}"></div></div>`+
     `<div class="bh-v">${brl(v)}${q==null?'':` <span style="color:var(--text-muted)">· ${q}</span>`}</div></div>`;
@@ -4978,10 +4985,40 @@ function gEsteiraPassos(el, passos, total){
   el.innerHTML=passos.map((p,i)=>barraH(
       `<span style="color:var(--text-muted)">${i+1}.</span> ${p.n}`, p.v, p.q, max,
       COR[p.n]||'var(--warning)',
-      `${p.n} — ${p.q} medições · ${brl(p.v)} · ${total?(100*p.v/total).toFixed(0):0}% do que está parado`)).join('')
+      `${p.n} — ${p.q} medições · ${brl(p.v)} · ${total?(100*p.v/total).toFixed(0):0}% do que está parado`
+      + ' · clique para ver a lista', i)).join('')
     + `<div class="bh" style="border-top:1px solid var(--line);margin-top:6px;padding-top:7px">`
     + `<div class="bh-l"><b>total parado</b></div><div class="bh-t"></div>`
     + `<div class="bh-v"><b>${brl(total)}</b> <span style="color:var(--text-muted)">· ${passos.reduce((a,p)=>a+p.q,0)}</span></div></div>`;
+  el.querySelectorAll('.bh[data-passo]').forEach(d=>{
+    const abre=()=>mdPasso(passos[+d.dataset.passo], total);
+    d.addEventListener('click', abre);
+    d.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); abre(); } });
+  });
+}
+
+/* A lista das medicoes paradas num passo da esteira. Usa a mesma janela dos
+   cartoes da Visao geral, entao ja vem com "Imprimir esta lista", rodape de
+   total e linha clicavel que leva para a Pagina da obra. */
+function mdPasso(p, total){
+  if(!p) return;
+  const its=(p.it||[]).slice().sort((a,b)=>(b.v||0)-(a.v||0));
+  const cols=[{r:'Obra'},{r:'Unidade'},{r:'Lote'},{r:'Med.'},{r:'Competência'},
+              {r:'Situação no portal'},{r:'Empreiteira'},
+              {r:'Valor parado',num:true},{r:'Previsão de recebimento'}];
+  const linhas=its.map(m=>{const o=OBRA[m.c]||{};
+    return {cod:m.c, cels:[m.c, o.unidade||'—', o.lote||'—', m.n,
+      (m.r&&m.r.length>=7)?mesAno(m.r):'—', m.sit||p.n, o.empreiteira||'—',
+      brl(m.v||0), dbr(m.p)]};});
+  mdObras({
+    titulo:'Parado em '+p.n,
+    sub:p.q+(p.q===1?' medição':' medições')+' · '+brl(p.v)+
+        (total?' · '+(100*p.v/total).toFixed(0)+'% de tudo que está parado na FDE':''),
+    nota:'A lista respeita os filtros do topo, igual à barra que a abriu. '+
+         'Clique numa linha para abrir a Página da obra. '+
+         'Ordenada do maior valor parado para o menor.',
+    cols, linhas,
+    tot:['Total',p.q+(p.q===1?' medição':' medições'),'','','','','',brl(p.v),'']});
 }
 
 // 3) RECEBIMENTO — caixa acumulado: firme x com estimativa
