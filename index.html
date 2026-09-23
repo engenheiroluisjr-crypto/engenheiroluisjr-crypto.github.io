@@ -366,6 +366,19 @@
     /* rodape de procedencia: 'Fonte: CTR FDE Barueri' nao cabe em 375px sem quebrar */
     #proc .pc{white-space:normal}
   }
+  /* --- tempo nas cidades das obras: Open-Meteo, buscado pelo navegador ao abrir -- */
+  #tempoTab th,#tempoTab td{text-align:center;white-space:nowrap;vertical-align:middle}
+  #tempoTab th:first-child,#tempoTab td:first-child{text-align:left}
+  #tempoTab th:nth-child(2),#tempoTab td:nth-child(2){text-align:right;color:var(--text-muted)}
+  #tempoTab .tpIc{font-size:17px;line-height:1.1;display:block}
+  #tempoTab .tpMm{font-size:11px;color:var(--text-secondary);display:block}
+  #tempoTab .tpT{font-size:10.5px;color:var(--text-muted);display:block}
+  #tempoTab td.tpChuva{background:rgba(208,59,59,.16)}
+  #tempoTab td.tpMeio{background:rgba(250,178,25,.11)}
+  #tempoCard .tpAtu{background:none;border:0;color:var(--text-muted);font:inherit;font-size:11px;
+    cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;padding:0;margin-left:8px}
+  #tempoCard .tpAlerta{color:var(--serious);font-weight:600}
+  #tempoCard .tpBom{color:var(--good);font-weight:600}
   /* --- janela de detalhe: as obras que formaram o numero do cartao --------- */
   #mdFundo{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.68);
     display:flex;align-items:flex-start;justify-content:center;padding:32px 14px}
@@ -934,6 +947,13 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
     <div id="faixaTit"><span class="ft" id="ftTexto">–</span><span class="fs" id="ftSub"></span></div>
 
     <div class="kpis5" id="kpiTopo"></div>
+
+    <div class="card" id="tempoCard" style="margin:12px 0">
+      <h2>Tempo nas cidades das obras — próximos 5 dias</h2>
+      <p class="nota" id="tempoResumo" style="margin:0 0 8px">buscando a previsão…</p>
+      <div class="rol"><table class="tbl" id="tempoTab"></table></div>
+      <p class="nota" id="tempoFonte" style="margin:8px 0 0"></p>
+    </div>
 
     <details id="maisNum">
       <summary>mais números da carteira</summary>
@@ -7462,6 +7482,105 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
     botaoSg(); caixaSg();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ligar); else ligar();
+})();
+</script>
+
+<script>
+/* ===========================================================================
+   TEMPO NAS CIDADES DAS OBRAS (Visao geral)
+   Chuva para obra e paralisacao. O navegador busca a previsao no Open-Meteo
+   (gratuito, sem chave) na hora de abrir o painel: uma chamada so para todas
+   as cidades com obra em andamento. Mesma regua de icones dos avisos nos
+   grupos de WhatsApp. Se nao houver internet, o quadro avisa e o resto do
+   painel segue normal. Cache de 1 h no navegador para nao bater na API a
+   cada troca de aba.
+   =========================================================================== */
+(function(){
+  var COORD = {                      /* as cidades do CTR; a rotina dos grupos usa a mesma tabela */
+    'BARUERI':[-23.5106,-46.8761],'OSASCO':[-23.5329,-46.7918],'ITAPECERICA DA SERRA':[-23.7167,-46.8494],
+    'TABOAO DA SERRA':[-23.6261,-46.7917],'ITAPEVI':[-23.5489,-46.9342],'EMBU DAS ARTES':[-23.6489,-46.8522],
+    'EMBU GUACU':[-23.8317,-46.8114],'JANDIRA':[-23.5275,-46.9022],'SANTANA DE PARNAIBA':[-23.4436,-46.9178],
+    'PIRAPORA DO BOM JESUS':[-23.3958,-46.9983],'JUQUITIBA':[-23.9319,-47.0669],'PIRITUBA (SP)':[-23.4870,-46.7350],
+    'BRASILANDIA (SP)':[-23.4550,-46.6900],'JARAGUA (SP)':[-23.4400,-46.7450],'SAO PAULO':[-23.5505,-46.6333],
+    'CARAPICUIBA':[-23.5225,-46.8356],'COTIA':[-23.6039,-46.9192],'VARGEM GRANDE PAULISTA':[-23.6025,-47.0261],
+    'CAJAMAR':[-23.3561,-46.8764],'FRANCO DA ROCHA':[-23.3283,-46.7267],'SAO ROQUE':[-23.5294,-47.1353],
+    'IBIUNA':[-23.6564,-47.2225],'SAO LOURENCO DA SERRA':[-23.8531,-46.9431]};
+  var ATIVOS = {'Execução':1,'Atenção':1,'Atrasado':1};
+  var CACHE = 'tempoPrevV1', VALIDADE = 60*60*1000;
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); };
+  var norm = function(x){ return String(x||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().replace(/\s+/g,' ').trim(); };
+  var DIAS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  function icone(p){ return p>=70?'🌧️':p>=40?'🌦️':p>=20?'🌤️':'☀️'; }
+  function classe(p){ return p>=70?' class="tpChuva"':p>=40?' class="tpMeio"':''; }
+  function dataLocal(iso){ var p=iso.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+  function rotDia(iso,i){ var d=dataLocal(iso); var dm=('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2);
+    return (i===0?'Hoje':i===1?'Amanhã':DIAS[d.getDay()])+'<br><span class="tpT">'+dm+'</span>'; }
+  function titulo(c){ return c.toLowerCase().replace(/(^|\s|\()([a-zà-ú])/g,function(m,a,b){return a+b.toUpperCase();}).replace(/ D(a|e|o|as|os) /g,function(m){return m.toLowerCase();}); }
+
+  function cidades(){
+    var n={}; var obras=(typeof D!=='undefined'&&D&&D.obras)||[];   /* D e const do script principal: global, mas nao e window.D */
+    obras.forEach(function(o){ if(!ATIVOS[o.status]||!o.cidade) return; n[o.cidade]=(n[o.cidade]||0)+1; });
+    return Object.keys(n).map(function(c){ return {nome:c, obras:n[c], xy:COORD[norm(c)]}; })
+      .sort(function(a,b){ return b.obras-a.obras || a.nome.localeCompare(b.nome); });
+  }
+  function lerCache(chave){ try{ var v=JSON.parse(localStorage.getItem(CACHE)||'null'); if(v&&v.chave===chave&&Date.now()-v.t<VALIDADE) return v; }catch(e){} return null; }
+  function gravaCache(chave,dados){ try{ localStorage.setItem(CACHE,JSON.stringify({chave:chave,t:Date.now(),dados:dados})); }catch(e){} }
+
+  function desenhar(lista,dados,quando){
+    var tab=$('tempoTab'), res=$('tempoResumo'), fonte=$('tempoFonte'); if(!tab) return;
+    var dias=(dados[0]&&dados[0].daily&&dados[0].daily.time)||[];
+    var h='<thead><tr><th>Cidade</th><th>obras</th>'+dias.map(function(d,i){return '<th>'+rotDia(d,i)+'</th>';}).join('')+'</tr></thead><tbody>';
+    var forte={0:[],1:[]}, obrasForte={0:0,1:0};
+    lista.forEach(function(c,k){
+      var d=dados[k]&&dados[k].daily; if(!d){ h+='<tr><td>'+esc(titulo(c.nome))+'</td><td>'+c.obras+'</td><td colspan="'+dias.length+'" class="tpT">sem previsão</td></tr>'; return; }
+      h+='<tr><td>'+esc(titulo(c.nome))+'</td><td>'+c.obras+'</td>';
+      dias.forEach(function(_,i){
+        var p=Math.round(d.precipitation_probability_max[i]||0), mm=Math.round(d.precipitation_sum[i]||0);
+        var tmin=Math.round(d.temperature_2m_min[i]), tmax=Math.round(d.temperature_2m_max[i]);
+        if(p>=70&&i<2){ forte[i].push(titulo(c.nome)); obrasForte[i]+=c.obras; }
+        h+='<td'+classe(p)+'><span class="tpIc">'+icone(p)+'</span><span class="tpMm">'+mm+' mm · '+p+'%</span><span class="tpT">'+tmin+'° a '+tmax+'°</span></td>';
+      });
+      h+='</tr>';
+    });
+    tab.innerHTML=h+'</tbody>';
+    var partes=[];
+    var onde=function(l){ return l.length===lista.length?'todas as '+l.length+' cidades':l.join(', '); };
+    var obrasTxt=function(q){ return q+' obra'+(q>1?'s':''); };
+    if(forte[0].length) partes.push('<span class="tpAlerta">Hoje: chuva forte (≥70%) em '+onde(forte[0])+'</span> — '+obrasTxt(obrasForte[0])+' afetada'+(obrasForte[0]>1?'s':'')+'.');
+    if(forte[1].length) partes.push('<span class="tpAlerta">Amanhã: '+onde(forte[1])+'</span> — '+obrasTxt(obrasForte[1])+'.');
+    if(!partes.length) partes.push('<span class="tpBom">Sem chuva forte prevista para hoje e amanhã</span> nas '+lista.length+' cidades — bom para cobertura, alvenaria externa e pintura.');
+    res.innerHTML=partes.join(' ')+' <span class="tpT">Chuva forte = probabilidade de chuva ≥ 70% no dia. Previsão por cidade, não por obra.</span>';
+    fonte.innerHTML='Fonte: Open-Meteo · atualizado às '+quando+' · guarda 1 h no navegador'+
+      '<button type="button" class="tpAtu" id="tempoAtu">atualizar agora</button>';
+    var b=$('tempoAtu'); if(b) b.onclick=function(){ try{localStorage.removeItem(CACHE);}catch(e){} carregar(true); };
+  }
+
+  function carregar(forcar){
+    var res=$('tempoResumo'); if(!res) return;
+    var lista=cidades().filter(function(c){ return c.xy; });
+    var semXY=cidades().filter(function(c){ return !c.xy; });
+    if(!lista.length){ res.textContent='Nenhuma obra em andamento com cidade cadastrada.'; return; }
+    var chave=lista.map(function(c){return c.nome;}).join('|');
+    var cc=!forcar&&lerCache(chave);
+    if(cc){ desenhar(lista,cc.dados,new Date(cc.t).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})); return; }
+    res.textContent='buscando a previsão para '+lista.length+' cidades…';
+    var url='https://api.open-meteo.com/v1/forecast?latitude='+lista.map(function(c){return c.xy[0];}).join(',')+
+      '&longitude='+lista.map(function(c){return c.xy[1];}).join(',')+
+      '&daily=precipitation_sum,precipitation_probability_max,temperature_2m_max,temperature_2m_min'+
+      '&timezone=America%2FSao_Paulo&forecast_days=5';
+    fetch(url).then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); }).then(function(j){
+      var dados=Array.isArray(j)?j:[j];
+      gravaCache(chave,dados);
+      desenhar(lista,dados,new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
+      if(semXY.length) $('tempoFonte').innerHTML+=' · sem coordenada: '+esc(semXY.map(function(c){return titulo(c.nome);}).join(', '));
+    }).catch(function(e){
+      res.innerHTML='Previsão indisponível agora ('+esc(e.message||e)+') — sem internet ou serviço fora do ar. O resto do painel não depende disso.';
+      $('tempoFonte').innerHTML='<button type="button" class="tpAtu" id="tempoAtu" style="margin:0">tentar de novo</button>';
+      var b=$('tempoAtu'); if(b) b.onclick=function(){ carregar(true); };
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ carregar(false); }); else carregar(false);
 })();
 </script>
 
