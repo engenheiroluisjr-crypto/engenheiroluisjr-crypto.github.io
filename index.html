@@ -7168,6 +7168,26 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
   #siengeBox th,#siengeBox td{padding:5px 7px;border-bottom:1px solid var(--line);text-align:left}
   #siengeBox td.n,#siengeBox th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
   #siengeBox .pend{color:var(--warning)}
+  #siengeBox .sgBarra{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px;font-size:12px;color:var(--text-muted)}
+  #siengeBox .sgEspaco{flex:1}
+  #siengeBox .sgQuem{background:var(--surface-1);color:var(--text-primary);border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:12px;width:150px}
+  #siengeBox .sgCont{color:var(--text-secondary)}
+  #siengeBox .sgBt{background:var(--surface-1);color:var(--text-secondary);border:1px solid var(--line);border-radius:6px;padding:5px 9px;font-size:11.5px;cursor:pointer}
+  #siengeBox .sgBt:hover{border-color:var(--realizado);color:var(--text-primary)}
+  #siengeBox .sgSt{display:flex;gap:4px}
+  #siengeBox .sgB{background:transparent;color:var(--text-muted);border:1px solid var(--line);border-radius:6px;padding:4px 7px;font-size:11px;cursor:pointer;white-space:nowrap}
+  #siengeBox .sgB:hover{border-color:var(--realizado);color:var(--text-primary)}
+  #siengeBox .sgB.sgOnE{background:var(--good);border-color:var(--good);color:#fff}
+  #siengeBox .sgB.sgOnP{background:var(--warning);border-color:var(--warning);color:#1a1a19;font-weight:650}
+  #siengeBox .sgB.sgOnN{background:var(--critical);border-color:var(--critical);color:#fff}
+  #siengeBox .sgQdo{font-size:10px;color:var(--text-muted);margin-top:3px}
+  #siengeBox .sgObs{width:100%;min-width:150px;background:var(--surface-1);color:var(--text-primary);border:1px solid var(--line);border-radius:6px;padding:5px 6px;font-size:11.5px;resize:vertical}
+  #siengeBox .sgImp{display:none}
+  #siengeBox .sgColSt{width:190px} #siengeBox .sgColObs{width:200px}
+  @media print{ #siengeBox .sgBarra,#siengeBox .sgSt,#siengeBox .sgObs{display:none !important}
+    #siengeBox .sgImp{display:block !important;font-size:8pt} }
+  body.relObra #siengeBox .sgBarra, body.relObra #siengeBox .sgSt, body.relObra #siengeBox .sgObs{display:none !important}
+  body.relObra #siengeBox .sgImp{display:block !important}
   @media print{
     body.relObra #obraNav, body.relObra #secObra > .filtros, body.relObra #relObraPop{display:none !important}
     body.relObra .relQuebra{break-before:page}
@@ -7227,7 +7247,48 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
   function nm(v){ return Number(v||0).toLocaleString('pt-BR',{maximumFractionDigits:3}); }
   function esc2(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
 
-  /* ---------- aba Pedidos do Sienge ---------- */
+  
+  /* ---------- controle de entrega dos pedidos (marcado pelo engenheiro) ---------- */
+  var SGE=(function(){
+    var CH='fdeEntregasV1', QCH='fdeEntregasQuem';
+    function ler(){ try{ return JSON.parse(localStorage.getItem(CH)||'{}'); }catch(e){ return {}; } }
+    function grava(o){ try{ localStorage.setItem(CH,JSON.stringify(o)); }catch(e){} }
+    function base(){ return (window.ENTREGAS||{}); }
+    function get(p){ var o=ler(); return o[String(p)]||base()[String(p)]||{}; }
+    function set(p,m){ var o=ler(); o[String(p)]=m; grava(o); }
+    function quem(){ try{ return localStorage.getItem(QCH)||''; }catch(e){ return ''; } }
+    function setQuem(v){ try{ localStorage.setItem(QCH,v); }catch(e){} }
+    function agora(){ var d=new Date(); return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
+    function marca(p,st){ var m=get(p); m.s=(m.s===st?null:st); m.quando=m.s?agora():null; m.por=m.s?quem():null; set(p,m);
+      if(atualCod!=null) renderSg(atualCod); }
+    function obs(p,v){ var m=get(p); m.obs=v; if(!m.quando){ m.quando=agora(); m.por=quem(); } set(p,m); }
+    function rot(s){ return s==='E'?'Entregue':s==='P'?'Entregue parcial':s==='N'?'Não entregue':'—'; }
+    function botoes(p){ var m=get(p);
+      function b(k,t,c){ return '<button class="sgB'+(m.s===k?' sgOn'+c:'')+'" onclick="SGE.marca('+p+',\''+k+'\')">'+t+'</button>'; }
+      return '<div class="sgSt">'+b('E','Entregue','E')+b('P','Parcial','P')+b('N','Não','N')+'</div>'+
+             '<div class="sgImp">'+rot(m.s)+'</div>'; }
+    function contador(d){ var e=document.getElementById('sgCont'); if(!e||!d) return;
+      var c={E:0,P:0,N:0,x:0};
+      d.ped.forEach(function(p){ var m=get(p[1]); if(m.s){ c[m.s]++; } else { c.x++; } });
+      e.innerHTML='<b>'+c.E+'</b> entregues · <b>'+c.P+'</b> parciais · <b>'+c.N+'</b> não entregues · <b>'+c.x+'</b> sem marcação'; }
+    function exportar(){ var o=ler(), l=[];
+      Object.keys(o).forEach(function(k){ var m=o[k]; if(m&&(m.s||m.obs)) l.push({pedido:+k,status:m.s||'',rotulo:rot(m.s),obs:m.obs||'',por:m.por||'',quando:m.quando||''}); });
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(new Blob([JSON.stringify(l,null,1)],{type:'application/json'}));
+      a.download='entregas_pedidos_'+new Date().toISOString().slice(0,10)+'.json'; document.body.appendChild(a); a.click(); a.remove(); }
+    function importar(){ var i=document.createElement('input'); i.type='file'; i.accept='.json,application/json';
+      i.onchange=function(){ var f=i.files[0]; if(!f) return; var r=new FileReader();
+        r.onload=function(){ try{ var l=JSON.parse(r.result), o=ler();
+            (Array.isArray(l)?l:[]).forEach(function(x){ o[String(x.pedido)]={s:x.status||null,obs:x.obs||'',por:x.por||'',quando:x.quando||''}; });
+            grava(o); if(atualCod!=null) renderSg(atualCod);
+          }catch(e){ console.log('[SGE] json invalido',e); } };
+        r.readAsText(f); };
+      i.click(); }
+    return {get:get,marca:marca,obs:obs,botoes:botoes,contador:contador,exportar:exportar,importar:importar,quem:quem,setQuem:setQuem,rot:rot};
+  })();
+  window.SGE=SGE;
+
+/* ---------- aba Pedidos do Sienge ---------- */
   function caixaSg(){
     var b=document.getElementById('siengeBox'); if(b) return b;
     b=document.createElement('div'); b.id='siengeBox'; b.hidden=true;
@@ -7255,12 +7316,21 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
     h+='<table><thead><tr><th>Insumo</th><th>Un</th><th class="n">Qtde comprada</th><th class="n">Valor</th><th class="n">Qtde pendente</th></tr></thead><tbody>'+
       d.ins.map(function(i){ return '<tr><td>'+esc2(i[0])+'</td><td>'+esc2(i[1])+'</td><td class="n">'+nm(i[2])+'</td><td class="n">'+brl(i[3])+
         '</td><td class="n'+(i[4]>0.0005?' pend':'')+'">'+(i[4]>0.0005?nm(i[4]):'—')+'</td></tr>'; }).join('')+'</tbody></table></div>';
-    h+='<div class="bloco" style="margin-top:14px"><header><h2>Pedidos</h2></header><table><thead><tr><th>Data</th><th>Pedido</th><th>Fornecedor</th>'+
-      '<th class="n">Total</th><th class="n">Entregue</th><th class="n">Pendente</th></tr></thead><tbody>'+
-      d.ped.map(function(p){ return '<tr><td>'+p[0]+'</td><td>'+p[1]+'</td><td>'+esc2(p[2])+'</td><td class="n">'+brl(p[3])+'</td><td class="n">'+brl(p[4])+
-        '</td><td class="n'+(p[5]>0.005?' pend':'')+'">'+(p[5]>0.005?brl(p[5]):'—')+'</td></tr>'; }).join('')+
-      '<tr><td colspan="3" style="font-weight:650">Total</td><td class="n" style="font-weight:650">'+brl(d.tot)+'</td><td class="n">'+brl(d.ent)+'</td><td class="n">'+brl(d.pen)+'</td></tr></tbody></table></div>';
-    b.innerHTML=h;
+    h+='<div class="bloco" style="margin-top:14px"><header><h2>Pedidos</h2><p>Marque a entrega de cada pedido: <b>Entregue</b> (chegou tudo), <b>Parcial</b> (chegou parte — diga na observação o que falta) ou <b>Não</b> (não chegou nada).</p></header>'+
+      '<div class="sgBarra">Marcando como <input class="sgQuem" id="sgQuem" placeholder="seu nome" value="'+esc2(SGE.quem())+'" oninput="SGE.setQuem(this.value)">'+
+      '<span class="sgCont" id="sgCont"></span><span class="sgEspaco"></span>'+
+      '<button class="sgBt" onclick="SGE.exportar()">Exportar marcações</button>'+
+      '<button class="sgBt" onclick="SGE.importar()">Importar</button></div>'+
+      '<table><thead><tr><th>Data</th><th>Pedido</th><th>Fornecedor</th>'+
+      '<th class="n">Total</th><th class="n">Entregue</th><th class="n">Pendente</th><th class="sgColSt">Entrega</th><th class="sgColObs">Observação do engenheiro</th></tr></thead><tbody>'+
+      d.ped.map(function(p){ var m=SGE.get(p[1]);
+        return '<tr><td>'+p[0]+'</td><td>'+p[1]+'</td><td>'+esc2(p[2])+'</td><td class="n">'+brl(p[3])+'</td><td class="n">'+brl(p[4])+
+        '</td><td class="n'+(p[5]>0.005?' pend':'')+'">'+(p[5]>0.005?brl(p[5]):'—')+'</td>'+
+        '<td>'+SGE.botoes(p[1])+(m.quando?'<div class="sgQdo">'+esc2(m.por||'')+(m.por?' · ':'')+esc2(m.quando)+'</div>':'')+'</td>'+
+        '<td><textarea class="sgObs" rows="1" placeholder="o que falta, previsão de entrega…" oninput="SGE.obs('+p[1]+',this.value)">'+esc2(m.obs||'')+'</textarea>'+
+        '<div class="sgImp">'+(esc2(m.obs||'')||'—')+'</div></td></tr>'; }).join('')+
+      '<tr><td colspan="3" style="font-weight:650">Total</td><td class="n" style="font-weight:650">'+brl(d.tot)+'</td><td class="n">'+brl(d.ent)+'</td><td class="n">'+brl(d.pen)+'</td><td colspan="2"></td></tr></tbody></table></div>';
+    b.innerHTML=h; try{ SGE.contador(d); }catch(e){}
   }
   var _abrir=window.abrirObra;
   if(typeof _abrir==='function') window.abrirObra=function(cod){ atualCod=cod; botaoSg(); var r=_abrir.apply(this,arguments); try{renderSg(cod);}catch(e){} return r; };
