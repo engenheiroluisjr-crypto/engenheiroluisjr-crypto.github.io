@@ -606,6 +606,14 @@
        como o PDF de 27/08 que virou o modelo. Larguras fixas + letra menor. */
     .pxl .tbl{table-layout:fixed !important;width:100%;font-size:7.6pt !important}
     .pxl .tbl th,.pxl .tbl td{padding:1.5px 4px !important;line-height:1.2;word-break:normal}
+    /* 23/09: o cabecalho tem de quebrar em duas linhas. `table.tbl th.num` declara
+       nowrap com especificidade maior, entao aqui vai !important -- sem isso as
+       colunas "Previsto em set/26", "Previsao lancada" e "Lancado no portal" saem
+       escritas umas por cima das outras no papel. */
+    .pxl .tbl th,.pxl .tbl th.num{overflow-wrap:anywhere;white-space:normal !important}
+    /* mesma coisa na coluna 7: quando nao ha cronograma a celula traz texto, nao
+       valor, e precisa poder quebrar. */
+    .pxl .tbl td:nth-child(7),.pxl .tbl td:nth-child(7) *{white-space:normal !important}
     .pxl .tbl th{font-size:7.2pt !important}
     .pxl .tbl .mono{font-size:6.6pt !important;letter-spacing:-.1px}
     .pxl .tbl td div{font-size:6.4pt !important;line-height:1.1}
@@ -683,6 +691,26 @@
     .kpis{grid-template-columns:repeat(auto-fit,minmax(92px,1fr)) !important}
     .kpi .v{font-size:11.5px !important}
     .card{padding:6px 8px}
+    /* 23/09: o relatorio Previsao x Lancado tambem tem de soltar a largura aqui.
+       Ele declara table-layout:fixed com larguras em %, desenhado para PAISAGEM;
+       numa folha RETRATO as 10 colunas nao cabem e o texto de uma invade a outra
+       (foi o que apareceu no PDF que o Luis mandou em 23/09). Na folha estreita a
+       tabela volta a ser automatica e cada coluna pede a largura de que precisa. */
+    .pxl .tbl{font-size:5.6pt !important}
+    .pxl .tbl th,.pxl .tbl td{overflow-wrap:break-word;word-break:normal;
+      white-space:normal !important}
+    /* valor nao parte no meio: "R$ 1.756.796" nunca vira "R$ 1.756.7 / 96" */
+    .pxl .tbl td.num,.pxl .tbl td.num *{white-space:nowrap !important}
+    .pxl .tbl td div,.pxl .tbl th span{font-size:5pt !important}
+    /* na folha estreita a escola cede espaco para as colunas de numero */
+    .pxl .tbl th:nth-child(2),.pxl .tbl td:nth-child(2){width:13% !important}
+    .pxl .tbl th:nth-child(5),.pxl .tbl td:nth-child(5){width:12% !important}
+    .pxl .tbl th:nth-child(4),.pxl .tbl td:nth-child(4){width:9% !important}
+    .pxl .tbl th:nth-child(7),.pxl .tbl td:nth-child(7){width:11% !important}
+    .pxl .tbl th:nth-child(8),.pxl .tbl td:nth-child(8){width:9.5% !important}
+    /* "sem cronograma no mes" e texto dentro de celula .num: precisa poder quebrar,
+       senao invade a coluna vizinha. So os valores em R$ ficam inteiros. */
+    .pxl .tbl td:nth-child(7){white-space:normal !important}
   }
 
 /* ===== orçamento por obra (escopado em .orc) ===== */
@@ -956,6 +984,7 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <button class="tab" role="tab" id="tObra" aria-selected="false">Página da obra</button>
       <button class="tab" role="tab" id="tEmpr" aria-selected="false">Empreiteiros</button>
       <button class="tab" role="tab" id="tPrev" aria-selected="false">Previsão do mês</button>
+      <button class="tab" role="tab" id="tPxl" aria-selected="false">Previsão × lançado</button>
       <button class="tab" role="tab" id="tMed" aria-selected="false">Medição e aprovação</button>
       <button class="tab" role="tab" id="tReceb" aria-selected="false">Recebimento</button>
       <button class="tab" role="tab" id="tRel" aria-selected="false">Relatórios</button>
@@ -1263,15 +1292,17 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       </div>
     </details>
 
-    <!-- ---------- Previsão × Lançado: mesmo assunto da aba, por isso vive aqui ----------
-         Relatorio de conferencia pedido pelo Luis em 27/08 e juntado a esta aba em 28/08.
-         Para cada obra em andamento: o que o cronograma manda medir no mes, o que ele
-         lancou como previsao no CTR e o que a empreiteira esta lancando no portal.
-         A previsao original vive na coluna PREVISAO ORIG. (R$) da aba MEDICOES do CTR --
-         sem ela o valor real sobrescreve a previsao na varredura e a comparacao vira
-         "real x real". De proposito NAO obedece aos filtros do topo: e relatorio fechado. -->
+  </section>
+
+  <!-- ==================== PREVISÃO × LANÇADO ====================
+       Aba propria desde 23/09/2026. Antes vivia dentro de "Previsao do mes",
+       e a pagina ficava com DUAS barras de filtro que governavam coisas
+       diferentes: a do topo (competencia/lote/fiscal/status) nao valia aqui.
+       Agora o recorte deste relatorio e fixo, esta escrito no cabecalho, e a
+       barra do topo nao aparece nesta aba -- uma pagina, um filtro. -->
+  <section id="secPxl" class="oculto">
     <div id="secComp" class="pxl">
-      <div class="card" style="margin-top:18px;border-left:4px solid var(--previsto)">
+      <div class="card" style="margin-top:0;border-left:4px solid var(--previsto)">
         <h2 style="margin:0">Previsão × Lançado — relatório de conferência</h2>
         <p style="font-size:11.5px;color:var(--text-muted);margin:6px 0 0" id="cTit"></p>
         <p style="font-size:11px;color:var(--text-secondary);margin:10px 0 0;line-height:1.6" id="cLeg"></p>
@@ -3395,6 +3426,7 @@ function abrirObra(cod){
 function mostra(qual){
   const map={cart:['tCart','secCarteira'],lista:['tLista','secLista'],obra:['tObra','secObra'],
              empr:['tEmpr','secEmpr'], prev:['tPrev','secPrev'],
+             pxl:['tPxl','secPxl'],
              med:['tMed','secMed'],
              receb:['tReceb','secReceb'],rel:['tRel','secRel'],
              alerta:['tAlerta','secAlerta'],
@@ -3405,11 +3437,20 @@ function mostra(qual){
   }
   // os filtros valem para a Carteira e para a pagina dos Empreiteiros
   const trio = (qual==='med'||qual==='receb');
+  // a aba Previsao x Lancado NAO entra aqui: o recorte dela e fixo, entao a barra
+  // do topo some e a pagina fica com um filtro so (o dela).
   $('barraFiltros').classList.toggle('oculto',
      !(qual==='cart'||qual==='lista'||qual==='empr'||qual==='prev'||qual==='obra'
        ||qual==='rel'||trio));
   // a barra de competencia/status e a mesma para as tres abas de medicao
   if($('barraReceb')) $('barraReceb').classList.toggle('oculto', !trio);
+  // o rodape descreve os filtros do topo; na aba Previsao x Lancado eles nao valem,
+  // entao a linha "Recorte" passa a dizer o escopo fixo do relatorio.
+  if(qual==='pxl'){
+    $('pcPeriodo').textContent='referência '+mesAno(MES_REF)+
+      ' · recorte fixo deste relatório: obras em execução, atenção ou atraso dos lotes 41 e 42'+
+      ' · não usa os filtros do topo';
+  } else rodapeProcedencia();
   classificarTabelas();
 }
 function irEmpr(){ mostra('empr'); renderEmpr(); window.scrollTo(0,0); }
@@ -3869,7 +3910,7 @@ function renderPxL(){
   $('cTit').textContent='desempenho de prazo até '+ANT+' e previsão × lançado em '+mesAno(MES)+
     ' — posição de '+new Date(D.gerado+'T12:00:00').toLocaleDateString('pt-BR');
   $('cKpis').innerHTML=
-    `<div class="card kpi"><span class="v">${tudo.length}</span><span class="l">Obras em andamento no relatório<br><span style="color:var(--text-muted)">escopo fechado: ignora os filtros do topo</span></span></div>`+
+    `<div class="card kpi"><span class="v">${tudo.length}</span><span class="l">Obras em andamento no relatório<br><span style="color:var(--text-muted)">escopo fechado, não depende de filtro</span></span></div>`+
     `<div class="card kpi"><span class="v" style="color:${pxlCorSPI(spi)}">${pxlN2(spi)}</span><span class="l">SPI da carteira até ${ANT} (só aprovado)</span></div>`+
     `<div class="card kpi"><span class="v" style="color:${pxlCorSPI(spiT)}">${pxlN2(spiT)}</span><span class="l">SPI contando o que está em tramitação</span></div>`+
     `<div class="card kpi"><span class="v" style="color:${sv>=0?'var(--good)':'var(--critical)'}">${sv===null?'—':(sv>=0?'+':'−')+brl(Math.abs(sv))}</span><span class="l">Desvio de prazo em R$ (SV = EV − PV)</span></div>`+
@@ -3889,7 +3930,7 @@ function renderPxL(){
     '<b>cumpriu</b> ≥ 95% do previsto, <b>parcial</b> ≥ 50%, senão <b>abaixo</b> ou <b>não lançou</b>. '+
     'Mede a confiabilidade do planejamento, não o desempenho da obra — por isso anda separado do SPI.<br>'+
     '<span style="color:var(--text-muted)">Entram só obras em execução, atenção ou atraso. '+
-    'Não passa pelos filtros do topo: é relatório fechado, para apresentar. '+
+    'Recorte fixo, para apresentar: por isso esta aba não tem a barra de filtros do topo. '+
     'Custo real ainda não entra, então não há CPI nem EAC.</span>';
   const nota=(l)=>{
     const p=l.reduce((a,x)=>a+x.pv,0), e=l.reduce((a,x)=>a+x.ev,0);
@@ -6997,6 +7038,10 @@ $('btImprimirLista').onclick=()=>{
 $('lOrdem').onchange=renderLista;
 $('tEmpr').onclick=irEmpr;
 $('tPrev').onclick=irPrev;
+$('tPxl').onclick=()=>{ mostra('pxl');
+  // renderPxL e quem enche cTit/cKpis/cLeg e as tabelas dos dois lotes
+  try{ renderPxL(); }catch(e){ console.error('Previsão × Lançado:', e); }
+  window.scrollTo(0,0); };
 $('cFiltro').onchange=renderPxL;
 $('cOrdem').onchange=renderPxL;
 // imprime so o relatorio Previsão × Lançado -- um lote por folha, como o PDF de 27/08
@@ -7018,6 +7063,7 @@ $('btPdfComp').onclick=()=>{
     const folha=document.createElement('div');
     folha.className='folha pxl';
     const cl=c.cloneNode(true);
+    cl.setAttribute('open','');   // sai no papel aberto mesmo se estiver recolhido na tela
     cl.querySelectorAll('button,label').forEach(e=>e.remove());
     cl.querySelectorAll('div').forEach(d=>{
       if((d.getAttribute('style')||'').includes('overflow')){d.style.maxHeight='none';d.style.overflow='visible';}});
