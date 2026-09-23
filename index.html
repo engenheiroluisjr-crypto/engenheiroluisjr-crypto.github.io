@@ -1009,7 +1009,7 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       <div><label class="f">Empreiteira</label><div class="ms" id="fEmp"></div></div>
       <div><label class="f">Status</label><div class="ms" id="fStatus"></div></div>
       <div><label class="f">Ano</label><div class="ms" id="fAno"></div></div>
-      <div><label class="f" for="fMes">Mês de referência</label><select id="fMes" title="troca o mês que o painel usa como mês corrente"></select></div>
+      <div id="campoMes"><label class="f" for="fMes">Mês de referência</label><select id="fMes" title="troca o mês que o painel usa como mês corrente"></select></div>
       <div><label class="f" for="fCron">Cronograma</label><select id="fCron">
         <option value="">Todas</option><option value="1">Só com cronograma</option>
         <option value="0">Só sem cronograma</option></select></div>
@@ -1565,8 +1565,9 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   <div class="filtros oculto" id="barraReceb" style="margin:0 0 10px;padding:0;background:none;border:0">
     <div style="flex:1 1 320px">
       <span style="font-size:11.5px;color:var(--text-muted);line-height:1.5;display:block">
-        O <b>mês</b> se escolhe no cabeçalho do quadro abaixo e vale para a página toda.
-        Contrato, lote, cidade, engenheiro, fiscal e empreiteira: filtros do topo.</span></div>
+        <span id="notaReceb">O <b>mês desta página</b> se escolhe no cabeçalho do quadro
+        abaixo. Contrato, lote, cidade, engenheiro, fiscal e empreiteira: filtros do topo.</span>
+      </span></div>
     <div style="display:none"><div class="ms" id="rMes"></div><div class="ms" id="rPortal"></div>
       <div class="ms" id="rContrato"></div><div class="ms" id="rLote"></div>
       <div class="ms" id="rFiscal"></div><input id="rBusca">
@@ -3444,6 +3445,19 @@ function mostra(qual){
        ||qual==='rel'||trio));
   // a barra de competencia/status e a mesma para as tres abas de medicao
   if($('barraReceb')) $('barraReceb').classList.toggle('oculto', !trio);
+  // 23/09: SEGUNDO FILTRO DUPLICADO. As abas Medicao e Recebimento tem o proprio
+  // seletor de mes (#rMesUni), que e o que manda na pagina. O "Mes de referencia"
+  // do topo NAO governa esses numeros -- ficavam dois seletores de mes lado a lado
+  // marcando meses diferentes (ago/26 no topo, set/26 no quadro). O do topo some
+  // nessas abas; os demais filtros do topo continuam valendo.
+  if($('campoMes')) $('campoMes').classList.toggle('oculto', qual==='med');
+  if($('notaReceb')) $('notaReceb').innerHTML = qual==='med'
+    ? 'O <b>mês desta página</b> se escolhe no cabeçalho do quadro abaixo — por isso o '+
+      '<b>Mês de referência</b> do topo não aparece aqui: ele não manda nestes números. '+
+      'Contrato, lote, cidade, engenheiro, fiscal e empreiteira: filtros do topo.'
+    : 'Esta página mostra mês a mês, não tem mês único. '+
+      'Contrato, lote, cidade, engenheiro, fiscal e empreiteira: filtros do topo.';
+  if(typeof marcaMes==='function') marcaMes();
   // o rodape descreve os filtros do topo; na aba Previsao x Lancado eles nao valem,
   // entao a linha "Recorte" passa a dizer o escopo fixo do relatorio.
   if(qual==='pxl'){
@@ -7211,7 +7225,10 @@ $('fBusca').oninput=aoFiltrar;
 $('btLimpar').onclick=limparFiltros;
 function marcaMes(){
   const av=$('avisoMes');
-  if(MES_REF===MES_REAL){ av.style.display='none'; return; }
+  // o aviso fala do mes de referencia do topo; nas abas que andam pelo proprio
+  // seletor ele nao se aplica e so confunde
+  const proprio=$('secMed')&&!$('secMed').classList.contains('oculto');
+  if(proprio || MES_REF===MES_REAL){ av.style.display='none'; return; }
   av.style.display='';
   av.innerHTML='Painel na posição de <b>'+mesAno(MES_REF)+'</b> — não do mês atual ('+
     mesAno(MES_REAL)+'). Meta do mês, curva S, SPI, PPC e a aba Previsão do mês seguem '+
