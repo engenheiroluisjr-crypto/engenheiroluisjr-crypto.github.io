@@ -360,6 +360,10 @@
   .base.ctr{background:#16233a;color:#7db4ee;border:1px solid var(--realizado)}
   table.tbl tr.clic{cursor:pointer}
   table.tbl tr.clic:hover td{background:#242422}
+  /* linha do mes atual: cor fixa nao serve, o painel tem tema claro e escuro */
+  table.tbl tr.mesAtual td{background:var(--surface-2)}
+  table.tbl th.grp.prev{background:#2b1f14;border-bottom-color:var(--previsto)}
+  html[data-tema="claro"] table.tbl th.grp.prev{background:#fbeadc}
   .tip{position:fixed;pointer-events:none;background:#000;border:1px solid var(--line);
     border-radius:7px;padding:7px 9px;font-size:12px;opacity:0;transition:opacity .1s;z-index:9;max-width:280px}
   .tip .k{color:var(--text-secondary)}
@@ -597,7 +601,7 @@
     details.drill>summary{color:#333 !important}
     .legend i{border:1px solid #000}
     table.tbl th,table.tbl td{border-color:#9a9a94 !important}
-    tr[style*="background:#20201d"]{background:#eeeee8 !important}
+    table.tbl tr.mesAtual td{background:#eeeee8 !important}
     /* Relatorio Previsao x Lancado: no papel tem de caber em duas folhas A4 deitadas,
        como o PDF de 27/08 que virou o modelo. Larguras fixas + letra menor. */
     .pxl .tbl{table-layout:fixed !important;width:100%;font-size:7.6pt !important}
@@ -3353,7 +3357,7 @@ function renderObra(cod){
       const fut=s.k>MES_REF;
       const sit=(fut||(s.p===0&&s.m===0))?'—':(pr>=pp-0.005?'ATINGIU':'ATRASO');
       const sub=v=>`<br><span style="color:var(--text-muted)">${pct(o.valor?v/o.valor:0)}</span>`;
-      return `<tr${destaque?' style="background:#20201d"':''}><td>${mesAno(s.k)}`+
+      return `<tr${destaque?' class="mesAtual"':''}><td>${mesAno(s.k)}`+
         `${s.n?' <span style="color:var(--text-muted)">(mês '+s.n+')</span>':''}`+
         `${destaque?' <span style="color:var(--terceiro)">• mês atual</span>':''}</td>`+
         `<td class="num">${brl(s.p)}${sub(s.p)}</td>`+
@@ -3976,7 +3980,7 @@ function renderPrev(){
     '<tr><th class="grp vazio" colspan="4"></th>'+
     '<th class="grp ctr" colspan="4">acumulado até o mês passado</th>'+
     '<th class="grp emp" colspan="5">'+mesAno(MES)+'</th>'+
-    '<th class="grp" colspan="2" style="background:#2b1f14;border-bottom-color:var(--previsto)">previsão a medir</th></tr>'+
+    '<th class="grp prev" colspan="2">previsão a medir</th></tr>'+
     '<tr><th>Nº</th><th>Unidade</th><th>Empreiteiro</th><th>Eng.</th>'+
     '<th class="num">Previsto</th><th class="num">Aprovado</th><th class="num">Em tramitação</th>'+
     '<th class="num">Atraso</th>'+
@@ -4514,7 +4518,7 @@ function renderReceb(){
       const ori=Object.values(s.ori||{}).sort((a,b)=>(b.m+b.t+b.p)-(a.m+a.t+a.p));
       const chips=ori.filter(o=>o.c&&o.c!=='?').slice(0,4).map(o=>chip(o.c,o)).join(' ')
         +(ori.length>4?` <span style="color:var(--text-muted)">+${ori.length-4}</span>`:'');
-      return `<tr${hoje?' style="background:#20201d"':''}><td>${mesAno(s.k)}`+
+      return `<tr${hoje?' class="mesAtual"':''}><td>${mesAno(s.k)}`+
         `${hoje?' <span style="color:var(--terceiro)">• mês atual</span>':''}${sel}</td>`+
         `<td>${chips||'<span style="color:var(--text-muted)">—</span>'}</td>`+
         `<td>${chipAp(s.k)}</td>`+
@@ -4534,7 +4538,7 @@ function renderReceb(){
     '<th class="num">Acumulado a medir</th><th>Vira caixa em</th><th>De onde vem</th></tr></thead><tbody>'+
     ((RC.prevComp||[]).length?RC.prevComp.map((x,i)=>{acm+=x.v;
       const atual=x.k===MES_REF;
-      return `<tr${atual?' style="background:#20201d"':''}><td>${mesAno(x.k)}`+
+      return `<tr${atual?' class="mesAtual"':''}><td>${mesAno(x.k)}`+
         `${atual?' <span style="color:var(--terceiro)">• mês atual</span>':''}</td>`+
         `<td class="num" style="color:var(--previsto)"><b>${brl(x.v)}</b></td>`+
         `<td class="num" style="color:var(--text-secondary)">${brl(acm)}</td>`+
