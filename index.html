@@ -7149,6 +7149,7 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
 <script src="sienge.js"></script>
+<script src="sienge_itens.js"></script>
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -7184,6 +7185,18 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
   #siengeBox .sgObs{width:100%;min-width:150px;background:var(--surface-1);color:var(--text-primary);border:1px solid var(--line);border-radius:6px;padding:5px 6px;font-size:11.5px;resize:vertical}
   #siengeBox .sgImp{display:none}
   #siengeBox .sgColSt{width:190px} #siengeBox .sgColObs{width:200px}
+  #siengeBox .sgLin{cursor:pointer}
+  #siengeBox .sgLin:hover{background:var(--surface-2)}
+  #siengeBox .sgLinAberta{background:var(--surface-2)}
+  #siengeBox .sgSeta{color:var(--text-muted);font-size:10px;margin-right:3px}
+  #siengeBox tr.sgItens{display:none}
+  #siengeBox tr.sgItens.sgAberta{display:table-row}
+  #siengeBox .sgItBox{background:var(--surface-1);border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin:4px 0 8px}
+  #siengeBox .sgItTab{width:100%;margin-top:6px;font-size:11px}
+  #siengeBox .sgItTab th{font-size:9.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+  #siengeBox .sgItTab td,#siengeBox .sgItTab th{padding:3px 6px;border-bottom:1px solid var(--line)}
+  @media print{ #siengeBox tr.sgItens{display:none !important} }
+  body.relObra #siengeBox tr.sgItens{display:none !important}
   @media print{ #siengeBox .sgBarra,#siengeBox .sgSt,#siengeBox .sgObs{display:none !important}
     #siengeBox .sgImp{display:block !important;font-size:8pt} }
   body.relObra #siengeBox .sgBarra, body.relObra #siengeBox .sgSt, body.relObra #siengeBox .sgObs{display:none !important}
@@ -7260,7 +7273,7 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
     function setQuem(v){ try{ localStorage.setItem(QCH,v); }catch(e){} }
     function agora(){ var d=new Date(); return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
     function marca(p,st){ var m=get(p); m.s=(m.s===st?null:st); m.quando=m.s?agora():null; m.por=m.s?quem():null; set(p,m);
-      if(atualCod!=null) renderSg(atualCod); }
+      if(atualCod!=null){ renderSg(atualCod); reabre(); } }
     function obs(p,v){ var m=get(p); m.obs=v; if(!m.quando){ m.quando=agora(); m.por=quem(); } set(p,m); }
     function rot(s){ return s==='E'?'Entregue':s==='P'?'Entregue parcial':s==='N'?'Não entregue':'—'; }
     function botoes(p){ var m=get(p);
@@ -7280,11 +7293,32 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
       i.onchange=function(){ var f=i.files[0]; if(!f) return; var r=new FileReader();
         r.onload=function(){ try{ var l=JSON.parse(r.result), o=ler();
             (Array.isArray(l)?l:[]).forEach(function(x){ o[String(x.pedido)]={s:x.status||null,obs:x.obs||'',por:x.por||'',quando:x.quando||''}; });
-            grava(o); if(atualCod!=null) renderSg(atualCod);
+            grava(o); if(atualCod!=null){ renderSg(atualCod); reabre(); }
           }catch(e){ console.log('[SGE] json invalido',e); } };
         r.readAsText(f); };
       i.click(); }
-    return {get:get,marca:marca,obs:obs,botoes:botoes,contador:contador,exportar:exportar,importar:importar,quem:quem,setQuem:setQuem,rot:rot};
+    function itens(cod,ped){ var T=(window.SIENGE_ITENS||{})[String(cod)]; return (T&&T[String(ped)])||[]; }
+    function nfmt(v){ return Number(v||0).toLocaleString('pt-BR',{maximumFractionDigits:3}); }
+    function linhaItens(cod,ped){ var l=itens(cod,ped); if(!l.length) return '';
+      var h='<tr class="sgItens"><td colspan="8"><div class="sgItBox"><b>Itens do pedido '+ped+'</b>'+
+        '<table class="sgItTab"><thead><tr><th>Insumo</th><th>Un</th><th class="n">Qtde</th><th class="n">Pendente</th></tr></thead><tbody>'+
+        l.map(function(i){ return '<tr><td>'+String(i[0]).replace(/[&<>]/g,'')+'</td><td>'+String(i[1]).replace(/[&<>]/g,'')+'</td><td class="n">'+nfmt(i[2])+
+          '</td><td class="n'+((i[3]||0)>0.0005?' pend':'')+'">'+((i[3]||0)>0.0005?nfmt(i[3]):'—')+'</td></tr>'; }).join('')+
+        '</tbody></table></div></td></tr>';
+      return h; }
+    var ABT={};
+    function pinta(tr,ab){ var prox=tr.nextElementSibling; if(!prox||!prox.classList.contains('sgItens')) return false;
+      prox.classList.toggle('sgAberta',ab); tr.classList.toggle('sgLinAberta',ab);
+      var se=tr.querySelector('.sgSeta'); if(se) se.textContent=ab?'\u25be':'\u25b8'; return true; }
+    function abre(tr,ev){ if(ev&&ev.target&&/BUTTON|TEXTAREA|INPUT|A|SELECT/.test(ev.target.tagName)) return;
+      var prox=tr.nextElementSibling; if(!prox||!prox.classList.contains('sgItens')) return;
+      var ab=!prox.classList.contains('sgAberta');
+      if(pinta(tr,ab)) ABT[tr.getAttribute('data-ped')]=ab; }
+    function reabre(){ try{ Object.keys(ABT).forEach(function(p){ if(!ABT[p]) return;
+        var tr=document.querySelector('#siengeBox tr.sgLin[data-ped="'+p+'"]'); if(tr) pinta(tr,true); }); }catch(e){} }
+    function todos(ab){ ABT={}; [].forEach.call(document.querySelectorAll('#siengeBox tr.sgLin'),function(tr){
+        if(pinta(tr,ab)) ABT[tr.getAttribute('data-ped')]=ab; }); }
+    return {get:get,marca:marca,obs:obs,botoes:botoes,contador:contador,exportar:exportar,importar:importar,quem:quem,setQuem:setQuem,rot:rot,linhaItens:linhaItens,abre:abre,reabre:reabre,todos:todos};
   })();
   window.SGE=SGE;
 
@@ -7319,16 +7353,18 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
     h+='<div class="bloco" style="margin-top:14px"><header><h2>Pedidos</h2><p>Marque a entrega de cada pedido: <b>Entregue</b> (chegou tudo), <b>Parcial</b> (chegou parte — diga na observação o que falta) ou <b>Não</b> (não chegou nada).</p></header>'+
       '<div class="sgBarra">Marcando como <input class="sgQuem" id="sgQuem" placeholder="seu nome" value="'+esc2(SGE.quem())+'" oninput="SGE.setQuem(this.value)">'+
       '<span class="sgCont" id="sgCont"></span><span class="sgEspaco"></span>'+
+      '<button class="sgBt" onclick="SGE.todos(true)">Abrir todos os itens</button>'+
+      '<button class="sgBt" onclick="SGE.todos(false)">Recolher</button>'+
       '<button class="sgBt" onclick="SGE.exportar()">Exportar marcações</button>'+
       '<button class="sgBt" onclick="SGE.importar()">Importar</button></div>'+
       '<table><thead><tr><th>Data</th><th>Pedido</th><th>Fornecedor</th>'+
       '<th class="n">Total</th><th class="n">Entregue</th><th class="n">Pendente</th><th class="sgColSt">Entrega</th><th class="sgColObs">Observação do engenheiro</th></tr></thead><tbody>'+
       d.ped.map(function(p){ var m=SGE.get(p[1]);
-        return '<tr><td>'+p[0]+'</td><td>'+p[1]+'</td><td>'+esc2(p[2])+'</td><td class="n">'+brl(p[3])+'</td><td class="n">'+brl(p[4])+
+        return '<tr class="sgLin" data-ped="'+p[1]+'" onclick="SGE.abre(this,event)"><td><span class="sgSeta">\u25b8</span> '+p[0]+'</td><td>'+p[1]+'</td><td>'+esc2(p[2])+'</td><td class="n">'+brl(p[3])+'</td><td class="n">'+brl(p[4])+
         '</td><td class="n'+(p[5]>0.005?' pend':'')+'">'+(p[5]>0.005?brl(p[5]):'—')+'</td>'+
         '<td>'+SGE.botoes(p[1])+(m.quando?'<div class="sgQdo">'+esc2(m.por||'')+(m.por?' · ':'')+esc2(m.quando)+'</div>':'')+'</td>'+
         '<td><textarea class="sgObs" rows="1" placeholder="o que falta, previsão de entrega…" oninput="SGE.obs('+p[1]+',this.value)">'+esc2(m.obs||'')+'</textarea>'+
-        '<div class="sgImp">'+(esc2(m.obs||'')||'—')+'</div></td></tr>'; }).join('')+
+        '<div class="sgImp">'+(esc2(m.obs||'')||'—')+'</div></td></tr>'+SGE.linhaItens(cod,p[1]); }).join('')+
       '<tr><td colspan="3" style="font-weight:650">Total</td><td class="n" style="font-weight:650">'+brl(d.tot)+'</td><td class="n">'+brl(d.ent)+'</td><td class="n">'+brl(d.pen)+'</td><td colspan="2"></td></tr></tbody></table></div>';
     b.innerHTML=h; try{ SGE.contador(d); }catch(e){}
   }
