@@ -7359,6 +7359,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
     '.fqP{min-width:132px;padding:10px 12px;border-radius:10px;background:var(--surface-1);border:1px solid var(--line)}',
     '.fqP span{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}',
     '.fqP b{display:block;margin-top:3px;font-size:16px;font-weight:650;font-variant-numeric:tabular-nums}',
+    '.fqP.fqPneg b{font-size:14px;color:var(--text-muted);font-weight:600}',
     '.fqWrap{overflow-x:auto;margin-top:14px}',
     '.fqTab{width:100%;border-collapse:collapse}',
     '.fqTab th,.fqTab td{padding:9px 12px;font-size:13px}',
@@ -7422,9 +7423,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
        '<div class="fqSub">'+(neg
           ? 'O material do Sienge ('+brl(Math.abs(d.q_desc))+') passou da empreita medida ('+brl(T.m-d.q_desc_med)+'). Nada a pagar — esta diferença fica para as próximas medições.'
           : 'Empreita medida menos o material descontado, dividido em duas parcelas.')+'</div></div>'+
-       '<div class="fqParc">'+
-         '<div class="fqP"><span>1ª parcela</span><b'+(neg?' class="fqR"':'')+'>'+brl(p1)+'</b></div>'+
-         '<div class="fqP"><span>2ª parcela</span><b'+(neg?' class="fqR"':'')+'>'+brl(p2)+'</b></div>'+
+       '<div class="fqParc">'+(neg
+         ? '<div class="fqP fqPneg"><span>parcelas</span><b>nada a pagar</b></div>'
+         : '<div class="fqP"><span>1ª parcela</span><b>'+brl(p1)+'</b></div>'+
+           '<div class="fqP"><span>2ª parcela</span><b>'+brl(p2)+'</b></div>')+
        '</div></div>';
     h+='<div class="fqWrap"><table class="tb fqTab"><thead><tr><th>Serviço</th>'+
        ['Valor total','Ac. anterior','Medição','Ac. total','Saldo'].map(function(c,i){
