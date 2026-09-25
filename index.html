@@ -1247,6 +1247,11 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       </details>
     </div>
 
+    <details class="drill" open>
+      <summary>Fechamento do mês — medido, material, saldo e parcelas<span class="qt" id="consQt"></span></summary>
+      <div id="consBox"></div>
+    </details>
+
     <details class="drill">
       <summary>Carteira do empreiteiro — no valor cheio do contrato<span class="qt"> · obra inteira, não só a empreita</span></summary>
       <div>
@@ -8082,6 +8087,94 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   setInterval(function(){ var nav=document.getElementById('obraNav'); if(!nav) return;
     botao(); var bt=nav.querySelector('[data-p="LO"]'); if(bt){ bt.disabled=false; bt.style.opacity=''; } },800);
   try{ if(window.SEC&&window.SEC.push) window.SEC.push({p:'LO',rot:'Fiscalização (LOs)'}); }catch(e){}
+})();
+</script>
+
+
+<!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
+<script src="consolidado.js"></script>
+<style>
+  #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
+  #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
+  #consBox .cK span{display:block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;opacity:.65}
+  #consBox .cK b{font-size:19px;font-weight:650;display:block;margin-top:2px}
+  #consBox table{width:100%;border-collapse:collapse;font-size:12.5px}
+  #consBox td,#consBox th{padding:4px 6px;border-bottom:1px solid var(--bd,#e4e4df)}
+  #consBox th{text-align:left;font-weight:650;opacity:.75;position:sticky;top:0;background:var(--cd,#fff)}
+  #consBox td.n,#consBox th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  #consBox tr.gp td{background:var(--cd2,#f4f4f0);font-weight:650}
+  #consBox .neg{color:#b3261e}
+  #consBox .tot td{border-top:2px solid var(--bd,#ccc);font-weight:650}
+</style>
+<script>
+(function(){
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function rs(v){ return (v<0?'−':'')+'R$ '+Math.abs(Number(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function r2(v){ return Math.round((Number(v)||0)*100)/100; }
+
+  function render(){
+    var box=document.getElementById('consBox'); if(!box) return;
+    if(!window.FECHCONS){ box.innerHTML='<div class="card">O arquivo do consolidado (consolidado.js) não carregou.</div>'; return; }
+    var L=window.FECHCONS.linhas.slice();
+    /* respeita o filtro de empreiteira da página quando ele existir */
+    try{
+      if(typeof filtradas==='function'){
+        var ok={}; filtradas().forEach(function(o){ ok[o.cod]=1; });
+        var f=L.filter(function(l){ return ok[l.obra]; });
+        if(f.length) L=f;
+      }
+    }catch(e){}
+    var T={emp:0,mat:0,saldo:0,p1:0,p2:0};
+    L.forEach(function(l){ T.emp+=l.emp_medido; T.mat+=l.mat; T.saldo+=l.saldo; T.p1+=l.p1; T.p2+=l.p2; });
+    var h='<div class="cK">'+
+      '<div><span>Obras</span><b>'+L.length+'</b></div>'+
+      '<div><span>Empreita sobre o medido</span><b>'+rs(T.emp)+'</b></div>'+
+      '<div><span>Material no Sienge</span><b>'+rs(T.mat)+'</b></div>'+
+      '<div><span>Saldo a pagar</span><b class="'+(T.saldo<0?'neg':'')+'">'+rs(T.saldo)+'</b></div>'+
+      '<div><span>1ª parcela</span><b>'+rs(T.p1)+'</b></div>'+
+      '<div><span>2ª parcela</span><b>'+rs(T.p2)+'</b></div></div>';
+    h+='<p style="font-size:11px;color:var(--text-muted);margin:-4px 0 10px">'+
+       '<b>Saldo = empreita sobre o medido − material comprado no Sienge.</b> A empreita sobre o medido é '+
+       '(medido aprovado + em tramitação) × taxa da obra. As parcelas são metade cada, com o centavo na primeira. '+
+       'Adiantamentos não entram aqui — eles ficam no arquivo de fechamento de cada obra. '+
+       'Gerado em '+esc((window.FECHCONS.geradoEm||'').split('-').reverse().join('/'))+'.</p>';
+    /* agrupado por empreiteiro */
+    var por={}; L.forEach(function(l){ (por[l.emp_nome]=por[l.emp_nome]||[]).push(l); });
+    var nomes=Object.keys(por).sort(function(a,b){
+      var sa=por[a].reduce(function(x,l){return x+l.saldo;},0), sb=por[b].reduce(function(x,l){return x+l.saldo;},0);
+      return sb-sa; });
+    h+='<table><thead><tr><th class="n">Obra</th><th>Unidade de ensino</th><th class="n">Taxa</th>'+
+       '<th class="n">Medido total</th><th class="n">Empreita s/ o medido</th><th class="n">Material</th>'+
+       '<th class="n">Saldo</th><th class="n">1ª parcela</th><th class="n">2ª parcela</th></tr></thead><tbody>';
+    nomes.forEach(function(nome){
+      var g=por[nome], G={emp:0,mat:0,saldo:0,p1:0,p2:0};
+      g.forEach(function(l){ G.emp+=l.emp_medido; G.mat+=l.mat; G.saldo+=l.saldo; G.p1+=l.p1; G.p2+=l.p2; });
+      h+='<tr class="gp"><td class="n">'+g.length+'</td><td>'+esc(nome)+'</td><td></td><td></td>'+
+         '<td class="n">'+rs(G.emp)+'</td><td class="n">'+rs(G.mat)+'</td>'+
+         '<td class="n'+(G.saldo<0?' neg':'')+'">'+rs(G.saldo)+'</td>'+
+         '<td class="n">'+rs(G.p1)+'</td><td class="n">'+rs(G.p2)+'</td></tr>';
+      g.sort(function(a,b){ return b.saldo-a.saldo; }).forEach(function(l){
+        h+='<tr><td class="n">'+l.obra+'</td><td>'+esc(l.uni)+'</td>'+
+           '<td class="n">'+(l.taxa*100).toFixed(2).replace('.',',')+'%</td>'+
+           '<td class="n">'+rs(l.medido)+'</td><td class="n">'+rs(l.emp_medido)+'</td>'+
+           '<td class="n">'+rs(l.mat)+(l.nped?' <span style="opacity:.55">('+l.nped+')</span>':'')+'</td>'+
+           '<td class="n'+(l.saldo<0?' neg':'')+'">'+rs(l.saldo)+'</td>'+
+           '<td class="n">'+rs(l.p1)+'</td><td class="n">'+rs(l.p2)+'</td></tr>';
+      });
+    });
+    h+='<tr class="tot"><td class="n">'+L.length+'</td><td>TOTAL</td><td></td><td></td>'+
+       '<td class="n">'+rs(T.emp)+'</td><td class="n">'+rs(T.mat)+'</td>'+
+       '<td class="n'+(T.saldo<0?' neg':'')+'">'+rs(T.saldo)+'</td>'+
+       '<td class="n">'+rs(T.p1)+'</td><td class="n">'+rs(T.p2)+'</td></tr>';
+    h+='</tbody></table>';
+    box.innerHTML=h;
+    var q=document.getElementById('consQt'); if(q) q.textContent=' · '+L.length+' obras · saldo '+rs(T.saldo);
+  }
+  window.renderCons=render;
+  var _r=window.renderEmpr;
+  if(typeof _r==='function') window.renderEmpr=function(){ var x=_r.apply(this,arguments); try{render();}catch(e){} return x; };
+  document.addEventListener('DOMContentLoaded',function(){ try{render();}catch(e){} });
+  try{ render(); }catch(e){}
 })();
 </script>
 
