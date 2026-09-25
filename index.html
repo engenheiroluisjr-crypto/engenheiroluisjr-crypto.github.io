@@ -7964,7 +7964,7 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
     var a=ks[0].split('-'), z=ks[ks.length-1].split('-'), seq=[];
     for(var y=+a[0],m0=+a[1]; y<+z[0]||(y==+z[0]&&m0<=+z[1]); m0++){ if(m0>12){m0=1;y++;}
       var k=y+'-'+('0'+m0).slice(-2); seq.push(k); if(!(k in meses)) meses[k]=0; }
-    var W=980,H=240,PL=64,PR=16,PT=18,PB=52;
+    var W=980,H=250,PL=86,PR=16,PT=18,PB=52;
     var n=seq.length, bw=(W-PL-PR)/Math.max(n,1);
     var acum=0, pts=seq.map(function(k){ acum+=meses[k]; return {k:k,v:meses[k],ac:acum}; });
     var max=Math.max.apply(null,pts.map(function(p){return p.ac;}))||1;
