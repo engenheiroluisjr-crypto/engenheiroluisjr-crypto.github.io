@@ -1,11 +1,16 @@
 /* Service worker do painel de obras.
-   - HTML (a pagina): rede primeiro; sem rede, a ultima copia guardada.
-   - resto (sienge.js, entregas.js, libs/, orc/*.json): responde do cache se tiver e
-     atualiza por tras (stale-while-revalidate). Assim o 4G nao baixa de novo o que ja tem.
-   - so mexe em pedidos GET da propria origem; a API do tempo (open-meteo) passa reto. */
-const VERSAO = 'painel-v1';
-const PRE = ['./', 'sienge.js', 'sienge_itens.js', 'entregas.js',
-             'libs/jspdf.umd.min.js', 'libs/jspdf.plugin.autotable.min.js', 'libs/xlsx.mini.min.js'];
+   - HTML (a pagina) e os arquivos de DADOS (fech.js, lo.js, consolidado.js, sienge*.js,
+     entregas.js): rede primeiro; sem rede, a ultima copia guardada. Sao os numeros --
+     ver o dado de ontem por causa de cache ja aconteceu e confunde mais do que ajuda.
+   - libs/ e o resto: responde do cache e atualiza por tras (stale-while-revalidate).
+     Essas nao mudam, entao o 4G nao baixa de novo o que ja tem.
+   - so mexe em pedidos GET da propria origem; a API do tempo (open-meteo) passa reto.
+
+   ATENCAO ao ignoreSearch: com ele ligado, 'fech.js?cb=123' casa com o 'fech.js' do cache
+   e o cache-busting nao funciona. Por isso os dados nao passam mais por esse caminho. */
+const VERSAO = 'painel-v2';
+const PRE = ['./', 'libs/jspdf.umd.min.js', 'libs/jspdf.plugin.autotable.min.js', 'libs/xlsx.mini.min.js'];
+const DADOS = /\/(fech|lo|consolidado|sienge|sienge_itens|entregas)\.js$/;
 
 self.addEventListener('install', ev => {
   ev.waitUntil(caches.open(VERSAO).then(c => Promise.allSettled(PRE.map(u => c.add(u)))).then(() => self.skipWaiting()));
@@ -22,6 +27,14 @@ self.addEventListener('fetch', ev => {
   if (ehPagina) {
     ev.respondWith(fetch(req).then(r => { const cp = r.clone(); caches.open(VERSAO).then(c => c.put('./', cp)); return r; })
                              .catch(() => caches.match('./')));
+    return;
+  }
+  if (DADOS.test(url.pathname)) {                 // dados: rede primeiro
+    ev.respondWith(fetch(req).then(r => {
+        if (r.ok) { const cp = r.clone(); caches.open(VERSAO).then(c => c.put(url.pathname, cp)); }
+        return r;
+      }).catch(() => caches.open(VERSAO).then(c => c.match(url.pathname))
+                           .then(x => x || new Response('', { status: 503, statusText: 'offline' }))));
     return;
   }
   ev.respondWith(caches.open(VERSAO).then(async c => {
