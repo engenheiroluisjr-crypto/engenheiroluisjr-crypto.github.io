@@ -7343,13 +7343,13 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
     if(d.q_total==null){
       d.q_total=d.empreita; d.q_ant=d.emp_ap;
       d.q_med=Math.round(((d.emp_tot||0)-(d.emp_ap||0))*100)/100;
-      d.q_desc=-(d.sienge||0);
+      d.q_desc=-(d.sienge||0); d.q_desc_med=d.q_desc;
     }
     var q=[
       {r:'MEDIÇÃO Nº '+(d.med_n!=null?String(d.med_n).padStart(2,'0'):'__'), t:d.q_total, a:d.q_ant, m:d.q_med, forte:true},
       {r:'ADIANTAMENTO', t:0, a:0, m:0},
       {r:'DESC ADTO',    t:0, a:0, m:0},
-      {r:'DESCONTOS',    t:d.q_desc, a:0, m:0}
+      {r:'DESCONTOS',    t:d.q_desc, a:0, m:(d.q_desc_med!=null?d.q_desc_med:0)}
     ];
     q.forEach(function(l){ l.t=+l.t||0; l.a=+l.a||0; l.m=+l.m||0; l.ac=l.a+l.m; l.s=l.t-l.ac; });
     var T={a:0,m:0,ac:0,s:0}; q.forEach(function(l){ T.a+=l.a; T.m+=l.m; T.ac+=l.ac; T.s+=l.s; });
@@ -7378,7 +7378,9 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
        '<div style="font-size:22px;font-weight:650'+(T.m<0?';color:#b3261e':'')+'">'+brl(T.m)+'</div>'+
        '<div style="font-size:13px;opacity:.7">1ª parcela</div><div style="font-weight:650">'+brl(p1)+'</div>'+
        '<div style="font-size:13px;opacity:.7">2ª parcela</div><div style="font-weight:650">'+brl(p2)+'</div></div>';
-    h+='<div class="card" style="margin-top:12px"><b>ADIANTAMENTO</b> e <b>DESC ADTO</b> ficam em zero aqui porque são entrada sua: preencha no arquivo '+
+    h+='<div class="card" style="margin-top:12px">Este é o <b>primeiro fechamento</b> da obra: por isso <b>AC ANTERIOR</b> entra zerado, '+
+       'todo o acumulado (aprovado + em tramitação) vai para a coluna <b>MEDIÇÃO</b> e o material do Sienge é descontado inteiro aqui. '+
+       '<b>ADIANTAMENTO</b> e <b>DESC ADTO</b> ficam em zero porque são entrada sua: preencha no arquivo '+
        '<b>FECHAMENTO-EMPREITEIRO</b> da obra, em <b>01. PLANILHA</b> — lá as três células amarelas entram na conta e as duas identidades '+
        '(<i>AC TOTAL = AC ANTERIOR + MEDIÇÃO</i> e <i>SALDO = VALOR TOTAL − AC TOTAL</i>) já estão em fórmula.</div></div>';
     h+='<div class="bloco" style="margin-top:14px"><header><h2>De onde vem cada número</h2></header><table class="tb"><tbody>'+
