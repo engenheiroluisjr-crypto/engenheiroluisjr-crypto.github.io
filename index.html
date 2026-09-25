@@ -7334,6 +7334,55 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
     bt.dataset.p='Fech'; bt.textContent='Fechamento de empreiteiro';
     nav.appendChild(bt);
   }
+  function estiloFq(){
+    if(document.getElementById('fqCss')) return;
+    var st=document.createElement('style'); st.id='fqCss';
+    st.textContent=[
+    '.fq header h2{margin-bottom:2px}',
+    '.fq .fqCid{color:var(--text-muted);font-weight:400}',
+    '.fqChips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}',
+    '.fqChip{display:inline-flex;align-items:baseline;gap:6px;padding:4px 10px;border-radius:999px;',
+      'background:var(--surface-2);border:1px solid var(--line);font-size:12px;line-height:1.5}',
+    '.fqChip i{font-style:normal;color:var(--text-muted)}',
+    '.fqChip b{font-weight:650;font-variant-numeric:tabular-nums}',
+    '.fqChip.fqSit b{color:var(--warning)}',
+    '.fqHero{display:flex;gap:20px;flex-wrap:wrap;align-items:stretch;justify-content:space-between;',
+      'margin:16px 0 4px;padding:16px 18px;border-radius:14px;background:var(--surface-2);',
+      'border:1px solid var(--line);border-left:4px solid var(--good)}',
+    '.fqHero.fqHeroNeg{border-left-color:var(--critical)}',
+    '.fqHeroMain{min-width:260px;flex:1 1 320px}',
+    '.fqLab{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted);font-weight:650}',
+    '.fqVal{font-size:34px;line-height:1.15;font-weight:700;margin:2px 0 6px;font-variant-numeric:tabular-nums;color:var(--good)}',
+    '.fqHeroNeg .fqVal{color:var(--critical)}',
+    '.fqSub{font-size:12.5px;color:var(--text-secondary);max-width:52ch;line-height:1.5}',
+    '.fqParc{display:flex;gap:10px;align-items:flex-start}',
+    '.fqP{min-width:132px;padding:10px 12px;border-radius:10px;background:var(--surface-1);border:1px solid var(--line)}',
+    '.fqP span{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}',
+    '.fqP b{display:block;margin-top:3px;font-size:16px;font-weight:650;font-variant-numeric:tabular-nums}',
+    '.fqWrap{overflow-x:auto;margin-top:14px}',
+    '.fqTab{width:100%;border-collapse:collapse}',
+    '.fqTab th,.fqTab td{padding:9px 12px;font-size:13px}',
+    '.fqTab thead th{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);',
+      'font-weight:650;border-bottom:1px solid var(--line);text-align:left}',
+    '.fqTab .fqNum{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}',
+    '.fqTab tbody tr{border-bottom:1px solid var(--line)}',
+    '.fqTab tbody tr:nth-child(even) td{background:rgba(127,127,127,.045)}',
+    '.fqTab td.fqCol,.fqTab th.fqCol{background:rgba(57,135,229,.09)}',
+    '.fqTab tbody tr:nth-child(even) td.fqCol{background:rgba(57,135,229,.13)}',
+    '.fqTab tr.fqForte td{font-weight:650}',
+    '.fqTab tr.fqZerada td{color:var(--text-muted)}',
+    '.fqTab .fqDash{color:var(--text-muted)}',
+    '.fqTab .fqR{color:var(--critical)}',
+    '.fqTab tfoot td{padding-top:11px;padding-bottom:11px;font-weight:700;font-size:13.5px;',
+      'border-top:2px solid var(--line);background:var(--surface-2)}',
+    '.fqTab tfoot .fqNum{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}',
+    '.fqNota{margin-top:14px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2)}',
+    '.fqNota summary{cursor:pointer;padding:10px 14px;font-size:12.5px;font-weight:650;color:var(--text-secondary)}',
+    '.fqNota p{margin:0 14px 12px;font-size:12.5px;line-height:1.55;color:var(--text-secondary)}',
+    '@media(max-width:640px){.fqVal{font-size:27px}.fqParc{width:100%}.fqP{flex:1 1 0;min-width:0}}'
+    ].join('');
+    document.head.appendChild(st);
+  }
   window.renderFech=function(cod){
     var b=caixa(); var d=FECH_DADOS[String(cod)];
     if(!d){ b.innerHTML='<div class="card" style="margin-bottom:12px">Esta obra não está no CTR com contrato e situação de execução ou conclusão.</div>'; return; }
@@ -7355,34 +7404,47 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
     var T={a:0,m:0,ac:0,s:0}; q.forEach(function(l){ T.a+=l.a; T.m+=l.m; T.ac+=l.ac; T.s+=l.s; });
     var p1=Math.round((T.m/2)*100)/100, p2=Math.round((T.m-p1)*100)/100;
     var medido=(d.ap||0)+(d.tr||0);
+    estiloFq();
+    var neg=T.m<0;
+    function cel(v,zebra){ if(v===0) return '<td class="fqNum fqDash">—</td>';
+      return '<td class="fqNum'+(v<0?' fqR':'')+(zebra?' fqCol':'')+'">'+brl(v)+'</td>'; }
     var h='';
-    h+='<div class="bloco"><header><h2>Fechamento com '+(d.emp||'o empreiteiro')+'</h2>'+
-       '<p>Obra '+d.num+' — '+d.uni+' ('+d.cid+') · taxa de empreita <b>'+pct(d.taxa)+'</b> ('+(d.taxa_fonte||'')+')'+
-       (d.med_ref?' · competência '+d.med_ref.slice(8,10)+'/'+d.med_ref.slice(5,7)+'/'+d.med_ref.slice(0,4):'')+
-       (d.med_sit?' · '+d.med_sit:'')+'</p></header>';
-    h+='<table class="tb"><thead><tr><th>SERVIÇO</th>'+
-       ['VALOR TOTAL','AC ANTERIOR','MEDIÇÃO','AC TOTAL','SALDO'].map(function(c){return '<th style="text-align:right">'+c+'</th>';}).join('')+
+    h+='<div class="bloco fq"><header><h2>Fechamento com '+(d.emp||'o empreiteiro')+'</h2>'+
+       '<p>Obra '+d.num+' — '+d.uni+' <span class="fqCid">'+d.cid+'</span></p>'+
+       '<div class="fqChips">'+
+         '<span class="fqChip"><i>taxa de empreita</i><b>'+pct(d.taxa)+'</b></span>'+
+         (d.med_ref?'<span class="fqChip"><i>competência</i><b>'+d.med_ref.slice(8,10)+'/'+d.med_ref.slice(5,7)+'/'+d.med_ref.slice(0,4)+'</b></span>':'')+
+         (d.med_sit?'<span class="fqChip fqSit"><b>'+d.med_sit+'</b></span>':'')+
+       '</div></header>';
+    h+='<div class="fqHero'+(neg?' fqHeroNeg':'')+'">'+
+       '<div class="fqHeroMain"><div class="fqLab">'+(neg?'Saldo a favor da Atlântica':'A pagar nesta medição')+'</div>'+
+       '<div class="fqVal">'+brl(Math.abs(T.m))+'</div>'+
+       '<div class="fqSub">'+(neg
+          ? 'O material do Sienge ('+brl(Math.abs(d.q_desc))+') passou da empreita medida ('+brl(T.m-d.q_desc_med)+'). Nada a pagar — esta diferença fica para as próximas medições.'
+          : 'Empreita medida menos o material descontado, dividido em duas parcelas.')+'</div></div>'+
+       '<div class="fqParc">'+
+         '<div class="fqP"><span>1ª parcela</span><b'+(neg?' class="fqR"':'')+'>'+brl(p1)+'</b></div>'+
+         '<div class="fqP"><span>2ª parcela</span><b'+(neg?' class="fqR"':'')+'>'+brl(p2)+'</b></div>'+
+       '</div></div>';
+    h+='<div class="fqWrap"><table class="tb fqTab"><thead><tr><th>Serviço</th>'+
+       ['Valor total','Ac. anterior','Medição','Ac. total','Saldo'].map(function(c,i){
+         return '<th class="fqNum'+(i===2?' fqCol':'')+'">'+c+'</th>';}).join('')+
        '</tr></thead><tbody>';
     q.forEach(function(l){
-      h+='<tr><td'+(l.forte?' style="font-weight:650"':'')+'>'+l.r+'</td>'+
-         [l.t,l.a,l.m,l.ac,l.s].map(function(v){
-           return '<td style="text-align:right;white-space:nowrap'+(l.forte?';font-weight:650':'')+
-                  (v<0?';color:#b3261e':'')+'">'+brl(v)+'</td>';}).join('')+'</tr>';
+      var zerada=(l.t===0&&l.a===0&&l.m===0);
+      h+='<tr class="'+(l.forte?'fqForte ':'')+(zerada?'fqZerada':'')+'"><td>'+l.r+'</td>'+
+         cel(l.t)+cel(l.a)+cel(l.m,true)+cel(l.ac)+cel(l.s)+'</tr>';
     });
-    h+='<tr style="border-top:2px solid var(--bd,#ccc)"><td style="font-weight:650">TOTAL</td><td></td>'+
-       [T.a,T.m,T.ac,T.s].map(function(v){
-         return '<td style="text-align:right;white-space:nowrap;font-weight:650'+(v<0?';color:#b3261e':'')+'">'+brl(v)+'</td>';}).join('')+
-       '</tr></tbody></table>';
-    h+='<div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;align-items:baseline">'+
-       '<div style="font-size:13px;opacity:.7">A PAGAR NESTA MEDIÇÃO</div>'+
-       '<div style="font-size:22px;font-weight:650'+(T.m<0?';color:#b3261e':'')+'">'+brl(T.m)+'</div>'+
-       '<div style="font-size:13px;opacity:.7">1ª parcela</div><div style="font-weight:650">'+brl(p1)+'</div>'+
-       '<div style="font-size:13px;opacity:.7">2ª parcela</div><div style="font-weight:650">'+brl(p2)+'</div></div>';
-    h+='<div class="card" style="margin-top:12px">Este é o <b>primeiro fechamento</b> da obra: por isso <b>AC ANTERIOR</b> entra zerado, '+
-       'todo o acumulado (aprovado + em tramitação) vai para a coluna <b>MEDIÇÃO</b> e o material do Sienge é descontado inteiro aqui. '+
-       '<b>ADIANTAMENTO</b> e <b>DESC ADTO</b> ficam em zero porque são entrada sua: preencha no arquivo '+
+    h+='</tbody><tfoot><tr><td>TOTAL</td><td class="fqNum fqDash">—</td>'+
+       cel(T.a)+cel(T.m,true)+cel(T.ac)+cel(T.s)+
+       '</tr></tfoot></table></div>';
+    h+='<details class="fqNota"><summary>Como este quadro foi montado</summary>'+
+       '<p>Este é o <b>primeiro fechamento</b> da obra: <b>Ac. anterior</b> entra zerado, todo o acumulado '+
+       '(aprovado + em tramitação) vai para a coluna <b>Medição</b> e o material do Sienge é descontado inteiro aqui.</p>'+
+       '<p><b>Adiantamento</b> e <b>Desc adto</b> ficam em zero porque são entrada sua: preencha no arquivo '+
        '<b>FECHAMENTO-EMPREITEIRO</b> da obra, em <b>01. PLANILHA</b> — lá as três células amarelas entram na conta e as duas identidades '+
-       '(<i>AC TOTAL = AC ANTERIOR + MEDIÇÃO</i> e <i>SALDO = VALOR TOTAL − AC TOTAL</i>) já estão em fórmula.</div></div>';
+       '(<i>Ac. total = Ac. anterior + Medição</i> e <i>Saldo = Valor total − Ac. total</i>) já estão em fórmula.</p>'+
+       '</details></div>';
     h+='<div class="bloco" style="margin-top:14px"><header><h2>De onde vem cada número</h2></header><table class="tb"><tbody>'+
       [['Contrato da obra (FDE)',brl(d.contrato),'CTR, coluna ORÇA/O'],
        ['Valor total da empreita',brl(d.empreita),'contrato × taxa'],
