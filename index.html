@@ -8045,6 +8045,14 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   #loBox .loLeg i.lgB{width:12px;height:10px;background:#7aa6c8}
   #loBox .loLeg i.lgL{width:14px;height:3px;background:#2f6f4e}
   #loBox .loLeg i.lgT{width:3px;height:13px;border-radius:999px}
+  #loBox .rt{display:inline-block;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:650}
+  #loBox .rt .rtD{font-weight:400;opacity:.7;font-size:10.5px}
+  #loBox .rtOk{background:#e3f1ea;color:#0b6547}
+  #loBox .rtLen{background:#fdf0dc;color:#8a5a12}
+  #loBox .rtPar{background:#f7dedb;color:#8c2019}
+  html[data-tema="escuro"] #loBox .rtOk{background:#12321f;color:#7fd6a8}
+  html[data-tema="escuro"] #loBox .rtLen{background:#3a2a10;color:#e8b767}
+  html[data-tema="escuro"] #loBox .rtPar{background:#3a1613;color:#f0a49c}
   #loBox .loFonte{font-size:10.5px;opacity:.55}
   #loBox svg{width:100%;height:auto;display:block}
 </style>
@@ -8070,6 +8078,25 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
     nav.appendChild(bt);
   }
 
+  /* % do contrato executado numa data: interpola entre as competencias das medicoes,
+     porque medicao e mensal e duas vistorias na mesma competencia nao teriam delta */
+  function curvaPct(d,ctr){
+    var M=(d.med||[]).filter(function(m){return m.ref;}).slice()
+          .sort(function(a,b){return a.ref.localeCompare(b.ref);});
+    if(!M.length||!ctr) return null;
+    var ac=0, P=M.map(function(m){ ac+=(+m.v||0); return {t:new Date(m.ref+'T00:00:00').getTime(), p:ac/ctr*100}; });
+    var ini=P[0].t-30*86400000;
+    return function(iso){
+      if(!iso) return null;
+      var t=new Date(iso+'T00:00:00').getTime();
+      if(t<=ini) return 0;
+      if(t<=P[0].t) return P[0].p*(t-ini)/(P[0].t-ini);
+      for(var i=0;i<P.length-1;i++){
+        if(t<=P[i+1].t) return P[i].p+(P[i+1].p-P[i].p)*(t-P[i].t)/((P[i+1].t-P[i].t)||1);
+      }
+      return P[P.length-1].p;
+    };
+  }
   /* contrato da obra: fech.js tem os 294; ORC_IDX e a reserva */
   function contratoDe(cod){
     try{ var f=window.FECH&&window.FECH.obras&&window.FECH.obras[String(cod)];
@@ -8186,16 +8213,38 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
     h+=grafico(d,cod)+'</div>';
     var L=(d.vist||[]).slice().sort(function(x,y){ return (x.d||'9999').localeCompare(y.d||'9999')||((x.n||0)-(y.n||0)); });
     var ant=null;
+    var fPct=curvaPct(d,ctrO);
+    var difT=null, difD=null;
+    if(fPct){ var cd=L.filter(function(v){return v.d;});
+      if(cd.length>1){ difT=fPct(cd[cd.length-1].d)-fPct(cd[0].d); difD=dias(cd[0].d,cd[cd.length-1].d); } }
+    var mediaDia=(difT!=null&&difD>0)?difT/difD:null;
     h+='<div class="bloco" style="margin-top:14px"><header><h2>Vistoria a vistoria</h2>'+
-       '<p>O intervalo é a diferença para a vistoria anterior. Quando a data não está no nome do arquivo, '+
-       'ela vem do carimbo do scanner ou da data de criação do PDF — está indicado ao lado.</p></header>'+
-       '<table><thead><tr><th class="n">Nº</th><th>Data</th><th>Tipo</th><th class="n">Intervalo</th><th>Arquivo</th></tr></thead><tbody>';
+       '<p>O intervalo é a diferença para a vistoria anterior. O <b>% executado</b> é o acumulado medido na data '+
+       'daquela vistoria, interpolado entre as competências (medição é mensal). O <b>ritmo</b> compara o avanço do '+
+       'intervalo com o ritmo médio desta obra: <b>parado</b> abaixo de 0,5 ponto no período, <b>lento</b> abaixo de 70% '+
+       'da média, senão <b>normal</b>. Quando a data não está no nome do arquivo, ela vem do carimbo do scanner ou da '+
+       'data de criação do PDF — está indicado ao lado.</p></header>'+
+       '<table><thead><tr><th class="n">Nº</th><th>Data</th><th>Tipo</th><th class="n">Intervalo</th>'+
+       '<th class="n">% executado</th><th>Ritmo</th><th>Arquivo</th></tr></thead><tbody>';
+    var pAnt=null;
     L.forEach(function(v){
       var g=(v.d&&ant)?dias(ant,v.d):null; if(v.d) ant=v.d;
+      var pq=(fPct&&v.d)?fPct(v.d):null;
+      var rit='—', cls='';
+      if(pq!=null&&pAnt!=null&&g>0){
+        var dp=pq-pAnt;
+        if(dp<0.5){ rit='parado'; cls='rtPar'; }
+        else if(mediaDia&&(dp/g)<0.7*mediaDia){ rit='lento'; cls='rtLen'; }
+        else { rit='normal'; cls='rtOk'; }
+        rit+=' <span class="rtD">+'+dp.toLocaleString('pt-BR',{maximumFractionDigits:1})+' p.p.</span>';
+      }
+      if(pq!=null) pAnt=pq;
       h+='<tr><td class="n">'+(v.n!=null?v.n:'—')+'</td><td>'+dbr(v.d)+
          (v.f&&v.f!=='nome'?' <span class="loFonte">('+(v.f==='scanner'?'scanner':'PDF')+')</span>':'')+'</td>'+
          '<td><span class="loTag t-'+esc(v.t)+'">'+esc(v.t)+'</span></td>'+
          '<td class="n'+(g>45?' loAl':'')+'">'+(g!=null?g+' d':'—')+'</td>'+
+         '<td class="n">'+(pq!=null?pq.toLocaleString('pt-BR',{maximumFractionDigits:1})+'%':'—')+'</td>'+
+         '<td>'+(cls?'<span class="rt '+cls+'">'+rit+'</span>':rit)+'</td>'+
          '<td style="font-size:11.5px;opacity:.8">'+esc(v.a)+'</td></tr>';
     });
     h+='</tbody></table></div>';
