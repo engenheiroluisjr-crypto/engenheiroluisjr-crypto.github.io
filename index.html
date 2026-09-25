@@ -7333,13 +7333,20 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
     var b=caixa(); var d=FECH_DADOS[String(cod)];
     if(!d){ b.innerHTML='<div class="card" style="margin-bottom:12px">Esta obra não está no CTR com contrato e situação de execução ou conclusão.</div>'; return; }
     if(!d.taxa){ b.innerHTML='<div class="card" style="margin-bottom:12px">Falta a <b>taxa de empreita</b> desta obra: preencher a <b>coluna M</b> do CTR (ou a coluna L, VLR EMPREITA). Sem ela não dá para montar o fechamento.</div>'; return; }
+    // reserva: se o fech.js em cache for anterior a 25/09 ele nao tem os campos do
+    // quadro; deriva do que existe para nunca mostrar NaN.
+    if(d.q_total==null){
+      d.q_total=d.empreita; d.q_ant=d.emp_ap;
+      d.q_med=Math.round(((d.emp_tot||0)-(d.emp_ap||0))*100)/100;
+      d.q_desc=-(d.sienge||0);
+    }
     var q=[
       {r:'MEDIÇÃO Nº '+(d.med_n!=null?String(d.med_n).padStart(2,'0'):'__'), t:d.q_total, a:d.q_ant, m:d.q_med, forte:true},
       {r:'ADIANTAMENTO', t:0, a:0, m:0},
       {r:'DESC ADTO',    t:0, a:0, m:0},
       {r:'DESCONTOS',    t:d.q_desc, a:0, m:0}
     ];
-    q.forEach(function(l){ l.ac=(l.a||0)+(l.m||0); l.s=(l.t||0)-l.ac; });
+    q.forEach(function(l){ l.t=+l.t||0; l.a=+l.a||0; l.m=+l.m||0; l.ac=l.a+l.m; l.s=l.t-l.ac; });
     var T={a:0,m:0,ac:0,s:0}; q.forEach(function(l){ T.a+=l.a; T.m+=l.m; T.ac+=l.ac; T.s+=l.s; });
     var p1=Math.round((T.m/2)*100)/100, p2=Math.round((T.m-p1)*100)/100;
     var medido=(d.ap||0)+(d.tr||0);
