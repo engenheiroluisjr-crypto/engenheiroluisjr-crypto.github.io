@@ -8063,8 +8063,11 @@ const FECH_DADOS={"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andra
     b.hidden=true;
     if(typeof _painel==='function') return _painel.apply(this,arguments);
   };
+  /* a pagina da obra ja e montada no boot, antes deste bloco existir: por isso o botao
+     tambem e criado aqui e reconferido, alem de nos wrappers acima. */
+  botao();
   setInterval(function(){ var nav=document.getElementById('obraNav'); if(!nav) return;
-    var bt=nav.querySelector('[data-p="LO"]'); if(bt){ bt.disabled=false; bt.style.opacity=''; } },800);
+    botao(); var bt=nav.querySelector('[data-p="LO"]'); if(bt){ bt.disabled=false; bt.style.opacity=''; } },800);
   try{ if(window.SEC&&window.SEC.push) window.SEC.push({p:'LO',rot:'Fiscalização (LOs)'}); }catch(e){}
 })();
 </script>
