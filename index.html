@@ -7331,59 +7331,64 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   }
   window.renderFech=function(cod){
     var b=caixa(); var d=FECH_DADOS[String(cod)];
-    if(!d){ b.innerHTML='<div class="card" style="margin-bottom:12px">Esta obra ainda não tem dados de fechamento. Faltam a planilha <b>- EMPREITA</b> em 01. PLANILHA e o relatório de pedidos do Sienge em 04. RELATÓRIOS.</div>'; return; }
-    var medido=(d.ap||0)+(d.tr||0);
-    var sg=(d.sienge!=null?d.sienge:((d.mat||0)+(d.serv||0)));
-    var linhas=[
-      ['Contrato da obra (FDE)', brl(d.contrato), ''],
-      ['Taxa de empreita', pct(d.taxa), d.taxa_fonte||'lida da planilha - EMPREITA da obra'],
-      ['Valor total da empreita', brl(d.empreita), 'contrato x taxa'],
-      ['SEP',null,null],
-      ['Medido aprovado', brl(d.ap), ''],
-      ['Medido em tramita\u00e7\u00e3o', brl(d.tr), ''],
-      ['Medido total', brl(medido), 'aprovado + tramita\u00e7\u00e3o'],
-      ['SEP',null,null],
-      ['Empreita sobre o aprovado', brl(d.emp_ap), 'o que j\u00e1 est\u00e1 fechado'],
-      ['Empreita sobre o medido total', brl(d.emp_tot), 'incluindo o que a FDE ainda analisa'],
-      ['SEP',null,null],
-      ['(\u2212) Relat\u00f3rio de compras do Sienge', brl(sg), d.npedidos?(d.npedidos+' pedidos'):'sem pedidos no Sienge'],
-      ['   dos quais material', brl(d.mat), ''],
-      ['   dos quais m\u00e3o de obra e servi\u00e7os', brl(d.serv), '']
+    if(!d){ b.innerHTML='<div class="card" style="margin-bottom:12px">Esta obra não está no CTR com contrato e situação de execução ou conclusão.</div>'; return; }
+    if(!d.taxa){ b.innerHTML='<div class="card" style="margin-bottom:12px">Falta a <b>taxa de empreita</b> desta obra: preencher a <b>coluna M</b> do CTR (ou a coluna L, VLR EMPREITA). Sem ela não dá para montar o fechamento.</div>'; return; }
+    var q=[
+      {r:'MEDIÇÃO Nº '+(d.med_n!=null?String(d.med_n).padStart(2,'0'):'__'), t:d.q_total, a:d.q_ant, m:d.q_med, forte:true},
+      {r:'ADIANTAMENTO', t:0, a:0, m:0},
+      {r:'DESC ADTO',    t:0, a:0, m:0},
+      {r:'DESCONTOS',    t:d.q_desc, a:0, m:0}
     ];
-    if(d.absorv!=null){
-      linhas.push(['SEP',null,null]);
-      linhas.push(['   j\u00e1 absorvido pelo servi\u00e7o medido', brl(d.absorv), 'o que pode ser descontado agora']);
-      linhas.push(['   estoque na obra, sem medi\u00e7\u00e3o', brl(d.estoque), 'desconta quando o servi\u00e7o for medido']);
-      linhas.push(['SEP',null,null]);
-      linhas.push(['= Saldo do empreiteiro sobre o aprovado', brl(d.saldo_ap_prop), 'descontando s\u00f3 o material j\u00e1 absorvido pelo medido']);
-      linhas.push(['= Saldo do empreiteiro sobre o medido total', brl(d.saldo_tot_prop), 'descontando s\u00f3 o material j\u00e1 absorvido pelo medido']);
-    } else {
-      linhas.push(['SEP',null,null]);
-      linhas.push(['= Saldo do empreiteiro sobre o aprovado', brl(d.saldo_ap), 'empreita do aprovado menos o relat\u00f3rio do Sienge']);
-      linhas.push(['= Saldo do empreiteiro sobre o medido total', brl(d.saldo_tot), 'empreita do medido total menos o relat\u00f3rio do Sienge']);
-    }
+    q.forEach(function(l){ l.ac=(l.a||0)+(l.m||0); l.s=(l.t||0)-l.ac; });
+    var T={a:0,m:0,ac:0,s:0}; q.forEach(function(l){ T.a+=l.a; T.m+=l.m; T.ac+=l.ac; T.s+=l.s; });
+    var p1=Math.round((T.m/2)*100)/100, p2=Math.round((T.m-p1)*100)/100;
+    var medido=(d.ap||0)+(d.tr||0);
     var h='';
     h+='<div class="bloco"><header><h2>Fechamento com '+(d.emp||'o empreiteiro')+'</h2>'+
-       '<p>Obra '+d.num+' — '+d.uni+' ('+d.cid+'). Tudo o que consta no relatório de compras do Sienge desconta do empreiteiro, mas só na proporção do serviço já medido: o material comprado para serviço que ainda não teve medição é estoque e desconta depois. Pintura e tela Q-92 descontam integral.</p></header>';
-    h+='<table class="tb"><tbody>';
-    linhas.forEach(function(l){
-      if(l[0]==='SEP'){ h+='<tr><td colspan="3" style="height:6px;border:0"></td></tr>'; return; }
-      var forte=/^= Saldo/.test(l[0])||l[0].indexOf('Valor total')===0;
-      h+='<tr><td'+(forte?' style="font-weight:650"':'')+'>'+l[0]+'</td>'+
-         '<td style="text-align:right;white-space:nowrap'+(forte?';font-weight:650':'')+'">'+l[1]+'</td>'+
-         '<td style="color:var(--text-muted)">'+(l[2]||'')+'</td></tr>';
+       '<p>Obra '+d.num+' — '+d.uni+' ('+d.cid+') · taxa de empreita <b>'+pct(d.taxa)+'</b> ('+(d.taxa_fonte||'')+')'+
+       (d.med_ref?' · competência '+d.med_ref.slice(8,10)+'/'+d.med_ref.slice(5,7)+'/'+d.med_ref.slice(0,4):'')+
+       (d.med_sit?' · '+d.med_sit:'')+'</p></header>';
+    h+='<table class="tb"><thead><tr><th>SERVIÇO</th>'+
+       ['VALOR TOTAL','AC ANTERIOR','MEDIÇÃO','AC TOTAL','SALDO'].map(function(c){return '<th style="text-align:right">'+c+'</th>';}).join('')+
+       '</tr></thead><tbody>';
+    q.forEach(function(l){
+      h+='<tr><td'+(l.forte?' style="font-weight:650"':'')+'>'+l.r+'</td>'+
+         [l.t,l.a,l.m,l.ac,l.s].map(function(v){
+           return '<td style="text-align:right;white-space:nowrap'+(l.forte?';font-weight:650':'')+
+                  (v<0?';color:#b3261e':'')+'">'+brl(v)+'</td>';}).join('')+'</tr>';
     });
-    h+='</tbody></table></div>';
+    h+='<tr style="border-top:2px solid var(--bd,#ccc)"><td style="font-weight:650">TOTAL</td><td></td>'+
+       [T.a,T.m,T.ac,T.s].map(function(v){
+         return '<td style="text-align:right;white-space:nowrap;font-weight:650'+(v<0?';color:#b3261e':'')+'">'+brl(v)+'</td>';}).join('')+
+       '</tr></tbody></table>';
+    h+='<div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;align-items:baseline">'+
+       '<div style="font-size:13px;opacity:.7">A PAGAR NESTA MEDIÇÃO</div>'+
+       '<div style="font-size:22px;font-weight:650'+(T.m<0?';color:#b3261e':'')+'">'+brl(T.m)+'</div>'+
+       '<div style="font-size:13px;opacity:.7">1ª parcela</div><div style="font-weight:650">'+brl(p1)+'</div>'+
+       '<div style="font-size:13px;opacity:.7">2ª parcela</div><div style="font-weight:650">'+brl(p2)+'</div></div>';
+    h+='<div class="card" style="margin-top:12px"><b>ADIANTAMENTO</b> e <b>DESC ADTO</b> ficam em zero aqui porque são entrada sua: preencha no arquivo '+
+       '<b>FECHAMENTO-EMPREITEIRO</b> da obra, em <b>01. PLANILHA</b> — lá as três células amarelas entram na conta e as duas identidades '+
+       '(<i>AC TOTAL = AC ANTERIOR + MEDIÇÃO</i> e <i>SALDO = VALOR TOTAL − AC TOTAL</i>) já estão em fórmula.</div></div>';
+    h+='<div class="bloco" style="margin-top:14px"><header><h2>De onde vem cada número</h2></header><table class="tb"><tbody>'+
+      [['Contrato da obra (FDE)',brl(d.contrato),'CTR, coluna ORÇA/O'],
+       ['Valor total da empreita',brl(d.empreita),'contrato × taxa'],
+       ['Medição da competência',brl(d.med_v),'linha FDE da medição '+(d.med_n!=null?String(d.med_n).padStart(3,'0'):'—')],
+       ['Acumulado das medições anteriores',brl(d.med_ant),'soma das medições anteriores'],
+       ['Medido aprovado',brl(d.ap),''],
+       ['Medido em tramitação',brl(d.tr),''],
+       ['Medido total',brl(medido),'aprovado + tramitação'],
+       ['Material e serviços no Sienge',brl(d.sienge),(d.npedidos?d.npedidos+' pedidos':'sem pedidos no Sienge')]
+      ].map(function(l){ return '<tr><td>'+l[0]+'</td><td style="text-align:right;white-space:nowrap">'+l[1]+'</td><td style="color:var(--text-muted)">'+l[2]+'</td></tr>'; }).join('')+
+      '</tbody></table></div>';
     if(d.top&&d.top.length){
-      h+='<div class="bloco"><header><h2>Material comprado — os maiores</h2>'+
-         '<p>Consolidado por insumo, do relatório de pedidos do Sienge.</p></header>'+
+      h+='<div class="bloco" style="margin-top:14px"><header><h2>Material comprado — os maiores</h2>'+
+         '<p>Consolidado por insumo, do relatório de pedidos do Sienge. É este total que entra na linha DESCONTOS.</p></header>'+
          '<table class="tb"><thead><tr><th>Insumo</th><th>Un</th><th style="text-align:right">Qtde</th><th style="text-align:right">Valor</th></tr></thead><tbody>';
       d.top.forEach(function(t){
         h+='<tr><td>'+t[0]+'</td><td>'+t[1]+'</td><td style="text-align:right">'+Number(t[2]).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'</td><td style="text-align:right;white-space:nowrap">'+brl(t[3])+'</td></tr>';
       });
       h+='</tbody></table></div>';
     }
-    h+='<div class="card" style="margin-top:12px"><b>De onde vem cada número.</b> Contrato e medições saem do CTR. A taxa vem da <b>coluna M do CTR</b> (e, nas obras em que ela é fórmula sem valor gravado, de <b>VLR EMPREITA ÷ ORÇA/O</b>) — a fonte usada em cada obra está escrita ao lado da taxa. A taxa é <b>da obra</b>, não do empreiteiro: o mesmo empreiteiro aparece com taxas diferentes conforme a obra. O abatimento parte do total do relatório de pedidos do Sienge e é rateado pela quantidade já medida de cada serviço, conforme a revisão em <b>04. RELATÓRIOS/REVISAO-DESCONTOS-EMPREITEIRO</b> da obra. Nenhum número aqui é digitado à mão.</div>';
     b.innerHTML=h;
   };
   var _abrir=window.abrirObra;
