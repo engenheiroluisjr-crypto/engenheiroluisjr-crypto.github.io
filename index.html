@@ -5975,12 +5975,27 @@ const REL = (function(){
     L.forEach(function(x, idx){
       var o=x.o, F=x.f, d=F.d, T=F.T, neg=T.m<0;
       if(idx) doc.addPage();
-      cabecalho(doc, 'Fechamento de empreiteiro · obra '+o.cod,
-        (d.uni||o.unidade||'')+' · '+(d.cid||o.cidade||'')+'  —  '+(d.emp||'empreiteiro')+
-        '  ·  taxa de empreita '+pc(d.taxa)+
-        (d.med_ref ? '  ·  competência '+dbr2(d.med_ref) : '')+
-        (d.med_sit ? '  ·  '+d.med_sit : ''));
-      var y = 27;
+      cabecalho(doc, 'FECHAMENTO DE EMPREITEIRO',
+        'Obra '+o.cod+'  ·  '+(d.uni||o.unidade||'')+'  ·  '+(d.cid||o.cidade||''));
+      var y = 26;
+      // --- identificação do fechamento
+      var rot=function(t){ return {content:t, styles:{fontStyle:'bold', textColor:[120,120,120]}}; };
+      doc.autoTable(Object.assign({}, ESTILO, {
+        startY:y, theme:'plain',
+        styles:Object.assign({}, ESTILO.styles, {fontSize:7.6, cellPadding:1.3}),
+        body:[
+          [rot('Empreiteiro'), (d.emp||'—'),
+           rot('Percentual de empreita'), pc(d.taxa)],
+          [rot('Contrato FDE'), 'R$ '+n2(d.contrato),
+           rot('Empreita contratada'), 'R$ '+n2(d.empreita)],
+          [rot('Medição'),
+           (d.med_n!=null?'nº '+String(d.med_n).padStart(3,'0'):'—')+
+             (d.med_ref?'  ·  competência '+dbr2(d.med_ref):''),
+           rot('Situação da medição'), (d.med_sit||'—')]
+        ],
+        columnStyles:{0:{cellWidth:30}, 1:{cellWidth:58}, 2:{cellWidth:38}, 3:{}}
+      }));
+      y = doc.lastAutoTable.finalY + 4;
       // --- faixa do resultado
       doc.setDrawColor(210); doc.setFillColor(246,246,242);
       doc.roundedRect(MARGEM, y, W, 21, 2, 2, 'FD');
@@ -5993,8 +6008,8 @@ const REL = (function(){
       doc.text('R$ '+n2(Math.abs(T.m)), MARGEM+5, y+15);
       doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(110);
       if(neg){
-        doc.text(doc.splitTextToSize('O material do Sienge (R$ '+n2(Math.abs(F.q.desc))+
-          ') passou da empreita medida (R$ '+n2(T.m-F.q.descMed)+'). Nada a pagar nesta medição.',
+        doc.text(doc.splitTextToSize('O material e os serviços fornecidos (R$ '+n2(Math.abs(F.q.desc))+
+          ') superam a empreita medida (R$ '+n2(T.m-F.q.descMed)+'). Nada a pagar nesta medição.',
           W-72), MARGEM+5, y+18.5);
       } else {
         doc.text('1ª parcela', LW-MARGEM-56, y+6.5);
@@ -6024,19 +6039,20 @@ const REL = (function(){
       // --- de onde vem cada número
       var medido=(d.ap||0)+(d.tr||0);
       doc.autoTable(Object.assign({}, ESTILO, {
-        startY:y, head:[['De onde vem cada número','Valor','Origem']],
+        startY:y, head:[['Composição dos valores','Valor','Critério']],
         body:[
-          ['Contrato da obra (FDE)','R$ '+n2(d.contrato),'CTR, coluna ORÇA/O'],
-          ['Taxa de empreita', pc(d.taxa), d.taxa_fonte||''],
-          ['Valor total da empreita','R$ '+n2(d.empreita),'contrato × taxa'],
-          ['Medição da competência','R$ '+n2(d.med_v),'linha FDE da medição '+
-             (d.med_n!=null?String(d.med_n).padStart(3,'0'):'—')],
-          ['Acumulado das medições anteriores','R$ '+n2(d.med_ant),'soma das anteriores'],
-          ['Medido aprovado','R$ '+n2(d.ap),''],
-          ['Medido em tramitação','R$ '+n2(d.tr),''],
-          ['Medido total','R$ '+n2(medido),'aprovado + tramitação'],
-          ['Material e serviços no Sienge','R$ '+n2(d.sienge),
-             (d.npedidos? d.npedidos+' pedidos' : 'sem pedidos no Sienge')]
+          ['Contrato FDE da obra','R$ '+n2(d.contrato),'valor contratado'],
+          ['Percentual de empreita', pc(d.taxa),'percentual contratual do empreiteiro'],
+          ['Empreita contratada','R$ '+n2(d.empreita),'contrato × percentual de empreita'],
+          ['Medição da competência','R$ '+n2(d.med_v),
+             (d.med_n!=null?'medição nº '+String(d.med_n).padStart(3,'0'):'—')],
+          ['Acumulado das medições anteriores','R$ '+n2(d.med_ant),'soma das medições anteriores'],
+          ['Medido aprovado','R$ '+n2(d.ap),'medições aprovadas'],
+          ['Medido em tramitação','R$ '+n2(d.tr),'medições em análise'],
+          ['Medido total','R$ '+n2(medido),'aprovado + em tramitação'],
+          ['Material e serviços fornecidos','R$ '+n2(d.sienge),
+             (d.npedidos? d.npedidos+' pedido'+(d.npedidos===1?'':'s')+' de fornecimento'
+                        : 'sem fornecimento no período')]
         ],
         columnStyles:{0:{cellWidth:70}, 1:{halign:'right', cellWidth:30}, 2:{textColor:[110,110,110]}}
       }));
@@ -6044,7 +6060,7 @@ const REL = (function(){
       // --- material comprado (os maiores)
       if(d.top && d.top.length && y < AH-70){
         doc.autoTable(Object.assign({}, ESTILO, {
-          startY:y, head:[['Material comprado — os maiores','Un','Qtde','Valor']],
+          startY:y, head:[['Material e serviços fornecidos — principais itens','Un','Qtde','Valor']],
           body:d.top.slice(0,8).map(function(t){
             return [t[0], t[1], Number(t[2]||0).toLocaleString('pt-BR',{maximumFractionDigits:3}),
                     'R$ '+n2(t[3])]; }),
@@ -6060,19 +6076,21 @@ const REL = (function(){
       doc.line(LW-MARGEM-70, ya, LW-MARGEM, ya);
       doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(110);
       doc.text(String(d.emp||'Empreiteiro'), MARGEM, ya+4);
+      doc.text('Empreiteiro — de acordo', MARGEM, ya+8);
       doc.text('ATLÂNTICA · Luis Júnior', LW-MARGEM-70, ya+4);
-      doc.text('Data: ____/____/______', MARGEM, ya+9);
+      doc.text('Engenharia · gestão de obras', LW-MARGEM-70, ya+8);
+      doc.text('Data: ____/____/______', MARGEM, ya+14);
     });
-    rodape(doc,'Empreita = contrato × taxa da coluna M do CTR. Medido: linha FDE do portal SMV. '+
-               'Descontos: pedidos do Sienge da obra.');
+    rodape(doc,'Empreita contratada = contrato FDE × percentual de empreita. Medições conforme '+
+               'portal SMV/FDE. Descontos: material e serviços fornecidos ao empreiteiro. Valores em reais.');
     return doc;
   }
 
   function xlsFech(){
     var L = fechLinhas();
-    var aoa=[['Obra','Unidade','Cidade','Empreiteiro','Taxa','Situação no CTR','Medição','Competência',
+    var aoa=[['Obra','Unidade','Cidade','Empreiteiro','% empreita','Situação da obra','Medição','Competência',
               'Situação da medição','Contrato FDE','Empreita contratada','Ac. anterior','Medição (empreita)',
-              'Ac. total','Saldo','Material Sienge','Pedidos','A pagar','1ª parcela','2ª parcela']];
+              'Ac. total','Saldo','Material e serviços','Pedidos','A pagar','1ª parcela','2ª parcela']];
     L.forEach(function(x){
       var d=x.f.d, T=x.f.T, l0=x.f.linhas[0];
       aoa.push([x.o.cod, d.uni||'', d.cid||'', d.emp||'', d.taxa, d.sit||'',
@@ -7591,8 +7609,8 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
        '<div class="fqHeroMain"><div class="fqLab">'+(neg?'Saldo a favor da Atlântica':'A pagar nesta medição')+'</div>'+
        '<div class="fqVal">'+brl(Math.abs(T.m))+'</div>'+
        '<div class="fqSub">'+(neg
-          ? 'O material do Sienge ('+brl(Math.abs(d.q_desc))+') passou da empreita medida ('+brl(T.m-d.q_desc_med)+'). Nada a pagar — esta diferença fica para as próximas medições.'
-          : 'Empreita medida menos o material descontado, dividido em duas parcelas.')+'</div></div>'+
+          ? 'O material e os serviços fornecidos ('+brl(Math.abs(d.q_desc))+') superam a empreita medida ('+brl(T.m-d.q_desc_med)+'). Nada a pagar — esta diferença fica para as próximas medições.'
+          : 'Empreita medida menos o material e os serviços fornecidos, dividido em duas parcelas.')+'</div></div>'+
        '<div class="fqParc">'+(neg
          ? '<div class="fqP fqPneg"><span>parcelas</span><b>nada a pagar</b></div>'
          : '<div class="fqP"><span>1ª parcela</span><b>'+brl(p1)+'</b></div>'+
@@ -7612,25 +7630,26 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
        '</tr></tfoot></table></div>';
     h+='<details class="fqNota"><summary>Como este quadro foi montado</summary>'+
        '<p>Este é o <b>primeiro fechamento</b> da obra: <b>Ac. anterior</b> entra zerado, todo o acumulado '+
-       '(aprovado + em tramitação) vai para a coluna <b>Medição</b> e o material do Sienge é descontado inteiro aqui.</p>'+
+       '(aprovado + em tramitação) vai para a coluna <b>Medição</b> e o material e os serviços fornecidos são descontados inteiros aqui.</p>'+
        '<p><b>Adiantamento</b> e <b>Desc adto</b> ficam em zero porque são entrada sua: preencha no arquivo '+
        '<b>FECHAMENTO-EMPREITEIRO</b> da obra, em <b>01. PLANILHA</b> — lá as três células amarelas entram na conta e as duas identidades '+
        '(<i>Ac. total = Ac. anterior + Medição</i> e <i>Saldo = Valor total − Ac. total</i>) já estão em fórmula.</p>'+
        '</details></div>';
-    h+='<div class="bloco" style="margin-top:14px"><header><h2>De onde vem cada número</h2></header><table class="tb"><tbody>'+
-      [['Contrato da obra (FDE)',brl(d.contrato),'CTR, coluna ORÇA/O'],
-       ['Valor total da empreita',brl(d.empreita),'contrato × taxa'],
-       ['Medição da competência',brl(d.med_v),'linha FDE da medição '+(d.med_n!=null?String(d.med_n).padStart(3,'0'):'—')],
+    h+='<div class="bloco" style="margin-top:14px"><header><h2>Composição dos valores</h2></header><table class="tb"><tbody>'+
+      [['Contrato FDE da obra',brl(d.contrato),'valor contratado'],
+       ['Percentual de empreita',pct(d.taxa),'percentual contratual do empreiteiro'],
+       ['Empreita contratada',brl(d.empreita),'contrato × percentual de empreita'],
+       ['Medição da competência',brl(d.med_v),(d.med_n!=null?'medição nº '+String(d.med_n).padStart(3,'0'):'—')],
        ['Acumulado das medições anteriores',brl(d.med_ant),'soma das medições anteriores'],
-       ['Medido aprovado',brl(d.ap),''],
-       ['Medido em tramitação',brl(d.tr),''],
-       ['Medido total',brl(medido),'aprovado + tramitação'],
-       ['Material e serviços no Sienge',brl(d.sienge),(d.npedidos?d.npedidos+' pedidos':'sem pedidos no Sienge')]
+       ['Medido aprovado',brl(d.ap),'medições aprovadas'],
+       ['Medido em tramitação',brl(d.tr),'medições em análise'],
+       ['Medido total',brl(medido),'aprovado + em tramitação'],
+       ['Material e serviços fornecidos',brl(d.sienge),(d.npedidos?d.npedidos+' pedido'+(d.npedidos===1?'':'s')+' de fornecimento':'sem fornecimento no período')]
       ].map(function(l){ return '<tr><td>'+l[0]+'</td><td style="text-align:right;white-space:nowrap">'+l[1]+'</td><td style="color:var(--text-muted)">'+l[2]+'</td></tr>'; }).join('')+
       '</tbody></table></div>';
     if(d.top&&d.top.length){
-      h+='<div class="bloco" style="margin-top:14px"><header><h2>Material comprado — os maiores</h2>'+
-         '<p>Consolidado por insumo, do relatório de pedidos do Sienge. É este total que entra na linha DESCONTOS.</p></header>'+
+      h+='<div class="bloco" style="margin-top:14px"><header><h2>Material e serviços fornecidos — principais itens</h2>'+
+         '<p>Consolidado por insumo. É este total que entra na linha DESCONTOS.</p></header>'+
          '<table class="tb"><thead><tr><th>Insumo</th><th>Un</th><th style="text-align:right">Qtde</th><th style="text-align:right">Valor</th></tr></thead><tbody>';
       d.top.forEach(function(t){
         h+='<tr><td>'+t[0]+'</td><td>'+t[1]+'</td><td style="text-align:right">'+Number(t[2]).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'</td><td style="text-align:right;white-space:nowrap">'+brl(t[3])+'</td></tr>';
