@@ -5935,6 +5935,8 @@ const REL = (function(){
      O mesmo quadro da aba "Fechamento de empreiteiro" da página da obra, agora
      em documento: um por obra do recorte, com o de-para dos números e espaço
      para as duas assinaturas. Fonte: fech.js (CTR + portal + pedidos Sienge). */
+  /* arredonda como o Excel, para o quadro fechar no centavo */
+  function r2f(v){ return Math.round((+v||0)*100)/100; }
   function fechDados(cod){
     try{
       var d = window.FECH && window.FECH.obras && window.FECH.obras[String(cod)];
@@ -5951,7 +5953,7 @@ const REL = (function(){
       var linhas=[
         {r:'MEDIÇÃO Nº '+(d.med_n!=null?String(d.med_n).padStart(2,'0'):'__'), t:q.total, a:q.ant, m:q.med},
         {r:'ADIANTAMENTO', t:q.adto, a:q.adto, m:0},
-        {r:'DESC ADTO',    t:q.dadto, a:q.dadto, m:0},
+        {r:'DESC ADTO',    t:-q.adto, a:q.dadto, m:r2f(-(q.adto+q.dadto))},
         {r:'DESCONTOS',    t:q.desc, a:descAnt, m:q.descMed}
       ];
       linhas.forEach(function(l){ l.ac=l.a+l.m; l.s=l.t-l.ac; });
@@ -7495,7 +7497,7 @@ aoFiltrar();
 </script>
 
 <!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
-<script src="fech.js?v=202609261141"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
+<script src="fech.js?v=202609261448"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
 <script>
 const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andrade", "cid": "BARUERI", "emp": "LEONARDO ZANAO", "sit": "5. CONCLUÍDA", "contrato": 235271.25, "taxa": 0.06, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 14116.27, "ap": 212526.4, "tr": 7207.92, "emp_ap": 12751.58, "emp_tot": 13184.06, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 12751.58, "saldo_tot": 13184.06}, "199": {"num": 199, "uni": "EE SEBASTIAO DE MORAES CARDOSO", "cid": "ITAPECERICA DA SERRA", "emp": "REINALDO", "sit": "5. CONCLUÍDA", "contrato": 186643.95, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 37328.79, "ap": 131576.49, "tr": 12451.6, "emp_ap": 26315.3, "emp_tot": 28805.62, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26315.3, "saldo_tot": 28805.62}, "200": {"num": 200, "uni": "EE OREDO RODRIGUES DA CRUZ", "cid": "JUQUITIBA", "emp": "ANTONIO CABELO", "sit": "5. CONCLUÍDA", "contrato": 171519.72, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 34303.94, "ap": 130434.87, "tr": 0.0, "emp_ap": 26086.97, "emp_tot": 26086.97, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26086.97, "saldo_tot": 26086.97}, "223": {"num": 223, "uni": "ETEC Antonio furlan", "cid": "BARUERI", "emp": "REINALDO", "sit": "4. EXECUÇÃO", "contrato": 1935375.91, "taxa": 0.538489, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 1042178.64, "ap": 413291.43, "tr": 273284.71, "emp_ap": 222552.89, "emp_tot": 369713.7, "mat": 127178.11, "serv": 19199.0, "sienge": 146945.42, "npedidos": 18, "top": [["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)", "m²", 731.4, 23331.66], ["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET", "m2", 450.0, 17946.0], ["Torneira de acionamento manual e com ciclo de ", "un", 18.0, 17457.3], ["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ", "un", 30.0, 14830.5], ["Tinta esmalte cinza médio 3,6 LT", "gl", 50.0, 5781.0], ["PORTA DE MADEIRA COMPLETA 0,92X2,10", "un", 6.0, 4296.0], ["TELA Q-92 2X3 M", "un", 60.0, 3996.0], ["Divisoria de Granilite frontal (DV-03) 0,40x1,", "un", 25.0, 3802.5], ["FERRO CHATO 5/8 X 3/16", "br", 90.0, 3780.0], ["LUMINÁRIA IL-45 - COM LÂMPADA LED", "un", 42.0, 3766.14], ["PR-09 C=2MM", "un", 12.0, 2808.0], ["Tinta Esmalte base d'água Branco 18l", "lt", 20.0, 2500.0], ["Esmalte Brilhante Branco Coralit 3, 6l", "gl", 20.0, 2500.0], ["TINTA ESMALTE BASE ÁGUA CINZA", "lt", 20.0, 2361.2], ["Coral Rende Muito Branco Neve 18l", "lt", 6.0, 2010.0], ["TINTA PISO CINZA MÉDIO 18L", "lt", 5.0, 1725.0], ["DV-04 C=1,2M", "un", 3.0, 1368.9], ["Divisórias de granilite 0,35 X 1,80 Conforme D", "un", 10.0, 1331.1], ["Cabo flex 6mm² preto", "rol", 2.0, 1295.0], ["Cabo flex 4mm² preto", "rol", 2.0, 864.8]], "saldo_ap": 75607.47, "saldo_tot": 222768.28, "absorv": 84486.46, "estoque": 61890.65, "saldo_ap_prop": 138066.43, "saldo_tot_prop": 285227.24}, "224": {"num": 224, "uni": "ELIZA DE OLIVEIRA RIBEIRO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1486645.35, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 486290.92, "tr": 274008.61, "emp_ap": null, "emp_tot": null, "mat": 2852.39, "serv": 0.0, "sienge": 2852.39, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "230": {"num": 230, "uni": "EE MARIA ANTONIETA MARTINS", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1979042.22, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 1083172.19, "tr": 179925.01, "emp_ap": null, "emp_tot": null, "mat": 1976.74, "serv": 0.0, "sienge": 1976.74, "npedidos": 9, "top": [], "saldo_ap": null, "saldo_tot": null}, "231": {"num": 231, "uni": "EE MARIA JOSE ANTUNES FERRAZ", "cid": "TABOÃO DA SERRA", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1912108.62, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 776720.04, "tr": 58057.26, "emp_ap": null, "emp_tot": null, "mat": 712.0, "serv": 0.0, "sienge": 712.0, "npedidos": 7, "top": [], "saldo_ap": null, "saldo_tot": null}, "232": {"num": 232, "uni": "EE NEIDE CELESTINA DE OLIVEIRA", "cid": "EMBU GUAÇU", "emp": "CRISTIAN GUIDO", "sit": "4. EXECUÇÃO", "contrato": 1394560.14, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 500062.77, "tr": 68313.36, "emp_ap": null, "emp_tot": null, "mat": 2080.0, "serv": 0.0, "sienge": 2080.0, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}, "269": {"num": 269, "uni": "EE JD CAMPESTRE", "cid": "EMBU GUAÇU", "emp": "RENILDO", "sit": "4. EXECUÇÃO", "contrato": 1328935.74, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 661977.78, "tr": 45518.87, "emp_ap": null, "emp_tot": null, "mat": 1113.72, "serv": 0.0, "sienge": 1113.72, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "274": {"num": 274, "uni": "ETEC EMBU", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1568182.98, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 104600.06, "tr": 468976.52, "emp_ap": null, "emp_tot": null, "mat": 1410.0, "serv": 0.0, "sienge": 1410.0, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "278": {"num": 278, "uni": "EE GERTRUDES EDER", "cid": "ITAPECERICA DA SERRA", "emp": "LEONARDO ZANAO", "sit": "4. EXECUÇÃO", "contrato": 2152584.69, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 156359.02, "tr": 57537.42, "emp_ap": null, "emp_tot": null, "mat": 4272.3, "serv": 0.0, "sienge": 4272.3, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "284": {"num": 284, "uni": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 114889.32, "taxa": 0.46, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 52849.09, "ap": 3522.17, "tr": 45000.54, "emp_ap": 1620.2, "emp_tot": 22320.45, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 1620.2, "saldo_tot": 22320.45}, "287": {"num": 287, "uni": "EEPROF LAERT ALMEIDA SÃO BERNARDO", "cid": "TABOÃO DA SERRA", "emp": "PEDRO", "sit": "4. EXECUÇÃO", "contrato": 1950390.3, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 32747.41, "tr": 273322.99, "emp_ap": null, "emp_tot": null, "mat": 1088.58, "serv": 0.0, "sienge": 1088.58, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "288": {"num": 288, "uni": "EE EDUARDO VAZ", "cid": "EMBU DAS ARTES", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1756795.6, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 2378.4, "tr": 156047.64, "emp_ap": null, "emp_tot": null, "mat": 8399.5, "serv": 0.0, "sienge": 8399.5, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}};
 (function(){
@@ -7587,7 +7589,8 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
     var q=[
       {r:'MEDIÇÃO Nº '+(d.med_n!=null?String(d.med_n).padStart(2,'0'):'__'), t:d.q_total, a:d.q_ant, m:d.q_med, forte:true},
       {r:'ADIANTAMENTO', t:(d.q_adto||0), a:(d.q_adto||0), m:0},
-      {r:'DESC ADTO',    t:(d.q_dadto||0), a:(d.q_dadto||0), m:0},
+      {r:'DESC ADTO',    t:-(d.q_adto||0), a:(d.q_dadto||0),
+       m:Math.round(-(((d.q_adto||0)+(d.q_dadto||0)))*100)/100},
       {r:'DESCONTOS',    t:d.q_desc, a:_descAnt, m:(d.q_desc_med!=null?d.q_desc_med:0)}
     ];
     q.forEach(function(l){ l.t=+l.t||0; l.a=+l.a||0; l.m=+l.m||0; l.ac=l.a+l.m; l.s=l.t-l.ac; });
@@ -7704,9 +7707,9 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
-<script src="sienge.js?v=202609261141"></script>
-<script src="sienge_itens.js?v=202609261141"></script>
-<script src="entregas.js?v=202609261141"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
+<script src="sienge.js?v=202609261448"></script>
+<script src="sienge_itens.js?v=202609261448"></script>
+<script src="entregas.js?v=202609261448"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -8215,7 +8218,8 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: SUB-ABA FISCALIZAÇÃO (Livros de Ocorrência) ================= -->
-<script src="lo.js?v=202609261141"></script>
+<script src="lo.js?v=202609261448"></script>
+<script src="seg.js?v=202609261448"></script>
 <style>
   #loBox .loK{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
   #loBox .loK>div{flex:1 1 150px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:10px 12px;background:var(--cd,#fff)}
@@ -8485,7 +8489,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
-<script src="consolidado.js?v=202609261141"></script>
+<script src="consolidado.js?v=202609261448"></script>
 <style>
   #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
   #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
@@ -8571,5 +8575,260 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 
+<script>
+/* ===== Sub-aba SEGURANÇA na página da obra =============================
+   Dados: seg.js  ->  window.SEG = {ger, n, obras:{ "<cod>": [inspeção, ...] }}
+   A inspeção mais recente vem primeiro. Padrão de injeção igual ao da aba LOs. */
+(function(){
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function nb(v,d){ return Number(v||0).toLocaleString('pt-BR',
+    {minimumFractionDigits:d==null?3:d, maximumFractionDigits:d==null?3:d}); }
+  function pc(v){ return (Number(v||0)*100).toLocaleString('pt-BR',{maximumFractionDigits:0})+'%'; }
+  function hoje(){ var d=new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate()); }
+  function dt(br){ var p=String(br||'').match(/(\d{2})\/(\d{2})\/(\d{4})/);
+    return p?new Date(+p[3],+p[2]-1,+p[1]):null; }
+
+  var COR={0:'#2f6f4e',1:'#4b8b6b',2:'#b98b18',3:'#c2661c',4:'#b3261e'};
+  var BG ={0:'#e6f4ec',1:'#eef6f1',2:'#fdf4de',3:'#fbe9dd',4:'#fbe0de'};
+  function faixaCor(cls){
+    if(/ÓTIMO/.test(cls)) return 0;
+    if(/^BOM/.test(cls))  return 1;
+    if(/REGULAR|ATENÇÃO/.test(cls)) return 2;
+    if(/RUIM/.test(cls))  return 3;
+    return 4;
+  }
+
+  if(!document.getElementById('segCSS')){
+    var st=document.createElement('style'); st.id='segCSS';
+    st.textContent=
+    '#segBox .segFaixa{border-radius:12px;padding:16px 18px;margin:0 0 14px;display:flex;'+
+      'align-items:center;gap:20px;flex-wrap:wrap;border:1px solid rgba(0,0,0,.08)}'+
+    '#segBox .segFaixa .sfNota{font-size:40px;font-weight:700;line-height:1}'+
+    '#segBox .segFaixa .sfCls{font-size:19px;font-weight:700;letter-spacing:.2px}'+
+    '#segBox .segFaixa .sfSub{font-size:12.5px;opacity:.8;margin-top:3px}'+
+    '#segBox .segAlerta{border-radius:10px;padding:10px 14px;margin:0 0 12px;font-size:13px;'+
+      'background:#fbe0de;color:#7d1b16;border:1px solid #f0b4b0;font-weight:600}'+
+    '#segBox .segKpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(122px,1fr));gap:10px;margin:0 0 14px}'+
+    '#segBox .segKpi div{background:var(--card,#fff);border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:10px 12px}'+
+    '#segBox .segKpi b{display:block;font-size:20px;line-height:1.15}'+
+    '#segBox .segKpi span{font-size:11px;opacity:.7;display:block;margin-top:2px}'+
+    '#segBox .segNota{display:inline-block;min-width:22px;text-align:center;border-radius:6px;'+
+      'padding:1px 6px;font-weight:700;font-size:12px}'+
+    '#segBox .segBloq{display:inline-block;background:#b3261e;color:#fff;border-radius:5px;'+
+      'padding:1px 6px;font-size:10.5px;font-weight:700;margin-right:6px;letter-spacing:.3px}'+
+    '#segBox .segVenc{color:#b3261e;font-weight:700}'+
+    '#segBox .segRei{background:#fbe0de;color:#7d1b16;border-radius:5px;padding:1px 6px;'+
+      'font-size:10.5px;font-weight:700}'+
+    '#segBox .segMeta{font-size:12px;opacity:.72;margin-top:6px}'+
+    '#segBox table{width:100%}'+
+    '#segBox .segPlano li{margin:5px 0}';
+    document.head.appendChild(st);
+  }
+
+  function caixa(){
+    var b=document.getElementById('segBox'); if(b) return b;
+    b=document.createElement('div'); b.id='segBox'; b.hidden=true;
+    var ref=document.getElementById('loBox')||document.getElementById('siengeBox')
+           ||document.getElementById('orcBox');
+    if(ref&&ref.parentNode) ref.parentNode.insertBefore(b,ref.nextSibling);
+    else document.body.appendChild(b);
+    return b;
+  }
+  function botao(){
+    var nav=document.getElementById('obraNav');
+    if(!nav||nav.querySelector('[data-p="Seg"]')) return;
+    var bt=document.createElement('button'); bt.className='tab'; bt.setAttribute('role','tab');
+    bt.setAttribute('aria-selected','false'); bt.dataset.p='Seg'; bt.textContent='Segurança';
+    nav.appendChild(bt);
+  }
+
+  function notaTag(n){
+    var t=['ÓTIMO','BOM','REGULAR','RUIM','PÉSSIMO'][n]||'';
+    return '<span class="segNota" style="background:'+BG[n]+';color:'+COR[n]+'">'+n+'</span>'+
+           ' <span style="font-size:11.5px;color:'+COR[n]+'">'+t+'</span>';
+  }
+
+  function blocoPlano(d){
+    var P=d.plano; if(!P) return '';
+    var meta = (d.cls&&/ÓTIMO|^BOM/.test(d.cls)) ? 'ÓTIMO' : 'BOM';
+    var pl=P.planos[meta], h='';
+    h+='<div class="bloco"><header><h2>O que precisa melhorar para a nota chegar a '+meta+'</h2>'+
+       '<p>A lista sai da própria vistoria: cada item entra pelo peso que a FDE dá a ele e pelo '+
+       'quanto a nota atual pesa na média. Item com <b>nota 4</b> entra sempre, mesmo que a média '+
+       'já esteja boa — risco grave não se compensa com média.</p></header>';
+    if(!pl.ok){
+      h+='<div class="card" style="background:'+BG[2]+';border-color:#e8cf8e">'+
+         '<b>'+meta+' não é alcançável nesta vistoria.</b> Com todos os itens avaliados em '+
+         '<i>Satisfatório</i> (nota 1) a média fica em <b>'+nb(pl.min)+'</b>. Para baixar disso é '+
+         'preciso que a vistoria também avalie os itens documentais — CTPS, ASO, PGR, PCMSO, '+
+         'comunicação ao SIT e treinamentos — que são os únicos que chegam a nota 0.</div>';
+      var alt=P.planos['BOM'];
+      if(alt&&alt.ok&&meta!=='BOM') h+='';
+      h+='</div>'; return h;
+    }
+    if(!pl.itens.length){
+      h+='<div class="card" style="background:'+BG[1]+';border-color:#bcd9c8">'+
+         'A obra já está na faixa <b>'+meta+'</b> e nenhum item exige correção para manter a nota.</div></div>';
+      return h;
+    }
+    h+='<table><thead><tr><th>Item</th><th class="n">Peso</th><th class="n">Nota hoje</th>'+
+       '<th class="n">Meta</th><th class="n">Ganho na média</th></tr></thead><tbody>';
+    var P2=d.pesos||1;
+    pl.itens.forEach(function(i){
+      h+='<tr><td>'+(i.bl?'<span class="segBloq">BLOQUEIO</span>':'')+esc(i.it)+'</td>'+
+         '<td class="n">'+i.pe+'</td><td class="n">'+notaTag(i.de)+'</td>'+
+         '<td class="n">'+notaTag(i.para)+'</td>'+
+         '<td class="n">−'+nb(i.g/P2)+'</td></tr>';
+    });
+    h+='</tbody></table>'+
+       '<div class="card" style="margin-top:10px;background:'+BG[1]+';border-color:#bcd9c8">'+
+       'Corrigindo esses <b>'+pl.itens.length+'</b> item(ns), a média ponderada sai de <b>'+
+       nb(d.medpond)+'</b> ('+esc(d.cls)+') para <b>'+nb(pl.media)+'</b> — faixa <b>'+meta+'</b>.'+
+       ' O índice de conformidade sobe de '+pc(d.conf)+' para '+pc(1-(pl.media/4))+'.</div></div>';
+    return h;
+  }
+
+  function render(cod){
+    var b=caixa();
+    var L=(window.SEG&&window.SEG.obras&&window.SEG.obras[String(cod)])||null;
+    if(!L||!L.length){
+      b.innerHTML='<div class="bloco"><header><h2>Segurança do trabalho</h2></header>'+
+        '<div class="card">Nenhuma vistoria de segurança registrada para esta obra.<div class="segMeta">'+
+        'As fichas ficam em <i>00. RELATORIOS / MODELOS / SEGURANCA DO TRABALHO / INSPECOES</i>. '+
+        'Ao salvar uma nova ficha lá, ela aparece aqui na próxima atualização do painel.</div></div></div>';
+      return;
+    }
+    var d=L[0], k=faixaCor(d.cls), h='';
+    var venc=+d.ncr.ve||0, rei=+d.ncr.rei||0, cri=+d.ncr.cr||0, ab=+d.ncr.ab||0;
+
+    /* 1. semáforo */
+    h+='<div class="segFaixa" style="background:'+BG[k]+';border-color:'+COR[k]+'33">'+
+       '<div style="color:'+COR[k]+'"><div class="sfNota">'+nb(d.medpond)+'</div>'+
+       '<div class="sfSub">média ponderada (0 a 4)</div></div>'+
+       '<div style="flex:1;min-width:230px"><div class="sfCls" style="color:'+COR[k]+'">'+esc(d.cls)+'</div>'+
+       '<div class="sfSub">'+esc(d.prov)+'</div>'+
+       '<div class="segMeta">Vistoria de <b>'+esc(d.data)+'</b> · '+esc(d.insp||'—')+
+       (L.length>1?' · '+L.length+' vistorias registradas':'')+'</div></div></div>';
+
+    /* 2. alertas que precisam saltar aos olhos */
+    var al=[];
+    if(d.pior>=4) al.push('Há item com <b>nota 4 (PÉSSIMO)</b> — ação imediata, independente da média.');
+    if(venc>0)    al.push('<b>'+venc+'</b> não conformidade(s) com <b>prazo vencido</b> e ainda em aberto.');
+    if(rei>0)     al.push('<b>'+rei+'</b> não conformidade(s) <b>reincidente(s)</b> — já apontadas em vistoria anterior e não corrigidas.');
+    if(cri>0)     al.push('<b>'+cri+'</b> não conformidade(s) classificada(s) como <b>CRÍTICO</b>.');
+    if(al.length) h+='<div class="segAlerta">'+al.join('<br>')+'</div>';
+
+    /* 3. números */
+    h+='<div class="segKpi">'+
+       '<div><b style="color:'+COR[k]+'">'+nb(d.medpond)+'</b><span>média ponderada</span></div>'+
+       '<div><b>'+nb(d.medfde)+'</b><span>média critério FDE</span></div>'+
+       '<div><b>'+pc(d.conf)+'</b><span>conformidade</span></div>'+
+       '<div><b>'+(d.itens||0)+'</b><span>itens avaliados</span></div>'+
+       '<div><b style="color:'+COR[Math.min(4,d.pior||0)]+'">'+(d.pior!=null?d.pior:'—')+'</b><span>pior nota</span></div>'+
+       '<div><b>'+(d.ncr.t||0)+'</b><span>não conformidades</span></div>'+
+       '<div><b'+(ab?' style="color:#c2661c"':'')+'>'+ab+'</b><span>em aberto</span></div>'+
+       '<div><b'+(venc?' style="color:#b3261e"':'')+'>'+venc+'</b><span>vencidas</span></div>'+
+       '</div>';
+
+    /* 4. o plano */
+    h+=blocoPlano(d);
+
+    /* 5. notas item a item */
+    if(d.itens_l&&d.itens_l.length){
+      var ord=d.itens_l.slice().sort(function(a,c){ return (c.no-a.no)||(c.pe-a.pe); });
+      h+='<div class="bloco" style="margin-top:14px"><header><h2>Nota item a item</h2>'+
+         '<p>Só os itens avaliados. Os que a etapa da obra não usa ficam como N.A. e não entram na média.</p></header>'+
+         '<table><thead><tr><th class="n">Nº</th><th>Item analisado</th><th class="n">Peso</th>'+
+         '<th class="n">Nota</th><th class="n">Pontos</th><th>Origem na vistoria</th></tr></thead><tbody>';
+      ord.forEach(function(i){
+        h+='<tr'+(i.no>=3?' style="background:'+BG[i.no]+'66"':'')+'>'+
+           '<td class="n">'+i.n+'</td><td>'+esc(i.it)+'</td><td class="n">'+i.pe+'</td>'+
+           '<td class="n">'+notaTag(i.no)+'</td><td class="n">'+(i.pe*i.no)+'</td>'+
+           '<td style="font-size:11.5px;opacity:.75">'+esc(i.og)+'</td></tr>';
+      });
+      h+='</tbody></table></div>';
+    }
+
+    /* 6. não conformidades */
+    if(d.nc&&d.nc.length){
+      var hj=hoje();
+      h+='<div class="bloco" style="margin-top:14px"><header><h2>Não conformidades da vistoria</h2>'+
+         '<p>As fotos de cada evidência estão na ficha da obra, em <i>INSPECOES</i>. '+
+         'Prazo em vermelho é prazo vencido com a NC ainda aberta.</p></header>'+
+         '<table><thead><tr><th class="n">Nº</th><th>Local</th><th>Não conformidade</th>'+
+         '<th class="n">Classif.</th><th>Medida corretiva</th><th class="n">Prazo</th>'+
+         '<th>Responsável</th><th class="n">Status</th></tr></thead><tbody>';
+      d.nc.forEach(function(v,ix){
+        var pz=dt(v.pz), vc=(pz&&pz<hj&&v.st!=='Concluída'&&v.st!=='Cancelada');
+        var cc=/CRÍT/.test(v.cl)?4:/ALTO/.test(v.cl)?3:/MÉDIO/.test(v.cl)?2:1;
+        h+='<tr><td class="n">'+(ix+1)+'</td><td>'+esc(v.lo)+
+           (v.re==='Sim'?'<br><span class="segRei">REINCIDENTE</span>':'')+'</td>'+
+           '<td>'+esc(v.nc)+'<div class="segMeta">'+esc(v.ri)+'</div></td>'+
+           '<td class="n"><span class="segNota" style="background:'+BG[cc]+';color:'+COR[cc]+'">'+esc(v.cl)+'</span></td>'+
+           '<td>'+esc(v.so)+'<div class="segMeta">'+esc(v.nr)+'</div></td>'+
+           '<td class="n'+(vc?' segVenc':'')+'">'+(v.pz||'—')+(vc?'<br>vencido':'')+'</td>'+
+           '<td>'+esc(v.rs)+'</td><td class="n">'+esc(v.st)+'</td></tr>';
+      });
+      h+='</tbody></table></div>';
+    }
+
+    /* 7. histórico */
+    if(L.length>1){
+      h+='<div class="bloco" style="margin-top:14px"><header><h2>Vistorias anteriores</h2>'+
+         '<p>Para ver se a obra melhorou ou repetiu o mesmo apontamento.</p></header>'+
+         '<table><thead><tr><th>Data</th><th>Inspetor</th><th class="n">Média pond.</th>'+
+         '<th class="n">Classificação</th><th class="n">NC</th><th class="n">Reincidentes</th></tr></thead><tbody>';
+      L.forEach(function(v,ix){
+        var kk=faixaCor(v.cls);
+        h+='<tr'+(ix===0?' style="font-weight:600"':'')+'><td>'+esc(v.data)+(ix===0?' <span class="segMeta">(atual)</span>':'')+'</td>'+
+           '<td style="font-size:12px">'+esc(v.insp)+'</td><td class="n">'+nb(v.medpond)+'</td>'+
+           '<td class="n" style="color:'+COR[kk]+';font-weight:700">'+esc(v.cls)+'</td>'+
+           '<td class="n">'+(v.ncr.t||0)+'</td><td class="n">'+(v.ncr.rei||0)+'</td></tr>';
+      });
+      h+='</tbody></table></div>';
+    }
+
+    /* 8. procedência */
+    h+='<div class="card" style="margin-top:14px;font-size:12px;opacity:.8">'+
+       '<b>Como ler.</b> A nota segue a pontuação da FDE: cada item vale de 0 (ÓTIMO) a 4 (PÉSSIMO) '+
+       'e é multiplicado pelo peso que a FDE dá a ele. A <b>média ponderada</b> é o total dividido '+
+       'pela soma dos pesos avaliados, sempre entre 0 e 4. A <b>média critério FDE</b> divide pelo '+
+       'número de itens e é a que vai no Relatório de Performance de Obra.'+
+       (d.orig?'<div class="segMeta" style="margin-top:6px">'+esc(d.orig)+'</div>':'')+
+       '<div class="segMeta">Ficha: '+esc(d.arq)+' · dados de '+esc((window.SEG||{}).ger||'')+'</div></div>';
+
+    b.innerHTML=h;
+  }
+
+  var _abrir=window.abrirObra;
+  if(typeof _abrir==='function') window.abrirObra=function(cod){
+    botao(); var r=_abrir.apply(this,arguments); try{ render(cod); }catch(e){} return r; };
+  var _painel=window.obraPainel;
+  window.obraPainel=function(p){
+    botao(); var b=caixa();
+    if(p==='Seg'){
+      var nav=document.getElementById('obraNav');
+      nav.querySelectorAll('button').forEach(function(x){
+        x.setAttribute('aria-selected', x.dataset.p==='Seg'?'true':'false'); });
+      var pg=document.getElementById('paginaObra'); if(pg) pg.classList.add('oculto');
+      ['orcBox','fechBox','siengeBox','loBox'].forEach(function(id){
+        var e=document.getElementById(id); if(e) e.hidden=true; });
+      b.hidden=false;
+      var c=(typeof atualCod!=='undefined'&&atualCod!=null)?atualCod
+            :(+(document.getElementById('selObra')||{}).value||null);
+      if(c!=null) render(c);
+      return;
+    }
+    b.hidden=true;
+    if(typeof _painel==='function') return _painel.apply(this,arguments);
+  };
+  botao();
+  setInterval(function(){ var nav=document.getElementById('obraNav'); if(!nav) return;
+    botao(); var bt=nav.querySelector('[data-p="Seg"]');
+    if(bt){ bt.disabled=false; bt.style.opacity=''; } },800);
+  try{ if(window.SEC&&window.SEC.push) window.SEC.push({p:'Seg',rot:'Segurança'}); }catch(e){}
+})();
+</script>
 </body>
 </html>
