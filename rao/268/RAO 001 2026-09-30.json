@@ -1,0 +1,123 @@
+{
+ "tipo": "diario",
+ "obra": 268,
+ "lote": "41",
+ "unidade": "EE INSTITUTO IMACULADA",
+ "data": "2026-09-30",
+ "numero": 1,
+ "pct": "58",
+ "previsao": "28/10/2026",
+ "gerado": "2026-09-30T16:08:18",
+ "ficha": {
+  "funcionarios": "2",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": "Não",
+  "andamento": "Em execução",
+  "pct": null,
+  "ritmo": "Lento",
+  "previsao": null,
+  "visita": "11:35",
+  "responsavel": null
+ },
+ "servicos": [
+  "Instalação do caixilhos, remoções caixilhos lado corredor, pintura laboratório"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [
+  "."
+ ],
+ "recomendacoes": [
+  "Finalizar instalação dos caixilhos"
+ ],
+ "pendencias": [
+  "Quadra, material forro"
+ ],
+ "pedidos_estado": {
+  "49846": "ENTREGUE",
+  "49915": "ENTREGUE",
+  "50319": "ENTREGUE",
+  "50520": "ENTREGUE",
+  "50931": "ENTREGUE",
+  "51237": "ENTREGUE",
+  "52286": "ENTREGUE",
+  "52287": "ENTREGUE",
+  "52289": "ENTREGUE",
+  "52444": "ENTREGUE",
+  "52476": "ENTREGUE",
+  "52811": "ENTREGUE",
+  "52872": "ENTREGUE",
+  "53529": "ENTREGUE",
+  "53796": "ENTREGUE",
+  "53834": "ENTREGUE",
+  "54036": "ENTREGUE",
+  "54095": "ENTREGUE",
+  "54591": "ENTREGUE",
+  "55350": "ENTREGUE",
+  "55353": "ENTREGUE",
+  "55416": "ENTREGUE",
+  "55485": "ENTREGUE",
+  "55690": "ENTREGUE",
+  "56805": "ENTREGUE",
+  "57052": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "13DaDkAw25KQHRt8MRstmrM6JYFKueAO1_20260930_113838.jpg",
+   "data": "2026-09-30",
+   "legenda": ""
+  },
+  {
+   "arquivo": "18TZpEBduu8R4qHSAmglOLSQl4uTuM2bc_20260930_113823.jpg",
+   "data": "2026-09-30",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1ATzJe_ToxxqSHM7qkGUusM44OP6uNcHk_20260930_113830.jpg",
+   "data": "2026-09-30",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1FZTa7AYvl7ttZfujRP5WVsIBKtFeviO-_20260930_113848.jpg",
+   "data": "2026-09-30",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1I2mC3zX1hPHyDdD1HvCCsCH_Zgr_sggt_20260930_113824.jpg",
+   "data": "2026-09-30",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1V8TQzeRrgj6bIHBZ0kx0owOzwhIPZJxe_20260930_113828.jpg",
+   "data": "2026-09-30",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1_DgbPFhtBWSmr9ormL4YuNM0O6EzYpIt_20260930_113820.jpg",
+   "data": "2026-09-30",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1dXUJPP6lnJIZNnFuv8Kv7zmlAvt-zjX8_20260930_113817(0).jpg",
+   "data": "2026-09-30",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1mlgV3Zq4vLggt5-Xda-jPHoSyte9k1-e_20260930_113818(0).jpg",
+   "data": "2026-09-30",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1tABZYHq6t_Js7CVLcUwB7rGXySr4bJrs_20260930_113819.jpg",
+   "data": "2026-09-30",
+   "legenda": ""
+  }
+ ],
+ "fotos_pasta": "/private/tmp/claude-501/-Users-luishenriquejunior-Library-Application-Support-Claude-scratch-workspaces-e96be136-1807-4a93-b3fc-6f98bc8cd7a7-66335df6-daab-4eca-8616-bd07b6bbe626-scratch-2026-09-23-571477/406fb208-aad6-4326-83e8-4fc0ce8ee146/scratchpad/visita268/fotos",
+ "legendas": "/private/tmp/claude-501/-Users-luishenriquejunior-Library-Application-Support-Claude-scratch-workspaces-e96be136-1807-4a93-b3fc-6f98bc8cd7a7-66335df6-daab-4eca-8616-bd07b6bbe626-scratch-2026-09-23-571477/406fb208-aad6-4326-83e8-4fc0ce8ee146/scratchpad/visita268/fichas/obra268_2026-09-30_151402_legendas.csv",
+ "m001": "41.268_M003_EE-INSTITUTO-IMACULADA_rev00.xlsx",
+ "autor": "douglas.anastacio93@gmail.com",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 30/09/2026*\n_EE INSTITUTO IMACULADA · 2026.ATA.FDE.41.268 · ITAPECERICA DA SERRA_\n\n👷 Efetivo: 2 · ☀️ Tempo seco · Ritmo lento\n📊 Avanço medido: *58%* · Previsão de término: 28/10/2026\n\n🔨 *Executado no dia*\n• Instalação do caixilhos, remoções caixilhos lado corredor, pintura laboratório\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• Quadra, material forro\n\n❗ *Recomendações*\n• Finalizar instalação dos caixilhos\n\n_Relatório nº 2 · Luis Júnior — Engenharia Atlântica_"
+}
