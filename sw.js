@@ -8,12 +8,13 @@
 
    ATENCAO ao ignoreSearch: com ele ligado, 'fech.js?cb=123' casa com o 'fech.js' do cache
    e o cache-busting nao funciona. Por isso os dados nao passam mais por esse caminho. */
+/* v4 (30/09/2026 noite): sienge_solic entrou em DADOS pelo mesmo motivo. */
 /* v3 (30/09/2026): 'rao' e 'seg' faltavam em DADOS e caiam no ramo com ignoreSearch,
    onde 'rao.js?v=...' casa com o 'rao.js' velho do cache — a copia antiga ganhava para
    sempre. Subir a VERSAO apaga os caches antigos de quem ja tem o painel aberto. */
-const VERSAO = 'painel-v3';
+const VERSAO = 'painel-v4';
 const PRE = ['./', 'libs/jspdf.umd.min.js', 'libs/jspdf.plugin.autotable.min.js', 'libs/xlsx.mini.min.js'];
-const DADOS = /\/(fech|lo|seg|rao|consolidado|sienge|sienge_itens|entregas)\.js$/;
+const DADOS = /\/(fech|lo|seg|rao|consolidado|sienge|sienge_itens|sienge_solic|entregas)\.js$/;
 
 self.addEventListener('install', ev => {
   ev.waitUntil(caches.open(VERSAO).then(c => Promise.allSettled(PRE.map(u => c.add(u)))).then(() => self.skipWaiting()));
