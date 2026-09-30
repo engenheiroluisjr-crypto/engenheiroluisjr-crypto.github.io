@@ -1,0 +1,117 @@
+{
+ "tipo": "diario",
+ "obra": 223,
+ "lote": "42",
+ "unidade": "ETEC Antonio furlan",
+ "data": "2026-09-30",
+ "numero": 1,
+ "pct": "35",
+ "previsao": "14/10/2026",
+ "gerado": "2026-09-30T15:23:34",
+ "ficha": {
+  "funcionarios": "8",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": "Não",
+  "andamento": "Em execução",
+  "pct": null,
+  "ritmo": "Normal",
+  "previsao": null,
+  "visita": "14:00",
+  "responsavel": null
+ },
+ "servicos": [
+  "Pintura"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [
+  "Teste"
+ ],
+ "recomendacoes": [
+  "Teste"
+ ],
+ "pendencias": [
+  "Teste"
+ ],
+ "pedidos_estado": {
+  "49451": "PENDENTE",
+  "50818": "PENDENTE",
+  "50882": "PENDENTE",
+  "50902": "PENDENTE",
+  "51337": "PENDENTE",
+  "51992": "PENDENTE",
+  "52454": "PENDENTE",
+  "52619": "PENDENTE",
+  "53445": "PENDENTE",
+  "53791": "PENDENTE",
+  "53858": "PENDENTE",
+  "54471": "PENDENTE",
+  "54494": "PENDENTE",
+  "54839": "PENDENTE",
+  "55427": "PENDENTE",
+  "55713": "PENDENTE",
+  "55717": "PENDENTE",
+  "56305": "PENDENTE",
+  "56841": "PENDENTE",
+  "57169": "PENDENTE"
+ },
+ "fotos": [
+  {
+   "arquivo": "1DX676I9-nbz0qThoS9Kx8zY3dqEu6azb_IMG_8648.jpg",
+   "data": "2026-09-28",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1M9AmlCZqoOE7XvzB8qgNX3-NQbZFqDex_IMG_8651.jpg",
+   "data": "2026-09-28",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1R04u768dElTvPt54sKESUCfDjXelZFrL_IMG_8649.jpg",
+   "data": "2026-09-28",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1X3Z-TPqbvWkstBf6LFpIWYOGwbfimmSQ_IMG_8650.jpg",
+   "data": "2026-09-28",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1b7GDG0ZzFpToev9130cE2nHPsZboo_Yu_IMG_8652.jpg",
+   "data": "2026-09-28",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1jBUVsifrQ_U6yvYKy1NiMOVucBXxn2zg_IMG_8653.jpg",
+   "data": "2026-09-28",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1q11a6eIku_jJdWF5wK2yoz0qyaTV68Ra_IMG_8647.jpg",
+   "data": "2026-09-28",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1Q20AIeb64U8rXJ9eYgd7Nw3C_YZLNwXM_IMG_8656.jpg",
+   "data": "2026-09-29",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1ZTanjgflmKr5K94_qVo_Y0D9idDPro5K_IMG_8657.jpg",
+   "data": "2026-09-29",
+   "legenda": ""
+  },
+  {
+   "arquivo": "1axKP4xzqFlEmHuSOS-Ikqo0-mIXOHRT6_IMG_8655.jpg",
+   "data": "2026-09-29",
+   "legenda": ""
+  }
+ ],
+ "fotos_pasta": "/private/tmp/claude-501/-Users-luishenriquejunior-Library-Application-Support-Claude-scratch-workspaces-e96be136-1807-4a93-b3fc-6f98bc8cd7a7-66335df6-daab-4eca-8616-bd07b6bbe626-scratch-2026-09-23-571477/406fb208-aad6-4326-83e8-4fc0ce8ee146/scratchpad/visita223/fotos",
+ "legendas": "/private/tmp/claude-501/-Users-luishenriquejunior-Library-Application-Support-Claude-scratch-workspaces-e96be136-1807-4a93-b3fc-6f98bc8cd7a7-66335df6-daab-4eca-8616-bd07b6bbe626-scratch-2026-09-23-571477/406fb208-aad6-4326-83e8-4fc0ce8ee146/scratchpad/visita223/fichas/obra223_2026-09-30_150644_legendas.csv",
+ "m001": "42.223_M005_ETEC-ANTONIO-FURLAN_rev00.xlsx",
+ "autor": "leomontanherieng@gmail.com",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 30/09/2026*\n_ETEC Antonio furlan · 2026.ATA.FDE.42.223 · BARUERI_\n\n👷 Efetivo: 8 · ☀️ Tempo seco · Ritmo normal\n📊 Avanço medido: *35%* · Previsão de término: 14/10/2026\n\n🔨 *Executado no dia*\n• Pintura\n\n📦 *Materiais — pedidos sem entrega*\n⚠️ 20 pedido(s), R$ 163.482,20 ainda por receber\n• 49451 — AZULEJO ELIANE: FORMA BRANCO BR (3 +1 itens — *161 dias* em aberto\n• 50818 — Cunha +2 itens — *128 dias* em aberto\n• 50882 — DV-01 DIVISORIA DE GRANILITE - LAT +3 itens — *128 dias* em aberto\n• 50902 — Cabo flex 4mm² preto +6 itens — *127 dias* em aberto\n• ... e mais 16 pedido(s) pendente(s)\n\n📌 *Pendências*\n• Teste\n\n❗ *Recomendações*\n• Teste\n\n_Relatório nº 1 · Luis Júnior — Engenharia Atlântica_"
+}
