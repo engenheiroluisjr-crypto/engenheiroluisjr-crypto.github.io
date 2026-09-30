@@ -5431,6 +5431,34 @@ const REL = (function(){
       ritmo: (mesesRest!=null && mesesRest>0.3 && saldo>0.5) ? saldo/Math.ceil(mesesRest) : null};
   }
 
+  /* 30/09: a Folha de obra pode sair de UMA obra (a selecionada na Página da obra, ou outra
+     escolhida no cartão) e com VALORES DE EMPREITEIRO = valor FDE x taxa do empreiteiro
+     (a mesma taxa do Fechamento de empreiteiro, fech.js). */
+  let FOLHA_OBRA=null; // null = segue a obra selecionada na Página da obra
+  const CHAVE_VAL='relFolhaVal';
+  function folhaVal(){ try{ return localStorage.getItem(CHAVE_VAL)==='emp'?'emp':'fde'; }catch(e){ return 'fde'; } }
+  function obraSel(){ const s=$('selObra'); const c=s?+s.value:0; return c||null; }
+  function folhaEscolha(){
+    const L=obras(); if(FOLHA_OBRA==='todas') return 'todas';
+    const c=FOLHA_OBRA!=null?FOLHA_OBRA:obraSel();
+    return (c!=null && L.some(o=>o.cod===c)) ? c : 'todas';
+  }
+  function obrasFolha(){ const e=folhaEscolha(); return e==='todas'?obras():obras().filter(o=>o.cod===e); }
+  function taxaEmp(cod){
+    const F=(window.FECH&&window.FECH.obras)||(typeof FECH_DADOS!=='undefined'?FECH_DADOS:{});
+    const d=F[String(cod)]; return d&&d.taxa>0&&d.taxa<=1?d.taxa:null;
+  }
+  function comValores(o){
+    if(folhaVal()!=='emp') return o;
+    const tx=taxaEmp(o.cod);
+    if(tx==null) return Object.assign({},o,{_emp:'semtaxa'});
+    const f=v=>v==null?v:Math.round(v*tx*100)/100;
+    return Object.assign({},o,{_emp:tx, valor:f(o.valor), medido_ap:f(o.medido_ap), medido_tr:f(o.medido_tr),
+      serie:(o.serie||[]).map(s=>Object.assign({},s,{p:f(s.p),m:f(s.m),t:f(s.t),pa:f(s.pa)})),
+      meds:(o.meds||[]).map(m=>Object.assign({},m,{vemp:f(m.vemp),vfde:f(m.vfde)}))});
+  }
+  const pcTx = tx => (tx*100).toLocaleString('pt-BR',{maximumFractionDigits:2})+'%';
+
   function atencao(o,N){
     const L=[], conc=/CONCLU|CANCEL/i.test(o.situacao||'');
     if(conc) return L;
@@ -5455,7 +5483,7 @@ const REL = (function(){
   }
 
   function folhaObra(){
-    const L = obras();
+    const L = obrasFolha().map(comValores);
     if(!L.length) return null;
     const OP = opcoes();
     const doc = novo('p');
@@ -5463,7 +5491,10 @@ const REL = (function(){
     const W = LW-2*MARGEM;
     L.forEach((o,idx)=>{
       if(idx) doc.addPage();
-      const tit=o.cod+' · '+(o.unidade||'—'), sub=[o.cidade,o.bairro,o.servico].filter(Boolean).join(' · ');
+      const tit=o.cod+' · '+(o.unidade||'—')+(o._emp?' · valores de empreiteiro':'');
+      const sub=[o.cidade,o.bairro,o.servico].filter(Boolean).join(' · ')+
+        (o._emp==='semtaxa'?'  ·  ATENÇÃO: taxa do empreiteiro não cadastrada — valores FDE':
+         o._emp?'  ·  empreita = valor FDE × '+pcTx(o._emp)+' (taxa do empreiteiro)':'');
       cabecalho(doc, tit, sub);
       const N=numeros(o);
       let y = 27;
@@ -5479,7 +5510,7 @@ const REL = (function(){
         ['Início · Prazo', dt(o.ini)+' · '+(o.prazo||'—')+' dias'],
         ['Término previsto', dt(o.fimPrev)+(o.desvio!=null?'  ('+(o.desvio>0?'+':'')+
             Number(o.desvio).toLocaleString('pt-BR',{maximumFractionDigits:1})+' meses)':'')],
-        ['Valor do contrato', 'R$ '+n2(o.valor)]
+        [typeof o._emp==='number'?'Valor da empreita':'Valor do contrato', 'R$ '+n2(o.valor)]
       ];
       const colL = W/2;
       doc.setFontSize(7);
@@ -5495,7 +5526,7 @@ const REL = (function(){
       // --- indicadores: 6 caixas
       if(OP.ind){
         const K=[
-          ['Aprovado FDE', 'R$ '+n2(N.ap), pc(N.pctAp)+' do contrato'],
+          [typeof o._emp==='number'?'Aprovado (empreita)':'Aprovado FDE', 'R$ '+n2(N.ap), pc(N.pctAp)+' do contrato'],
           ['Em tramitação', 'R$ '+n2(N.tr), 'aguardando a FDE'],
           ['Saldo a medir', 'R$ '+n2(N.saldo), pc(N.valor?N.saldo/N.valor:null)+' do contrato'],
           ['Prazo decorrido', pc(N.pz), N.mesesRest!=null?(N.mesesRest>0?Math.ceil(N.mesesRest)+' mês(es) restantes':'prazo encerrado'):'sem início'],
@@ -5902,14 +5933,17 @@ const REL = (function(){
       'Desvio de prazo (meses)','Contrato (R$)','Aprovado FDE (R$)','Em tramitação (R$)','Saldo a medir (R$)',
       '% aprovado','% executado (aprov.+tram.)','% prazo decorrido','Previsto acumulado até o mês (R$)',
       'Executado × previsto']];
-    obras().forEach(o=>{ const N=numeros(o);
+    const emp=folhaVal()==='emp';
+    if(emp){ aoa[0][16]='Empreita (R$)'; aoa[0][17]='Aprovado - empreita (R$)'; aoa[0][18]='Em tramitação - empreita (R$)';
+      aoa[0][19]='Saldo a medir - empreita (R$)'; aoa[0][23]='Previsto acumulado - empreita (R$)'; aoa[0].push('Taxa do empreiteiro'); }
+    obrasFolha().map(comValores).forEach(o=>{ const N=numeros(o);
       aoa.push([o.cod,o.unidade||'',o.cidade||'',o.contratoAta||'',o.lote||'',o.contrato||'',o.pi||'',
         o.empreiteira||'',o.eng||'',o.fiscal||'',o.situacao||'',o.status||'',o.ini||'',o.prazo||'',o.fimPrev||'',
         o.desvio==null?'':o.desvio, N.valor, N.ap, N.tr, N.saldo,
         N.pctAp==null?'':N.pctAp, N.pctExec==null?'':N.pctExec, N.pz==null?'':N.pz, N.prevAcum,
-        N.ader==null?'':N.ader]); });
-    planilha(aoa,[7,34,16,13,6,20,12,16,14,12,20,11,11,11,14,12,15,15,15,15,10,12,12,16,12],
-      nomeArq('RELATORIO_OBRAS')+'xlsx','Obras');
+        N.ader==null?'':N.ader].concat(emp?[typeof o._emp==='number'?o._emp:'não cadastrada (valores FDE)']:[])); });
+    planilha(aoa,[7,34,16,13,6,20,12,16,14,12,20,11,11,11,14,12,15,15,15,15,10,12,12,16,12,14],
+      nomeArq('RELATORIO_OBRAS'+sufFolha())+'xlsx','Obras');
   };
   const xlsAprov = () => {
     const aoa=[['Nº','Unidade de ensino','Contrato FDE','PI','Empreiteira','Med.',
@@ -6110,13 +6144,26 @@ const REL = (function(){
       nomeArq('FECHAMENTO-EMPREITEIRO')+'xlsx','Fechamento');
   }
 
+  function sufFolha(){ const e=folhaEscolha(); return (e==='todas'?'':'_'+e)+(folhaVal()==='emp'?'_EMPREITEIRO':''); }
+  function htmlFolhaSel(){
+    const L=obras(), e=folhaEscolha(), s=obraSel(), v=folhaVal();
+    const os=L.map(o=>'<option value="'+o.cod+'"'+(e===o.cod?' selected':'')+'>'+o.cod+' · '+String(o.unidade||'').replace(/[<>&"]/g,'')+
+      (o.cod===s?' (selecionada)':'')+'</option>').join('');
+    return '<div class="relOpc"><span class="relOpcT">Obra</span><select class="relSelObra" style="font:inherit;padding:4px 6px;max-width:100%">'+
+      '<option value="todas"'+(e==='todas'?' selected':'')+'>Todas as '+L.length+' obras do filtro</option>'+os+'</select>'+
+      '<span class="relOpcT" style="margin-top:6px">Valores</span>'+
+      '<label><input type="radio" name="relVal" value="fde"'+(v==='fde'?' checked':'')+'> FDE (contrato e medições)</label>'+
+      '<label><input type="radio" name="relVal" value="emp"'+(v==='emp'?' checked':'')+'> Empreiteiro (valor FDE × taxa do empreiteiro)</label></div>';
+  }
   /* ========================= OS TRÊS RELATÓRIOS =========================== */
   const DEFS = [
     {id:'obra', nome:'Folha de obra', fmt:'A4 retrato · uma página por obra',
      exp:'Identificação e, à sua escolha: indicadores, gráfico mês a mês, curva S, tabela com '+
          'acumulados, medições lançadas e pontos de atenção.', opc:true,
-     conta:()=>{const n=obras().length; return n?n+' obra'+(n===1?'':'s')+' no filtro · '+n+' página'+(n===1?'':'s'):'';},
-     pdf:folhaObra, pdfNome:()=>nomeArq('FOLHA-DE-OBRA')+'pdf', xls:xlsObra},
+     conta:()=>{const L=obrasFolha(), n=L.length; if(!n) return '';
+        return (n===1? L[0].cod+' · '+(L[0].unidade||'')+' · 1 página' : n+' obras no filtro · '+n+' páginas')+
+          (folhaVal()==='emp'?' · valores de empreiteiro':'');},
+     pdf:folhaObra, pdfNome:()=>nomeArq('FOLHA-DE-OBRA'+sufFolha())+'pdf', xls:xlsObra},
     {id:'contr', nome:'Contrato das obras', fmt:'A4 paisagem',
      exp:'O mesmo recorte da aba Contrato das obras: resumo, obras que vencem em até 60 dias e a tabela '+
          'com prazo, contratado, aprovado, tramitação, saldo e % real × previsto. Segue o "Mostrar" e o "Ordenar" da aba.',
@@ -6154,7 +6201,10 @@ const REL = (function(){
   function render(){
     if($('relEscopo')) $('relEscopo').innerHTML =
       'Recorte de agora: <b>'+escopo()+'</b>. Todo relatório desta aba obedece a esses filtros — '+
-      'mude no topo da página e gere de novo.';
+      'mude no topo da página e gere de novo.'+
+      (()=>{ const c=obraSel(), o=c&&obras().find(x=>x.cod===c);
+        return o?'<br>Obra selecionada na Página da obra: <b>'+o.cod+' · '+String(o.unidade||'').replace(/[<>&]/g,'')+'</b>'+
+          ' — a Folha de obra sai só dela (troque no cartão para todas as obras).':''; })();
     const cx=$('relLista'); if(!cx) return;
     cx.innerHTML = DEFS.map(d=>{
       const c=d.conta(), tem=!!c;
@@ -6163,7 +6213,7 @@ const REL = (function(){
         '<h3>'+d.nome+'</h3>'+
         '<span class="exp">'+d.exp+'</span>'+
         '<span class="cont'+(tem?'':' vazio')+'">'+(tem?c:'nada neste recorte')+'</span>'+
-        (d.opc ? '<div class="relOpc"><span class="relOpcT">O que entra na folha</span>'+
+        (d.opc ? htmlFolhaSel()+'<div class="relOpc"><span class="relOpcT">O que entra na folha</span>'+
           BLOCOS.map(b=>'<label><input type="checkbox" data-bl="'+b.id+'"'+(opcoes()[b.id]?' checked':'')+'> '+b.rot+'</label>').join('')+
           '</div>' : '')+
         (d.selComp ? '<div class="relOpc"><span class="relOpcT">Competência</span><select class="relSelComp" style="font:inherit;padding:4px 6px">'+
@@ -6182,6 +6232,8 @@ const REL = (function(){
       'o conteúdo. Gerado a partir do CTR FDE Barueri de '+(D.gerado?dt(D.gerado):'—')+'.';
     if(!cx.__lig2){ cx.__lig2=1; cx.addEventListener('change', ev=>{
       if(ev.target.classList&&ev.target.classList.contains('relSelComp')){ COMP_MES=ev.target.value; render(); return; }
+      if(ev.target.classList&&ev.target.classList.contains('relSelObra')){ const v=ev.target.value; FOLHA_OBRA=v==='todas'?'todas':+v; render(); return; }
+      if(ev.target.name==='relVal'){ try{localStorage.setItem(CHAVE_VAL,ev.target.value);}catch(e){} render(); return; }
       const cc=ev.target.closest('input[data-blc]');
       if(cc){ const o=opcC(); o[cc.dataset.blc]=cc.checked; try{localStorage.setItem(CHAVE_C,JSON.stringify(o));}catch(e){} return; }
       const cb=ev.target.closest('input[data-bl]'); if(!cb) return;
@@ -7497,7 +7549,7 @@ aoFiltrar();
 </script>
 
 <!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
-<script src="fech.js?v=202609301524"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
+<script src="fech.js?v=202609301827"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
 <script>
 const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andrade", "cid": "BARUERI", "emp": "LEONARDO ZANAO", "sit": "5. CONCLUÍDA", "contrato": 235271.25, "taxa": 0.06, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 14116.27, "ap": 212526.4, "tr": 7207.92, "emp_ap": 12751.58, "emp_tot": 13184.06, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 12751.58, "saldo_tot": 13184.06}, "199": {"num": 199, "uni": "EE SEBASTIAO DE MORAES CARDOSO", "cid": "ITAPECERICA DA SERRA", "emp": "REINALDO", "sit": "5. CONCLUÍDA", "contrato": 186643.95, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 37328.79, "ap": 131576.49, "tr": 12451.6, "emp_ap": 26315.3, "emp_tot": 28805.62, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26315.3, "saldo_tot": 28805.62}, "200": {"num": 200, "uni": "EE OREDO RODRIGUES DA CRUZ", "cid": "JUQUITIBA", "emp": "ANTONIO CABELO", "sit": "5. CONCLUÍDA", "contrato": 171519.72, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 34303.94, "ap": 130434.87, "tr": 0.0, "emp_ap": 26086.97, "emp_tot": 26086.97, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26086.97, "saldo_tot": 26086.97}, "223": {"num": 223, "uni": "ETEC Antonio furlan", "cid": "BARUERI", "emp": "REINALDO", "sit": "4. EXECUÇÃO", "contrato": 1935375.91, "taxa": 0.538489, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 1042178.64, "ap": 413291.43, "tr": 273284.71, "emp_ap": 222552.89, "emp_tot": 369713.7, "mat": 127178.11, "serv": 19199.0, "sienge": 146945.42, "npedidos": 18, "top": [["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)", "m²", 731.4, 23331.66], ["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET", "m2", 450.0, 17946.0], ["Torneira de acionamento manual e com ciclo de ", "un", 18.0, 17457.3], ["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ", "un", 30.0, 14830.5], ["Tinta esmalte cinza médio 3,6 LT", "gl", 50.0, 5781.0], ["PORTA DE MADEIRA COMPLETA 0,92X2,10", "un", 6.0, 4296.0], ["TELA Q-92 2X3 M", "un", 60.0, 3996.0], ["Divisoria de Granilite frontal (DV-03) 0,40x1,", "un", 25.0, 3802.5], ["FERRO CHATO 5/8 X 3/16", "br", 90.0, 3780.0], ["LUMINÁRIA IL-45 - COM LÂMPADA LED", "un", 42.0, 3766.14], ["PR-09 C=2MM", "un", 12.0, 2808.0], ["Tinta Esmalte base d'água Branco 18l", "lt", 20.0, 2500.0], ["Esmalte Brilhante Branco Coralit 3, 6l", "gl", 20.0, 2500.0], ["TINTA ESMALTE BASE ÁGUA CINZA", "lt", 20.0, 2361.2], ["Coral Rende Muito Branco Neve 18l", "lt", 6.0, 2010.0], ["TINTA PISO CINZA MÉDIO 18L", "lt", 5.0, 1725.0], ["DV-04 C=1,2M", "un", 3.0, 1368.9], ["Divisórias de granilite 0,35 X 1,80 Conforme D", "un", 10.0, 1331.1], ["Cabo flex 6mm² preto", "rol", 2.0, 1295.0], ["Cabo flex 4mm² preto", "rol", 2.0, 864.8]], "saldo_ap": 75607.47, "saldo_tot": 222768.28, "absorv": 84486.46, "estoque": 61890.65, "saldo_ap_prop": 138066.43, "saldo_tot_prop": 285227.24}, "224": {"num": 224, "uni": "ELIZA DE OLIVEIRA RIBEIRO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1486645.35, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 486290.92, "tr": 274008.61, "emp_ap": null, "emp_tot": null, "mat": 2852.39, "serv": 0.0, "sienge": 2852.39, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "230": {"num": 230, "uni": "EE MARIA ANTONIETA MARTINS", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1979042.22, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 1083172.19, "tr": 179925.01, "emp_ap": null, "emp_tot": null, "mat": 1976.74, "serv": 0.0, "sienge": 1976.74, "npedidos": 9, "top": [], "saldo_ap": null, "saldo_tot": null}, "231": {"num": 231, "uni": "EE MARIA JOSE ANTUNES FERRAZ", "cid": "TABOÃO DA SERRA", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1912108.62, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 776720.04, "tr": 58057.26, "emp_ap": null, "emp_tot": null, "mat": 712.0, "serv": 0.0, "sienge": 712.0, "npedidos": 7, "top": [], "saldo_ap": null, "saldo_tot": null}, "232": {"num": 232, "uni": "EE NEIDE CELESTINA DE OLIVEIRA", "cid": "EMBU GUAÇU", "emp": "CRISTIAN GUIDO", "sit": "4. EXECUÇÃO", "contrato": 1394560.14, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 500062.77, "tr": 68313.36, "emp_ap": null, "emp_tot": null, "mat": 2080.0, "serv": 0.0, "sienge": 2080.0, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}, "269": {"num": 269, "uni": "EE JD CAMPESTRE", "cid": "EMBU GUAÇU", "emp": "RENILDO", "sit": "4. EXECUÇÃO", "contrato": 1328935.74, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 661977.78, "tr": 45518.87, "emp_ap": null, "emp_tot": null, "mat": 1113.72, "serv": 0.0, "sienge": 1113.72, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "274": {"num": 274, "uni": "ETEC EMBU", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1568182.98, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 104600.06, "tr": 468976.52, "emp_ap": null, "emp_tot": null, "mat": 1410.0, "serv": 0.0, "sienge": 1410.0, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "278": {"num": 278, "uni": "EE GERTRUDES EDER", "cid": "ITAPECERICA DA SERRA", "emp": "LEONARDO ZANAO", "sit": "4. EXECUÇÃO", "contrato": 2152584.69, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 156359.02, "tr": 57537.42, "emp_ap": null, "emp_tot": null, "mat": 4272.3, "serv": 0.0, "sienge": 4272.3, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "284": {"num": 284, "uni": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 114889.32, "taxa": 0.46, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 52849.09, "ap": 3522.17, "tr": 45000.54, "emp_ap": 1620.2, "emp_tot": 22320.45, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 1620.2, "saldo_tot": 22320.45}, "287": {"num": 287, "uni": "EEPROF LAERT ALMEIDA SÃO BERNARDO", "cid": "TABOÃO DA SERRA", "emp": "PEDRO", "sit": "4. EXECUÇÃO", "contrato": 1950390.3, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 32747.41, "tr": 273322.99, "emp_ap": null, "emp_tot": null, "mat": 1088.58, "serv": 0.0, "sienge": 1088.58, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "288": {"num": 288, "uni": "EE EDUARDO VAZ", "cid": "EMBU DAS ARTES", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1756795.6, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 2378.4, "tr": 156047.64, "emp_ap": null, "emp_tot": null, "mat": 8399.5, "serv": 0.0, "sienge": 8399.5, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}};
 (function(){
@@ -7714,9 +7766,9 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
-<script src="sienge.js?v=202609301524"></script>
-<script src="sienge_itens.js?v=202609301524"></script>
-<script src="entregas.js?v=202609301524"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
+<script src="sienge.js?v=202609301827"></script>
+<script src="sienge_itens.js?v=202609301827"></script>
+<script src="entregas.js?v=202609301827"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -8251,9 +8303,9 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: SUB-ABA FISCALIZAÇÃO (Livros de Ocorrência) ================= -->
-<script src="lo.js?v=202609301524"></script>
-<script src="seg.js?v=202609301524"></script>
-<script src="rao.js?v=202609301524"></script>  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
+<script src="lo.js?v=202609301827"></script>
+<script src="seg.js?v=202609301827"></script>
+<script src="rao.js?v=202609301827"></script>  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
 <style>
   #loBox .loK{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
   #loBox .loK>div{flex:1 1 150px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:10px 12px;background:var(--cd,#fff)}
@@ -8526,7 +8578,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
-<script src="consolidado.js?v=202609301524"></script>
+<script src="consolidado.js?v=202609301827"></script>
 <style>
   #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
   #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
