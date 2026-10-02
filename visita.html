@@ -76,8 +76,9 @@ var PERG=[['mao_de_obra','Mão de obra',['Suficiente','Insuficiente']],['materia
   ['equipamentos','Equipamentos',['Suficiente','Insuficiente']],['tempo','Tempo',['Seco','Chuva']],
   ['falhas','Falhas construtivas a serem corrigidas',['Sim','Não']],['placa','Placa de obra instalada',['Sim','Não']],
   ['andamento','Andamento dos serviços',['Não iniciada','Em execução','Obra paralisada','Obra concluída','Em rescisão']],
-  ['ritmo','Ritmo da obra',['Normal','Lento','Parado']]];
-var RUIM={mao_de_obra:'Insuficiente',material:'Insuficiente',equipamentos:'Insuficiente',falhas:'Sim',placa:'Não',ritmo:'Lento|Parado',andamento:'Obra paralisada|Em rescisão'};
+  ['ritmo','Ritmo da obra',['Normal','Lento','Parado']],
+  ['limpeza','Organização e limpeza da obra',['Boa','Regular','Ruim']]];
+var RUIM={mao_de_obra:'Insuficiente',material:'Insuficiente',equipamentos:'Insuficiente',falhas:'Sim',placa:'Não',ritmo:'Lento|Parado',limpeza:'Ruim',andamento:'Obra paralisada|Em rescisão'};
 var TXT=[['servicos','Serviços executados','um por linha'],['observacoes','Observações','uma por linha'],
   ['recomendacoes','Recomendações à contratada','uma por linha'],['pendencias','Pendências em aberto','uma por linha']];
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
