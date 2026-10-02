@@ -5,11 +5,12 @@
  "unidade": "EE INSTITUTO IMACULADA",
  "data": "2026-09-30",
  "numero": 1,
- "pct": "58",
+ "pct": "61",
  "previsao": "28/10/2026",
- "gerado": "2026-09-30T16:10:56",
+ "gerado": "2026-10-02T13:36:00",
  "ficha": {
   "funcionarios": "2",
+  "mao_de_obra": "Suficiente",
   "material": "Suficiente",
   "equipamentos": "Suficiente",
   "tempo": "Seco",
@@ -23,17 +24,35 @@
   "responsavel": null
  },
  "servicos": [
-  "Instalação do caixilhos, remoções caixilhos lado corredor, pintura laboratório"
+  "Instalação do caixilhos",
+  "Remoções caixilhos lado corredor",
+  "Pintura laboratório"
  ],
  "servicos_da_visita": true,
- "observacoes": [
-  "."
- ],
+ "observacoes": [],
  "recomendacoes": [
   "Finalizar instalação dos caixilhos"
  ],
  "pendencias": [
   "Quadra, material forro"
+ ],
+ "alertas": [
+  [
+   "medio",
+   "Placa de obra não instalada"
+  ],
+  [
+   "medio",
+   "Ritmo da obra: lento"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 2 funcionário(s) na visita"
+  ],
+  [
+   "medio",
+   "61% medido com 79% do prazo decorrido (desvio -18 p.p.)"
+  ]
  ],
  "pedidos_estado": {
   "49846": "ENTREGUE",
@@ -61,7 +80,8 @@
   "55485": "ENTREGUE",
   "55690": "ENTREGUE",
   "56805": "ENTREGUE",
-  "57052": "ENTREGUE"
+  "57052": "ENTREGUE",
+  "57205": "ENTREGUE"
  },
  "fotos": [
   {
@@ -100,12 +120,12 @@
    "legenda": ""
   },
   {
-   "arquivo": "1dXUJPP6lnJIZNnFuv8Kv7zmlAvt-zjX8_20260930_113817(0).jpg",
+   "arquivo": "1dXUJPP6lnJIZNnFuv8Kv7zmlAvt-zjX8_20260930_113817.jpg",
    "data": "2026-09-30",
    "legenda": ""
   },
   {
-   "arquivo": "1mlgV3Zq4vLggt5-Xda-jPHoSyte9k1-e_20260930_113818(0).jpg",
+   "arquivo": "1mlgV3Zq4vLggt5-Xda-jPHoSyte9k1-e_20260930_113818.jpg",
    "data": "2026-09-30",
    "legenda": ""
   },
@@ -117,5 +137,5 @@
  ],
  "m001": "41.268_M003_EE-INSTITUTO-IMACULADA_rev00.xlsx",
  "autor": "Eng. Douglas",
- "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 30/09/2026*\n_EE INSTITUTO IMACULADA · 2026.ATA.FDE.41.268 · ITAPECERICA DA SERRA_\n\n👷 Efetivo: 2 · ☀️ Tempo seco · Ritmo lento\n📊 Avanço medido: *58%* · Previsão de término: 28/10/2026\n\n🔨 *Executado no dia*\n• Instalação do caixilhos, remoções caixilhos lado corredor, pintura laboratório\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• Quadra, material forro\n\n❗ *Recomendações*\n• Finalizar instalação dos caixilhos\n\n_Relatório nº 1 · Luis Júnior — Engenharia Atlântica_"
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 30/09/2026*\n_EE INSTITUTO IMACULADA · 2026.ATA.FDE.41.268 · ITAPECERICA DA SERRA_\n\n👷 Efetivo: 2 · ☀️ Tempo seco · Ritmo lento\n📊 Medido: *61,2%* (aprovado 58,1%) · Previsão de término: 28/10/2026\n\n🔨 *Executado no dia*\n• Instalação do caixilhos\n• Remoções caixilhos lado corredor\n• Pintura laboratório\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n🚨 *Pontos de atenção*\n• Placa de obra não instalada\n• Ritmo da obra: lento\n• Efetivo baixo: 2 funcionário(s) na visita\n• 61% medido com 79% do prazo decorrido (desvio -18 p.p.)\n\n📌 *Pendências*\n• Quadra, material forro\n\n❗ *Recomendações*\n• Finalizar instalação dos caixilhos\n\n_Relatório nº 1 · Eng. Douglas · Engenharia Atlântica_"
 }
