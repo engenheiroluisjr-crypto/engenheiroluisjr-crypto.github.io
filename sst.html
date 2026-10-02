@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vistoria SST — Obras FDE</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--bg:#f4f3ef;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--ln:#dcdad3;--pri:#1f4e79;--ok:#2f6f4e;--okb:#e6f4ec;--bad:#b3261e;--badb:#fbe0de;--na:#5f6368;--nab:#ececea;--warn:#b98b18;--warnb:#fdf4de}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#22221f;--tx:#ecebe6;--mut:#a3a29c;--ln:#3a3935;--pri:#7fb0de;--ok:#7fc7a0;--okb:#1f3a2c;--bad:#f08a80;--badb:#4a2220;--na:#bdbdb8;--nab:#2e2e2b;--warn:#e5c062;--warnb:#3d3420}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header.top{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:10px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+header.top h1{font-size:16px;margin:0;flex:1;min-width:200px}
+header.top .nota{font-weight:700;font-size:14px;background:rgba(255,255,255,.16);padding:4px 10px;border-radius:8px;white-space:nowrap}
+main{max-width:980px;margin:0 auto;padding:12px 16px 120px}
+details{background:var(--card);border:1px solid var(--ln);border-radius:12px;margin:12px 0;overflow:hidden}
+summary{cursor:pointer;padding:12px 14px;font-weight:650;list-style:none;display:flex;gap:8px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary .cont{margin-left:auto;font-weight:500;font-size:12.5px;color:var(--mut)}
+.in{padding:4px 14px 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+label.f{display:block;font-size:12.5px;color:var(--mut)}
+label.f input,label.f select,label.f textarea{display:block;width:100%;margin-top:3px}
+input,select,textarea{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--ln);border-radius:8px;padding:7px 9px;min-height:36px}
+textarea{min-height:58px;resize:vertical}
+.ast{color:var(--bad)}
+.sec{font-weight:650;margin:14px 0 6px;padding-top:8px;border-top:1px solid var(--ln);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sec:first-child{border-top:0}
+.sec button{margin-left:auto}
+.it{padding:8px 0;border-bottom:1px dashed var(--ln)}
+.it .q{display:flex;gap:8px;align-items:flex-start}
+.it .cod{font-weight:650;min-width:46px;color:var(--pri)}
+.it .nr{font-size:11.5px;color:var(--mut)}
+.seg{display:flex;gap:6px;margin:6px 0 0 54px;flex-wrap:wrap}
+.seg button{border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:7px 12px;font:inherit;font-size:13.5px;cursor:pointer;min-width:70px}
+.seg button.on.c{background:var(--okb);border-color:var(--ok);color:var(--ok);font-weight:650}
+.seg button.on.n{background:var(--badb);border-color:var(--bad);color:var(--bad);font-weight:650}
+.seg button.on.a{background:var(--nab);border-color:var(--na);color:var(--na);font-weight:650}
+.it .nc{margin:8px 0 0 54px;display:none;gap:8px;grid-template-columns:2fr 1fr}
+.it.ruim .nc{display:grid}
+.it.ruim .nc textarea{min-height:44px}
+.inv{font-size:11.5px;color:var(--warn)}
+button.bt{border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:7px 12px;font:inherit;font-size:13.5px;cursor:pointer}
+button.pri{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:650}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--ln);padding:6px 5px;text-align:left;vertical-align:top}
+th{font-size:12px;color:var(--mut);font-weight:600}
+td.n,th.n{text-align:right}
+.tw{overflow-x:auto}
+.row{border:1px solid var(--ln);border-radius:10px;padding:10px;margin:8px 0;position:relative}
+.row .x{position:absolute;top:6px;right:6px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:6px 0 12px}
+.kpi div{border:1px solid var(--ln);border-radius:10px;padding:8px 10px}
+.kpi b{display:block;font-size:19px}
+.kpi span{font-size:11.5px;color:var(--mut)}
+.cls{border-radius:10px;padding:10px 12px;font-weight:650;margin:0 0 10px}
+.nota0,.nota1{color:var(--ok)}.nota2{color:var(--warn)}.nota3,.nota4{color:var(--bad)}
+footer.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--ln);padding:10px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:6}
+footer.bar .msg{flex:1;font-size:13px;color:var(--mut);min-width:180px}
+.foto{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.foto img{width:84px;height:64px;object-fit:cover;border-radius:6px;border:1px solid var(--ln)}
+.aviso{background:var(--warnb);border:1px solid var(--warn);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:13.5px}
+.okmsg{background:var(--okb);border:1px solid var(--ok);border-radius:10px;padding:12px;margin:10px 0}
+.mut{color:var(--mut);font-size:12.5px}
+@media (max-width:600px){.seg{margin-left:0}.it .nc{margin-left:0;grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><h1>Vistoria SST · modelo rev01</h1><span class="nota" id="hNota">sem itens avaliados</span></header>
+<main id="app"><p class="mut">Carregando o modelo…</p></main>
+<footer class="bar"><span class="msg" id="msg">Rascunho salvo neste aparelho automaticamente.</span>
+<button class="bt" id="btLimpar">Limpar</button><button class="bt pri" id="btEnviar">Enviar vistoria</button></footer>
+<script src="sst_modelo.js"></script>
+<script>
+(function(){
+'use strict';
+var SRV={form:'https://docs.google.com/forms/d/e/1FAIpQLSeUr4exNdJSwZw80uo9nU9bsRHCZtBEd9QG4w73NMtn_y9zlw/formResponse',entry:'entry.2131162142'};
+var M=window.SST_MOD; if(!M){ document.getElementById('app').innerHTML='<div class="aviso">O modelo (sst_modelo.js) não carregou. Atualize a página.</div>'; return; }
+var Q=new URLSearchParams(location.search), CH='sstRascunho', CHQ='sstQuem';
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function hoje(){ var d=new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
+function novo(){ return {v:1,obra:Q.get('obra')||'',data:hoje(),hora:'',id:{},colab:[],resp:{},com:{},acao:{},over:{},nc:[],acomp:{},quem:ls(CHQ)||''}; }
+var S; try{ S=JSON.parse(ls(CH)||'null'); }catch(e){ S=null; }
+if(!S||S.v!==1) S=novo();
+if(Q.get('obra')&&String(S.obra)!==Q.get('obra')&&!Object.keys(S.resp).length){ S=novo(); }
+var FOTOS={}; /* nc index -> [dataURL] (memoria; vai junto ao enviar) */
+try{ FOTOS=JSON.parse(ls(CH+'F')||'{}'); }catch(e){ FOTOS={}; }
+function salva(){ ls(CH,JSON.stringify(S)); try{ localStorage.setItem(CH+'F',JSON.stringify(FOTOS)); }catch(e){} }
+
+var OPC={doc:['Sim','Não'],sn:['Sim','Não'],info:['Sim','Não'],inv:['Sim','Não'],sat:['Satisfatório','Insatisfatório']};
+function ponto(t,a){ if(!a||a==='N.A.') return null;
+  if(t==='doc') return a==='Sim'?0:a==='Não'?4:null;
+  if(t==='sat') return a==='Satisfatório'?1:a==='Insatisfatório'?3:null;
+  if(t==='sn') return a==='Sim'?1:a==='Não'?3:null;
+  if(t==='inv') return a==='Não'?1:a==='Sim'?3:null;
+  return null; }
+function ruim(t,a){ return (t==='info'&&a==='Não')||(ponto(t,a)||0)>=3; }
+var PORL={}; M.itens.forEach(function(i){ PORL[i.l]=i; });
+function colabPonto(col){ /* L10 CTPS(E) L11 ASO(F) L12 treino(H) L13 EPI(I) */
+  var k={10:'ctps',11:'aso',12:'trein',13:'epi'}[col], v=S.colab.map(function(c){return c[k];}).filter(Boolean);
+  if(!v.length) return null; return v.indexOf('Não')>=0?4:0; }
+function calc(){
+  var tot=0,n=0,pes=0,pior=null,linhas=[];
+  M.pont.forEach(function(p){
+    var vs=[]; p.lin.forEach(function(l){ var i=PORL[l]; if(i){ var x=ponto(i.t,S.resp[i.c]); if(x!=null) vs.push(x);} });
+    p.col.forEach(function(c){ var x=colabPonto(c); if(x!=null) vs.push(x); });
+    var sug=vs.length?Math.max.apply(null,vs):null, o=S.over[p.n], nota=(o===''||o==null)?sug:(o==='NA'?null:+o);
+    if(nota!=null){ tot+=p.pe*nota; n++; pes+=p.pe; pior=pior==null?nota:Math.max(pior,nota); }
+    linhas.push({p:p,sug:sug,nota:nota});
+  });
+  var mp=pes?tot/pes:null;
+  var cls=mp==null?'':mp<1?'ÓTIMO':mp<1.5?'BOM':mp<2.5?'REGULAR / ATENÇÃO':mp<3.5?'RUIM':'PÉSSIMO';
+  var prov=pior==null?'':pior>=4?'AÇÃO IMEDIATA — item com nota 4 (PÉSSIMO)':pior===3?'CORREÇÃO IMEDIATA — item com nota 3 (RUIM)':pior===2?'PLANO DE AÇÃO COM PRAZO':'MANTER O PADRÃO';
+  return {tot:tot,n:n,mfde:n?tot/n:null,pes:pes,mp:mp,conf:pes?1-tot/(4*pes):null,pior:pior,cls:cls,prov:prov,linhas:linhas};
+}
+function nb(v,d){ return v==null?'—':Number(v).toLocaleString('pt-BR',{minimumFractionDigits:d==null?3:d,maximumFractionDigits:d==null?3:d}); }
+function obraNome(c){ var o=M.obras.filter(function(x){return String(x[0])===String(c);})[0]; return o?o[1]:''; }
+
+function campo(k,rot,tipo,req,ph){ var v=S.id[k]||'';
+  if(tipo==='area') return '<label class="f">'+rot+(req?' <b class="ast">*</b>':'')+'<textarea data-id="'+k+'" placeholder="'+esc(ph||'')+'">'+esc(v)+'</textarea></label>';
+  if(tipo&&tipo.join) return '<label class="f">'+rot+'<select data-id="'+k+'"><option value=""></option>'+tipo.map(function(o){return '<option'+(o===v?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select></label>';
+  return '<label class="f">'+rot+(req?' <b class="ast">*</b>':'')+'<input data-id="'+k+'" value="'+esc(v)+'" placeholder="'+esc(ph||'')+'"></label>'; }
+
+function render(){
+  var aberto=[].map.call(document.querySelectorAll('#app details'),function(d){ return d.open; }), y=window.scrollY;
+  var h='';
+  h+='<details open><summary>1. Identificação<span class="cont" id="cId"></span></summary><div class="in"><div class="grid">'+
+    '<label class="f">Obra (CTR) <b class="ast">*</b><select id="fObra"><option value="">escolha…</option>'+M.obras.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(S.obra)?' selected':'')+'>'+o[0]+' — '+esc(o[1])+'</option>';}).join('')+'</select></label>'+
+    '<label class="f">Data da vistoria <b class="ast">*</b><input type="date" id="fData" value="'+esc(S.data)+'"></label>'+
+    '<label class="f">Horário<input type="time" id="fHora" value="'+esc(S.hora)+'"></label>'+
+    campo('fase','Fase / etapa da obra na vistoria',null,true,'ex.: pintura e acabamentos')+
+    campo('tipo','Tipo de obra',M.listas.tipo_obra)+
+    campo('empr','Empreiteira / contratada',null,true)+
+    campo('rt','Responsável técnico da obra')+
+    campo('enc','Encarregado / preposto no local')+
+    campo('resp','Responsável pela vistoria (SST)',null,true)+
+    campo('insp','Inspetor(a) de segurança')+
+    campo('crea','Registro profissional (CREA / CAU)')+
+    campo('coord','Engenheiro coordenador de obras')+
+    campo('fde','Código FDE (ex.: 01.24.164)')+campo('pi','PI')+campo('os','N.º da Ordem de Serviço')+
+    campo('mun','Município / Localização')+campo('end','Endereço')+campo('prazo','Prazo contratual (dias)')+
+    '</div>'+campo('orig','Origem dos dados / observações','area',false,'ex.: vistoria parcial — só bloco A')+'</div></details>';
+
+  h+='<details><summary>2. Colaboradores<span class="cont" id="cCol"></span></summary><div class="in">'+
+    '<p class="mut">Um por linha. Quatro itens da pontuação nascem daqui: CTPS (item 1), ASO (5), treinamentos (34) e ficha de EPI (35). Basta um “Não” para o item ir a nota 4.</p><div id="colab"></div>'+
+    '<button class="bt" id="addCol">+ colaborador</button></div></details>';
+
+  h+='<details open><summary>3. Vistoria NR-18<span class="cont" id="cVis"></span></summary><div class="in">'+
+    '<p class="mut">Use <b>N.A.</b> para o que não se aplica à etapa da obra (sai do cálculo). Item não verificado fica em branco. Todo item não conforme pede comentário.</p>';
+  var sec='';
+  M.itens.forEach(function(i){
+    if(i.s!==sec){ sec=i.s; h+='<div class="sec">'+esc(sec)+'<button class="bt" data-na="'+esc(sec)+'">tudo N.A.</button></div>'; }
+    var a=S.resp[i.c]||'', o=OPC[i.t];
+    h+='<div class="it'+(ruim(i.t,a)?' ruim':'')+'" data-c="'+esc(i.c)+'"><div class="q"><span class="cod">'+esc(i.c)+'</span><div>'+esc(i.x.replace(/\s*\(Sim = [^)]*\)/,''))+
+      (i.t==='inv'?' <span class="inv">(Sim = não conformidade)</span>':'')+' <span class="nr">'+esc(i.nr)+'</span></div></div>'+
+      '<div class="seg">'+o.map(function(v,k){ var bad=(i.t==='inv')?(k===0):(k===1); return '<button data-v="'+v+'" class="'+(bad?'n':'c')+(a===v?' on':'')+'">'+v+'</button>'; }).join('')+
+      '<button data-v="N.A." class="a'+(a==='N.A.'?' on':'')+'">N.A.</button></div>'+
+      '<div class="nc"><textarea data-com="'+esc(i.c)+'" placeholder="Descreva a não conformidade (obrigatório)">'+esc(S.com[i.c]||'')+'</textarea>'+
+      '<textarea data-acao="'+esc(i.c)+'" placeholder="Ação / prazo">'+esc(S.acao[i.c]||'')+'</textarea></div></div>';
+  });
+  h+='</div></details>';
+
+  h+='<details><summary>4. Pontuação FDE<span class="cont" id="cPt"></span></summary><div class="in" id="pont"></div></details>';
+
+  h+='<details><summary>5. Não conformidades (com foto)<span class="cont" id="cNc"></span></summary><div class="in">'+
+    '<p class="mut">Uma linha por evidência. Prazo e responsável são obrigatórios em NC aberta. Reincidente = já apontada em vistoria anterior.</p>'+
+    '<button class="bt" id="ncAuto">Trazer os itens não conformes da vistoria</button> <button class="bt" id="addNc">+ não conformidade</button><div id="ncs"></div></div></details>';
+
+  var A=S.acomp;
+  h+='<details><summary>6. Acompanhamento do dia</summary><div class="in"><div class="grid">'+
+    '<label class="f">Efetivo no dia<input type="number" min="0" data-ac="efetivo" value="'+esc(A.efetivo||'')+'"></label>'+
+    '<label class="f">EPI / uniforme entregue<select data-ac="epi"><option></option><option'+(A.epi==='Sim'?' selected':'')+'>Sim</option><option'+(A.epi==='Não'?' selected':'')+'>Não</option></select></label>'+
+    '</div><label class="f">Atividades do dia<textarea data-ac="ativ">'+esc(A.ativ||'')+'</textarea></label>'+
+    '<label class="f">Itens de SST observados<textarea data-ac="sst">'+esc(A.sst||'')+'</textarea></label>'+
+    '<label class="f">Pendências<textarea data-ac="pend">'+esc(A.pend||'')+'</textarea></label></div></details>';
+
+  h+='<details open><summary>Envio</summary><div class="in"><div class="grid"><label class="f">Seu nome (quem preencheu) <b class="ast">*</b><input id="fQuem" value="'+esc(S.quem)+'"></label></div>'+
+    '<p class="mut">Ao enviar, a vistoria vai para o servidor do painel; a ficha no modelo rev01 (Excel) e o relatório em PDF são gerados na pasta INSPECOES e aparecem na aba Segurança da obra.</p><div id="resultado"></div></div></details>';
+  document.getElementById('app').innerHTML=h;
+  if(aberto.length) [].forEach.call(document.querySelectorAll('#app details'),function(d,i){ d.open=!!aberto[i]; });
+  desenhaColab(); desenhaNc(); atualiza(); if(aberto.length) window.scrollTo(0,y);
+}
+function desenhaColab(){
+  var b=document.getElementById('colab'), SN=['','Sim','Não'];
+  function sel(i,k,ops){ var v=S.colab[i][k]||''; return '<select data-cl="'+i+'" data-k="'+k+'">'+ops.map(function(o){return '<option'+(o===v?' selected':'')+'>'+o+'</option>';}).join('')+'</select>'; }
+  b.innerHTML=S.colab.map(function(c,i){ return '<div class="row"><button class="bt x" data-rmcol="'+i+'">×</button><div class="grid">'+
+    '<label class="f">Nome<input data-cl="'+i+'" data-k="nome" value="'+esc(c.nome||'')+'"></label>'+
+    '<label class="f">Cargo / função<input data-cl="'+i+'" data-k="cargo" value="'+esc(c.cargo||'')+'"></label>'+
+    '<label class="f">Vínculo'+sel(i,'vinc',['','Próprio','Subempreitado'])+'</label>'+
+    '<label class="f">CTPS / contrato PJ'+sel(i,'ctps',SN)+'</label>'+
+    '<label class="f">ASO válido'+sel(i,'aso',SN)+'</label>'+
+    '<label class="f">Treinamentos (NR)<input data-cl="'+i+'" data-k="nrs" value="'+esc(c.nrs||'')+'" placeholder="NR-18, NR-35…"></label>'+
+    '<label class="f">Treinamento realizado'+sel(i,'trein',SN)+'</label>'+
+    '<label class="f">Ficha de EPI assinada'+sel(i,'epi',SN)+'</label>'+
+    '<label class="f">Observações<input data-cl="'+i+'" data-k="obs" value="'+esc(c.obs||'')+'"></label></div></div>'; }).join('')||'<p class="mut">Nenhum colaborador lançado.</p>';
+}
+function itemOpts(v){ return '<option value=""></option>'+M.itens.map(function(i){ return '<option value="'+esc(i.c)+'"'+(i.c===v?' selected':'')+'>'+esc(i.c+' '+i.x.slice(0,50))+'</option>'; }).join(''); }
+function desenhaNc(){
+  var b=document.getElementById('ncs');
+  b.innerHTML=S.nc.map(function(n,i){ var f=FOTOS[i]||[];
+    return '<div class="row"><button class="bt x" data-rmnc="'+i+'">×</button><div class="grid">'+
+    '<label class="f">Item da vistoria<select data-nc="'+i+'" data-k="item">'+itemOpts(n.item)+'</select></label>'+
+    '<label class="f">Local<input data-nc="'+i+'" data-k="local" value="'+esc(n.local||'')+'"></label>'+
+    '<label class="f">Classificação<select data-nc="'+i+'" data-k="cls"><option></option>'+M.listas.risco.map(function(o){return '<option'+(o===n.cls?' selected':'')+'>'+o+'</option>';}).join('')+'</select></label>'+
+    '<label class="f">Reincidente<select data-nc="'+i+'" data-k="rei"><option></option><option'+(n.rei==='Sim'?' selected':'')+'>Sim</option><option'+(n.rei==='Não'?' selected':'')+'>Não</option></select></label>'+
+    '<label class="f">Prazo<input type="date" data-nc="'+i+'" data-k="prazo" value="'+esc(n.prazo||'')+'"></label>'+
+    '<label class="f">Responsável<input data-nc="'+i+'" data-k="respo" value="'+esc(n.respo||'')+'"></label>'+
+    '<label class="f">Status<select data-nc="'+i+'" data-k="st">'+M.listas.status.map(function(o){return '<option'+(o===(n.st||'Aberta')?' selected':'')+'>'+o+'</option>';}).join('')+'</select></label>'+
+    '</div><label class="f">Não conformidade encontrada<textarea data-nc="'+i+'" data-k="nc">'+esc(n.nc||'')+'</textarea></label>'+
+    '<div class="grid"><label class="f">Risco<input data-nc="'+i+'" data-k="risco" value="'+esc(n.risco||'')+'"></label>'+
+    '<label class="f">Solução / medida corretiva<input data-nc="'+i+'" data-k="sol" value="'+esc(n.sol||'')+'"></label></div>'+
+    '<label class="f">Foto (até 2)<input type="file" accept="image/*" capture="environment" multiple data-foto="'+i+'"></label>'+
+    '<div class="foto">'+f.map(function(u){return '<img src="'+u+'" alt="foto da NC">';}).join('')+'</div></div>'; }).join('')||'<p class="mut">Nenhuma não conformidade lançada.</p>';
+}
+function atualiza(){
+  var r=calc(), resp=Object.keys(S.resp).length, nRuim=M.itens.filter(function(i){return ruim(i.t,S.resp[i.c]);}).length;
+  document.getElementById('hNota').textContent=r.mp==null?'sem itens avaliados':('média ponderada '+nb(r.mp)+' · '+r.cls);
+  document.getElementById('cVis').textContent=resp+' de '+M.itens.length+' respondidos · '+nRuim+' não conformes';
+  document.getElementById('cCol').textContent=S.colab.length+' colaborador(es)';
+  document.getElementById('cNc').textContent=S.nc.length+' NC';
+  document.getElementById('cPt').textContent=r.n?(r.n+' itens · '+r.cls):'';
+  document.getElementById('cId').textContent=S.obra?(S.obra+' — '+obraNome(S.obra)):'';
+  var k=r.pior==null?1:Math.min(4,r.pior), h='';
+  h+='<div class="cls nota'+(r.mp==null?1:r.mp<1?0:r.mp<1.5?1:r.mp<2.5?2:r.mp<3.5?3:4)+'">'+(r.cls||'—')+(r.prov?' · '+r.prov:'')+'</div>';
+  h+='<div class="kpi"><div><b>'+nb(r.tot,0)+'</b><span>Total de pontos</span></div><div><b>'+r.n+'</b><span>Itens avaliados</span></div>'+
+     '<div><b>'+nb(r.mfde)+'</b><span>Média FDE (total ÷ itens)</span></div><div><b>'+nb(r.mp)+'</b><span>Média ponderada (0 a 4)</span></div>'+
+     '<div><b>'+(r.conf==null?'—':Math.round(r.conf*100)+'%')+'</b><span>Índice de conformidade</span></div></div>';
+  h+='<div class="tw"><table><thead><tr><th>N.º</th><th>Item</th><th class="n">Peso</th><th class="n">Sugestão</th><th>Pontuação</th><th class="n">Pontos</th></tr></thead><tbody>'+
+    r.linhas.map(function(l){ var o=S.over[l.p.n]==null?'':S.over[l.p.n];
+      return '<tr><td>'+l.p.n+'</td><td>'+esc(l.p.it)+'<div class="mut">'+esc(l.p.og)+'</div></td><td class="n">'+l.p.pe+'</td><td class="n">'+(l.sug==null?'NA':l.sug)+'</td>'+
+        '<td><select data-over="'+l.p.n+'"><option value=""'+(o===''?' selected':'')+'>automático</option>'+['0','1','2','3','4','NA'].map(function(v){return '<option'+(String(o)===v?' selected':'')+'>'+v+'</option>';}).join('')+'</select></td>'+
+        '<td class="n nota'+(l.nota==null?1:l.nota)+'">'+(l.nota==null?'—':l.p.pe*l.nota)+'</td></tr>'; }).join('')+'</tbody></table></div>'+
+    '<p class="mut">“automático” segue a regra do modelo (vale o pior dos itens da vistoria que alimentam o item). Para divergir, escolha a nota e explique no comentário da vistoria.</p>';
+  document.getElementById('pont').innerHTML=h;
+}
+function msg(t){ document.getElementById('msg').textContent=t; }
+
+document.addEventListener('click',function(e){
+  var t=e.target;
+  if(t.matches('.seg button')){ var it=t.closest('.it'), c=it.dataset.c, v=t.dataset.v; S.resp[c]=(S.resp[c]===v?undefined:v); if(!S.resp[c]) delete S.resp[c];
+    var i=M.itens.filter(function(x){return x.c===c;})[0];
+    it.querySelectorAll('.seg button').forEach(function(b){ b.classList.toggle('on',b.dataset.v===S.resp[c]); });
+    it.classList.toggle('ruim',ruim(i.t,S.resp[c])); salva(); atualiza(); return; }
+  if(t.dataset.na!=null){ var sec=t.dataset.na; M.itens.forEach(function(i){ if(i.s===sec&&!S.resp[i.c]) S.resp[i.c]='N.A.'; }); salva(); render(); return; }
+  if(t.id==='addCol'){ S.colab.push({}); salva(); desenhaColab(); atualiza(); return; }
+  if(t.dataset.rmcol!=null){ S.colab.splice(+t.dataset.rmcol,1); salva(); desenhaColab(); atualiza(); return; }
+  if(t.id==='addNc'){ S.nc.push({st:'Aberta',data:S.data}); salva(); desenhaNc(); atualiza(); return; }
+  if(t.dataset.rmnc!=null){ var k=+t.dataset.rmnc; S.nc.splice(k,1); var nf={}; Object.keys(FOTOS).forEach(function(x){ x=+x; if(x<k) nf[x]=FOTOS[x]; else if(x>k) nf[x-1]=FOTOS[x]; }); FOTOS=nf; salva(); desenhaNc(); atualiza(); return; }
+  if(t.id==='ncAuto'){ var ja={}; S.nc.forEach(function(n){ ja[n.item]=1; });
+    M.itens.forEach(function(i){ if(ruim(i.t,S.resp[i.c])&&!ja[i.c]) S.nc.push({item:i.c,nc:S.com[i.c]||'',sol:S.acao[i.c]||'',st:'Aberta',cls:(ponto(i.t,S.resp[i.c])===4?'ALTO':'MÉDIO')}); });
+    salva(); desenhaNc(); atualiza(); return; }
+  if(t.id==='btLimpar'){ if(!confirmaLimpar) { confirmaLimpar=true; msg('Clique de novo em Limpar para apagar este rascunho.'); setTimeout(function(){confirmaLimpar=false;},4000); return; }
+    S=novo(); FOTOS={}; salva(); render(); msg('Rascunho apagado.'); return; }
+  if(t.id==='btEnviar'){ enviar(); return; }
+});
+var confirmaLimpar=false;
+document.addEventListener('input',function(e){
+  var t=e.target, d=t.dataset;
+  if(t.id==='fObra'){ S.obra=t.value; }
+  else if(t.id==='fData'){ S.data=t.value; }
+  else if(t.id==='fHora'){ S.hora=t.value; }
+  else if(t.id==='fQuem'){ S.quem=t.value; ls(CHQ,t.value); }
+  else if(d.id){ S.id[d.id]=t.value; }
+  else if(d.com){ S.com[d.com]=t.value; }
+  else if(d.acao){ S.acao[d.acao]=t.value; }
+  else if(d.ac){ S.acomp[d.ac]=t.value; }
+  else if(d.cl!=null){ S.colab[+d.cl][d.k]=t.value; if(/ctps|aso|trein|epi/.test(d.k)) atualiza(); }
+  else if(d.nc!=null&&d.k){ S.nc[+d.nc][d.k]=t.value; }
+  else if(d.over){ S.over[d.over]=t.value; atualiza(); }
+  else return;
+  salva(); if(t.id==='fObra') atualiza();
+});
+document.addEventListener('change',function(e){
+  var t=e.target; if(!t.dataset||t.dataset.foto==null) return;
+  var i=+t.dataset.foto, fs=[].slice.call(t.files||[],0,2); FOTOS[i]=[];
+  msg('Reduzindo foto(s)…');
+  Promise.all(fs.map(reduz)).then(function(us){ FOTOS[i]=us.filter(Boolean); salva(); desenhaNc(); msg('Foto(s) anexada(s) à NC '+(i+1)+'.'); });
+});
+function reduz(f){ return new Promise(function(ok){ var r=new FileReader(); r.onload=function(){ var im=new Image(); im.onload=function(){
+  var m=1000, s=Math.min(1,m/Math.max(im.width,im.height)), c=document.createElement('canvas'); c.width=Math.round(im.width*s); c.height=Math.round(im.height*s);
+  c.getContext('2d').drawImage(im,0,0,c.width,c.height); ok(c.toDataURL('image/jpeg',0.6)); }; im.onerror=function(){ ok(null); }; im.src=r.result; }; r.readAsDataURL(f); }); }
+
+function faltas(){
+  var f=[];
+  if(!S.obra) f.push('a obra'); if(!S.data) f.push('a data');
+  if(!S.id.fase) f.push('a fase da obra'); if(!S.id.empr) f.push('a empreiteira'); if(!S.id.resp) f.push('o responsável pela vistoria');
+  if(!(S.quem||'').trim()) f.push('seu nome');
+  if(!Object.keys(S.resp).length) f.push('ao menos um item da vistoria');
+  var semCom=M.itens.filter(function(i){ return ruim(i.t,S.resp[i.c])&&!(S.com[i.c]||'').trim(); }).map(function(i){return i.c;});
+  if(semCom.length) f.push('o comentário dos itens não conformes ('+semCom.join(', ')+')');
+  var ncSem=S.nc.map(function(n,i){ return (n.st==='Aberta'||n.st==='Em andamento')&&(!n.prazo||!(n.respo||'').trim())?(i+1):null; }).filter(Boolean);
+  if(ncSem.length) f.push('prazo e responsável das NC abertas (NC '+ncSem.join(', ')+')');
+  return f;
+}
+function posta(obj){ var fd=new FormData(); fd.append(SRV.entry,JSON.stringify(obj));
+  return fetch(SRV.form,{method:'POST',mode:'no-cors',body:fd}); }
+var enviando=false;
+function enviar(){
+  if(enviando) return;
+  var f=faltas(); if(f.length){ document.getElementById('resultado').innerHTML='<div class="aviso">Falta preencher: '+esc(f.join('; '))+'.</div>'; msg('Falta preencher alguns campos — veja no fim da página.'); return; }
+  enviando=true;
+  var r=calc(), id=S.obra+'-'+Date.now().toString(36);
+  var dados=JSON.parse(JSON.stringify(S)); dados.parte='dados'; dados.idv=id; dados.unidade=obraNome(S.obra);
+  dados.calc={tot:r.tot,n:r.n,mfde:r.mfde,pes:r.pes,mp:r.mp,conf:r.conf,pior:r.pior,cls:r.cls,prov:r.prov};
+  dados.enviado=new Date().toISOString(); dados.nfotos=0;
+  var pecas=[]; Object.keys(FOTOS).forEach(function(i){ (FOTOS[i]||[]).forEach(function(u,j){ var b=u.split(',')[1]||'', n=Math.ceil(b.length/30000);
+    dados.nfotos++; for(var k=0;k<n;k++) pecas.push({v:1,parte:'foto',idv:id,nc:+i,f:j,k:k,n:n,b:b.slice(k*30000,(k+1)*30000)}); }); });
+  var tot=pecas.length+1, feito=0;
+  msg('Enviando 1 de '+tot+'…');
+  posta(dados).then(function(){ feito++;
+    return pecas.reduce(function(p,pc){ return p.then(function(){ return posta(pc).then(function(){ feito++; msg('Enviando '+feito+' de '+tot+'…'); }); }); },Promise.resolve()); })
+  .then(function(){ enviando=false;
+    document.getElementById('resultado').innerHTML='<div class="okmsg"><b>Vistoria enviada.</b> Código '+esc(id)+' · obra '+esc(S.obra)+' · '+esc(r.cls)+(r.prov?' · '+esc(r.prov):'')+
+      '<div class="mut">A ficha no modelo rev01 e o PDF entram na aba Segurança na próxima atualização do painel. O rascunho foi apagado deste aparelho.</div></div>';
+    var ok=document.getElementById('resultado').innerHTML; var q=S.quem; S=novo(); S.quem=q; FOTOS={}; salva(); render();
+    document.getElementById('resultado').innerHTML=ok; msg('Enviada (código '+id+').'); window.scrollTo(0,document.body.scrollHeight); })
+  .catch(function(){ enviando=false; msg('Sem conexão — o rascunho continua salvo; tente enviar de novo.'); });
+}
+render();
+})();
+</script>
+</body>
+</html>

@@ -12,9 +12,11 @@
 /* v3 (30/09/2026): 'rao' e 'seg' faltavam em DADOS e caiam no ramo com ignoreSearch,
    onde 'rao.js?v=...' casa com o 'rao.js' velho do cache — a copia antiga ganhava para
    sempre. Subir a VERSAO apaga os caches antigos de quem ja tem o painel aberto. */
-const VERSAO = 'painel-v4';
+/* v5 (02/10/2026): sst.html (formulario de seguranca) e outra pagina: nao pode ser guardada
+   no lugar do painel ('./'). E sst_modelo entrou em DADOS. */
+const VERSAO = 'painel-v5';
 const PRE = ['./', 'libs/jspdf.umd.min.js', 'libs/jspdf.plugin.autotable.min.js', 'libs/xlsx.mini.min.js'];
-const DADOS = /\/(fech|lo|seg|rao|consolidado|sienge|sienge_itens|sienge_solic|entregas)\.js$/;
+const DADOS = /\/(fech|lo|seg|rao|consolidado|sienge|sienge_itens|sienge_solic|entregas|sst_modelo)\.js$/;
 
 self.addEventListener('install', ev => {
   ev.waitUntil(caches.open(VERSAO).then(c => Promise.allSettled(PRE.map(u => c.add(u)))).then(() => self.skipWaiting()));
@@ -29,8 +31,10 @@ self.addEventListener('fetch', ev => {
   if (url.origin !== location.origin) return;
   const ehPagina = req.mode === 'navigate' || url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
   if (ehPagina) {
-    ev.respondWith(fetch(req).then(r => { const cp = r.clone(); caches.open(VERSAO).then(c => c.put('./', cp)); return r; })
-                             .catch(() => caches.match('./')));
+    const outra = /\.html$/.test(url.pathname) && !url.pathname.endsWith('/index.html');
+    const chave = outra ? url.pathname : './';
+    ev.respondWith(fetch(req).then(r => { const cp = r.clone(); caches.open(VERSAO).then(c => c.put(chave, cp)); return r; })
+                             .catch(() => caches.match(chave)));
     return;
   }
   if (DADOS.test(url.pathname)) {                 // dados: rede primeiro
