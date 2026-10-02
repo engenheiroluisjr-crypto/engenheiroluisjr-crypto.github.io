@@ -7,7 +7,7 @@
  "numero": 1,
  "pct": "65",
  "previsao": "29/01/2027",
- "gerado": "2026-10-02T12:38:53",
+ "gerado": "2026-10-02T13:12:57",
  "ficha": {
   "funcionarios": "6",
   "mao_de_obra": "Suficiente",
@@ -53,33 +53,29 @@
   [
    "medio",
    "Placa de obra não instalada"
-  ],
-  [
-   "medio",
-   "17 pedido(s) de material sem entrega há 60 dias ou mais"
   ]
  ],
  "pedidos_estado": {
-  "49594": "PENDENTE",
-  "50301": "PENDENTE",
-  "50453": "PENDENTE",
-  "50454": "PENDENTE",
-  "50609": "PENDENTE",
-  "50828": "PENDENTE",
-  "50829": "PENDENTE",
-  "50830": "PENDENTE",
-  "50831": "PENDENTE",
-  "51099": "PENDENTE",
-  "51209": "PENDENTE",
-  "51650": "PENDENTE",
-  "52015": "PENDENTE",
-  "53206": "PENDENTE",
-  "53296": "PENDENTE",
-  "53686": "PENDENTE",
-  "54084": "PENDENTE",
-  "54776": "PENDENTE",
-  "54796": "PENDENTE",
-  "55568": "PENDENTE"
+  "49594": "SEM BAIXA",
+  "50301": "SEM BAIXA",
+  "50453": "SEM BAIXA",
+  "50454": "SEM BAIXA",
+  "50609": "SEM BAIXA",
+  "50828": "SEM BAIXA",
+  "50829": "SEM BAIXA",
+  "50830": "SEM BAIXA",
+  "50831": "SEM BAIXA",
+  "51099": "SEM BAIXA",
+  "51209": "SEM BAIXA",
+  "51650": "SEM BAIXA",
+  "52015": "SEM BAIXA",
+  "53206": "SEM BAIXA",
+  "53296": "SEM BAIXA",
+  "53686": "SEM BAIXA",
+  "54084": "SEM BAIXA",
+  "54776": "SEM BAIXA",
+  "54796": "SEM BAIXA",
+  "55568": "SEM BAIXA"
  },
  "fotos": [
   {
@@ -140,5 +136,5 @@
  ],
  "m001": "42.228_M004_EE-NERCY-AMELIA_rev00.xlsx",
  "autor": "Eng. Leonardo",
- "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 01/10/2026*\n_NERCY AMELIA MARTELINI DAHER PROFESSORA · 2026.ATA.FDE.42.228 · PIRAPORA DO BOM JESUS_\n\n👷 Efetivo: 6 · 🌧️ Tempo chuva · Ritmo normal\n📊 Avanço medido: *65%* · Previsão de término: 29/01/2027\n\n🔨 *Executado no dia*\n• EXECUÇÃO DE FORRO DE GESSO NA SALA DE LEITURA\n• ADEQUAÇÃO DA RAMPA DE ACESSO ÀS SALAS\n• EXECUÇÃO DE LIMPEZA DA OBRA\n• INSTALAÇÃO DE PORTAS NAS SALAS\n\n📦 *Materiais — pedidos sem entrega*\n⚠️ 20 pedido(s), R$ 352.725,49 ainda por receber\n• 49594 — PISO PORCELANATO — *161 dias* em aberto\n• 50301 — PILAR CORTE E DOBRA (ARMADO) C=2,4 +2 itens — *142 dias* em aberto\n• 50453 — TELHA GALVALUME / ACO GALV SANDUIC — *140 dias* em aberto\n• 50454 — PT-29 +2 itens — *139 dias* em aberto\n• ... e mais 16 pedido(s) pendente(s)\n\n🚨 *Pontos de atenção*\n• Falhas construtivas a corrigir — registrar quais e o prazo\n• Placa de obra não instalada\n• 17 pedido(s) de material sem entrega há 60 dias ou mais\n\n📌 *Pendências*\n• 1- PROBLEMA NO ENCANAMENTO DO RESERVATÓRIO, OCASIONANDO FALTA DE ÁGUA NA UNIDADE ESCOLAR. ENCANADOR ACIONADO, COM ATENDIMENTO PROGRAMADO PARA AMANHÃ, CONFORME INFORMAÇÃO DO EMPREITEIRO\n• 2- EXECUÇÃO DE ACABAMENTOS (INSTALAÇÃO DE SIFÕES E CANTONEIRAS) E LIMPEZA GROSSA NOS BANHEIROS PARA LIBERAÇÃO DA UNIDADE PARA AS ELEIÇÕES\n• 3- INSTALAÇÃO DE PORTAS NAS SALAS E LIMPEZA DA OBRA\n• 4- VERIFICAÇÃO DE VAZAMENTO DE GÁS\n• 5- ADEQUAÇÃO DA RAMPA DE ACESSO ÀS SALAS DE AULA\n\n❗ *Recomendações*\n• REGULARIZAÇÃO DAS PENDÊNCIAS 01, 02, 03, 05, 06 E 07 ATÉ O DIA 02/10/2026, CONFORME COMBINADO. APÓS A REGULARIZAÇÃO, ENVIAR FOTOS NO GRUPO PARA REGISTRO\n\n_Relatório nº 1 · Eng. Leonardo · Engenharia Atlântica_"
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 01/10/2026*\n_NERCY AMELIA MARTELINI DAHER PROFESSORA · 2026.ATA.FDE.42.228 · PIRAPORA DO BOM JESUS_\n\n👷 Efetivo: 6 · 🌧️ Tempo chuva · Ritmo normal\n📊 Avanço medido: *65%* · Previsão de término: 29/01/2027\n\n🔨 *Executado no dia*\n• EXECUÇÃO DE FORRO DE GESSO NA SALA DE LEITURA\n• ADEQUAÇÃO DA RAMPA DE ACESSO ÀS SALAS\n• EXECUÇÃO DE LIMPEZA DA OBRA\n• INSTALAÇÃO DE PORTAS NAS SALAS\n\n📦 *Materiais* — o Sienge não dá baixa de entrega nesta obra; nenhum pedido marcado como pendente pelo engenheiro.\n\n🚨 *Pontos de atenção*\n• Falhas construtivas a corrigir — registrar quais e o prazo\n• Placa de obra não instalada\n\n📌 *Pendências*\n• 1- PROBLEMA NO ENCANAMENTO DO RESERVATÓRIO, OCASIONANDO FALTA DE ÁGUA NA UNIDADE ESCOLAR. ENCANADOR ACIONADO, COM ATENDIMENTO PROGRAMADO PARA AMANHÃ, CONFORME INFORMAÇÃO DO EMPREITEIRO\n• 2- EXECUÇÃO DE ACABAMENTOS (INSTALAÇÃO DE SIFÕES E CANTONEIRAS) E LIMPEZA GROSSA NOS BANHEIROS PARA LIBERAÇÃO DA UNIDADE PARA AS ELEIÇÕES\n• 3- INSTALAÇÃO DE PORTAS NAS SALAS E LIMPEZA DA OBRA\n• 4- VERIFICAÇÃO DE VAZAMENTO DE GÁS\n• 5- ADEQUAÇÃO DA RAMPA DE ACESSO ÀS SALAS DE AULA\n\n❗ *Recomendações*\n• REGULARIZAÇÃO DAS PENDÊNCIAS 01, 02, 03, 05, 06 E 07 ATÉ O DIA 02/10/2026, CONFORME COMBINADO. APÓS A REGULARIZAÇÃO, ENVIAR FOTOS NO GRUPO PARA REGISTRO\n\n_Relatório nº 1 · Eng. Leonardo · Engenharia Atlântica_"
 }
