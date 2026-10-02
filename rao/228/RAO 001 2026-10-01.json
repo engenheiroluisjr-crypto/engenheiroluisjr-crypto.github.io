@@ -5,9 +5,14 @@
  "unidade": "NERCY AMELIA MARTELINI DAHER PROFESSORA",
  "data": "2026-10-01",
  "numero": 1,
- "pct": "77",
+ "pct": "57",
+ "avanco": {
+  "aprovado": 65.0114326995697,
+  "engenheiro": null,
+  "fiscal_lo": 57.0
+ },
  "previsao": "29/01/2027",
- "gerado": "2026-10-02T13:33:43",
+ "gerado": "2026-10-02T14:16:54",
  "ficha": {
   "funcionarios": "6",
   "mao_de_obra": "Suficiente",
@@ -136,5 +141,5 @@
  ],
  "m001": "42.228_M004_EE-NERCY-AMELIA_rev00.xlsx",
  "autor": "Eng. Leonardo",
- "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 01/10/2026*\n_NERCY AMELIA MARTELINI DAHER PROFESSORA · 2026.ATA.FDE.42.228 · PIRAPORA DO BOM JESUS_\n\n👷 Efetivo: 6 · 🌧️ Tempo chuva · Ritmo normal\n📊 Medido: *76,6%* (aprovado 65,0%) · Previsão de término: 29/01/2027\n\n🔨 *Executado no dia*\n• EXECUÇÃO DE FORRO DE GESSO NA SALA DE LEITURA\n• ADEQUAÇÃO DA RAMPA DE ACESSO ÀS SALAS\n• EXECUÇÃO DE LIMPEZA DA OBRA\n• INSTALAÇÃO DE PORTAS NAS SALAS\n\n📦 *Materiais* — o Sienge não dá baixa de entrega nesta obra; nenhum pedido marcado como pendente pelo engenheiro.\n\n🚨 *Pontos de atenção*\n• Falhas construtivas a corrigir — registrar quais e o prazo\n• Placa de obra não instalada\n\n📌 *Pendências*\n• 1- PROBLEMA NO ENCANAMENTO DO RESERVATÓRIO, OCASIONANDO FALTA DE ÁGUA NA UNIDADE ESCOLAR. ENCANADOR ACIONADO, COM ATENDIMENTO PROGRAMADO PARA AMANHÃ, CONFORME INFORMAÇÃO DO EMPREITEIRO\n• 2- EXECUÇÃO DE ACABAMENTOS (INSTALAÇÃO DE SIFÕES E CANTONEIRAS) E LIMPEZA GROSSA NOS BANHEIROS PARA LIBERAÇÃO DA UNIDADE PARA AS ELEIÇÕES\n• 3- INSTALAÇÃO DE PORTAS NAS SALAS E LIMPEZA DA OBRA\n• 4- VERIFICAÇÃO DE VAZAMENTO DE GÁS\n• 5- ADEQUAÇÃO DA RAMPA DE ACESSO ÀS SALAS DE AULA\n\n❗ *Recomendações*\n• REGULARIZAÇÃO DAS PENDÊNCIAS 01, 02, 03, 05, 06 E 07 ATÉ O DIA 02/10/2026, CONFORME COMBINADO. APÓS A REGULARIZAÇÃO, ENVIAR FOTOS NO GRUPO PARA REGISTRO\n\n_Relatório nº 1 · Eng. Leonardo · Engenharia Atlântica_"
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 01/10/2026*\n_NERCY AMELIA MARTELINI DAHER PROFESSORA · 2026.ATA.FDE.42.228 · PIRAPORA DO BOM JESUS_\n\n👷 Efetivo: 6 · 🌧️ Tempo chuva · Ritmo normal\n📊 Aprovado *65%* · Fiscal FDE *57%* (LO 18/09)\n📅 Previsão de término: 29/01/2027\n\n🔨 *Executado no dia*\n• EXECUÇÃO DE FORRO DE GESSO NA SALA DE LEITURA\n• ADEQUAÇÃO DA RAMPA DE ACESSO ÀS SALAS\n• EXECUÇÃO DE LIMPEZA DA OBRA\n• INSTALAÇÃO DE PORTAS NAS SALAS\n\n📦 *Materiais* — o Sienge não dá baixa de entrega nesta obra; nenhum pedido marcado como pendente pelo engenheiro.\n\n🚨 *Pontos de atenção*\n• Falhas construtivas a corrigir — registrar quais e o prazo\n• Placa de obra não instalada\n\n📌 *Pendências*\n• 1- PROBLEMA NO ENCANAMENTO DO RESERVATÓRIO, OCASIONANDO FALTA DE ÁGUA NA UNIDADE ESCOLAR. ENCANADOR ACIONADO, COM ATENDIMENTO PROGRAMADO PARA AMANHÃ, CONFORME INFORMAÇÃO DO EMPREITEIRO\n• 2- EXECUÇÃO DE ACABAMENTOS (INSTALAÇÃO DE SIFÕES E CANTONEIRAS) E LIMPEZA GROSSA NOS BANHEIROS PARA LIBERAÇÃO DA UNIDADE PARA AS ELEIÇÕES\n• 3- INSTALAÇÃO DE PORTAS NAS SALAS E LIMPEZA DA OBRA\n• 4- VERIFICAÇÃO DE VAZAMENTO DE GÁS\n• 5- ADEQUAÇÃO DA RAMPA DE ACESSO ÀS SALAS DE AULA\n\n❗ *Recomendações*\n• REGULARIZAÇÃO DAS PENDÊNCIAS 01, 02, 03, 05, 06 E 07 ATÉ O DIA 02/10/2026, CONFORME COMBINADO. APÓS A REGULARIZAÇÃO, ENVIAR FOTOS NO GRUPO PARA REGISTRO\n\n_Relatório nº 1 · Eng. Leonardo · Engenharia Atlântica_"
 }

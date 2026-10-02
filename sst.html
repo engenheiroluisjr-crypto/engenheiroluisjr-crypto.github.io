@@ -41,6 +41,19 @@ textarea{min-height:58px;resize:vertical}
 .it.ruim .nc{display:grid}
 .it.ruim .nc textarea{min-height:44px}
 .inv{font-size:11.5px;color:var(--warn)}
+.prz{border:1px solid var(--ln);border-radius:10px;padding:10px 12px;margin:10px 0 4px;font-size:13.5px;display:flex;flex-wrap:wrap;gap:6px 18px}
+.prz b{font-size:15px}
+.prz .barra{flex-basis:100%;height:8px;border-radius:5px;background:var(--ln);overflow:hidden}
+.prz .barra i{display:block;height:100%;background:var(--pri)}
+.prz.venc{border-color:var(--bad);background:var(--badb)}
+.pre{font-size:11px;color:var(--ok);font-weight:600}
+.nrs{grid-column:1/-1;font-size:12.5px;color:var(--mut)}
+.nrs .ops{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.nrs .ops label{display:flex;align-items:center;gap:5px;border:1px solid var(--ln);border-radius:8px;padding:6px 9px;font-size:13px;color:var(--tx);cursor:pointer;background:var(--card)}
+.nrs .ops label.on{background:var(--okb);border-color:var(--ok);font-weight:600}
+.nrs .ops label span{color:var(--mut);font-weight:400;font-size:11.5px}
+.nrs .ops input[type=checkbox]{min-height:0;margin:0}
+.nrs .ops input.outra{min-height:32px;max-width:170px;padding:5px 8px}
 button.bt{border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:7px 12px;font:inherit;font-size:13.5px;cursor:pointer}
 button.pri{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:650}
 table{border-collapse:collapse;width:100%;font-size:13px}
@@ -89,6 +102,42 @@ var FOTOS={}; /* nc index -> [dataURL] (memoria; vai junto ao enviar) */
 try{ FOTOS=JSON.parse(ls(CH+'F')||'{}'); }catch(e){ FOTOS={}; }
 function salva(){ ls(CH,JSON.stringify(S)); try{ localStorage.setItem(CH+'F',JSON.stringify(FOTOS)); }catch(e){} }
 
+var NRS=[['NR-01','integração / OS'],['NR-06','EPI'],['NR-10','eletricidade'],['NR-11','cargas / içamento'],['NR-12','máquinas'],['NR-18','construção civil'],['NR-33','espaço confinado'],['NR-35','trabalho em altura']];
+function nrLista(c){ return String(c.nrs||'').split(/\s*[,;\/]\s*/).map(function(x){ x=x.trim().toUpperCase().replace(/^NR\s*-?\s*(\d)$/,'NR-0$1').replace(/^NR\s*-?\s*/,'NR-'); return x; }).filter(Boolean); }
+function nrJunta(i){ var v=[].map.call(document.querySelectorAll('input[data-nr="'+i+'"]:checked'),function(x){return x.value;}), o=document.querySelector('input[data-nrx="'+i+'"]'); if(o&&o.value.trim()) v.push(o.value.trim()); return v.join(', '); }
+/* 02/10: dados da obra (CTR) ja preenchidos + prazo decorrido. S.pre guarda o que veio automatico:
+   trocar de obra substitui so o automatico, nunca o que a pessoa digitou. */
+var PREK=['fde','pi','os','mun','tipo','prazo','empr','coord'];
+function infoObra(c){ var o=M.obras.filter(function(x){return String(x[0])===String(c);})[0]; return (o&&o[3])||{}; }
+function lsj(k){ try{ return JSON.parse(ls(k)||'{}')||{}; }catch(e){ return {}; } }
+function preenche(){
+  if(!S.pre) S.pre={};
+  var I=infoObra(S.obra), mem=lsj('sstObra_'+S.obra), fix=lsj('sstFixos'), src={};
+  PREK.forEach(function(k){ if(I[k]!=null) src[k]=String(I[k]); });
+  ['rt','enc'].forEach(function(k){ if(mem[k]) src[k]=mem[k]; });
+  ['resp','insp','crea'].forEach(function(k){ if(fix[k]) src[k]=fix[k]; });
+  Object.keys(S.pre).forEach(function(k){ if(!(k in src)&&S.id[k]===S.pre[k]){ delete S.id[k]; delete S.pre[k]; } });
+  Object.keys(src).forEach(function(k){ if(!S.id[k]||S.id[k]===S.pre[k]){ S.id[k]=src[k]; S.pre[k]=src[k]; } });
+}
+function dBr(d){ return d?('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear():''; }
+function dIso(t){ var m=/^(\d{4})-(\d\d)-(\d\d)/.exec(t||''); return m?new Date(+m[1],+m[2]-1,+m[3]):null; }
+function prazoObra(){
+  var I=infoObra(S.obra), ini=dIso(I.ini), pz=parseInt(S.id.prazo||I.prazo,10), dv=dIso(S.data);
+  if(!ini||!pz) return null;
+  var fim=new Date(ini); if(pz%30===0) fim.setMonth(fim.getMonth()+pz/30); else fim.setDate(fim.getDate()+pz);
+  var tot=Math.round((fim-ini)/864e5), dec=dv?Math.round((dv-ini)/864e5):null;
+  var r={ini:dBr(ini),fim:dBr(fim),prazo:pz,tot:tot,dec:dec,pct:dec==null?null:Math.round(dec/tot*100),rest:dec==null?null:tot-dec};
+  r.txt='início '+r.ini+' · término previsto '+r.fim+(dec==null?'':(dec<0?' · obra ainda não iniciada':' · decorridos '+dec+' de '+tot+' dias ('+r.pct+'%)'+(r.rest<0?' · prazo vencido há '+(-r.rest)+' dias':' · restam '+r.rest+' dias')))+(dv?' na data da vistoria':'');
+  return r;
+}
+function boxPrazo(){ var r=prazoObra(), I=infoObra(S.obra);
+  if(!S.obra) return '';
+  if(!r) return '<div class="prz mut">Sem data de início ou prazo no CTR para esta obra.</div>';
+  var p=Math.max(0,Math.min(100,r.pct||0));
+  return '<div class="prz'+(r.rest!=null&&r.rest<0?' venc':'')+'"><span>Início<br><b>'+r.ini+'</b></span><span>Término previsto<br><b>'+r.fim+'</b></span><span>Prazo<br><b>'+r.prazo+' dias</b></span>'+
+    (r.dec==null?'':'<span>Decorrido na vistoria<br><b>'+(r.dec<0?'não iniciada':r.dec+' dias · '+r.pct+'%')+'</b></span><span>'+(r.rest<0?'Vencido há':'Restam')+'<br><b>'+Math.abs(r.rest)+' dias</b></span>')+
+    (I.fiscal?'<span>Fiscal FDE<br><b>'+esc(I.fiscal)+'</b></span>':'')+(I.ctf?'<span>Contrato FDE<br><b>'+esc(I.ctf)+'</b></span>':'')+
+    '<div class="barra"><i style="width:'+p+'%"></i></div></div>'; }
 var OPC={doc:['Sim','Não'],sn:['Sim','Não'],info:['Sim','Não'],inv:['Sim','Não'],sat:['Satisfatório','Insatisfatório']};
 function ponto(t,a){ if(!a||a==='N.A.') return null;
   if(t==='doc') return a==='Sim'?0:a==='Não'?4:null;
@@ -118,7 +167,7 @@ function calc(){
 function nb(v,d){ return v==null?'—':Number(v).toLocaleString('pt-BR',{minimumFractionDigits:d==null?3:d,maximumFractionDigits:d==null?3:d}); }
 function obraNome(c){ var o=M.obras.filter(function(x){return String(x[0])===String(c);})[0]; return o?o[1]:''; }
 
-function campo(k,rot,tipo,req,ph){ var v=S.id[k]||'';
+function campo(k,rot,tipo,req,ph){ var v=S.id[k]||''; if(S.pre&&S.pre[k]&&S.pre[k]===v) rot+=' <span class="pre">automático</span>';
   if(tipo==='area') return '<label class="f">'+rot+(req?' <b class="ast">*</b>':'')+'<textarea data-id="'+k+'" placeholder="'+esc(ph||'')+'">'+esc(v)+'</textarea></label>';
   if(tipo&&tipo.join) return '<label class="f">'+rot+'<select data-id="'+k+'"><option value=""></option>'+tipo.map(function(o){return '<option'+(o===v?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select></label>';
   return '<label class="f">'+rot+(req?' <b class="ast">*</b>':'')+'<input data-id="'+k+'" value="'+esc(v)+'" placeholder="'+esc(ph||'')+'"></label>'; }
@@ -141,7 +190,7 @@ function render(){
     campo('coord','Engenheiro coordenador de obras')+
     campo('fde','Código FDE (ex.: 01.24.164)')+campo('pi','PI')+campo('os','N.º da Ordem de Serviço')+
     campo('mun','Município / Localização')+campo('end','Endereço')+campo('prazo','Prazo contratual (dias)')+
-    '</div>'+campo('orig','Origem dos dados / observações','area',false,'ex.: vistoria parcial — só bloco A')+'</div></details>';
+    '</div><div id="przBox">'+boxPrazo()+'</div>'+campo('orig','Origem dos dados / observações','area',false,'ex.: vistoria parcial — só bloco A')+'</div></details>';
 
   h+='<details><summary>2. Colaboradores<span class="cont" id="cCol"></span></summary><div class="in">'+
     '<p class="mut">Um por linha. Quatro itens da pontuação nascem daqui: CTPS (item 1), ASO (5), treinamentos (34) e ficha de EPI (35). Basta um “Não” para o item ir a nota 4.</p><div id="colab"></div>'+
@@ -191,7 +240,10 @@ function desenhaColab(){
     '<label class="f">Vínculo'+sel(i,'vinc',['','Próprio','Subempreitado'])+'</label>'+
     '<label class="f">CTPS / contrato PJ'+sel(i,'ctps',SN)+'</label>'+
     '<label class="f">ASO válido'+sel(i,'aso',SN)+'</label>'+
-    '<label class="f">Treinamentos (NR)<input data-cl="'+i+'" data-k="nrs" value="'+esc(c.nrs||'')+'" placeholder="NR-18, NR-35…"></label>'+
+    (function(){ var sel=nrLista(c), cods=NRS.map(function(n){return n[0];}), outras=sel.filter(function(x){return cods.indexOf(x)<0;});
+      return '<div class="nrs">Treinamentos (NR) — assinale os que o colaborador tem<div class="ops">'+NRS.map(function(n){ var on=sel.indexOf(n[0])>=0;
+        return '<label class="'+(on?'on':'')+'"><input type="checkbox" data-nr="'+i+'" value="'+n[0]+'"'+(on?' checked':'')+'>'+n[0]+' <span>'+esc(n[1])+'</span></label>'; }).join('')+
+        '<input class="outra" data-nrx="'+i+'" value="'+esc(outras.join(', '))+'" placeholder="outra (ex.: NR-20)"></div></div>'; })()+
     '<label class="f">Treinamento realizado'+sel(i,'trein',SN)+'</label>'+
     '<label class="f">Ficha de EPI assinada'+sel(i,'epi',SN)+'</label>'+
     '<label class="f">Observações<input data-cl="'+i+'" data-k="obs" value="'+esc(c.obs||'')+'"></label></div></div>'; }).join('')||'<p class="mut">Nenhum colaborador lançado.</p>';
@@ -244,7 +296,7 @@ document.addEventListener('click',function(e){
     it.querySelectorAll('.seg button').forEach(function(b){ b.classList.toggle('on',b.dataset.v===S.resp[c]); });
     it.classList.toggle('ruim',ruim(i.t,S.resp[c])); salva(); atualiza(); return; }
   if(t.dataset.na!=null){ var sec=t.dataset.na; M.itens.forEach(function(i){ if(i.s===sec&&!S.resp[i.c]) S.resp[i.c]='N.A.'; }); salva(); render(); return; }
-  if(t.id==='addCol'){ S.colab.push({}); salva(); desenhaColab(); atualiza(); return; }
+  if(t.id==='addCol'){ var ant=S.colab[S.colab.length-1]; S.colab.push(ant&&ant.nrs?{nrs:ant.nrs}:{}); salva(); desenhaColab(); atualiza(); return; }
   if(t.dataset.rmcol!=null){ S.colab.splice(+t.dataset.rmcol,1); salva(); desenhaColab(); atualiza(); return; }
   if(t.id==='addNc'){ S.nc.push({st:'Aberta',data:S.data}); salva(); desenhaNc(); atualiza(); return; }
   if(t.dataset.rmnc!=null){ var k=+t.dataset.rmnc; S.nc.splice(k,1); var nf={}; Object.keys(FOTOS).forEach(function(x){ x=+x; if(x<k) nf[x]=FOTOS[x]; else if(x>k) nf[x-1]=FOTOS[x]; }); FOTOS=nf; salva(); desenhaNc(); atualiza(); return; }
@@ -252,20 +304,22 @@ document.addEventListener('click',function(e){
     M.itens.forEach(function(i){ if(ruim(i.t,S.resp[i.c])&&!ja[i.c]) S.nc.push({item:i.c,nc:S.com[i.c]||'',sol:S.acao[i.c]||'',st:'Aberta',cls:(ponto(i.t,S.resp[i.c])===4?'ALTO':'MÉDIO')}); });
     salva(); desenhaNc(); atualiza(); return; }
   if(t.id==='btLimpar'){ if(!confirmaLimpar) { confirmaLimpar=true; msg('Clique de novo em Limpar para apagar este rascunho.'); setTimeout(function(){confirmaLimpar=false;},4000); return; }
-    S=novo(); FOTOS={}; salva(); render(); msg('Rascunho apagado.'); return; }
+    S=novo(); if(S.obra) preenche(); FOTOS={}; salva(); render(); msg('Rascunho apagado.'); return; }
   if(t.id==='btEnviar'){ enviar(); return; }
 });
 var confirmaLimpar=false;
 document.addEventListener('input',function(e){
   var t=e.target, d=t.dataset;
-  if(t.id==='fObra'){ S.obra=t.value; }
-  else if(t.id==='fData'){ S.data=t.value; }
+  if(t.id==='fObra'){ S.obra=t.value; preenche(); salva(); render(); return; }
+  else if(t.id==='fData'){ S.data=t.value; var pb=document.getElementById('przBox'); if(pb) pb.innerHTML=boxPrazo(); }
+  else if(d.id==='prazo'){ S.id.prazo=t.value; var pb2=document.getElementById('przBox'); if(pb2) pb2.innerHTML=boxPrazo(); }
   else if(t.id==='fHora'){ S.hora=t.value; }
   else if(t.id==='fQuem'){ S.quem=t.value; ls(CHQ,t.value); }
   else if(d.id){ S.id[d.id]=t.value; }
   else if(d.com){ S.com[d.com]=t.value; }
   else if(d.acao){ S.acao[d.acao]=t.value; }
   else if(d.ac){ S.acomp[d.ac]=t.value; }
+  else if(d.nr!=null||d.nrx!=null){ var kn=+(d.nr!=null?d.nr:d.nrx); S.colab[kn].nrs=nrJunta(kn); if(d.nr!=null) t.parentNode.classList.toggle('on',t.checked); }
   else if(d.cl!=null){ S.colab[+d.cl][d.k]=t.value; if(/ctps|aso|trein|epi/.test(d.k)) atualiza(); }
   else if(d.nc!=null&&d.k){ S.nc[+d.nc][d.k]=t.value; }
   else if(d.over){ S.over[d.over]=t.value; atualiza(); }
@@ -273,6 +327,7 @@ document.addEventListener('input',function(e){
   salva(); if(t.id==='fObra') atualiza();
 });
 document.addEventListener('change',function(e){
+  var t=e.target; if(t.dataset&&t.dataset.nr!=null){ var kn=+t.dataset.nr; S.colab[kn].nrs=nrJunta(kn); t.parentNode.classList.toggle('on',t.checked); salva(); return; }
   var t=e.target; if(!t.dataset||t.dataset.foto==null) return;
   var i=+t.dataset.foto, fs=[].slice.call(t.files||[],0,2); FOTOS[i]=[];
   msg('Reduzindo foto(s)…');
@@ -303,6 +358,9 @@ function enviar(){
   enviando=true;
   var r=calc(), id=S.obra+'-'+Date.now().toString(36);
   var dados=JSON.parse(JSON.stringify(S)); dados.parte='dados'; dados.idv=id; dados.unidade=obraNome(S.obra);
+  var pr=prazoObra(); if(pr){ dados.przx=pr; dados.id.przx=pr.txt; }
+  try{ var mem={}; ['rt','enc'].forEach(function(k){ if(S.id[k]) mem[k]=S.id[k]; }); ls('sstObra_'+S.obra,JSON.stringify(mem));
+       var fx={}; ['resp','insp','crea'].forEach(function(k){ if(S.id[k]) fx[k]=S.id[k]; }); ls('sstFixos',JSON.stringify(fx)); }catch(e){}
   dados.calc={tot:r.tot,n:r.n,mfde:r.mfde,pes:r.pes,mp:r.mp,conf:r.conf,pior:r.pior,cls:r.cls,prov:r.prov};
   dados.enviado=new Date().toISOString(); dados.nfotos=0;
   var pecas=[]; Object.keys(FOTOS).forEach(function(i){ (FOTOS[i]||[]).forEach(function(u,j){ var b=u.split(',')[1]||'', n=Math.ceil(b.length/30000);
@@ -314,10 +372,11 @@ function enviar(){
   .then(function(){ enviando=false;
     document.getElementById('resultado').innerHTML='<div class="okmsg"><b>Vistoria enviada.</b> Código '+esc(id)+' · obra '+esc(S.obra)+' · '+esc(r.cls)+(r.prov?' · '+esc(r.prov):'')+
       '<div class="mut">A ficha no modelo rev01 e o PDF entram na aba Segurança na próxima atualização do painel. O rascunho foi apagado deste aparelho.</div></div>';
-    var ok=document.getElementById('resultado').innerHTML; var q=S.quem; S=novo(); S.quem=q; FOTOS={}; salva(); render();
+    var ok=document.getElementById('resultado').innerHTML; var q=S.quem, ob=S.obra; S=novo(); S.quem=q; S.obra=ob; preenche(); FOTOS={}; salva(); render();
     document.getElementById('resultado').innerHTML=ok; msg('Enviada (código '+id+').'); window.scrollTo(0,document.body.scrollHeight); })
   .catch(function(){ enviando=false; msg('Sem conexão — o rascunho continua salvo; tente enviar de novo.'); });
 }
+if(S.obra){ preenche(); salva(); }
 render();
 })();
 </script>

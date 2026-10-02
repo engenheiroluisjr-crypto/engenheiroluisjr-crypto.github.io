@@ -41,6 +41,16 @@ footer.bar .msg{flex:1;font-size:13px;color:var(--mut);min-width:180px}
 .aviso{background:var(--warnb);border:1px solid var(--warn);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:13.5px}
 .okmsg{background:var(--okb);border:1px solid var(--ok);border-radius:10px;padding:12px;margin:10px 0}
 .mut{color:var(--mut);font-size:12.5px}
+.pd{padding:9px 0;border-bottom:1px dashed var(--ln)}
+.pd:last-child{border-bottom:0}
+.pd .h{font-size:14px}.pd .h b{color:var(--pri)}
+.pd .it{font-size:12.5px;color:var(--mut);margin:2px 0 6px}
+.pd.falta .h::after{content:' · responder';color:var(--bad);font-size:12px;font-weight:600}
+.sb{display:flex;gap:6px;flex-wrap:wrap}
+.sb button{border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:7px 12px;font:inherit;font-size:13.5px;cursor:pointer}
+.sb button.on.E{background:var(--okb);border-color:var(--ok);color:var(--ok);font-weight:650}
+.sb button.on.P{background:var(--warnb);border-color:var(--warn);color:var(--warn);font-weight:650}
+.sb button.on.N{background:var(--badb);border-color:var(--bad);color:var(--bad);font-weight:650}
 </style>
 </head>
 <body>
@@ -49,6 +59,9 @@ footer.bar .msg{flex:1;font-size:13px;color:var(--mut);min-width:180px}
 <footer class="bar"><span class="msg" id="msg">Rascunho salvo neste aparelho automaticamente.</span>
 <button class="bt" id="btLimpar">Limpar</button><button class="bt pri" id="btEnviar">Enviar relatório</button></footer>
 <script src="sst_modelo.js"></script>
+<script src="sienge.js"></script>
+<script src="sienge_itens.js"></script>
+<script src="entregas.js"></script>
 <script>
 (function(){
 'use strict';
@@ -71,9 +84,45 @@ function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){retur
 function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
 function hoje(){ var d=new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
 function agora(){ var d=new Date(); return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); }
-function novo(){ return {v:1,obra:Q.get('obra')||'',data:hoje(),hora:agora(),func:'',r:{},t:{},quem:ls(CHQ)||''}; }
+function novo(){ return {v:1,obra:Q.get('obra')||'',data:hoje(),hora:agora(),func:'',r:{},t:{},ent:{},quem:ls(CHQ)||''}; }
+/* 02/10: entrega dos pedidos do Sienge — cada engenheiro responde na visita (obrigatorio).
+   A resposta vai para o MESMO servidor de entregas da aba Pedidos do Sienge do painel
+   (Google Form de 1 campo, JSON {pedido,s,por,quando,trava}); "Entregue" trava o pedido. */
+var SG=window.SIENGE||{}, SGI=window.SIENGE_ITENS||{}, ESRV=window.ENTREGAS_SRV||{}, REM=null;
+var STP=[['E','Entregue'],['P','Parcial'],['N','Não entregue']];
+function tsq(q){ var m=/^(\d{2})\/(\d{2})\/(\d{4})[ ,]+(\d{2}):(\d{2})/.exec(q||''); return m?new Date(+m[3],+m[2]-1,+m[1],+m[4],+m[5]).getTime():0; }
+function dnum(d){ var m=/^(\d{2})\/(\d{2})\/(\d{4})/.exec(d||''); return m?+(m[3]+m[2]+m[1]):0; }
+function csvP(t){ var L=[], r=[], f='', q=false; for(var i=0;i<t.length;i++){ var ch=t[i];
+    if(q){ if(ch==='"'){ if(t[i+1]==='"'){ f+='"'; i++; } else q=false; } else f+=ch; }
+    else if(ch==='"') q=true; else if(ch===','){ r.push(f); f=''; }
+    else if(ch==='\n'){ r.push(f); L.push(r); r=[]; f=''; } else if(ch!=='\r') f+=ch; }
+  if(f||r.length){ r.push(f); L.push(r); } return L; }
+function lerServidor(){ if(!ESRV.ler){ REM={}; return Promise.resolve(); }
+  return fetch(ESRV.ler+'&t='+Date.now()).then(function(r){ return r.text(); }).then(function(t){
+    if(/<html/i.test(t.slice(0,200))) throw new Error('privada'); var o={};
+    csvP(t).slice(1).forEach(function(l){ var m; try{ m=JSON.parse(l[1]); }catch(e){ return; }
+      var p=String(m&&m.pedido||'').trim(); if(!p) return; var a=o[p];
+      var r={s:m.s||null,trava:!!(m.trava&&m.s==='E'),destrava:!!m.destrava,quando:m.quando||'',por:m.por||''};
+      if(a&&a.trava&&!r.destrava&&!(r.trava&&tsq(r.quando)<tsq(a.quando))) return; o[p]=r; });
+    REM=o; }).catch(function(){ REM={}; }); }
+function pedidosAbertos(){ var o=(SG.obras||{})[String(S.obra)]; if(!o) return []; var base=window.ENTREGAS||{};
+  return (o.ped||[]).map(function(p){ var n=String(p[1]), se=(o.se||{})[n]||[], m=(REM&&REM[n])||base[n]||{};
+      return {n:n,data:p[0],forn:p[2],se:se[0]||'',ult:m.s||'',por:m.por||'',quando:m.quando||'',fechado:se[0]==='E'||!!m.trava,itens:((SGI[String(S.obra)]||{})[n]||[])}; })
+    .filter(function(x){ return !x.fechado; }).sort(function(a,b){ return dnum(b.data)-dnum(a.data); }); }
+function secPedidos(){ var tit='<h2>Materiais — entrega dos pedidos do Sienge <b class="ast">*</b>';
+  if(!S.obra) return '<section id="secPed">'+tit+'</h2><p class="mut">Escolha a obra.</p></section>';
+  var L=pedidosAbertos(), sem=L.filter(function(x){ return !S.ent[x.n]; }).length;
+  if(!L.length) return '<section id="secPed">'+tit+'</h2><p class="mut">'+(REM===null?'Carregando…':'Nenhum pedido em aberto no Sienge para esta obra.')+'</p></section>';
+  return '<section id="secPed">'+tit+' <span class="mut">('+L.length+' em aberto · '+sem+' sem resposta)</span></h2>'+
+    '<p class="mut">Responda cada pedido conforme o que está na obra hoje. <b>Entregue</b> fecha o pedido para todos (se marcar errado, dá para retirar na aba Pedidos do Sienge do painel). A resposta vai junto com o relatório e aparece na aba Pedidos do Sienge.</p>'+
+    L.map(function(x){ var v=S.ent[x.n]||'', it=x.itens.slice(0,3).map(function(i){ return esc(String(i[0]).replace(/^\d+\s*-\s*/,''))+' — '+String(i[2]).replace('.',',')+' '+esc(i[1]); }).join(' · ')+(x.itens.length>3?' · +'+(x.itens.length-3)+' item(ns)':'');
+      var ant=x.ult?('última marca: '+({E:'Entregue',P:'Parcial',N:'Não entregue'}[x.ult]||x.ult)+(x.por?' por '+esc(x.por):'')+(x.quando?' em '+esc(x.quando):'')):(x.se==='S'?'sem baixa no Sienge':x.se==='P'?'parcial pelo Sienge':'pendente no Sienge');
+      return '<div class="pd'+(v?'':' falta')+'" data-p="'+x.n+'"><div class="h"><b>'+x.n+'</b> · '+esc(x.data)+' · '+esc(x.forn)+'</div><div class="it">'+(it||'—')+'<br>'+ant+'</div>'+
+        '<div class="sb">'+STP.map(function(o){ return '<button data-s="'+o[0]+'" class="'+o[0]+(v===o[0]?' on':'')+'">'+o[1]+'</button>'; }).join('')+'</div></div>'; }).join('')+'</section>'; }
+function pintaPedidos(){ var e=document.getElementById('secPed'); if(e) e.outerHTML=secPedidos(); }
 var S; try{ S=JSON.parse(ls(CH)||'null'); }catch(e){ S=null; }
 if(!S||S.v!==1) S=novo();
+if(!S.ent) S.ent={};
 if(Q.get('obra')&&String(S.obra)!==Q.get('obra')&&!Object.keys(S.r).length&&!Object.keys(S.t).length) S=novo();
 var F=[]; try{ F=JSON.parse(ls(CHF)||'[]'); }catch(e){ F=[]; }   /* [{u:dataURL,l:legenda}] */
 function salva(){ ls(CH,JSON.stringify(S)); try{ localStorage.setItem(CHF,JSON.stringify(F)); }catch(e){ msg('Fotos demais para guardar no rascunho — envie logo ou tire alguma.'); } }
@@ -86,6 +135,7 @@ function render(){
     '<label class="f">Data da visita <b class="ast">*</b><input type="date" id="fData" value="'+esc(S.data)+'"></label>'+
     '<label class="f">Hora da visita<input type="time" id="fHora" value="'+esc(S.hora)+'"></label>'+
     '<label class="f">Número de funcionários<input type="number" min="0" id="fFunc" value="'+esc(S.func)+'"></label>'+
+    '<label class="f">% executado da obra (sua avaliação) <b class="ast">*</b><input type="number" min="0" max="100" step="1" inputmode="numeric" id="fPct" value="'+esc(S.pct||'')+'" placeholder="0 a 100"></label>'+
     '<label class="f">Quem preencheu <b class="ast">*</b><input id="fQuem" list="engs" value="'+esc(S.quem)+'" placeholder="Eng. …"><datalist id="engs">'+ENG.map(function(e){return '<option value="'+esc(e)+'">';}).join('')+'</datalist></label>'+
     '</div></section>';
   h+='<section><h2>Itens verificados</h2>'+PERG.map(function(p){ var v=S.r[p[0]]||'';
@@ -94,10 +144,11 @@ function render(){
         return '<button data-v="'+esc(o)+'" class="'+(v===o?'on':'')+(ruim?' r':'')+'">'+esc(o)+'</button>'; }).join('')+'</div></div>'; }).join('')+'</section>';
   h+='<section><h2>Anotações</h2>'+TXT.map(function(t){ return '<label class="f">'+esc(t[1])+(t[0]==='servicos'?' <b class="ast">*</b>':'')+
       '<textarea data-t="'+t[0]+'" placeholder="'+esc(t[2])+'">'+esc(S.t[t[0]]||'')+'</textarea></label>'; }).join('')+'</section>';
+  h+=secPedidos();
   h+='<section><h2>Fotos <span class="mut" id="nF"></span></h2>'+
     '<p class="mut">Até '+MAXF+' fotos. Cada foto é reduzida no próprio celular antes de enviar. Não enviar foto em que dê para identificar aluno — o relatório vai para o painel.</p>'+
     '<input type="file" accept="image/*" multiple id="fFotos"><div class="fotos" id="fotos"></div></section>';
-  h+='<section><div id="resultado"></div><p class="mut">O % de avanço, a previsão de término e os pedidos do Sienge entram sozinhos no relatório (vêm da medição, do CTR e do Sienge). O relatório aparece na aba <b>Relatório de visita</b> da obra depois da rodada no Mac.</p></section>';
+  h+='<section><div id="resultado"></div><p class="mut">No relatório entram três percentuais: o % aprovado nas medições, o % executado que você informou acima e o último % do fiscal da FDE no livro de ocorrências — sem valores em reais. A previsão de término e os pedidos do Sienge entram sozinhos. O relatório aparece na aba <b>Relatório de visita</b> da obra depois da rodada no Mac.</p></section>';
   document.getElementById('app').innerHTML=h; desenhaFotos(); topo();
 }
 function topo(){ document.getElementById('hObra').textContent=S.obra?(S.obra+' — '+nomeObra(S.obra)):'escolha a obra'; }
@@ -111,6 +162,7 @@ function reduz(f){ return new Promise(function(ok){ var r=new FileReader(); r.on
   c.getContext('2d').drawImage(im,0,0,c.width,c.height); ok(c.toDataURL('image/jpeg',0.62)); }; im.onerror=function(){ ok(null); }; im.src=r.result; }; r.readAsDataURL(f); }); }
 
 document.addEventListener('click',function(e){ var t=e.target;
+  if(t.matches('.sb button')){ var pn=t.closest('.pd').dataset.p, sv=t.dataset.s; if(S.ent[pn]===sv) delete S.ent[pn]; else S.ent[pn]=sv; salva(); var y=window.scrollY; pintaPedidos(); window.scrollTo(0,y); return; }
   if(t.matches('.seg button')){ var k=t.closest('.q').dataset.k, v=t.dataset.v; S.r[k]=(S.r[k]===v?undefined:v); if(!S.r[k]) delete S.r[k];
     t.closest('.seg').querySelectorAll('button').forEach(function(b){ b.classList.toggle('on',b.dataset.v===S.r[k]); }); salva(); return; }
   if(t.dataset.rm!=null){ F.splice(+t.dataset.rm,1); salva(); desenhaFotos(); return; }
@@ -120,8 +172,8 @@ document.addEventListener('click',function(e){ var t=e.target;
 });
 var limpar=false;
 document.addEventListener('input',function(e){ var t=e.target, d=t.dataset;
-  if(t.id==='fObra'){ S.obra=t.value; topo(); }
-  else if(t.id==='fData') S.data=t.value; else if(t.id==='fHora') S.hora=t.value; else if(t.id==='fFunc') S.func=t.value;
+  if(t.id==='fObra'){ S.obra=t.value; S.ent={}; topo(); pintaPedidos(); }
+  else if(t.id==='fData') S.data=t.value; else if(t.id==='fHora') S.hora=t.value; else if(t.id==='fFunc') S.func=t.value; else if(t.id==='fPct') S.pct=t.value;
   else if(t.id==='fQuem'){ S.quem=t.value; ls(CHQ,t.value); }
   else if(d.t) S.t[d.t]=t.value; else if(d.leg!=null) F[+d.leg].l=t.value; else return;
   salva(); });
@@ -132,7 +184,9 @@ document.addEventListener('change',function(e){ var t=e.target; if(t.id!=='fFoto
 });
 function faltas(){ var f=[];
   if(!S.obra) f.push('a obra'); if(!S.data) f.push('a data da visita'); else if(S.data>hoje()) f.push('a data da visita (está no futuro: '+S.data.split('-').reverse().join('/')+')'); if(!(S.quem||'').trim()) f.push('quem preencheu');
+  var pc=String(S.pct==null?'':S.pct).replace(',','.').trim(); if(pc===''||isNaN(+pc)||+pc<0||+pc>100) f.push('o % executado da obra (0 a 100)');
   if(!(S.t.servicos||'').trim()) f.push('os serviços executados');
+  var semP=pedidosAbertos().filter(function(x){ return !S.ent[x.n]; }).length; if(semP) f.push('a entrega de '+semP+' pedido(s) do Sienge');
   var semR=PERG.filter(function(p){ return !S.r[p[0]]; }).map(function(p){ return p[1].toLowerCase(); }); if(semR.length) f.push('responder: '+semR.join(', '));
   return f; }
 function posta(o){ var fd=new FormData(); fd.append(SRV.entry,JSON.stringify(o)); return fetch(SRV.form,{method:'POST',mode:'no-cors',body:fd}); }
@@ -140,12 +194,16 @@ var enviando=false;
 function enviar(){ if(enviando) return;
   var f=faltas(); if(f.length){ document.getElementById('resultado').innerHTML='<div class="aviso">Falta: '+esc(f.join('; '))+'.</div>'; msg('Falta preencher alguns campos — veja no fim da página.'); window.scrollTo(0,document.body.scrollHeight); return; }
   enviando=true; var id='v'+S.obra+'-'+Date.now().toString(36);
-  var d=JSON.parse(JSON.stringify(S)); d.parte='rao'; d.idv=id; d.unidade=nomeObra(S.obra); d.enviado=new Date().toISOString();
+  var abertos={}; pedidosAbertos().forEach(function(x){ abertos[x.n]=1; }); Object.keys(S.ent).forEach(function(k){ if(!abertos[k]) delete S.ent[k]; });
+  var dd=new Date(), qd=dd.toLocaleDateString('pt-BR')+' '+dd.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  var marcas=Object.keys(S.ent).map(function(k){ return {pedido:+k,s:S.ent[k],obs:'',por:S.quem,quando:qd,trava:S.ent[k]==='E',origem:'visita '+S.obra}; });
+  var d=JSON.parse(JSON.stringify(S)); d.parte='rao'; d.marcas=marcas; d.idv=id; d.unidade=nomeObra(S.obra); d.enviado=new Date().toISOString();
   d.fotos=F.map(function(x,i){ return {i:i,l:x.l||''}; });
   var pecas=[]; F.forEach(function(x,i){ var b=(x.u.split(',')[1]||''), n=Math.ceil(b.length/30000);
     for(var k=0;k<n;k++) pecas.push({v:1,parte:'rao_foto',idv:id,f:i,k:k,n:n,b:b.slice(k*30000,(k+1)*30000)}); });
   var tot=pecas.length+1, feito=0; msg('Enviando 1 de '+tot+'…');
-  posta(d).then(function(){ feito++; return pecas.reduce(function(p,pc){ return p.then(function(){ return posta(pc).then(function(){ feito++; msg('Enviando '+feito+' de '+tot+'… (não feche a página)'); }); }); },Promise.resolve()); })
+  function postaEnt(m){ if(!ESRV.form) return Promise.resolve(); var fd=new FormData(); fd.append(ESRV.entry,JSON.stringify(m)); return fetch(ESRV.form,{method:'POST',mode:'no-cors',body:fd}); }
+  posta(d).then(function(){ return Promise.all(marcas.map(postaEnt)); }).then(function(){ feito++; return pecas.reduce(function(p,pc){ return p.then(function(){ return posta(pc).then(function(){ feito++; msg('Enviando '+feito+' de '+tot+'… (não feche a página)'); }); }); },Promise.resolve()); })
   .then(function(){ enviando=false; var ob=S.obra, n=F.length, q=S.quem; S=novo(); S.quem=q; S.obra=ob; F=[]; salva(); render();
     document.getElementById('resultado').innerHTML='<div class="okmsg"><b>Relatório enviado.</b> Código '+esc(id)+' · obra '+esc(ob)+' · '+n+' foto(s).'+
       '<div class="mut">Ele entra na aba Relatório de visita da obra na próxima rodada. O rascunho foi apagado deste aparelho.</div></div>';
@@ -153,6 +211,7 @@ function enviar(){ if(enviando) return;
   .catch(function(){ enviando=false; msg('Sem conexão — o rascunho continua salvo; tente enviar de novo.'); });
 }
 render();
+lerServidor().then(pintaPedidos);
 })();
 </script>
 </body>
