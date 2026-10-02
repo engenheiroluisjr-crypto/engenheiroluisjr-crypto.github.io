@@ -6205,6 +6205,56 @@ const REL = (function(){
      pdf:fila, pdfNome:()=>nomeArq('EM-TRAMITACAO')+'pdf', xls:xlsFila}
   ];
 
+  /* 02/10 (Luis): na aba Relatórios, o relatório por obra de SEGURANÇA DO TRABALHO e de ACOMPANHAMENTO
+     DE OBRA (os PDFs já gerados pela rodada: seg.js / rao.js) e o SEMANAL de todas as obras (relsem.js). */
+  var SR_OBRA=null, SR_SEM=null;
+  function srEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function srDados(){
+    var S=(window.SEG||{}), R=(window.RAO||{}), M={};
+    Object.keys(S.obras||{}).forEach(function(c){ (S.obras[c]||[]).forEach(function(x){ if(!x.pdf) return; var o=M[c]=M[c]||{u:x.unid||'',it:[]};
+      o.it.push({g:'Segurança — vistoria', d:x.dk||'', dt:x.data||'', a:x.pdf, x:(x.cls||'')+(x.nc?' · '+x.nc.length+' NC':'')}); }); });
+    Object.keys(S.sem||{}).forEach(function(c){ (S.sem[c]||[]).forEach(function(x){ var o=M[c]=M[c]||{u:'',it:[]};
+      o.it.push({g:'Segurança — semanal', d:x.de||'', dt:(x.de||'').split('-').reverse().join('/')+' a '+(x.ate||'').split('-').reverse().join('/'), a:x.a, x:(x.n||0)+' vistoria(s) · '+(x.cls||'')}); }); });
+    Object.keys(S.todas||{}).forEach(function(c){ var x=S.todas[c], o=M[c]=M[c]||{u:'',it:[]};
+      o.it.push({g:'Segurança — todas as vistorias', d:'9999', dt:'', a:x.a, x:(x.n||0)+' vistorias num PDF'}); });
+    Object.keys(R.obras||{}).forEach(function(c){ (R.obras[c]||[]).forEach(function(x){ var o=M[c]=M[c]||{u:'',it:[]};
+      var pdf='rao/'+c+'/'+String(x.a).replace(/\.html$/,'.pdf'), htm='rao/'+c+'/'+x.a;
+      o.it.push({g:x.t==='semanal'?'Acompanhamento — semanal':'Acompanhamento — diário (RAO)', d:x.de||x.d||'', dt:x.t==='semanal'?((x.de||'').split('-').reverse().join('/')+' a '+(x.ate||'').split('-').reverse().join('/')):(x.d||'').split('-').reverse().join('/'),
+        a:x.pdf?pdf:htm, x:(x.pdf?'':'(PDF em geração — abre a versão web) ')+(x.n?'nº '+x.n:'')+(x.q?' · '+x.q:'')}); }); });
+    var lo=(typeof obras==='function'?obras():[]), un={}; lo.forEach(function(o){ un[String(o.cod)]=o.unidade||''; });
+    Object.keys(M).forEach(function(c){ if(!M[c].u) M[c].u=un[c]||''; M[c].it.sort(function(a,b){ return a.g<b.g?-1:a.g>b.g?1:(a.d<b.d?1:-1); }); });
+    return M;
+  }
+  function cardsSegRao(){
+    var M=srDados(), cods=Object.keys(M).sort(function(a,b){return a-b;});
+    if(SR_OBRA==null||!M[SR_OBRA]){ var s=(typeof obraSel==='function')?String(obraSel()||''):''; SR_OBRA=M[s]?s:(cods[0]||''); }
+    var o=M[SR_OBRA], h='<div class="relCard" data-rel="segrao"><span class="fmt">PDFs gerados pela rodada de hora em hora</span>'+
+      '<h3>Segurança do trabalho e acompanhamento — por obra</h3>'+
+      '<span class="exp">Escolha a obra: aparecem todas as vistorias de segurança, o semanal de segurança, os relatórios de acompanhamento (RAO diário) e o semanal de acompanhamento, do mais novo para o mais antigo.</span>'+
+      '<span class="cont'+(cods.length?'':' vazio')+'">'+(cods.length?cods.length+' obras com relatório':'nenhum relatório ainda')+'</span>'+
+      '<div class="relOpc"><span class="relOpcT">Obra</span><select class="relSelSR" style="font:inherit;padding:4px 6px;max-width:100%">'+
+      cods.map(function(c){ return '<option value="'+c+'"'+(c===SR_OBRA?' selected':'')+'>'+c+' · '+srEsc(M[c].u)+' ('+M[c].it.length+')</option>'; }).join('')+'</select></div>';
+    if(o){ var g0=''; h+='<div class="relOpc" style="gap:2px">';
+      o.it.forEach(function(i){ if(i.g!==g0){ g0=i.g; h+='<span class="relOpcT" style="margin-top:6px">'+srEsc(i.g)+'</span>'; }
+        h+='<a href="'+encodeURI(i.a)+'" target="_blank" rel="noopener" style="display:block;font-size:12.5px;padding:2px 0">'+(i.dt?srEsc(i.dt)+' — ':'')+srEsc(i.x||'abrir')+'</a>'; });
+      h+='</div>'; }
+    h+='</div>';
+    var W=((window.RELSEM||{}).semanas||[]);
+    if(SR_SEM==null||!W.some(function(w){return w.k===SR_SEM;})) SR_SEM=W.length?W[0].k:'';
+    var w=W.filter(function(x){return x.k===SR_SEM;})[0];
+    h+='<div class="relCard" data-rel="semanal"><span class="fmt">A4 · um PDF com todas as obras da semana</span>'+
+      '<h3>Relatório semanal — todas as obras</h3>'+
+      '<span class="exp">O semanal de segurança e o semanal de acompanhamento de cada obra da semana, juntos num PDF só, com um marcador por obra para navegar.</span>'+
+      '<span class="cont'+(w?'':' vazio')+'">'+(w?w.s+' · '+w.de+' a '+w.ate+' · '+w.obras.length+' obras':'nenhum semanal ainda')+'</span>'+
+      (W.length?'<div class="relOpc"><span class="relOpcT">Semana</span><select class="relSelSem" style="font:inherit;padding:4px 6px">'+
+        W.map(function(x){ return '<option value="'+x.k+'"'+(x.k===SR_SEM?' selected':'')+'>'+x.s+' · '+x.de+' a '+x.ate+' ('+x.obras.length+' obras)</option>'; }).join('')+'</select></div>':'')+
+      (w?'<div class="relOpc" style="gap:2px"><span class="relOpcT">Obras na semana</span>'+w.obras.map(function(x){
+        return '<span style="font-size:12.5px">'+x.cod+' · '+srEsc(x.unid)+' — '+
+          x.sst.map(function(a){return '<a href="'+encodeURI(a)+'" target="_blank" rel="noopener">segurança</a>';}).join(' ')+(x.sst.length&&x.rao.length?' · ':'')+
+          x.rao.map(function(a){return '<a href="'+encodeURI(a)+'" target="_blank" rel="noopener">acompanhamento</a>';}).join(' ')+'</span>'; }).join('')+'</div>':'')+
+      '<div class="relBts">'+(w&&w.a?'<a class="relBt pdf" href="'+encodeURI(w.a)+'" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">Baixar PDF da semana</a>':'<button class="relBt pdf" disabled>Baixar PDF da semana</button>')+'</div></div>';
+    return h;
+  }
   function render(){
     if($('relEscopo')) $('relEscopo').innerHTML =
       'Recorte de agora: <b>'+escopo()+'</b>. Todo relatório desta aba obedece a esses filtros — '+
@@ -6233,13 +6283,15 @@ const REL = (function(){
           '<button class="relBt pdf" data-ac="pdf"'+(tem?'':' disabled')+'>Baixar PDF</button>'+
           '<button class="relBt xls" data-ac="xls"'+(tem?'':' disabled')+'>Baixar Excel</button>'+
         '</div></div>';
-    }).join('');
+    }).join('')+cardsSegRao();
     if($('relRod')) $('relRod').textContent =
       'Os arquivos são montados pelo próprio painel: a folha, a orientação e a margem estão '+
       'definidas em cada relatório, então não há configuração de impressão que possa cortar '+
       'o conteúdo. Gerado a partir do CTR FDE Barueri de '+(D.gerado?dt(D.gerado):'—')+'.';
     if(!cx.__lig2){ cx.__lig2=1; cx.addEventListener('change', ev=>{
       if(ev.target.classList&&ev.target.classList.contains('relSelComp')){ COMP_MES=ev.target.value; render(); return; }
+      if(ev.target.classList&&ev.target.classList.contains('relSelSR')){ SR_OBRA=ev.target.value; render(); return; }
+      if(ev.target.classList&&ev.target.classList.contains('relSelSem')){ SR_SEM=ev.target.value; render(); return; }
       if(ev.target.classList&&ev.target.classList.contains('relSelObra')){ const v=ev.target.value; FOLHA_OBRA=v==='todas'?'todas':+v; render(); return; }
       if(ev.target.name==='relVal'){ try{localStorage.setItem(CHAVE_VAL,ev.target.value);}catch(e){} render(); return; }
       const cc=ev.target.closest('input[data-blc]');
@@ -7560,7 +7612,7 @@ aoFiltrar();
 </script>
 
 <!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
-<script src="fech.js?v=202610022237"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
+<script src="fech.js?v=202610022241"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
 <script>
 const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andrade", "cid": "BARUERI", "emp": "LEONARDO ZANAO", "sit": "5. CONCLUÍDA", "contrato": 235271.25, "taxa": 0.06, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 14116.27, "ap": 212526.4, "tr": 7207.92, "emp_ap": 12751.58, "emp_tot": 13184.06, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 12751.58, "saldo_tot": 13184.06}, "199": {"num": 199, "uni": "EE SEBASTIAO DE MORAES CARDOSO", "cid": "ITAPECERICA DA SERRA", "emp": "REINALDO", "sit": "5. CONCLUÍDA", "contrato": 186643.95, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 37328.79, "ap": 131576.49, "tr": 12451.6, "emp_ap": 26315.3, "emp_tot": 28805.62, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26315.3, "saldo_tot": 28805.62}, "200": {"num": 200, "uni": "EE OREDO RODRIGUES DA CRUZ", "cid": "JUQUITIBA", "emp": "ANTONIO CABELO", "sit": "5. CONCLUÍDA", "contrato": 171519.72, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 34303.94, "ap": 130434.87, "tr": 0.0, "emp_ap": 26086.97, "emp_tot": 26086.97, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26086.97, "saldo_tot": 26086.97}, "223": {"num": 223, "uni": "ETEC Antonio furlan", "cid": "BARUERI", "emp": "REINALDO", "sit": "4. EXECUÇÃO", "contrato": 1935375.91, "taxa": 0.538489, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 1042178.64, "ap": 413291.43, "tr": 273284.71, "emp_ap": 222552.89, "emp_tot": 369713.7, "mat": 127178.11, "serv": 19199.0, "sienge": 146945.42, "npedidos": 18, "top": [["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)", "m²", 731.4, 23331.66], ["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET", "m2", 450.0, 17946.0], ["Torneira de acionamento manual e com ciclo de ", "un", 18.0, 17457.3], ["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ", "un", 30.0, 14830.5], ["Tinta esmalte cinza médio 3,6 LT", "gl", 50.0, 5781.0], ["PORTA DE MADEIRA COMPLETA 0,92X2,10", "un", 6.0, 4296.0], ["TELA Q-92 2X3 M", "un", 60.0, 3996.0], ["Divisoria de Granilite frontal (DV-03) 0,40x1,", "un", 25.0, 3802.5], ["FERRO CHATO 5/8 X 3/16", "br", 90.0, 3780.0], ["LUMINÁRIA IL-45 - COM LÂMPADA LED", "un", 42.0, 3766.14], ["PR-09 C=2MM", "un", 12.0, 2808.0], ["Tinta Esmalte base d'água Branco 18l", "lt", 20.0, 2500.0], ["Esmalte Brilhante Branco Coralit 3, 6l", "gl", 20.0, 2500.0], ["TINTA ESMALTE BASE ÁGUA CINZA", "lt", 20.0, 2361.2], ["Coral Rende Muito Branco Neve 18l", "lt", 6.0, 2010.0], ["TINTA PISO CINZA MÉDIO 18L", "lt", 5.0, 1725.0], ["DV-04 C=1,2M", "un", 3.0, 1368.9], ["Divisórias de granilite 0,35 X 1,80 Conforme D", "un", 10.0, 1331.1], ["Cabo flex 6mm² preto", "rol", 2.0, 1295.0], ["Cabo flex 4mm² preto", "rol", 2.0, 864.8]], "saldo_ap": 75607.47, "saldo_tot": 222768.28, "absorv": 84486.46, "estoque": 61890.65, "saldo_ap_prop": 138066.43, "saldo_tot_prop": 285227.24}, "224": {"num": 224, "uni": "ELIZA DE OLIVEIRA RIBEIRO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1486645.35, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 486290.92, "tr": 274008.61, "emp_ap": null, "emp_tot": null, "mat": 2852.39, "serv": 0.0, "sienge": 2852.39, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "230": {"num": 230, "uni": "EE MARIA ANTONIETA MARTINS", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1979042.22, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 1083172.19, "tr": 179925.01, "emp_ap": null, "emp_tot": null, "mat": 1976.74, "serv": 0.0, "sienge": 1976.74, "npedidos": 9, "top": [], "saldo_ap": null, "saldo_tot": null}, "231": {"num": 231, "uni": "EE MARIA JOSE ANTUNES FERRAZ", "cid": "TABOÃO DA SERRA", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1912108.62, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 776720.04, "tr": 58057.26, "emp_ap": null, "emp_tot": null, "mat": 712.0, "serv": 0.0, "sienge": 712.0, "npedidos": 7, "top": [], "saldo_ap": null, "saldo_tot": null}, "232": {"num": 232, "uni": "EE NEIDE CELESTINA DE OLIVEIRA", "cid": "EMBU GUAÇU", "emp": "CRISTIAN GUIDO", "sit": "4. EXECUÇÃO", "contrato": 1394560.14, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 500062.77, "tr": 68313.36, "emp_ap": null, "emp_tot": null, "mat": 2080.0, "serv": 0.0, "sienge": 2080.0, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}, "269": {"num": 269, "uni": "EE JD CAMPESTRE", "cid": "EMBU GUAÇU", "emp": "RENILDO", "sit": "4. EXECUÇÃO", "contrato": 1328935.74, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 661977.78, "tr": 45518.87, "emp_ap": null, "emp_tot": null, "mat": 1113.72, "serv": 0.0, "sienge": 1113.72, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "274": {"num": 274, "uni": "ETEC EMBU", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1568182.98, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 104600.06, "tr": 468976.52, "emp_ap": null, "emp_tot": null, "mat": 1410.0, "serv": 0.0, "sienge": 1410.0, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "278": {"num": 278, "uni": "EE GERTRUDES EDER", "cid": "ITAPECERICA DA SERRA", "emp": "LEONARDO ZANAO", "sit": "4. EXECUÇÃO", "contrato": 2152584.69, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 156359.02, "tr": 57537.42, "emp_ap": null, "emp_tot": null, "mat": 4272.3, "serv": 0.0, "sienge": 4272.3, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "284": {"num": 284, "uni": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 114889.32, "taxa": 0.46, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 52849.09, "ap": 3522.17, "tr": 45000.54, "emp_ap": 1620.2, "emp_tot": 22320.45, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 1620.2, "saldo_tot": 22320.45}, "287": {"num": 287, "uni": "EEPROF LAERT ALMEIDA SÃO BERNARDO", "cid": "TABOÃO DA SERRA", "emp": "PEDRO", "sit": "4. EXECUÇÃO", "contrato": 1950390.3, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 32747.41, "tr": 273322.99, "emp_ap": null, "emp_tot": null, "mat": 1088.58, "serv": 0.0, "sienge": 1088.58, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "288": {"num": 288, "uni": "EE EDUARDO VAZ", "cid": "EMBU DAS ARTES", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1756795.6, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 2378.4, "tr": 156047.64, "emp_ap": null, "emp_tot": null, "mat": 8399.5, "serv": 0.0, "sienge": 8399.5, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}};
 (function(){
@@ -7777,10 +7829,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
-<script src="sienge.js?v=202610022237"></script>
-<script src="sienge_itens.js?v=202610022237"></script>
-<script src="sienge_solic.js?v=202610022237"></script>
-<script src="entregas.js?v=202610022237"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
+<script src="sienge.js?v=202610022241"></script>
+<script src="sienge_itens.js?v=202610022241"></script>
+<script src="sienge_solic.js?v=202610022241"></script>
+<script src="entregas.js?v=202610022241"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -8491,9 +8543,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: SUB-ABA FISCALIZAÇÃO (Livros de Ocorrência) ================= -->
-<script src="lo.js?v=202610022237"></script>
-<script src="seg.js?v=202610022237"></script>
-<script src="rao.js?v=202610022237"></script>  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
+<script src="lo.js?v=202610022241"></script>
+<script src="seg.js?v=202610022241"></script>
+<script src="rao.js?v=202610022241"></script>
+<script src="relsem.js?v=202610022241"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
 <style>
   #loBox .loK{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
   #loBox .loK>div{flex:1 1 150px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:10px 12px;background:var(--cd,#fff)}
@@ -8777,7 +8830,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
-<script src="consolidado.js?v=202610022237"></script>
+<script src="consolidado.js?v=202610022241"></script>
 <style>
   #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
   #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
