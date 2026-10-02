@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checklist de medições — Obras FDE</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--bg:#f4f3ef;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--ln:#dcdad3;--pri:#1f4e79;--ok:#2f6f4e;--okb:#e6f4ec;--bad:#b3261e;--badb:#fbe0de;--warn:#9a6b00;--warnb:#fdf4de;--na:#6b6b66;--nab:#eeede8}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#22221f;--tx:#ecebe6;--mut:#a3a29c;--ln:#3a3935;--pri:#7fb0de;--ok:#7fc7a0;--okb:#1f3a2c;--bad:#f08a80;--badb:#4a2220;--warn:#e5c062;--warnb:#3d3420;--na:#a3a29c;--nab:#2c2b28}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header.top{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header.top h1{font-size:16px;margin:0;flex:1;min-width:200px}
+header.top a{color:#fff;font-size:13px;opacity:.85}
+main{max-width:1240px;margin:0 auto;padding:12px 16px 60px}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:10px 12px}
+label.f{display:flex;flex-direction:column;font-size:12px;color:var(--mut);gap:3px}
+input,select{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--ln);border-radius:8px;padding:6px 8px;min-height:34px}
+.chk{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--tx)}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.kpi div{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:8px 10px}
+.kpi b{display:block;font-size:20px}.kpi span{font-size:12px;color:var(--mut)}
+.sync{font-size:12.5px;color:var(--mut)}.sync.ok{color:var(--ok)}.sync.err{color:var(--bad)}
+h2{font-size:14px;margin:18px 0 6px;color:var(--pri)}
+table{border-collapse:collapse;width:100%;background:var(--card);border:1px solid var(--ln);border-radius:10px;overflow:hidden}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;color:var(--mut);text-align:left;padding:7px 8px;border-bottom:1px solid var(--ln);background:var(--nab)}
+td{padding:7px 8px;border-bottom:1px solid var(--ln);vertical-align:middle}
+tr.okrow td{background:color-mix(in srgb,var(--okb) 45%,transparent)}
+.obra b{display:block}.obra span{font-size:12px;color:var(--mut)}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;white-space:nowrap}
+.p-ok{background:var(--okb);color:var(--ok)}.p-bad{background:var(--badb);color:var(--bad)}.p-warn{background:var(--warnb);color:var(--warn)}.p-na{background:var(--nab);color:var(--na)}
+.tg{border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:5px 10px;font:inherit;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.tg.on{background:var(--okb);border-color:var(--ok);color:var(--ok);font-weight:650}
+.tg.on.no{background:var(--badb);border-color:var(--bad);color:var(--bad)}
+.mini{font-size:11px;color:var(--mut);margin-top:2px}
+.obs{width:100%;min-width:140px}
+.auto{font-size:11px;color:var(--mut)}
+@media (max-width:760px){
+  thead{display:none} table,tbody,tr,td{display:block;width:100%} tr{border-bottom:2px solid var(--ln);padding:6px 0}
+  td{border:0;padding:4px 10px} td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--mut);text-transform:uppercase}
+}
+</style>
+</head>
+<body>
+<header class="top"><h1>Checklist de medições</h1><a href="./">← voltar ao painel</a></header>
+<main id="app"><p>Carregando…</p></main>
+<script src="chk.js"></script>
+<script src="entregas.js"></script>
+<script>
+(function(){
+'use strict';
+/* 02/10/2026 — checklist mensal por obra: a medicao foi inserida no portal ou enviada por e-mail,
+   a situacao dela (da varredura do portal / CTR) e se o relatorio fotografico foi gerado e enviado.
+   O que se marca aqui vai para o servidor comum do painel (o mesmo das entregas dos pedidos),
+   como JSON {tipo:'chk', k:'obra|aaaa-mm', campo, v, por, quando}; todo aparelho le de la. */
+var D=window.CHK, SRV=window.ENTREGAS_SRV||{}, QCH='fdeEntregasQuem', FCH='chkFila';
+var app=document.getElementById('app');
+if(!D){ app.innerHTML='<p>Os dados do checklist (chk.js) não carregaram. Atualize a página.</p>'; return; }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
+function agora(){ var d=new Date(); return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
+function ts(q){ var m=/^(\d{2})\/(\d{2})\/(\d{4})[ ,]+(\d{2}):(\d{2})/.exec(q||''); return m?new Date(+m[3],+m[2]-1,+m[1],+m[4],+m[5]).getTime():0; }
+function dbr(iso){ var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso||''); return m?m[3]+'/'+m[2]+'/'+m[1]:''; }
+var MES=['','janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+function mesNome(k){ var p=k.split('-'); return MES[+p[1]]+'/'+p[0]; }
+
+var F={mes:ls('chkMes')||D.meses[0], eng:ls('chkEng')||'', lote:'', pend:ls('chkPend')==='1', busca:''};
+if(D.meses.indexOf(F.mes)<0) F.mes=D.meses[0];
+var M={}; /* k|campo -> {v,por,quando} vindo do servidor + fila local */
+var SY={st:'carregando',hora:''};
+
+function csv(t){ var L=[], r=[], f='', q=false; for(var i=0;i<t.length;i++){ var ch=t[i];
+  if(q){ if(ch==='"'){ if(t[i+1]==='"'){ f+='"'; i++; } else q=false; } else f+=ch; }
+  else if(ch==='"') q=true; else if(ch===','){ r.push(f); f=''; }
+  else if(ch==='\n'){ r.push(f); L.push(r); r=[]; f=''; } else if(ch!=='\r') f+=ch; }
+  if(f||r.length){ r.push(f); L.push(r); } return L; }
+function fila(){ try{ return JSON.parse(ls(FCH)||'[]'); }catch(e){ return []; } }
+function aplica(m){ var id=m.k+'|'+m.campo, a=M[id]; if(!a||ts(m.quando)>=ts(a.quando)) M[id]={v:m.v,por:m.por||'',quando:m.quando||''}; }
+function puxa(){
+  if(!SRV.ler){ SY.st='local'; fila().forEach(aplica); render(); return Promise.resolve(); }
+  return fetch(SRV.ler+'&t='+Date.now()).then(function(r){ return r.text(); }).then(function(t){
+    if(/<html/i.test(t.slice(0,200))) throw new Error('privada');
+    M={}; csv(t).slice(1).forEach(function(l){ var m; try{ m=JSON.parse(l[1]); }catch(e){ return; } if(m&&m.tipo==='chk'&&m.k&&m.campo) aplica(m); });
+    var l=fila().filter(function(x){ var a=M[x.k+'|'+x.campo]; return !(a&&a.quando===x.quando&&String(a.v)===String(x.v)); });
+    ls(FCH,JSON.stringify(l)); l.forEach(aplica);
+    SY.st=l.length?'pend':'ok'; SY.hora=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); render();
+  }).catch(function(){ fila().forEach(aplica); SY.st='erro'; render(); });
+}
+function envia(){ var l=fila(); if(!SRV.form||!l.length) return;
+  Promise.all(l.map(function(m){ var fd=new FormData(); fd.append(SRV.entry,JSON.stringify(m)); return fetch(SRV.form,{method:'POST',mode:'no-cors',body:fd}); }))
+   .then(function(){ setTimeout(puxa,2500); }).catch(function(){ SY.st='erro'; pintaSync(); }); }
+function marca(k,campo,v){
+  var q=(ls(QCH)||'').trim(); if(!q){ var e=document.getElementById('fQuem'); if(e){ e.focus(); e.style.borderColor='var(--bad)'; e.placeholder='digite seu nome para marcar'; } return false; }
+  var m={tipo:'chk',k:k,campo:campo,v:v,por:q,quando:agora()};
+  var l=fila().filter(function(x){ return !(x.k===k&&x.campo===campo); }); l.push(m); ls(FCH,JSON.stringify(l));
+  aplica(m); SY.st='pend'; clearTimeout(marca._t); marca._t=setTimeout(envia,700); return true; }
+function val(k,c){ var a=M[k+'|'+c]; return a?a.v:null; }
+function quem(k,cs){ var b=null; cs.forEach(function(c){ var a=M[k+'|'+c]; if(a&&(!b||ts(a.quando)>ts(b.quando))) b=a; }); return b; }
+
+function sitPill(m){ if(!m) return '<span class="pill p-bad">sem medição no CTR</span>';
+  var s=m.sit||'', rot=s.replace(/^[\d.]+\s*/,''), c=/^4/.test(s)?'p-ok':/^3/.test(s)?'p-warn':/^[12]/.test(s)?'p-warn':'p-bad';
+  return '<span class="pill '+c+'">'+esc(rot?rot.charAt(0)+rot.slice(1).toLowerCase():'—')+'</span>'; }
+function linhas(){
+  var med=D.med[F.mes]||{};
+  return D.obras.filter(function(o){ return (med[String(o.c)]||/^4\./.test(o.s)); })
+    .filter(function(o){ return (!F.eng||o.e===F.eng)&&(!F.lote||o.l===F.lote)&&
+      (!F.busca||(o.c+' '+o.u).toLowerCase().indexOf(F.busca.toLowerCase())>=0); })
+    .map(function(o){ var m=med[String(o.c)]||null, k=o.c+'|'+F.mes, rf=((D.rf||{})[String(o.c)]||{})[F.mes]||'';
+      var pMan=val(k,'portal'), em=val(k,'email'), rfe=val(k,'rfenv');
+      var ins=!!(m&&m.portal)||pMan===true||pMan==='1';
+      var envio=ins||em===true||em==='1';
+      var rfok=rfe===true||rfe==='1';
+      return {o:o,m:m,k:k,rf:rf,ins:ins,auto:!!(m&&m.portal),em:em===true||em==='1',envio:envio,rfg:!!rf,rfok:rfok,ok:envio&&rfok,obs:val(k,'obs')||''}; })
+    .filter(function(x){ return !F.pend||!x.ok; });
+}
+function pintaSync(){ var e=document.getElementById('sync'); if(!e) return;
+  var n=fila().length; e.className='sync '+(SY.st==='ok'?'ok':SY.st==='erro'?'err':'');
+  e.textContent=SY.st==='ok'?('✓ salvo para todos · '+SY.hora):SY.st==='erro'?('⚠ sem conexão com o servidor — '+n+' marcação(ões) guardada(s) neste aparelho'):SY.st==='local'?'⚠ servidor não configurado — marcação só neste aparelho':(n?'salvando… ('+n+')':'carregando…'); }
+function render(){
+  var y=window.scrollY, foco=document.activeElement&&document.activeElement.id;
+  var engs={}; D.obras.forEach(function(o){ if(o.e) engs[o.e]=1; });
+  var L=linhas(), tot=L.length;
+  var nIns=L.filter(function(x){return x.ins;}).length, nEm=L.filter(function(x){return x.em;}).length,
+      nRfg=L.filter(function(x){return x.rfg;}).length, nRf=L.filter(function(x){return x.rfok;}).length, nOk=L.filter(function(x){return x.ok;}).length;
+  var h='<div class="barra">'+
+    '<label class="f">Mês de referência<select id="fMes">'+D.meses.map(function(k){ return '<option value="'+k+'"'+(k===F.mes?' selected':'')+'>'+mesNome(k)+'</option>'; }).join('')+'</select></label>'+
+    '<label class="f">Engenheiro<select id="fEng"><option value="">todos</option>'+Object.keys(engs).sort().map(function(e){ return '<option'+(e===F.eng?' selected':'')+'>'+esc(e)+'</option>'; }).join('')+'</select></label>'+
+    '<label class="f">Lote<select id="fLote"><option value="">41 e 42</option><option'+(F.lote==='41'?' selected':'')+'>41</option><option'+(F.lote==='42'?' selected':'')+'>42</option></select></label>'+
+    '<label class="f">Buscar obra<input id="fBusca" value="'+esc(F.busca)+'" placeholder="nº ou escola"></label>'+
+    '<label class="chk"><input type="checkbox" id="fPend"'+(F.pend?' checked':'')+'> só pendentes</label>'+
+    '<label class="f" style="margin-left:auto">Marcando como<input id="fQuem" value="'+esc(ls(QCH)||'')+'" placeholder="seu nome"></label></div>';
+  h+='<div class="kpi"><div><b>'+tot+'</b><span>obras em '+mesNome(F.mes)+'</span></div>'+
+     '<div><b>'+nIns+'</b><span>inseridas no portal</span></div><div><b>'+nEm+'</b><span>enviadas por e-mail</span></div>'+
+     '<div><b>'+nRfg+'</b><span>RF gerado (pasta da obra)</span></div><div><b>'+nRf+'</b><span>RF enviado</span></div>'+
+     '<div><b style="color:var('+(nOk===tot?'--ok':'--bad')+')">'+(tot-nOk)+'</b><span>com pendência</span></div></div>';
+  h+='<p class="sync" id="sync"></p>';
+  var por={}; L.forEach(function(x){ (por[x.o.e||'Sem engenheiro']=por[x.o.e||'Sem engenheiro']||[]).push(x); });
+  Object.keys(por).sort().forEach(function(e){
+    var g=por[e];
+    h+='<h2>'+esc(e)+' · '+g.filter(function(x){return x.ok;}).length+' de '+g.length+' completas</h2><table><thead><tr>'+
+      '<th>Obra</th><th>Medição</th><th>Situação</th><th>Inserida no portal</th><th>Enviada por e-mail</th><th>RF gerado</th><th>RF enviado</th><th>Observação</th></tr></thead><tbody>';
+    g.forEach(function(x){ var o=x.o, m=x.m, q=quem(x.k,['portal','email','rfenv','obs']);
+      h+='<tr class="'+(x.ok?'okrow':'')+'">'+
+        '<td class="obra" data-l="Obra"><b>'+o.c+' — '+esc(o.u)+'</b><span>L'+esc(o.l)+(o.cid?' · '+esc(o.cid):'')+(o.ct?' · '+esc(o.ct):'')+'</span></td>'+
+        '<td data-l="Medição">'+(m?'<b>M'+esc(m.n)+'</b><div class="mini">ref. '+mesNome(F.mes)+'</div>':'—')+'</td>'+
+        '<td data-l="Situação">'+sitPill(m)+(m&&m.dp?'<div class="mini">desde '+dbr(m.dp)+'</div>':'')+(m&&m.ap&&/^4/.test(m.sit)?'<div class="mini">aprovada '+esc(m.ap.slice(0,10))+'</div>':'')+'</td>'+
+        '<td data-l="Inserida no portal">'+(x.auto?'<span class="pill p-ok">✓ no portal</span><div class="auto">pela varredura</div>':
+          '<button class="tg'+(x.ins?' on':'')+'" data-k="'+x.k+'" data-c="portal">'+(x.ins?'✓ inserida':'marcar inserida')+'</button>')+'</td>'+
+        '<td data-l="Enviada por e-mail"><button class="tg'+(x.em?' on':'')+'" data-k="'+x.k+'" data-c="email">'+(x.em?'✓ enviada':'marcar enviada')+'</button></td>'+
+        '<td data-l="RF gerado">'+(x.rfg?'<span class="pill p-ok" title="'+esc(x.rf)+'">✓ na pasta</span>':'<span class="pill p-na">não achado</span>')+'</td>'+
+        '<td data-l="RF enviado"><button class="tg'+(x.rfok?' on':'')+'" data-k="'+x.k+'" data-c="rfenv">'+(x.rfok?'✓ enviado':'marcar enviado')+'</button></td>'+
+        '<td data-l="Observação"><input class="obs" id="o_'+x.k.replace('|','_')+'" data-k="'+x.k+'" value="'+esc(x.obs)+'" placeholder="ex.: aguardando fiscal">'+
+          (q?'<div class="mini">'+esc(q.por)+' · '+esc(q.quando)+'</div>':'')+'</td></tr>';
+    });
+    h+='</tbody></table>';
+  });
+  if(!L.length) h+='<p class="mini" style="margin-top:14px">Nenhuma obra com esse filtro.</p>';
+  h+='<p class="mini" style="margin-top:16px">Situação e “inserida no portal” vêm da varredura do portal (CTR) · “RF gerado” é o arquivo RF … '+F.mes.split('-')[1]+'-'+F.mes.split('-')[0]+' na pasta da obra · dados de '+esc(D.ger)+'. '+
+     'E-mail e RF enviado ficam salvos para todos os aparelhos.</p>';
+  app.innerHTML=h; pintaSync();
+  if(foco){ var f=document.getElementById(foco); if(f){ f.focus(); if(f.setSelectionRange&&f.value) f.setSelectionRange(f.value.length,f.value.length); } }
+  window.scrollTo(0,y);
+}
+app.addEventListener('click',function(e){ var t=e.target.closest('.tg'); if(!t) return;
+  var k=t.dataset.k, c=t.dataset.c, cur=val(k,c), on=cur===true||cur==='1';
+  if(marca(k,c,!on)) render(); });
+app.addEventListener('change',function(e){ var t=e.target;
+  if(t.id==='fMes'){ F.mes=t.value; ls('chkMes',F.mes); render(); }
+  else if(t.id==='fEng'){ F.eng=t.value; ls('chkEng',F.eng); render(); }
+  else if(t.id==='fLote'){ F.lote=t.value; render(); }
+  else if(t.id==='fPend'){ F.pend=t.checked; ls('chkPend',F.pend?'1':'0'); render(); }
+  else if(t.classList.contains('obs')){ if(t.value!==(val(t.dataset.k,'obs')||'')&&marca(t.dataset.k,'obs',t.value)) render(); }
+});
+app.addEventListener('input',function(e){ var t=e.target;
+  if(t.id==='fQuem'){ ls(QCH,t.value); t.style.borderColor=''; }
+  else if(t.id==='fBusca'){ F.busca=t.value; clearTimeout(render._t); render._t=setTimeout(render,250); }
+});
+render(); puxa().then(envia);
+setInterval(function(){ if(document.visibilityState==='visible'&&!fila().length) puxa(); },60000);
+})();
+</script>
+</body>
+</html>

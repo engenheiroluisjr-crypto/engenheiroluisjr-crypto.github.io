@@ -14,9 +14,9 @@
    sempre. Subir a VERSAO apaga os caches antigos de quem ja tem o painel aberto. */
 /* v5 (02/10/2026): sst.html (formulario de seguranca) e outra pagina: nao pode ser guardada
    no lugar do painel ('./'). E sst_modelo entrou em DADOS. */
-const VERSAO = 'painel-v5';
+const VERSAO = 'painel-v6';
 const PRE = ['./', 'libs/jspdf.umd.min.js', 'libs/jspdf.plugin.autotable.min.js', 'libs/xlsx.mini.min.js'];
-const DADOS = /\/(fech|lo|seg|rao|consolidado|sienge|sienge_itens|sienge_solic|entregas|sst_modelo)\.js$/;
+const DADOS = /\/(fech|lo|seg|rao|consolidado|sienge|sienge_itens|sienge_solic|entregas|sst_modelo|chk)\.js$/;
 
 self.addEventListener('install', ev => {
   ev.waitUntil(caches.open(VERSAO).then(c => Promise.allSettled(PRE.map(u => c.add(u)))).then(() => self.skipWaiting()));
