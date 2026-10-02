@@ -284,7 +284,7 @@ function reduz(f){ return new Promise(function(ok){ var r=new FileReader(); r.on
 
 function faltas(){
   var f=[];
-  if(!S.obra) f.push('a obra'); if(!S.data) f.push('a data');
+  if(!S.obra) f.push('a obra'); if(!S.data) f.push('a data'); else if(S.data>hoje()) f.push('a data da vistoria (está no futuro: '+S.data.split('-').reverse().join('/')+')');
   if(!S.id.fase) f.push('a fase da obra'); if(!S.id.empr) f.push('a empreiteira'); if(!S.id.resp) f.push('o responsável pela vistoria');
   if(!(S.quem||'').trim()) f.push('seu nome');
   if(!Object.keys(S.resp).length) f.push('ao menos um item da vistoria');

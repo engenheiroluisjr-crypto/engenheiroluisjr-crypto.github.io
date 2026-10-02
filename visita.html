@@ -131,7 +131,7 @@ document.addEventListener('change',function(e){ var t=e.target; if(t.id!=='fFoto
   Promise.all(fs.map(reduz)).then(function(us){ us.filter(Boolean).forEach(function(u){ F.push({u:u,l:''}); }); t.value=''; salva(); desenhaFotos(); msg(F.length+' foto(s) anexada(s).'); });
 });
 function faltas(){ var f=[];
-  if(!S.obra) f.push('a obra'); if(!S.data) f.push('a data da visita'); if(!(S.quem||'').trim()) f.push('quem preencheu');
+  if(!S.obra) f.push('a obra'); if(!S.data) f.push('a data da visita'); else if(S.data>hoje()) f.push('a data da visita (está no futuro: '+S.data.split('-').reverse().join('/')+')'); if(!(S.quem||'').trim()) f.push('quem preencheu');
   if(!(S.t.servicos||'').trim()) f.push('os serviços executados');
   var semR=PERG.filter(function(p){ return !S.r[p[0]]; }).map(function(p){ return p[1].toLowerCase(); }); if(semR.length) f.push('responder: '+semR.join(', '));
   return f; }
