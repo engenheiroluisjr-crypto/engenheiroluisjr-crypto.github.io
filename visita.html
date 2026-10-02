@@ -103,12 +103,12 @@ function lerServidor(){ if(!ESRV.ler){ REM={}; return Promise.resolve(); }
     if(/<html/i.test(t.slice(0,200))) throw new Error('privada'); var o={};
     csvP(t).slice(1).forEach(function(l){ var m; try{ m=JSON.parse(l[1]); }catch(e){ return; }
       var p=String(m&&m.pedido||'').trim(); if(!p) return; var a=o[p];
-      var r={s:m.s||null,trava:!!(m.trava&&m.s==='E'),destrava:!!m.destrava,quando:m.quando||'',por:m.por||''};
+      var r={s:m.s||null,trava:!!(m.trava&&m.s==='E'),destrava:!!m.destrava,sg:!!m.sg,quando:m.quando||'',por:m.por||''};
       if(a&&a.trava&&!r.destrava&&!(r.trava&&tsq(r.quando)<tsq(a.quando))) return; o[p]=r; });
     REM=o; }).catch(function(){ REM={}; }); }
 function pedidosAbertos(){ var o=(SG.obras||{})[String(S.obra)]; if(!o) return []; var base=window.ENTREGAS||{};
   return (o.ped||[]).map(function(p){ var n=String(p[1]), se=(o.se||{})[n]||[], m=(REM&&REM[n])||base[n]||{};
-      return {n:n,data:p[0],forn:p[2],se:se[0]||'',ult:m.s||'',por:m.por||'',quando:m.quando||'',fechado:se[0]==='E'||!!m.trava,itens:((SGI[String(S.obra)]||{})[n]||[])}; })
+      return {n:n,data:p[0],forn:p[2],se:se[0]||'',ult:m.s||'',por:m.por||'',quando:m.quando||'',fechado:(se[0]==='E'&&!(m.sg||m.destrava))||!!m.trava,sgE:se[0]==='E',itens:((SGI[String(S.obra)]||{})[n]||[])}; })
     .filter(function(x){ return !x.fechado; }).sort(function(a,b){ return dnum(b.data)-dnum(a.data); }); }
 function secPedidos(){ var tit='<h2>Materiais — entrega dos pedidos do Sienge <b class="ast">*</b>';
   if(!S.obra) return '<section id="secPed">'+tit+'</h2><p class="mut">Escolha a obra.</p></section>';
@@ -197,7 +197,8 @@ function enviar(){ if(enviando) return;
   enviando=true; var id='v'+S.obra+'-'+Date.now().toString(36);
   var abertos={}; pedidosAbertos().forEach(function(x){ abertos[x.n]=1; }); Object.keys(S.ent).forEach(function(k){ if(!abertos[k]) delete S.ent[k]; });
   var dd=new Date(), qd=dd.toLocaleDateString('pt-BR')+' '+dd.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  var marcas=Object.keys(S.ent).map(function(k){ return {pedido:+k,s:S.ent[k],obs:'',por:S.quem,quando:qd,trava:S.ent[k]==='E',origem:'visita '+S.obra}; });
+  var sgE={}; pedidosAbertos().forEach(function(x){ if(x.sgE) sgE[x.n]=1; });
+  var marcas=Object.keys(S.ent).map(function(k){ return {pedido:+k,s:S.ent[k],obs:'',por:S.quem,quando:qd,trava:S.ent[k]==='E',sg:!!sgE[k],origem:'visita '+S.obra}; });
   var d=JSON.parse(JSON.stringify(S)); d.parte='rao'; d.marcas=marcas; d.idv=id; d.unidade=nomeObra(S.obra); d.enviado=new Date().toISOString();
   d.fotos=F.map(function(x,i){ return {i:i,l:x.l||''}; });
   var pecas=[]; F.forEach(function(x,i){ var b=(x.u.split(',')[1]||''), n=Math.ceil(b.length/30000);
