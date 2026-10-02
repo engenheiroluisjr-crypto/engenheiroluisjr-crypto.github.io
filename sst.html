@@ -73,6 +73,7 @@ footer.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-
 footer.bar .msg{flex:1;font-size:13px;color:var(--mut);min-width:180px}
 .foto{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .foto img{width:84px;height:64px;object-fit:cover;border-radius:6px;border:1px solid var(--ln)}
+.foto .fw{position:relative;display:inline-block}.foto .fx{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:#b42318;color:#fff;font-weight:700;line-height:20px;padding:0;cursor:pointer}
 .aviso{background:var(--warnb);border:1px solid var(--warn);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:13.5px}
 .okmsg{background:var(--okb);border:1px solid var(--ok);border-radius:10px;padding:12px;margin:10px 0}
 .mut{color:var(--mut);font-size:12.5px}
@@ -263,8 +264,8 @@ function desenhaNc(){
     '</div><label class="f">Não conformidade encontrada<textarea data-nc="'+i+'" data-k="nc">'+esc(n.nc||'')+'</textarea></label>'+
     '<div class="grid"><label class="f">Risco<input data-nc="'+i+'" data-k="risco" value="'+esc(n.risco||'')+'"></label>'+
     '<label class="f">Solução / medida corretiva<input data-nc="'+i+'" data-k="sol" value="'+esc(n.sol||'')+'"></label></div>'+
-    '<label class="f">Foto (até 2)<input type="file" accept="image/*" capture="environment" multiple data-foto="'+i+'"></label>'+
-    '<div class="foto">'+f.map(function(u){return '<img src="'+u+'" alt="foto da NC">';}).join('')+'</div></div>'; }).join('')||'<p class="mut">Nenhuma não conformidade lançada.</p>';
+    (f.length<2?'<label class="f">'+(f.length?'Adicionar a 2ª foto':'Fotos (até 2 por NC)')+'<input type="file" accept="image/*" multiple data-foto="'+i+'"></label>':'<p class="mut" style="margin:6px 0 0">2 fotos anexadas (máximo). Para trocar, remova uma.</p>')+
+    '<div class="foto">'+f.map(function(u,j){return '<span class="fw"><img src="'+u+'" alt="foto '+(j+1)+' da NC"><button type="button" class="fx" data-rmfoto="'+i+':'+j+'" aria-label="remover foto">×</button></span>';}).join('')+'</div></div>'; }).join('')||'<p class="mut">Nenhuma não conformidade lançada.</p>';
 }
 function atualiza(){
   var r=calc(), resp=Object.keys(S.resp).length, nRuim=M.itens.filter(function(i){return ruim(i.t,S.resp[i.c]);}).length;
@@ -299,6 +300,7 @@ document.addEventListener('click',function(e){
   if(t.id==='addCol'){ var ant=S.colab[S.colab.length-1]; S.colab.push(ant&&ant.nrs?{nrs:ant.nrs}:{}); salva(); desenhaColab(); atualiza(); return; }
   if(t.dataset.rmcol!=null){ S.colab.splice(+t.dataset.rmcol,1); salva(); desenhaColab(); atualiza(); return; }
   if(t.id==='addNc'){ S.nc.push({st:'Aberta',data:S.data}); salva(); desenhaNc(); atualiza(); return; }
+  if(t.dataset.rmfoto!=null){ var pr=t.dataset.rmfoto.split(':'), a=+pr[0], b=+pr[1]; (FOTOS[a]||[]).splice(b,1); salva(); desenhaNc(); return; }
   if(t.dataset.rmnc!=null){ var k=+t.dataset.rmnc; S.nc.splice(k,1); var nf={}; Object.keys(FOTOS).forEach(function(x){ x=+x; if(x<k) nf[x]=FOTOS[x]; else if(x>k) nf[x-1]=FOTOS[x]; }); FOTOS=nf; salva(); desenhaNc(); atualiza(); return; }
   if(t.id==='ncAuto'){ var ja={}; S.nc.forEach(function(n){ ja[n.item]=1; });
     M.itens.forEach(function(i){ if(ruim(i.t,S.resp[i.c])&&!ja[i.c]) S.nc.push({item:i.c,nc:S.com[i.c]||'',sol:S.acao[i.c]||'',st:'Aberta',cls:(ponto(i.t,S.resp[i.c])===4?'ALTO':'MÉDIO')}); });
@@ -329,9 +331,11 @@ document.addEventListener('input',function(e){
 document.addEventListener('change',function(e){
   var t=e.target; if(t.dataset&&t.dataset.nr!=null){ var kn=+t.dataset.nr; S.colab[kn].nrs=nrJunta(kn); t.parentNode.classList.toggle('on',t.checked); salva(); return; }
   var t=e.target; if(!t.dataset||t.dataset.foto==null) return;
-  var i=+t.dataset.foto, fs=[].slice.call(t.files||[],0,2); FOTOS[i]=[];
+  /* 02/10: até 2 fotos por NC — a 2ª SOMA à 1ª (no celular a câmera tira uma de cada vez) */
+  var i=+t.dataset.foto, ja=(FOTOS[i]||[]).slice(0,2), fs=[].slice.call(t.files||[],0,Math.max(0,2-ja.length));
+  if(!fs.length){ msg('Esta NC já tem 2 fotos. Remova uma para trocar.'); t.value=''; return; }
   msg('Reduzindo foto(s)…');
-  Promise.all(fs.map(reduz)).then(function(us){ FOTOS[i]=us.filter(Boolean); salva(); desenhaNc(); msg('Foto(s) anexada(s) à NC '+(i+1)+'.'); });
+  Promise.all(fs.map(reduz)).then(function(us){ FOTOS[i]=ja.concat(us.filter(Boolean)).slice(0,2); salva(); desenhaNc(); msg((FOTOS[i].length)+' foto(s) na NC '+(i+1)+'.'); });
 });
 function reduz(f){ return new Promise(function(ok){ var r=new FileReader(); r.onload=function(){ var im=new Image(); im.onload=function(){
   var m=1000, s=Math.min(1,m/Math.max(im.width,im.height)), c=document.createElement('canvas'); c.width=Math.round(im.width*s); c.height=Math.round(im.height*s);
