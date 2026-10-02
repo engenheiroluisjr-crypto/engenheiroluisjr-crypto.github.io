@@ -1,0 +1,24 @@
+{
+ "tipo": "semanal",
+ "obra": 268,
+ "lote": "41",
+ "unidade": "EE INSTITUTO IMACULADA",
+ "de": "2026-09-28",
+ "ate": "2026-10-02",
+ "diarios": 1,
+ "pct": null,
+ "servicos": [
+  "Instalação do caixilhos",
+  "Remoções caixilhos lado corredor",
+  "Pintura laboratório"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "gerado": "2026-10-02T14:33:24",
+ "avanco": {
+  "aprovado": 58.09420797407549,
+  "engenheiro": null,
+  "fiscal_lo": 40.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 40*\n_EE INSTITUTO IMACULADA · 28/09/2026 a 02/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *58,1%* · Fiscal FDE *40%* (LO 30/09)\n\n🔨 *Executado na semana*\n• Instalação do caixilhos\n• Remoções caixilhos lado corredor\n• Pintura laboratório\n\n_Luis Júnior — Engenharia Atlântica_"
+}

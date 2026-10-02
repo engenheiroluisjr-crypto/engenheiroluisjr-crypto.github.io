@@ -1,0 +1,25 @@
+{
+ "tipo": "semanal",
+ "obra": 228,
+ "lote": "42",
+ "unidade": "NERCY AMELIA MARTELINI DAHER PROFESSORA",
+ "de": "2026-09-28",
+ "ate": "2026-10-02",
+ "diarios": 1,
+ "pct": null,
+ "servicos": [
+  "EXECUÇÃO DE FORRO DE GESSO NA SALA DE LEITURA",
+  "ADEQUAÇÃO DA RAMPA DE ACESSO ÀS SALAS",
+  "EXECUÇÃO DE LIMPEZA DA OBRA",
+  "INSTALAÇÃO DE PORTAS NAS SALAS"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "gerado": "2026-10-02T14:33:15",
+ "avanco": {
+  "aprovado": 65.0114326995697,
+  "engenheiro": null,
+  "fiscal_lo": 57.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 40*\n_NERCY AMELIA MARTELINI DAHER PROFESSORA · 28/09/2026 a 02/10/2026_\n\n📅 1 visita(s) na semana · 1 dia(s) de chuva\n📊 Aprovado *65%* · Fiscal FDE *57%* (LO 18/09)\n\n🔨 *Executado na semana*\n• EXECUÇÃO DE FORRO DE GESSO NA SALA DE LEITURA\n• ADEQUAÇÃO DA RAMPA DE ACESSO ÀS SALAS\n• EXECUÇÃO DE LIMPEZA DA OBRA\n• INSTALAÇÃO DE PORTAS NAS SALAS\n\n_Luis Júnior — Engenharia Atlântica_"
+}
