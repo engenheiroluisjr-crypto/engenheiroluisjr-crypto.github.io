@@ -31,6 +31,7 @@ tr.okrow td{background:color-mix(in srgb,var(--okb) 45%,transparent)}
 .pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;white-space:nowrap}
 .p-ok{background:var(--okb);color:var(--ok)}.p-bad{background:var(--badb);color:var(--bad)}.p-warn{background:var(--warnb);color:var(--warn)}.p-na{background:var(--nab);color:var(--na)}
 .tg{border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:5px 10px;font:inherit;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.rfb{display:flex;gap:5px;flex-wrap:wrap}
 .tg.on{background:var(--okb);border-color:var(--ok);color:var(--ok);font-weight:650}
 .tg.on.no{background:var(--badb);border-color:var(--bad);color:var(--bad)}
 .mini{font-size:11px;color:var(--mut);margin-top:2px}
@@ -110,8 +111,10 @@ function linhas(){
       var pMan=val(k,'portal'), em=val(k,'email'), rfe=val(k,'rfenv');
       var ins=!!(m&&m.portal)||pMan===true||pMan==='1';
       var envio=ins||em===true||em==='1';
-      var rfok=rfe===true||rfe==='1';
-      return {o:o,m:m,k:k,rf:rf,ins:ins,auto:!!(m&&m.portal),em:em===true||em==='1',envio:envio,rfg:!!rf,rfok:rfok,ok:envio&&rfok,obs:val(k,'obs')||''}; })
+      /* 02/10: RF enviado por WhatsApp e/ou e-mail (rfwa / rfem); 'rfenv' antigo continua valendo */
+      var sim=function(v){ return v===true||v==='1'; }, rfwa=sim(val(k,'rfwa')), rfem=sim(val(k,'rfem'));
+      var rfok=sim(rfe)||rfwa||rfem;
+      return {o:o,m:m,k:k,rf:rf,ins:ins,auto:!!(m&&m.portal),em:sim(em),envio:envio,rfg:!!rf,rfok:rfok,rfwa:rfwa,rfem:rfem,rfant:sim(rfe)&&!rfwa&&!rfem,ok:envio&&rfok,obs:val(k,'obs')||''}; })
     .filter(function(x){ return !F.pend||!x.ok; });
 }
 function pintaSync(){ var e=document.getElementById('sync'); if(!e) return;
@@ -140,7 +143,7 @@ function render(){
     var g=por[e];
     h+='<h2>'+esc(e)+' · '+g.filter(function(x){return x.ok;}).length+' de '+g.length+' completas</h2><table><thead><tr>'+
       '<th>Obra</th><th>Medição</th><th>Situação</th><th>Inserida no portal</th><th>Enviada por e-mail</th><th>RF gerado</th><th>RF enviado</th><th>Observação</th></tr></thead><tbody>';
-    g.forEach(function(x){ var o=x.o, m=x.m, q=quem(x.k,['portal','email','rfenv','obs']);
+    g.forEach(function(x){ var o=x.o, m=x.m, q=quem(x.k,['portal','email','rfenv','rfwa','rfem','obs']);
       h+='<tr class="'+(x.ok?'okrow':'')+'">'+
         '<td class="obra" data-l="Obra"><b>'+o.c+' — '+esc(o.u)+'</b><span>L'+esc(o.l)+(o.cid?' · '+esc(o.cid):'')+(o.ct?' · '+esc(o.ct):'')+'</span></td>'+
         '<td data-l="Medição">'+(m?'<b>M'+esc(m.n)+'</b><div class="mini">ref. '+mesNome(F.mes)+'</div>':'—')+'</td>'+
@@ -149,7 +152,9 @@ function render(){
           '<button class="tg'+(x.ins?' on':'')+'" data-k="'+x.k+'" data-c="portal">'+(x.ins?'✓ inserida':'marcar inserida')+'</button>')+'</td>'+
         '<td data-l="Enviada por e-mail"><button class="tg'+(x.em?' on':'')+'" data-k="'+x.k+'" data-c="email">'+(x.em?'✓ enviada':'marcar enviada')+'</button></td>'+
         '<td data-l="RF gerado">'+(x.rfg?'<span class="pill p-ok" title="'+esc(x.rf)+'">✓ na pasta</span>':'<span class="pill p-na">não achado</span>')+'</td>'+
-        '<td data-l="RF enviado"><button class="tg'+(x.rfok?' on':'')+'" data-k="'+x.k+'" data-c="rfenv">'+(x.rfok?'✓ enviado':'marcar enviado')+'</button></td>'+
+        '<td data-l="RF enviado"><div class="rfb"><button class="tg'+(x.rfwa?' on':'')+'" data-k="'+x.k+'" data-c="rfwa">'+(x.rfwa?'✓ WhatsApp':'WhatsApp')+'</button>'+
+          '<button class="tg'+(x.rfem?' on':'')+'" data-k="'+x.k+'" data-c="rfem">'+(x.rfem?'✓ e-mail':'e-mail')+'</button></div>'+
+          (x.rfant?'<div class="mini">✓ enviado (sem meio)</div>':'')+'</td>'+
         '<td data-l="Observação"><input class="obs" id="o_'+x.k.replace('|','_')+'" data-k="'+x.k+'" value="'+esc(x.obs)+'" placeholder="ex.: aguardando fiscal">'+
           (q?'<div class="mini">'+esc(q.por)+' · '+esc(q.quando)+'</div>':'')+'</td></tr>';
     });
@@ -157,7 +162,7 @@ function render(){
   });
   if(!L.length) h+='<p class="mini" style="margin-top:14px">Nenhuma obra com esse filtro.</p>';
   h+='<p class="mini" style="margin-top:16px">Situação e “inserida no portal” vêm da varredura do portal (CTR) · “RF gerado” é o arquivo RF … '+F.mes.split('-')[1]+'-'+F.mes.split('-')[0]+' na pasta da obra · dados de '+esc(D.ger)+'. '+
-     'E-mail e RF enviado ficam salvos para todos os aparelhos.</p>';
+     'E-mail e RF enviado (WhatsApp ou e-mail) ficam salvos para todos os aparelhos.</p>';
   app.innerHTML=h; pintaSync();
   if(foco){ var f=document.getElementById(foco); if(f){ f.focus(); if(f.setSelectionRange&&f.value) f.setSelectionRange(f.value.length,f.value.length); } }
   window.scrollTo(0,y);
