@@ -1,0 +1,17 @@
+{
+ "tipo": "semanal",
+ "obra": "222",
+ "unidade": "ETEC Doutor Celso Giglio",
+ "de": "2026-09-07",
+ "ate": "2026-09-13",
+ "n": 1,
+ "cls": "RUIM",
+ "medpond": 3.0,
+ "vistorias": [
+  "leg-222-20260911"
+ ],
+ "whats": "🦺 *SEGURANÇA DO TRABALHO — SEMANA 37*\n_ETEC Doutor Celso Giglio · obra 222 · 07/09 a 11/09/2026_\n\n📅 1 vistoria(s): 11/09 RUIM\n📋 Situação atual: *RUIM* (média 3,000)\n\n⚠️ *Não conformidades em aberto (5)*\n• Isolamento e sinalização insuficientes na área em execução. A delimitação com cones e fita zebrada não impede de forma eficaz o acesso de alunos, funcionários e demais pessoas à frente de serviço. — prazo 17/09/2026 · resp. Rafael\n• Delimitação parcial da área de trabalho, com uso pontual de cones e fita zebrada. O tapume móvel não acompanha integralmente o avanço da atividade, mantendo trechos da intervenção expostos à circulação. — prazo 17/09/2026 · resp. Rafael\n• Área de pintura sem isolamento físico contínuo durante a execução, possibilitando aproximação indevida de terceiros, contato com superfície recém-pintada e interferência na atividade. — prazo 17/09/2026 · resp. Rafael\n• Cones utilizados de forma isolada, sem fechamento contínuo com fita zebrada e/ou tapume móvel, tornando a sinalização pouco efetiva para segregação entre a circulação e a frente de serviço. — prazo 17/09/2026 · resp. Rafael\n• Sinalização insuficiente em ponto de circulação. A presença de cone, sem complementação adequada por fita zebrada e tapume móvel, não garante o bloqueio e direcionamento seguro do fluxo de pessoas. — prazo 17/09/2026 · resp. Rafael\n\n_Luis Júnior — Engenharia Atlântica_",
+ "gerado": "2026-10-03T02:10:05",
+ "pdf_completo": "SST_SEMANAL_222_ETEC-DOUTOR-CELSO-GIGLIO_S37_11-09-2026.pdf",
+ "pdf": "SST_SEMANAL_222_ETEC-DOUTOR-CELSO-GIGLIO_S37_11-09-2026.pdf"
+}
