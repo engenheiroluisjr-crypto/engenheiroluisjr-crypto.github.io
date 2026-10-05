@@ -1,0 +1,180 @@
+{
+ "tipo": "diario",
+ "obra": 283,
+ "lote": "42",
+ "unidade": "PARQUE PAYOL",
+ "data": "2026-10-05",
+ "numero": 1,
+ "pct": "77",
+ "avanco": {
+  "aprovado": 1.8100452716849176,
+  "engenheiro": 77.0,
+  "fiscal_lo": 50.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-05T15:57:16",
+ "ficha": {
+  "funcionarios": "5",
+  "mao_de_obra": "Suficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "77",
+  "ritmo": "Normal",
+  "limpeza": "Boa",
+  "previsao": null,
+  "visita": "10:59",
+  "responsavel": null
+ },
+ "servicos": [
+  "Execução de requadro para chumbamento e posterior instalação de balcão",
+  "Execução do chumbamento de janelas metálicas (ferro), incluindo fixação e alinhamento dos caixilhos"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [
+  "Envio de fotos no grupo da obra, registrando as pendências identificadas e a evolução dos serviços executados"
+ ],
+ "pendencias": [
+  "01 - Retirada do balcão, com posterior requadro da alvenaria, deixando 5 cm de espaço para a instalação da pedra inferior do balcão e do passa-prato",
+  "02 - Instalação das janelas metálicas (ferro), com posicionamento, alinhamento e fixação dos caixilhos",
+  "03 - Assentamento de revestimento cerâmico (azulejos) e porcelanato, incluindo preparação e nivelamento das superfícies"
+ ],
+ "alertas": [],
+ "pedidos_estado": {
+  "52905": "ENTREGUE",
+  "53222": "ENTREGUE",
+  "55487": "ENTREGUE",
+  "55984": "ENTREGUE",
+  "56008": "PENDENTE",
+  "56211": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv234-muveq0pcf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf08xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf09xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf08xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf09xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf10xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf11xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf12xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf13xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  }
+ ],
+ "m001": "42.283_M003_PARQUE-PAYOL_rev00.xlsx",
+ "autor": "Eng. Leonardo",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_PARQUE PAYOL · 2026.ATA.FDE.42.283 · PIRAPORA DO BOM JESUS_\n\n👷 Efetivo: 5 · ☀️ Tempo seco · Ritmo normal · Limpeza boa\n📊 Aprovado *1,8%* · Engenheiro *77%* · Fiscal FDE *50%* (LO 24/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Execução de requadro para chumbamento e posterior instalação de balcão\n• Execução do chumbamento de janelas metálicas (ferro), incluindo fixação e alinhamento dos caixilhos\n\n📦 *Materiais — pedidos sem entrega até 05/10/2026*\n⚠️ 1 pedido(s), R$ 14.665,93 ainda por receber\n• 56008 — PRATELEIRA DE GRANILITE DE (5,30 X +7 itens — *31 dias* em aberto\n\n📌 *Pendências*\n• 01 - Retirada do balcão, com posterior requadro da alvenaria, deixando 5 cm de espaço para a instalação da pedra inferior do balcão e do passa-prato\n• 02 - Instalação das janelas metálicas (ferro), com posicionamento, alinhamento e fixação dos caixilhos\n• 03 - Assentamento de revestimento cerâmico (azulejos) e porcelanato, incluindo preparação e nivelamento das superfícies\n\n❗ *Recomendações*\n• Envio de fotos no grupo da obra, registrando as pendências identificadas e a evolução dos serviços executados\n\n_Relatório nº 1 · Eng. Leonardo · Engenharia Atlântica_"
+}

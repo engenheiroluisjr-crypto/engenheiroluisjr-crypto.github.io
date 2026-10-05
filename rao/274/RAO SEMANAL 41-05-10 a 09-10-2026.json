@@ -1,0 +1,32 @@
+{
+ "tipo": "semanal",
+ "obra": 274,
+ "lote": "41",
+ "unidade": "ETEC EMBU",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 2,
+ "pct": "40",
+ "servicos": [
+  "Rejuntando azulejo e assentamento de azulejo",
+  "Assentamento e rejuntamento de azulejo"
+ ],
+ "chegou": [],
+ "pendentes": [
+  "56182"
+ ],
+ "sem_pedido": [
+  29722
+ ],
+ "sem_entrega": [
+  "56182"
+ ],
+ "pedidos_em": "05/10/2026 15:58",
+ "gerado": "2026-10-05T15:58:10",
+ "avanco": {
+  "aprovado": 36.575870757123,
+  "engenheiro": 40.0,
+  "fiscal_lo": 41.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_ETEC EMBU · 05/10/2026 a 09/10/2026_\n\n📅 2 visita(s) na semana\n📊 Aprovado *36,6%* · Engenheiro *40%* · Fiscal FDE *41%* (LO 29/09)\n\n🔨 *Executado na semana*\n• Rejuntando azulejo e assentamento de azulejo\n• Assentamento e rejuntamento de azulejo\n\n📦 *Ainda sem entrega até 05/10/2026* — 1 pedido(s), R$ 42.473,79\n• 56182 — DIVISORIA SANITARIA DE GRANILITE E +2 itens — *26 dias* em aberto\n\n🛒 *Solicitado e ainda sem pedido de compra* — 1\n• sol. 29722 (15/07) — FINALIDADE: REVESTIMENTO\n\n_Situação dos pedidos em 05/10/2026 15:58_\n\n_Luis Júnior — Engenharia Atlântica_"
+}

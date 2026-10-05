@@ -1,0 +1,201 @@
+{
+ "tipo": "diario",
+ "obra": 289,
+ "lote": "41",
+ "unidade": "EE HENRIQUE COSTA",
+ "data": "2026-10-05",
+ "numero": 1,
+ "pct": "20",
+ "avanco": {
+  "aprovado": 0.1992980897666881,
+  "engenheiro": 20.0,
+  "fiscal_lo": 10.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-05T15:57:43",
+ "ficha": {
+  "funcionarios": "4",
+  "mao_de_obra": "Insuficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "20",
+  "ritmo": "Normal",
+  "limpeza": "Regular",
+  "previsao": null,
+  "visita": "11:53",
+  "responsavel": null
+ },
+ "servicos": [
+  "Pintura de salas de aula",
+  "Sant masculino chumbando hidráulica",
+  "Início revestimento"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [
+  "Aumentar efetivo pintura"
+ ],
+ "pendencias": [
+  "PINGADEIRAS DE CONCRETO MURO"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "medio",
+   "Organização e limpeza da obra: regular"
+  ]
+ ],
+ "pedidos_estado": {
+  "53551": "ENTREGUE",
+  "53585": "ENTREGUE",
+  "54319": "ENTREGUE",
+  "55020": "PENDENTE",
+  "55087": "ENTREGUE",
+  "55343": "ENTREGUE",
+  "55693": "ENTREGUE",
+  "55794": "ENTREGUE",
+  "56087": "ENTREGUE",
+  "56091": "ENTREGUE",
+  "56668": "ENTREGUE",
+  "56810": "ENTREGUE",
+  "57089": "ENTREGUE",
+  "57092": "ENTREGUE",
+  "57102": "ENTREGUE",
+  "57179": "PENDENTE",
+  "57180": "PENDENTE",
+  "57195": "ENTREGUE",
+  "57229": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv234-muveq0pcf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf08xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf09xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf08xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf09xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf10xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf11xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf12xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf13xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  }
+ ],
+ "m001": "41.289_M002_EE-HENRIQUE-COSTA_rev00.xlsx",
+ "autor": "Eng. Douglas",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_EE HENRIQUE COSTA · 2026.ATA.FDE.41.289 · EMBU DAS ARTES_\n\n👷 Efetivo: 4 · ☀️ Tempo seco · Ritmo normal · Limpeza regular\n📊 Aprovado *0,2%* · Engenheiro *20%* · Fiscal FDE *10%* (LO 30/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Pintura de salas de aula\n• Sant masculino chumbando hidráulica\n• Início revestimento\n\n📦 *Materiais — pedidos sem entrega até 05/10/2026*\n⚠️ 3 pedido(s), R$ 108.848,56 ainda por receber\n• 55020 — CUMEEIRA - PINTADA 1 FACE TELHADO  +3 itens — *47 dias* em aberto\n• 57179 — Tinta alumínio +7 itens — *5 dias* em aberto\n• 57180 — TELA DE ARAME GALVANIZADO FIO 10,  +1 itens — *5 dias* em aberto\n\n📌 *Pendências*\n• PINGADEIRAS DE CONCRETO MURO\n\n❗ *Recomendações*\n• Aumentar efetivo pintura\n\n_Relatório nº 1 · Eng. Douglas · Engenharia Atlântica_"
+}

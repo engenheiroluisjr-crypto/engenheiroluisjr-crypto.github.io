@@ -1,0 +1,237 @@
+{
+ "tipo": "diario",
+ "obra": 274,
+ "lote": "41",
+ "unidade": "ETEC EMBU",
+ "data": "2026-10-05",
+ "numero": 2,
+ "pct": "40",
+ "avanco": {
+  "aprovado": 36.575870757123,
+  "engenheiro": 40.0,
+  "fiscal_lo": 41.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-05T15:57:34",
+ "ficha": {
+  "funcionarios": "1",
+  "mao_de_obra": "Insuficiente",
+  "material": "Insuficiente",
+  "equipamentos": "Insuficiente",
+  "tempo": "Seco",
+  "falhas": "Sim",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "40",
+  "ritmo": "Lento",
+  "limpeza": "Regular",
+  "previsao": null,
+  "visita": "11:16",
+  "responsavel": null
+ },
+ "servicos": [
+  "Assentamento e rejuntamento de azulejo"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [],
+ "pendencias": [
+  "Execução do forro de gesso dos banheiros alunos masculino e feminino, equipe da obra informou que tinha material mas hoje fez uma solicitação da estrutura do forro"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Material em canteiro insuficiente"
+  ],
+  [
+   "medio",
+   "Equipamentos insuficientes"
+  ],
+  [
+   "alto",
+   "Falhas construtivas a corrigir — registrar quais e o prazo"
+  ],
+  [
+   "medio",
+   "Ritmo da obra: lento"
+  ],
+  [
+   "medio",
+   "Organização e limpeza da obra: regular"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 1 funcionário(s) na visita"
+  ]
+ ],
+ "pedidos_estado": {
+  "51074": "ENTREGUE",
+  "51819": "ENTREGUE",
+  "52711": "ENTREGUE",
+  "52712": "ENTREGUE",
+  "52790": "ENTREGUE",
+  "52791": "ENTREGUE",
+  "52852": "ENTREGUE",
+  "52986": "ENTREGUE",
+  "52989": "ENTREGUE",
+  "53352": "ENTREGUE",
+  "53803": "ENTREGUE",
+  "53867": "ENTREGUE",
+  "54126": "ENTREGUE",
+  "54137": "ENTREGUE",
+  "54140": "ENTREGUE",
+  "54158": "ENTREGUE",
+  "54505": "ENTREGUE",
+  "54536": "ENTREGUE",
+  "54572": "ENTREGUE",
+  "54671": "ENTREGUE",
+  "54677": "ENTREGUE",
+  "54941": "ENTREGUE",
+  "54943": "ENTREGUE",
+  "55695": "ENTREGUE",
+  "55780": "ENTREGUE",
+  "55782": "ENTREGUE",
+  "55788": "ENTREGUE",
+  "55790": "ENTREGUE",
+  "55795": "ENTREGUE",
+  "56145": "ENTREGUE",
+  "56182": "PENDENTE",
+  "56414": "ENTREGUE",
+  "56432": "ENTREGUE",
+  "56433": "ENTREGUE",
+  "56792": "ENTREGUE",
+  "56814": "ENTREGUE",
+  "57049": "ENTREGUE",
+  "57069": "ENTREGUE",
+  "57094": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv234-muveq0pcf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf08xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf09xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf08xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf09xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf10xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf11xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf12xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf13xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  }
+ ],
+ "m001": "41.274_M004_ETEC-EMBU_rev00.xlsx",
+ "autor": "Eng. Luis Júnior",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_ETEC EMBU · 2026.ATA.FDE.41.274 · EMBU DAS ARTES_\n\n👷 Efetivo: 1 · ☀️ Tempo seco · Ritmo lento · Limpeza regular\n📊 Aprovado *36,6%* · Engenheiro *40%* · Fiscal FDE *41%* (LO 29/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Assentamento e rejuntamento de azulejo\n\n📦 *Materiais — pedidos sem entrega até 05/10/2026*\n⚠️ 1 pedido(s), R$ 42.473,79 ainda por receber\n• 56182 — DIVISORIA SANITARIA DE GRANILITE E +2 itens — *26 dias* em aberto\n\n📌 *Pendências*\n• Execução do forro de gesso dos banheiros alunos masculino e feminino, equipe da obra informou que tinha material mas hoje fez uma solicitação da estrutura do forro\n\n_Relatório nº 2 · Eng. Luis Júnior · Engenharia Atlântica_"
+}

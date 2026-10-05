@@ -1,0 +1,43 @@
+{
+ "tipo": "semanal",
+ "obra": 234,
+ "lote": "41",
+ "unidade": "EE EE PROF DR EURICO DA SILVA BASTOS",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 1,
+ "pct": "50",
+ "servicos": [
+  "Instalando pingadeira de concreto"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "sem_pedido": [
+  27966,
+  27967,
+  27968,
+  27969,
+  28516,
+  28519,
+  28540,
+  28544,
+  28545,
+  28546,
+  28556,
+  28557,
+  28558,
+  29202,
+  30324,
+  30349,
+  30590
+ ],
+ "sem_entrega": [],
+ "pedidos_em": "05/10/2026 15:58",
+ "gerado": "2026-10-05T15:58:28",
+ "avanco": {
+  "aprovado": 62.01443171095406,
+  "engenheiro": 50.0,
+  "fiscal_lo": 43.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EE EE PROF DR EURICO DA SILVA BASTOS · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *62%* · Engenheiro *50%* · Fiscal FDE *43%* (LO 10/09)\n\n🔨 *Executado na semana*\n• Instalando pingadeira de concreto\n\n🛒 *Solicitado e ainda sem pedido de compra* — 17\n• sol. 27966 (28/04) — FINALIDADE: MURO DIVISA *IMAGEM EM ANEXO*\n• sol. 27967 (28/04) — FINALIDADE: MURO DIVISA *IMAGEM EM ANEXO*\n• sol. 27968 (28/04) — FINALIDADE: MURO DE DIVISA *IMAGEM EM ANEXO*\n• sol. 27969 (28/04) — FINALIDADE: MURO DE DIVISA FD-16\n• sol. 28516 (21/05) — FINALIDADE: GRANITO COZINHA\n• sol. 28519 (21/05) — FINALIDADE: ARMADURA QE-37\n• ... e mais 11 solicitação(ões)\n\n_Situação dos pedidos em 05/10/2026 15:58_\n\n_Luis Júnior — Engenharia Atlântica_"
+}

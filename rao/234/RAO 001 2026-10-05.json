@@ -1,0 +1,263 @@
+{
+ "tipo": "diario",
+ "obra": 234,
+ "lote": "41",
+ "unidade": "EE EE PROF DR EURICO DA SILVA BASTOS",
+ "data": "2026-10-05",
+ "numero": 1,
+ "pct": "50",
+ "avanco": {
+  "aprovado": 62.01443171095406,
+  "engenheiro": 50.0,
+  "fiscal_lo": 43.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-05T15:57:52",
+ "ficha": {
+  "funcionarios": "1",
+  "mao_de_obra": "Insuficiente",
+  "material": "Insuficiente",
+  "equipamentos": "Insuficiente",
+  "tempo": "Seco",
+  "falhas": "Sim",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "50",
+  "ritmo": "Lento",
+  "limpeza": "Ruim",
+  "previsao": null,
+  "visita": "12:23",
+  "responsavel": null
+ },
+ "servicos": [
+  "Instalando pingadeira de concreto"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [
+  "Itens a serem regularizar",
+  "Válvula HYDRA  (nao conectado tubo de descida)",
+  "Azulejos trincado",
+  "Rejunte com falhas",
+  "Falta pintura tetos sanitado",
+  "Vazamento telhado",
+  "Falta instalar rufo"
+ ],
+ "recomendacoes": [
+  "Aumentar efetivo,  e finalizar sant masculino"
+ ],
+ "pendencias": [],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Material em canteiro insuficiente"
+  ],
+  [
+   "medio",
+   "Equipamentos insuficientes"
+  ],
+  [
+   "alto",
+   "Falhas construtivas a corrigir — registrar quais e o prazo"
+  ],
+  [
+   "medio",
+   "Ritmo da obra: lento"
+  ],
+  [
+   "alto",
+   "Organização e limpeza da obra: ruim"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 1 funcionário(s) na visita"
+  ]
+ ],
+ "pedidos_estado": {
+  "49588": "ENTREGUE",
+  "49830": "ENTREGUE",
+  "50140": "ENTREGUE",
+  "50195": "ENTREGUE",
+  "50243": "ENTREGUE",
+  "50325": "ENTREGUE",
+  "50456": "ENTREGUE",
+  "50631": "ENTREGUE",
+  "50783": "ENTREGUE",
+  "50788": "ENTREGUE",
+  "50914": "ENTREGUE",
+  "50933": "ENTREGUE",
+  "51015": "ENTREGUE",
+  "51017": "ENTREGUE",
+  "51068": "ENTREGUE",
+  "51455": "ENTREGUE",
+  "51473": "ENTREGUE",
+  "51736": "ENTREGUE",
+  "51737": "ENTREGUE",
+  "51808": "ENTREGUE",
+  "51815": "ENTREGUE",
+  "51863": "ENTREGUE",
+  "51872": "ENTREGUE",
+  "52154": "ENTREGUE",
+  "52155": "ENTREGUE",
+  "52250": "ENTREGUE",
+  "52310": "ENTREGUE",
+  "52339": "ENTREGUE",
+  "52403": "ENTREGUE",
+  "52434": "ENTREGUE",
+  "52881": "ENTREGUE",
+  "52973": "ENTREGUE",
+  "52985": "ENTREGUE",
+  "53355": "ENTREGUE",
+  "53442": "ENTREGUE",
+  "53450": "ENTREGUE",
+  "53806": "ENTREGUE",
+  "53807": "ENTREGUE",
+  "54149": "ENTREGUE",
+  "54172": "ENTREGUE",
+  "54202": "ENTREGUE",
+  "54649": "ENTREGUE",
+  "54652": "ENTREGUE",
+  "54928": "ENTREGUE",
+  "55451": "ENTREGUE",
+  "55781": "ENTREGUE",
+  "55787": "ENTREGUE",
+  "56152": "ENTREGUE",
+  "56312": "ENTREGUE",
+  "56313": "ENTREGUE",
+  "56431": "ENTREGUE",
+  "56739": "ENTREGUE",
+  "56741": "ENTREGUE",
+  "56795": "ENTREGUE",
+  "56883": "ENTREGUE",
+  "57037": "ENTREGUE",
+  "57207": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv234-muveq0pcf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf08xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv234-muveq0pcf09xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf08xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf09xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf10xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf11xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf12xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  },
+  {
+   "arquivo": "painelv274-muvc0xprf13xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": ""
+  }
+ ],
+ "m001": "41.234_M005_EE-EURICO-DA-SILVA-BASTOS_rev00.xlsx",
+ "autor": "Eng. Douglas",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_EE EE PROF DR EURICO DA SILVA BASTOS · 2026.ATA.FDE.41.234 · ITAPECERICA DA SERRA_\n\n👷 Efetivo: 1 · ☀️ Tempo seco · Ritmo lento · Limpeza ruim\n📊 Aprovado *62%* · Engenheiro *50%* · Fiscal FDE *43%* (LO 10/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Instalando pingadeira de concreto\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n🚨 *Pontos de atenção*\n• Itens a serem regularizar\n• Válvula HYDRA  (nao conectado tubo de descida)\n• Azulejos trincado\n• Rejunte com falhas\n• Falta pintura tetos sanitado\n• Vazamento telhado\n\n❗ *Recomendações*\n• Aumentar efetivo,  e finalizar sant masculino\n\n_Relatório nº 1 · Eng. Douglas · Engenharia Atlântica_"
+}
