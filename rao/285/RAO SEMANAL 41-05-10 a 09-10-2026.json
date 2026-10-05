@@ -1,0 +1,26 @@
+{
+ "tipo": "semanal",
+ "obra": 285,
+ "lote": "42",
+ "unidade": "CANDIDO RONDON MARECHAL",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 1,
+ "pct": "99",
+ "servicos": [
+  "CONCLUSÃO DA OBRA (falta alguns detalhes)",
+  "Agendado para entrega com o Fiscal na Quinta-feira"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "sem_pedido": [],
+ "sem_entrega": [],
+ "pedidos_em": "05/10/2026 13:55",
+ "gerado": "2026-10-05T13:55:05",
+ "avanco": {
+  "aprovado": 7.568244066474975,
+  "engenheiro": 99.0,
+  "fiscal_lo": 90.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_CANDIDO RONDON MARECHAL · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana · 1 dia(s) de chuva\n📊 Aprovado *7,6%* · Engenheiro *99%* · Fiscal FDE *90%* (LO 24/09)\n\n🔨 *Executado na semana*\n• CONCLUSÃO DA OBRA (falta alguns detalhes)\n• Agendado para entrega com o Fiscal na Quinta-feira\n\n_Situação dos pedidos em 05/10/2026 13:55_\n\n_Luis Júnior — Engenharia Atlântica_"
+}

@@ -1,0 +1,108 @@
+{
+ "tipo": "diario",
+ "obra": 285,
+ "lote": "42",
+ "unidade": "CANDIDO RONDON MARECHAL",
+ "data": "2026-10-05",
+ "numero": 1,
+ "pct": "99",
+ "avanco": {
+  "aprovado": 7.568244066474975,
+  "engenheiro": 99.0,
+  "fiscal_lo": 90.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-05T13:54:56",
+ "ficha": {
+  "funcionarios": "0",
+  "mao_de_obra": "Suficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Chuva",
+  "falhas": "Sim",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "99",
+  "ritmo": "Normal",
+  "limpeza": "Boa",
+  "previsao": null,
+  "visita": "08:48",
+  "responsavel": null
+ },
+ "servicos": [
+  "CONCLUSÃO DA OBRA (falta alguns detalhes)",
+  "Agendado para entrega com o Fiscal na Quinta-feira"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [],
+ "pendencias": [
+  "01 - Retoque de pintura na janela- (Pátio)",
+  "02 - Acabamento (piso de concreto)"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Falhas construtivas a corrigir — registrar quais e o prazo"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 0 funcionário(s) na visita"
+  ]
+ ],
+ "pedidos_estado": {
+  "53705": "ENTREGUE",
+  "53723": "ENTREGUE",
+  "56572": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv285-muv76nzxf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv285-muv76nzxf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv285-muv76nzxf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv285-muv76nzxf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Pendência 02"
+  },
+  {
+   "arquivo": "painelv285-muv76nzxf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv285-muv76nzxf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv285-muv76nzxf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Pendência 01"
+  },
+  {
+   "arquivo": "painelv285-muv76nzxf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv285-muv76nzxf08xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  }
+ ],
+ "m001": "42.285_M002_CANDIDO-RONDON-MARECHAL_rev00.xlsx",
+ "autor": "Eng. Leonardo",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_CANDIDO RONDON MARECHAL · 2026.ATA.FDE.42.285 · ITAPEVI_\n\n👷 Efetivo: 0 · 🌧️ Tempo chuva · Ritmo normal · Limpeza boa\n📊 Aprovado *7,6%* · Engenheiro *99%* · Fiscal FDE *90%* (LO 24/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• CONCLUSÃO DA OBRA (falta alguns detalhes)\n• Agendado para entrega com o Fiscal na Quinta-feira\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n🚨 *Pontos de atenção*\n• Falhas construtivas a corrigir — registrar quais e o prazo\n• Efetivo baixo: 0 funcionário(s) na visita\n\n📌 *Pendências*\n• 01 - Retoque de pintura na janela- (Pátio)\n• 02 - Acabamento (piso de concreto)\n\n_Relatório nº 1 · Eng. Leonardo · Engenharia Atlântica_"
+}
