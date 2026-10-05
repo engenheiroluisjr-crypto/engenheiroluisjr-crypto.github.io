@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Catálogos FDE — orientações por serviço</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--bg:#f4f3ef;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--ln:#dcdad3;--pri:#1f4e79;--ok:#2f6f4e;--okb:#e6f4ec;--warn:#8a6512;--warnb:#fdf4de;--chip:#eef2f7}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#22221f;--tx:#ecebe6;--mut:#a3a29c;--ln:#3a3935;--pri:#7fb0de;--ok:#7fc7a0;--okb:#1f3a2c;--warn:#e5c062;--warnb:#3d3420;--chip:#2c3340}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:10px 16px}
+header h1{font-size:16px;margin:0 0 8px}
+header .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type=search]{flex:1;min-width:200px;font:inherit;padding:9px 12px;border-radius:10px;border:0}
+.tabs button{font:inherit;font-size:13px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;border-radius:999px;padding:5px 12px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:#fff;color:#1f4e79}
+main{max-width:980px;margin:0 auto;padding:12px 16px 80px}
+.nota{color:var(--mut);font-size:13px;margin:6px 0 12px}
+.it{background:var(--card);border:1px solid var(--ln);border-radius:12px;margin:10px 0;padding:12px 14px}
+.it h2{font-size:15px;margin:0 0 4px;display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
+.cod{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700}
+.un{color:var(--mut);font-size:12.5px}
+.grp{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin:10px 0 4px}
+.f{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid var(--ln)}
+.f:first-of-type{border-top:0}
+.f .fc{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;min-width:74px}
+.f .fn{flex:1}
+.f .cat{font-size:12px;color:var(--mut)}
+.f a{white-space:nowrap;color:var(--pri);font-weight:600;text-decoration:none}
+.f a:hover{text-decoration:underline}
+.tag{font-size:11.5px;border-radius:6px;padding:1px 7px;background:var(--chip)}
+.tag.d{background:var(--okb);color:var(--ok)}
+.tag.g{background:var(--warnb);color:var(--warn)}
+.vazio{color:var(--mut);padding:20px 0}
+.mais{display:block;margin:14px auto;font:inherit;padding:8px 16px;border-radius:10px;border:1px solid var(--ln);background:var(--card);color:var(--tx);cursor:pointer}
+@media (max-width:560px){.f{flex-wrap:wrap}.f .fc{min-width:0}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Catálogos técnicos FDE — orientação por serviço do orçamento</h1>
+  <div class="row">
+    <input id="q" type="search" placeholder="Código do serviço (ex.: 15.02.025) ou palavra (ex.: porta, pintura)" autocomplete="off">
+    <span class="tabs"><button id="tS" aria-pressed="true">Serviços do orçamento</button> <button id="tF" aria-pressed="false">Todas as fichas</button></span>
+  </div>
+</header>
+<main>
+  <p class="nota" id="nota"></p>
+  <div id="res"></div>
+</main>
+<script src="catalogo.js"></script>
+<script>
+const C=window.CATFDE, F=C.f, M=C.m, $=id=>document.getElementById(id);
+let modo='S', lim=40;
+const norm=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const GRUPOS=[['d','A ficha cita este serviço','d'],['c','Componente citado na descrição','d'],['s','Fichas do mesmo subcapítulo','s'],['g','Orientação geral do capítulo','g']];
+function ficha(i,tag){const f=F[i]; return `<div class="f"><span class="fc">${esc(f[0])}</span><span class="fn">${esc(f[1])} <span class="cat">· ${esc(f[2])}</span>${tag?` <span class="tag">${esc(tag)}</span>`:''}</span>${f[3]?`<a href="${esc(f[3])}" target="_blank" rel="noopener">Abrir ficha ↗</a>`:''}</div>`;}
+function item(c){const x=M[c]; if(!x) return '';
+  let h=`<div class="it"><h2><span class="cod">${c}</span> ${esc(x[0])} <span class="un">${esc(x[1])}</span></h2>`;
+  if(!x[2].length) h+='<div class="vazio">Nenhuma ficha relacionada.</div>';
+  for(const [k,tit] of GRUPOS){const L=x[2].filter(r=>r[1][0]===k); if(!L.length) continue;
+    h+=`<div class="grp">${tit}</div>`+L.map(r=>ficha(r[0], k==='c'?r[1].slice(2):'')).join('');}
+  return h+'</div>';}
+function busca(){
+  const q=$('q').value.trim(), nq=norm(q), out=$('res');
+  history.replaceState(null,'',q?('?'+(modo==='F'?'f=':'c=')+encodeURIComponent(q)):location.pathname);
+  if(modo==='S'){
+    let ks=Object.keys(M);
+    if(q){ const cm=q.match(/^\d{2}(\.\d{0,2}(\.\d{0,3})?)?$/);
+      ks = cm ? ks.filter(k=>k.startsWith(q)) : ks.filter(k=>{const t=norm(k+' '+M[k][0]); return nq.split(/\s+/).every(w=>t.includes(w));}); }
+    else ks=ks.filter(k=>M[k][2].some(r=>r[1]==='d'));
+    $('nota').textContent = q ? `${ks.length} serviço(s) do boletim FDE encontrados.` :
+      `Digite o código do serviço do orçamento ou uma palavra. Abaixo, os serviços que têm ficha própria no catálogo (${ks.length}). Índice gerado em ${C.ger}.`;
+    out.innerHTML = ks.length ? ks.slice(0,lim).map(item).join('')+(ks.length>lim?'<button class="mais" id="mais">Mostrar mais</button>':'') : '<div class="vazio">Nada encontrado.</div>';
+  } else {
+    let L=F.map((f,i)=>i); if(q) L=L.filter(i=>{const t=norm(F[i].slice(0,3).join(' ')); return nq.split(/\s+/).every(w=>t.includes(w));});
+    $('nota').textContent=`${L.length} ficha(s) de ${F.length} nos catálogos técnicos da FDE.`;
+    out.innerHTML = L.length ? '<div class="it">'+L.slice(0,lim*5).map(i=>ficha(i,'')).join('')+'</div>'+(L.length>lim*5?'<button class="mais" id="mais">Mostrar mais</button>':'') : '<div class="vazio">Nada encontrado.</div>';
+  }
+  const b=$('mais'); if(b) b.onclick=()=>{lim+=40; busca();};
+}
+function setModo(m){modo=m; lim=40; $('tS').setAttribute('aria-pressed',m==='S'); $('tF').setAttribute('aria-pressed',m==='F'); busca();}
+$('tS').onclick=()=>setModo('S'); $('tF').onclick=()=>setModo('F');
+let tm; $('q').addEventListener('input',()=>{clearTimeout(tm); lim=40; tm=setTimeout(busca,200);});
+const P=new URLSearchParams(location.search);
+if(P.get('f')){ $('q').value=P.get('f'); setModo('F'); } else { $('q').value=P.get('c')||''; busca(); }
+</script>
+</body>
+</html>
