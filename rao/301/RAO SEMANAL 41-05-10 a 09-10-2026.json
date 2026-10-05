@@ -1,0 +1,45 @@
+{
+ "tipo": "semanal",
+ "obra": 301,
+ "lote": "41",
+ "unidade": "EE EDUARDO VAZ",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 1,
+ "pct": "5",
+ "servicos": [
+  "Serviços parados",
+  "Efetivo tinha apenas uma funcionários organizando e limpando"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "sem_pedido": [
+  30280,
+  30285,
+  30286,
+  30287,
+  30288,
+  30289,
+  30290,
+  30291,
+  30292,
+  30293,
+  30294,
+  30295,
+  30296,
+  30297,
+  30932,
+  30943,
+  30945,
+  31397
+ ],
+ "sem_entrega": [],
+ "pedidos_em": "05/10/2026 18:30",
+ "gerado": "2026-10-05T18:30:52",
+ "avanco": {
+  "aprovado": 0.0,
+  "engenheiro": 5.0,
+  "fiscal_lo": 10.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EE EDUARDO VAZ · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *0%* · Engenheiro *5%* · Fiscal FDE *10%* (LO 29/09)\n\n🔨 *Executado na semana*\n• Serviços parados\n• Efetivo tinha apenas uma funcionários organizando e limpando\n\n🛒 *Solicitado e ainda sem pedido de compra* — 18\n• sol. 30280 (07/08) — FINALIDADE: LABORATÓRIO DE FARMACIA *ORÇAMENTO E\n• sol. 30285 (07/08) — FINALIDADE: LABORATÓRIO FARMACIA - CUBAS E ACESS\n• sol. 30286 (07/08) — FINALIDADE: LABORATÓRIO FARMACIA - INSUMO PARA P\n• sol. 30287 (07/08) — FINALIDADE: LABORATÓRIO FARMACIA - PISO VINILICO\n• sol. 30288 (07/08) — FINALIDADE: LABORATÓRIO FARMACIA *IMAGEM EM ANEX\n• sol. 30289 (07/08) — FINALIDADE: LABORATÓRIO FARMACIA - ESQUADRIA DE \n• ... e mais 12 solicitação(ões)\n\n_Situação dos pedidos em 05/10/2026 18:30_\n\n_Luis Júnior — Engenharia Atlântica_"
+}

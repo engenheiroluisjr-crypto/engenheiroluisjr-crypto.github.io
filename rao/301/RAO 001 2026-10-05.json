@@ -1,0 +1,124 @@
+{
+ "tipo": "diario",
+ "obra": 301,
+ "lote": "41",
+ "unidade": "EE EDUARDO VAZ",
+ "data": "2026-10-05",
+ "numero": 1,
+ "pct": "5",
+ "avanco": {
+  "aprovado": 0.0,
+  "engenheiro": 5.0,
+  "fiscal_lo": 10.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-05T18:29:48",
+ "ficha": {
+  "funcionarios": "1",
+  "mao_de_obra": "Insuficiente",
+  "material": "Insuficiente",
+  "equipamentos": "Insuficiente",
+  "tempo": "Seco",
+  "falhas": "Sim",
+  "placa": null,
+  "andamento": "Obra paralisada",
+  "pct": "5",
+  "ritmo": "Parado",
+  "limpeza": "Ruim",
+  "previsao": null,
+  "visita": "11:57",
+  "responsavel": null
+ },
+ "servicos": [
+  "Serviços parados",
+  "Efetivo tinha apenas uma funcionários organizando e limpando"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [],
+ "pendencias": [
+  "Aguardando entrega de material já comprado - elétrico e hidráulico"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Material em canteiro insuficiente"
+  ],
+  [
+   "medio",
+   "Equipamentos insuficientes"
+  ],
+  [
+   "alto",
+   "Falhas construtivas a corrigir — registrar quais e o prazo"
+  ],
+  [
+   "alto",
+   "Ritmo da obra: parado"
+  ],
+  [
+   "alto",
+   "Organização e limpeza da obra: ruim"
+  ],
+  [
+   "alto",
+   "Andamento: Obra paralisada"
+  ]
+ ],
+ "pedidos_estado": {
+  "54456": "ENTREGUE",
+  "55318": "ENTREGUE",
+  "55786": "ENTREGUE",
+  "56434": "ENTREGUE",
+  "56731": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv301-muvg4vwgf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Entregue apenas luminária da eletrica"
+  },
+  {
+   "arquivo": "painelv301-muvg4vwgf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Demolição de revestimento"
+  },
+  {
+   "arquivo": "painelv301-muvg4vwgf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Portas de ferro entregue"
+  },
+  {
+   "arquivo": "painelv301-muvg4vwgf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Demolição e contrapiso parado"
+  },
+  {
+   "arquivo": "painelv301-muvg4vwgf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Contrapiso parado"
+  },
+  {
+   "arquivo": "painelv301-muvg4vwgf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Porta de acesso mas sem identificação da obra"
+  },
+  {
+   "arquivo": "painelv301-muvg4vwgf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Demolição e piso parada"
+  },
+  {
+   "arquivo": "painelv301-muvg4vwgf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Desorganização na obra"
+  }
+ ],
+ "m001": "41.301_M002_EE-EDUARDO-VAZ_rev00.xlsx",
+ "autor": "Eng. Luis Júnior",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_EE EDUARDO VAZ · 2026.ATA.FDE.41.301 · EMBU DAS ARTES_\n\n👷 Efetivo: 1 · ☀️ Tempo seco · Ritmo parado · Limpeza ruim\n📊 Aprovado *0%* · Engenheiro *5%* · Fiscal FDE *10%* (LO 29/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Serviços parados\n• Efetivo tinha apenas uma funcionários organizando e limpando\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• Aguardando entrega de material já comprado - elétrico e hidráulico\n\n_Relatório nº 1 · Eng. Luis Júnior · Engenharia Atlântica_"
+}

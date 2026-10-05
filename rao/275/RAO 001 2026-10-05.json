@@ -1,0 +1,140 @@
+{
+ "tipo": "diario",
+ "obra": 275,
+ "lote": "42",
+ "unidade": "EE/EMEF JD MARIA HELENA / PADRE ELIDIO",
+ "data": "2026-10-05",
+ "numero": 1,
+ "pct": "24",
+ "avanco": {
+  "aprovado": 21.168809195405906,
+  "engenheiro": 24.0,
+  "fiscal_lo": 38.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-05T18:30:01",
+ "ficha": {
+  "funcionarios": "0",
+  "mao_de_obra": "Insuficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Sim",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "24",
+  "ritmo": "Normal",
+  "limpeza": "Ruim",
+  "previsao": null,
+  "visita": "13:16",
+  "responsavel": null
+ },
+ "servicos": [
+  "No horário da vistoria não havia funcionário na unidade"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [],
+ "pendencias": [
+  "Instalação da porta de vidro no corredor, solicitado diversas vezes e até o momento não instalado",
+  "Material sem isolamento no corredor de acesso ao estacionamento",
+  "Material sem isolamento no refeitório, acesso para qualquer pessoa",
+  "Pisos sem junta de dilatação executada",
+  "Pisos com degrau entre ambientes",
+  "Sem soleiras, mostrando o piso sob piso executado"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Falhas construtivas a corrigir — registrar quais e o prazo"
+  ],
+  [
+   "alto",
+   "Organização e limpeza da obra: ruim"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 0 funcionário(s) na visita"
+  ]
+ ],
+ "pedidos_estado": {
+  "52828": "ENTREGUE",
+  "53558": "ENTREGUE",
+  "54486": "ENTREGUE",
+  "56529": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv275-muvgk34gf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Latas de tintas sem isolamento no refeitório"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Acabamento do piso ficou ruim"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Piso refeitório sem junta de dilatação"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Degrau no acesso externo"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Não trocado soleira entre ambientes, degrau no piso"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Sem soleira, podendo danificar o piso"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf08xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Sem soleira, mostrando o piso sob piso"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf09xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Sem isolamento material no corredor acesso estacionamento"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf10xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Entulho no estacionamento"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf11xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Porta removida ainda não foi instalada"
+  },
+  {
+   "arquivo": "painelv275-muvgk34gf12xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Danificado guarnição porta sala direção"
+  }
+ ],
+ "m001": "42.275_M003_PADRE-ELIDIO_rev00.xlsx",
+ "autor": "Eng. Luis Júnior",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_EE/EMEF JD MARIA HELENA / PADRE ELIDIO · 2026.ATA.FDE.42.275 · BARUERI_\n\n👷 Efetivo: 0 · ☀️ Tempo seco · Ritmo normal · Limpeza ruim\n📊 Aprovado *21,2%* · Engenheiro *24%* · Fiscal FDE *38%* (LO 28/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• No horário da vistoria não havia funcionário na unidade\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• Instalação da porta de vidro no corredor, solicitado diversas vezes e até o momento não instalado\n• Material sem isolamento no corredor de acesso ao estacionamento\n• Material sem isolamento no refeitório, acesso para qualquer pessoa\n• Pisos sem junta de dilatação executada\n• Pisos com degrau entre ambientes\n\n_Relatório nº 1 · Eng. Luis Júnior · Engenharia Atlântica_"
+}

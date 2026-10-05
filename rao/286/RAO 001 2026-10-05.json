@@ -1,0 +1,102 @@
+{
+ "tipo": "diario",
+ "obra": 286,
+ "lote": "41",
+ "unidade": "EE MARIA CATHARINA COMINO",
+ "data": "2026-10-05",
+ "numero": 1,
+ "pct": "25",
+ "avanco": {
+  "aprovado": 13.0262598855199,
+  "engenheiro": 25.0,
+  "fiscal_lo": 23.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-05T18:30:14",
+ "ficha": {
+  "funcionarios": "0",
+  "mao_de_obra": "Insuficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "25",
+  "ritmo": "Parado",
+  "limpeza": "Ruim",
+  "previsao": null,
+  "visita": "14:21",
+  "responsavel": null
+ },
+ "servicos": [
+  "Pintura estrutura quadra",
+  "Pintura interna",
+  "Elétrica"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [
+  "Sala dos professores, luminaria sem funcionar",
+  "Sala coordenadora 1pav, pintura sem realizar",
+  "Cobertura parada",
+  "Piso pátio sem finalizar  a mais de 40 dias"
+ ],
+ "recomendacoes": [
+  "Aumentar efetivo, finalizar adequação hidráulica  incêndio,  e finalizar piso pátio"
+ ],
+ "pendencias": [
+  "Tampa de concreto canaleta"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Ritmo da obra: parado"
+  ],
+  [
+   "alto",
+   "Organização e limpeza da obra: ruim"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 0 funcionário(s) na visita"
+  ]
+ ],
+ "pedidos_estado": {
+  "49067": "ENTREGUE",
+  "49262": "ENTREGUE",
+  "53159": "ENTREGUE",
+  "53213": "ENTREGUE",
+  "53219": "ENTREGUE",
+  "53226": "ENTREGUE",
+  "53229": "ENTREGUE",
+  "53231": "ENTREGUE",
+  "53797": "ENTREGUE",
+  "53798": "ENTREGUE",
+  "54098": "ENTREGUE",
+  "54925": "ENTREGUE",
+  "54983": "ENTREGUE",
+  "55805": "ENTREGUE",
+  "56546": "ENTREGUE",
+  "56813": "ENTREGUE",
+  "57066": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv286-muvitz1af00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv286-muvitz1af01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Registro da visita"
+  }
+ ],
+ "m001": "41.286_M002_EE-MARIA-CATHARINA-COMINO_rev00.xlsx",
+ "autor": "Eng. Douglas",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_EE MARIA CATHARINA COMINO · 2026.ATA.FDE.41.286 · TABOÃO DA SERRA_\n\n👷 Efetivo: 0 · ☀️ Tempo seco · Ritmo parado · Limpeza ruim\n📊 Aprovado *13%* · Engenheiro *25%* · Fiscal FDE *23%* (LO 30/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Pintura estrutura quadra\n• Pintura interna\n• Elétrica\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n🚨 *Pontos de atenção*\n• Sala dos professores, luminaria sem funcionar\n• Sala coordenadora 1pav, pintura sem realizar\n• Cobertura parada\n• Piso pátio sem finalizar  a mais de 40 dias\n\n📌 *Pendências*\n• Tampa de concreto canaleta\n\n❗ *Recomendações*\n• Aumentar efetivo, finalizar adequação hidráulica  incêndio,  e finalizar piso pátio\n\n_Relatório nº 1 · Eng. Douglas · Engenharia Atlântica_"
+}

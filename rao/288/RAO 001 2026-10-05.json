@@ -1,0 +1,166 @@
+{
+ "tipo": "diario",
+ "obra": 288,
+ "lote": "41",
+ "unidade": "EE EDUARDO VAZ",
+ "data": "2026-10-05",
+ "numero": 1,
+ "pct": "25",
+ "avanco": {
+  "aprovado": 9.01789826887089,
+  "engenheiro": 25.0,
+  "fiscal_lo": 20.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-05T18:29:34",
+ "ficha": {
+  "funcionarios": "1",
+  "mao_de_obra": "Insuficiente",
+  "material": "Suficiente",
+  "equipamentos": "Insuficiente",
+  "tempo": "Seco",
+  "falhas": "Sim",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "25",
+  "ritmo": "Lento",
+  "limpeza": "Ruim",
+  "previsao": null,
+  "visita": "11:47",
+  "responsavel": null
+ },
+ "servicos": [
+  "Execução da limpeza da obra",
+  "Remoção de telhas e madeiramento"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [
+  "Agilizar a limpeza da obra e melhorar isolamento dos materiais e locais de trabalho"
+ ],
+ "pendencias": [
+  "Isolamento material"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "medio",
+   "Equipamentos insuficientes"
+  ],
+  [
+   "alto",
+   "Falhas construtivas a corrigir — registrar quais e o prazo"
+  ],
+  [
+   "medio",
+   "Ritmo da obra: lento"
+  ],
+  [
+   "alto",
+   "Organização e limpeza da obra: ruim"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 1 funcionário(s) na visita"
+  ]
+ ],
+ "pedidos_estado": {
+  "53750": "ENTREGUE",
+  "53760": "ENTREGUE",
+  "53815": "ENTREGUE",
+  "53817": "ENTREGUE",
+  "55320": "ENTREGUE",
+  "55775": "ENTREGUE",
+  "55857": "ENTREGUE",
+  "56393": "ENTREGUE",
+  "56419": "ENTREGUE",
+  "56628": "ENTREGUE",
+  "56664": "ENTREGUE",
+  "56788": "ENTREGUE",
+  "56869": "ENTREGUE",
+  "56888": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv288-muvfy1dvf00xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Falta limpeza e remoção do material"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf01xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Falta limpeza e remoção do material"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf02xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Falta limpeza e remoção do material"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf03xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Falta limpeza e remoção do material"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf04xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Telha em cima podendo voar"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf05xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Falta limpeza e remoção do material"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf06xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Falta limpeza e remoção do material"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf07xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Falta limpeza e remoção do material"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf08xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Falta limpeza e remoção do material"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf09xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Falta isolamento do material"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf10xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Falta isolamento do material"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf11xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Tubulação e cabos pendurados"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf12xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Vão entre telhas instaladas"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf13xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Tubulação e fios penduras"
+  },
+  {
+   "arquivo": "painelv288-muvfy1dvf14xxxx.jpg",
+   "data": "2026-10-05",
+   "legenda": "Tubulação e fios pendurados"
+  }
+ ],
+ "m001": "41.288_M002_EE-EDUARDO-VAZ_rev00.xlsx",
+ "autor": "Eng. Luis Júnior",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_EE EDUARDO VAZ · 2026.ATA.FDE.41.288 · EMBU DAS ARTES_\n\n👷 Efetivo: 1 · ☀️ Tempo seco · Ritmo lento · Limpeza ruim\n📊 Aprovado *9%* · Engenheiro *25%* · Fiscal FDE *20%* (LO 29/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Execução da limpeza da obra\n• Remoção de telhas e madeiramento\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• Isolamento material\n\n❗ *Recomendações*\n• Agilizar a limpeza da obra e melhorar isolamento dos materiais e locais de trabalho\n\n_Relatório nº 1 · Eng. Luis Júnior · Engenharia Atlântica_"
+}

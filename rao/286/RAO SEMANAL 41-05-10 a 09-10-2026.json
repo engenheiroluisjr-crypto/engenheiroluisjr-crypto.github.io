@@ -1,0 +1,38 @@
+{
+ "tipo": "semanal",
+ "obra": 286,
+ "lote": "41",
+ "unidade": "EE MARIA CATHARINA COMINO",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 1,
+ "pct": "25",
+ "servicos": [
+  "Pintura estrutura quadra",
+  "Pintura interna",
+  "Elétrica"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "sem_pedido": [
+  29572,
+  29573,
+  29575,
+  29578,
+  29580,
+  30182,
+  30724,
+  30944,
+  31087,
+  31184
+ ],
+ "sem_entrega": [],
+ "pedidos_em": "05/10/2026 18:31",
+ "gerado": "2026-10-05T18:31:18",
+ "avanco": {
+  "aprovado": 13.0262598855199,
+  "engenheiro": 25.0,
+  "fiscal_lo": 23.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EE MARIA CATHARINA COMINO · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *13%* · Engenheiro *25%* · Fiscal FDE *23%* (LO 30/09)\n\n🔨 *Executado na semana*\n• Pintura estrutura quadra\n• Pintura interna\n• Elétrica\n\n🛒 *Solicitado e ainda sem pedido de compra* — 10\n• sol. 29572 (13/07) — FINALIDADE: AGUAS PLUVIAIS\n• sol. 29573 (13/07) — FINALIDADE: AGUAS PLUVIAIS\n• sol. 29575 (13/07) — FINALIDADE: TAPUME FDE ISOLAMENTO TALUDE\n• sol. 29578 (13/07) — FINALIDADE: COMPONENTE ESPORTIVO *TABELA EM CHAP\n• sol. 29580 (13/07) — FINALIDADE: FORMA QE-37\n• sol. 30182 (04/08) — FINALIDADE: COBERTURA METÁLICA BLOCO 01\n• ... e mais 4 solicitação(ões)\n\n_Situação dos pedidos em 05/10/2026 18:31_\n\n_Luis Júnior — Engenharia Atlântica_"
+}
