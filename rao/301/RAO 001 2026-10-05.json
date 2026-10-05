@@ -12,7 +12,7 @@
   "fiscal_lo": 10.0
  },
  "previsao": "",
- "gerado": "2026-10-05T18:29:48",
+ "gerado": "2026-10-05T19:21:57",
  "ficha": {
   "funcionarios": "1",
   "mao_de_obra": "Insuficiente",
@@ -74,7 +74,9 @@
   "55318": "ENTREGUE",
   "55786": "ENTREGUE",
   "56434": "ENTREGUE",
-  "56731": "ENTREGUE"
+  "56731": "ENTREGUE",
+  "57366": "PENDENTE",
+  "57396": "PENDENTE"
  },
  "fotos": [
   {
@@ -120,5 +122,5 @@
  ],
  "m001": "41.301_M002_EE-EDUARDO-VAZ_rev00.xlsx",
  "autor": "Eng. Luis Júnior",
- "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_EE EDUARDO VAZ · 2026.ATA.FDE.41.301 · EMBU DAS ARTES_\n\n👷 Efetivo: 1 · ☀️ Tempo seco · Ritmo parado · Limpeza ruim\n📊 Aprovado *0%* · Engenheiro *5%* · Fiscal FDE *10%* (LO 29/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Serviços parados\n• Efetivo tinha apenas uma funcionários organizando e limpando\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• Aguardando entrega de material já comprado - elétrico e hidráulico\n\n_Relatório nº 1 · Eng. Luis Júnior · Engenharia Atlântica_"
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_EE EDUARDO VAZ · 2026.ATA.FDE.41.301 · EMBU DAS ARTES_\n\n👷 Efetivo: 1 · ☀️ Tempo seco · Ritmo parado · Limpeza ruim\n📊 Aprovado *0%* · Engenheiro *5%* · Fiscal FDE *10%* (LO 29/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Serviços parados\n• Efetivo tinha apenas uma funcionários organizando e limpando\n\n📦 *Materiais — pedidos sem entrega até 05/10/2026*\n⚠️ 2 pedido(s), R$ 18.225,36 ainda por receber\n• 57366 — MAO DE OBRA — *3 dias* em aberto\n• 57396 — Cabo flex 2,5mm² preto +17 itens — *0 dias* em aberto\n\n📌 *Pendências*\n• Aguardando entrega de material já comprado - elétrico e hidráulico\n\n_Relatório nº 1 · Eng. Luis Júnior · Engenharia Atlântica_"
 }
