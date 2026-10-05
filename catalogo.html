@@ -59,7 +59,7 @@ a.tg:hover{border-color:var(--pri)}
   <p class="nota" id="nota"></p>
   <div id="res"></div>
 </main>
-<script src="catalogo.js"></script>
+<script src="catalogo.js?v=1791174419"></script>
 <script>
 const C=window.CATFDE, F=C.f, M=C.m, $=id=>document.getElementById(id);
 let lim=40;
@@ -71,7 +71,7 @@ const cats=[...new Set(F.map(f=>f[2]))].sort((a,b)=>a.localeCompare(b,'pt'));
 $('cat').innerHTML+=cats.map(c=>`<option>${esc(c)}</option>`).join('');
 const proprias=Object.values(M).filter(x=>x[2].some(r=>r[1]==='d'||r[1][0]==='c')).length;
 $('kpi').innerHTML=[[fmt(F.length),'fichas nos catálogos'],[fmt(Object.keys(M).length),'serviços do boletim FDE'],[fmt(proprias),'serviços com ficha própria'],[C.ger,'índice gerado em']]
-  .map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join('');
+  .map(([b,s],i)=>`<div><b${i===3?' class="dt"':''}>${b}</b><span>${s}</span></div>`).join('');
 function fichaLi(i,tag){const f=F[i]; return `<li><span class="fc">${esc(f[0])}</span><span class="fn">${esc(f[1])} <span class="cat">· ${esc(f[2])}</span>${tag||''}</span>${f[3]?`<a class="tg" href="${esc(f[3])}" target="_blank" rel="noopener">abrir ficha ↗</a>`:''}</li>`;}
 function linhaServ(c){const x=M[c], cf=$('cat').value;
   let L=x[2]; if(cf) L=L.filter(r=>F[r[0]][2]===cf);
