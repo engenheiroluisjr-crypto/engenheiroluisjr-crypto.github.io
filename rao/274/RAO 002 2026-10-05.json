@@ -12,7 +12,7 @@
   "fiscal_lo": 41.0
  },
  "previsao": "",
- "gerado": "2026-10-05T15:57:34",
+ "gerado": "2026-10-05T20:19:44",
  "ficha": {
   "funcionarios": "1",
   "mao_de_obra": "Insuficiente",
@@ -107,131 +107,87 @@
   "56814": "ENTREGUE",
   "57049": "ENTREGUE",
   "57069": "ENTREGUE",
-  "57094": "ENTREGUE"
+  "57094": "ENTREGUE",
+  "57433": "PENDENTE"
  },
  "fotos": [
   {
-   "arquivo": "painelv234-muveq0pcf00xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf00xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Fachada a ser executada reparo do revestimento, pintura e reparo do brise metalico"
   },
   {
-   "arquivo": "painelv234-muveq0pcf01xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf01xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Bacia sanitária com espaçamento"
   },
   {
-   "arquivo": "painelv234-muveq0pcf02xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf02xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Acabamento ruim entre porcelanato e piso existente da escola"
   },
   {
-   "arquivo": "painelv234-muveq0pcf03xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf03xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Acabamento ruim entre porcelanato e piso existente da escola"
   },
   {
-   "arquivo": "painelv234-muveq0pcf04xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf04xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Acabamento entre azulejo e viga existente"
   },
   {
-   "arquivo": "painelv234-muveq0pcf05xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf05xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Não iniciado forro"
   },
   {
-   "arquivo": "painelv234-muveq0pcf06xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf06xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Válvulas sem os acabamentos"
   },
   {
-   "arquivo": "painelv234-muveq0pcf07xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf07xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Pontos de infiltração do telhado a serem corrigidos"
   },
   {
-   "arquivo": "painelv234-muveq0pcf08xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf08xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Pontos de infiltração do telhado a serem corrigidos"
   },
   {
-   "arquivo": "painelv234-muveq0pcf09xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf09xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Pontos de infiltração do telhado a serem corrigidos (Elevador)"
   },
   {
-   "arquivo": "painelv274-muvc0xprf00xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf10xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Pontos de infiltração do telhado a serem corrigidos"
   },
   {
-   "arquivo": "painelv274-muvc0xprf01xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf11xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Mictórios não finalizados válvulas"
   },
   {
-   "arquivo": "painelv274-muvc0xprf02xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf12xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Azulejo banheiro não finalizado"
   },
   {
-   "arquivo": "painelv274-muvc0xprf03xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf13xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Muro onde possivelmente será executado alambrado"
   },
   {
-   "arquivo": "painelv274-muvc0xprf04xxxx.jpg",
+   "arquivo": "painelv274-muvc7wrsf14xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf05xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf06xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf07xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf08xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf09xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf10xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf11xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf12xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf13xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Guarita, previsão de manutenção para acabar com infiltrações"
   }
  ],
  "m001": "41.274_M004_ETEC-EMBU_rev00.xlsx",
  "autor": "Eng. Luis Júnior",
- "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_ETEC EMBU · 2026.ATA.FDE.41.274 · EMBU DAS ARTES_\n\n👷 Efetivo: 1 · ☀️ Tempo seco · Ritmo lento · Limpeza regular\n📊 Aprovado *36,6%* · Engenheiro *40%* · Fiscal FDE *41%* (LO 29/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Assentamento e rejuntamento de azulejo\n\n📦 *Materiais — pedidos sem entrega até 05/10/2026*\n⚠️ 1 pedido(s), R$ 42.473,79 ainda por receber\n• 56182 — DIVISORIA SANITARIA DE GRANILITE E +2 itens — *26 dias* em aberto\n\n📌 *Pendências*\n• Execução do forro de gesso dos banheiros alunos masculino e feminino, equipe da obra informou que tinha material mas hoje fez uma solicitação da estrutura do forro\n\n_Relatório nº 2 · Eng. Luis Júnior · Engenharia Atlântica_"
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_ETEC EMBU · 2026.ATA.FDE.41.274 · EMBU DAS ARTES_\n\n👷 Efetivo: 1 · ☀️ Tempo seco · Ritmo lento · Limpeza regular\n📊 Aprovado *36,6%* · Engenheiro *40%* · Fiscal FDE *41%* (LO 29/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Assentamento e rejuntamento de azulejo\n\n📦 *Materiais — pedidos sem entrega até 05/10/2026*\n⚠️ 2 pedido(s), R$ 43.776,09 ainda por receber\n• 56182 — DIVISORIA SANITARIA DE GRANILITE E +2 itens — *26 dias* em aberto\n• 57433 — TIRANTE 15CM +10 itens — *0 dias* em aberto\n\n📌 *Pendências*\n• Execução do forro de gesso dos banheiros alunos masculino e feminino, equipe da obra informou que tinha material mas hoje fez uma solicitação da estrutura do forro\n\n_Relatório nº 2 · Eng. Luis Júnior · Engenharia Atlântica_"
 }

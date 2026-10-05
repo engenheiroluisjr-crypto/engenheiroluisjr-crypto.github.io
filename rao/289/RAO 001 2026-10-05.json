@@ -12,7 +12,7 @@
   "fiscal_lo": 10.0
  },
  "previsao": "",
- "gerado": "2026-10-05T15:57:43",
+ "gerado": "2026-10-05T20:19:53",
  "ficha": {
   "funcionarios": "4",
   "mao_de_obra": "Insuficiente",
@@ -71,131 +71,87 @@
   "57179": "PENDENTE",
   "57180": "PENDENTE",
   "57195": "ENTREGUE",
-  "57229": "ENTREGUE"
+  "57229": "ENTREGUE",
+  "57387": "PENDENTE"
  },
  "fotos": [
   {
-   "arquivo": "painelv234-muveq0pcf00xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff00xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf01xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff01xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf02xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff02xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf03xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff03xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf04xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff04xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf05xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff05xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf06xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff06xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf07xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff07xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf08xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff08xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf09xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff09xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv274-muvc0xprf00xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff10xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv274-muvc0xprf01xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff11xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv274-muvc0xprf02xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff12xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv274-muvc0xprf03xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff13xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv274-muvc0xprf04xxxx.jpg",
+   "arquivo": "painelv289-muvdizlff14xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf05xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf06xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf07xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf08xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf09xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf10xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf11xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf12xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf13xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   }
  ],
  "m001": "41.289_M002_EE-HENRIQUE-COSTA_rev00.xlsx",
  "autor": "Eng. Douglas",
- "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_EE HENRIQUE COSTA · 2026.ATA.FDE.41.289 · EMBU DAS ARTES_\n\n👷 Efetivo: 4 · ☀️ Tempo seco · Ritmo normal · Limpeza regular\n📊 Aprovado *0,2%* · Engenheiro *20%* · Fiscal FDE *10%* (LO 30/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Pintura de salas de aula\n• Sant masculino chumbando hidráulica\n• Início revestimento\n\n📦 *Materiais — pedidos sem entrega até 05/10/2026*\n⚠️ 3 pedido(s), R$ 108.848,56 ainda por receber\n• 55020 — CUMEEIRA - PINTADA 1 FACE TELHADO  +3 itens — *47 dias* em aberto\n• 57179 — Tinta alumínio +7 itens — *5 dias* em aberto\n• 57180 — TELA DE ARAME GALVANIZADO FIO 10,  +1 itens — *5 dias* em aberto\n\n📌 *Pendências*\n• PINGADEIRAS DE CONCRETO MURO\n\n❗ *Recomendações*\n• Aumentar efetivo pintura\n\n_Relatório nº 1 · Eng. Douglas · Engenharia Atlântica_"
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_EE HENRIQUE COSTA · 2026.ATA.FDE.41.289 · EMBU DAS ARTES_\n\n👷 Efetivo: 4 · ☀️ Tempo seco · Ritmo normal · Limpeza regular\n📊 Aprovado *0,2%* · Engenheiro *20%* · Fiscal FDE *10%* (LO 30/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Pintura de salas de aula\n• Sant masculino chumbando hidráulica\n• Início revestimento\n\n📦 *Materiais — pedidos sem entrega até 05/10/2026*\n⚠️ 4 pedido(s), R$ 118.848,56 ainda por receber\n• 55020 — CUMEEIRA - PINTADA 1 FACE TELHADO  +3 itens — *47 dias* em aberto\n• 57179 — Tinta alumínio +7 itens — *5 dias* em aberto\n• 57180 — TELA DE ARAME GALVANIZADO FIO 10,  +1 itens — *5 dias* em aberto\n• 57387 — MAO DE OBRA — *0 dias* em aberto\n\n📌 *Pendências*\n• PINGADEIRAS DE CONCRETO MURO\n\n❗ *Recomendações*\n• Aumentar efetivo pintura\n\n_Relatório nº 1 · Eng. Douglas · Engenharia Atlântica_"
 }

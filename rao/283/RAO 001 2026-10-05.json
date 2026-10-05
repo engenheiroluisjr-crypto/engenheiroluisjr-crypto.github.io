@@ -12,7 +12,7 @@
   "fiscal_lo": 50.0
  },
  "previsao": "",
- "gerado": "2026-10-05T15:57:16",
+ "gerado": "2026-10-05T20:19:24",
  "ficha": {
   "funcionarios": "5",
   "mao_de_obra": "Suficiente",
@@ -54,124 +54,49 @@
  },
  "fotos": [
   {
-   "arquivo": "painelv234-muveq0pcf00xxxx.jpg",
+   "arquivo": "painelv283-muvbwdlkf00xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Pendência 01"
   },
   {
-   "arquivo": "painelv234-muveq0pcf01xxxx.jpg",
+   "arquivo": "painelv283-muvbwdlkf01xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Pendência 01 e 03"
   },
   {
-   "arquivo": "painelv234-muveq0pcf02xxxx.jpg",
+   "arquivo": "painelv283-muvbwdlkf02xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf03xxxx.jpg",
+   "arquivo": "painelv283-muvbwdlkf03xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf04xxxx.jpg",
+   "arquivo": "painelv283-muvbwdlkf04xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf05xxxx.jpg",
+   "arquivo": "painelv283-muvbwdlkf05xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf06xxxx.jpg",
+   "arquivo": "painelv283-muvbwdlkf06xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf07xxxx.jpg",
+   "arquivo": "painelv283-muvbwdlkf07xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Registro da visita"
   },
   {
-   "arquivo": "painelv234-muveq0pcf08xxxx.jpg",
+   "arquivo": "painelv283-muvbwdlkf08xxxx.jpg",
    "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv234-muveq0pcf09xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf00xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf01xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf02xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf03xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf04xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf05xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf06xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf07xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf08xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf09xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf10xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf11xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf12xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
-  },
-  {
-   "arquivo": "painelv274-muvc0xprf13xxxx.jpg",
-   "data": "2026-10-05",
-   "legenda": ""
+   "legenda": "Pendência 02 e 03"
   }
  ],
  "m001": "42.283_M003_PARQUE-PAYOL_rev00.xlsx",
