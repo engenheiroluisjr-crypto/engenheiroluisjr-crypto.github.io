@@ -3,90 +3,110 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Catálogos FDE — orientações por serviço</title>
+<title>Catálogos FDE — Obras FDE</title>
 <meta name="robots" content="noindex">
 <style>
-:root{--bg:#f4f3ef;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--ln:#dcdad3;--pri:#1f4e79;--ok:#2f6f4e;--okb:#e6f4ec;--warn:#8a6512;--warnb:#fdf4de;--chip:#eef2f7}
-@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#22221f;--tx:#ecebe6;--mut:#a3a29c;--ln:#3a3935;--pri:#7fb0de;--ok:#7fc7a0;--okb:#1f3a2c;--warn:#e5c062;--warnb:#3d3420;--chip:#2c3340}}
+:root{--bg:#f4f3ef;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--ln:#dcdad3;--pri:#1f4e79;--ok:#2f6f4e;--okb:#e6f4ec;--bad:#b3261e;--badb:#fbe0de;--warn:#9a6b00;--warnb:#fdf4de;--na:#6b6b66;--nab:#eeede8}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#22221f;--tx:#ecebe6;--mut:#a3a29c;--ln:#3a3935;--pri:#7fb0de;--ok:#7fc7a0;--okb:#1f3a2c;--bad:#f08a80;--badb:#4a2220;--warn:#e5c062;--warnb:#3d3420;--na:#a3a29c;--nab:#2c2b28}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-header{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:10px 16px}
-header h1{font-size:16px;margin:0 0 8px}
-header .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-input[type=search]{flex:1;min-width:200px;font:inherit;padding:9px 12px;border-radius:10px;border:0}
-.tabs button{font:inherit;font-size:13px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;border-radius:999px;padding:5px 12px;cursor:pointer}
-.tabs button[aria-pressed=true]{background:#fff;color:#1f4e79}
-main{max-width:980px;margin:0 auto;padding:12px 16px 80px}
-.nota{color:var(--mut);font-size:13px;margin:6px 0 12px}
-.it{background:var(--card);border:1px solid var(--ln);border-radius:12px;margin:10px 0;padding:12px 14px}
-.it h2{font-size:15px;margin:0 0 4px;display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
-.cod{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700}
-.un{color:var(--mut);font-size:12.5px}
-.grp{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin:10px 0 4px}
-.f{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid var(--ln)}
-.f:first-of-type{border-top:0}
-.f .fc{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;min-width:74px}
-.f .fn{flex:1}
-.f .cat{font-size:12px;color:var(--mut)}
-.f a{white-space:nowrap;color:var(--pri);font-weight:600;text-decoration:none}
-.f a:hover{text-decoration:underline}
-.tag{font-size:11.5px;border-radius:6px;padding:1px 7px;background:var(--chip)}
-.tag.d{background:var(--okb);color:var(--ok)}
-.tag.g{background:var(--warnb);color:var(--warn)}
-.vazio{color:var(--mut);padding:20px 0}
-.mais{display:block;margin:14px auto;font:inherit;padding:8px 16px;border-radius:10px;border:1px solid var(--ln);background:var(--card);color:var(--tx);cursor:pointer}
-@media (max-width:560px){.f{flex-wrap:wrap}.f .fc{min-width:0}}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header.top{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header.top h1{font-size:16px;margin:0;flex:1;min-width:200px}
+header.top a{color:#fff;font-size:13px;opacity:.85}
+main{max-width:1240px;margin:0 auto;padding:12px 16px 60px}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:10px 12px}
+label.f{display:flex;flex-direction:column;font-size:12px;color:var(--mut);gap:3px}
+label.f.q{flex:1;min-width:220px}
+input,select{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--ln);border-radius:8px;padding:6px 8px;min-height:34px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.kpi div{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:8px 10px}
+.kpi b{display:block;font-size:20px}.kpi span{font-size:12px;color:var(--mut)}
+.nota{font-size:12.5px;color:var(--mut);margin:0 0 6px}
+h2{font-size:14px;margin:18px 0 6px;color:var(--pri)}
+table{border-collapse:collapse;width:100%;background:var(--card);border:1px solid var(--ln);border-radius:10px;overflow:hidden}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;color:var(--mut);text-align:left;padding:7px 8px;border-bottom:1px solid var(--ln);background:var(--nab)}
+td{padding:7px 8px;border-bottom:1px solid var(--ln);vertical-align:top}
+.cod{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:650;white-space:nowrap}
+.obra b{display:block}.obra span{font-size:12px;color:var(--mut)}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;white-space:nowrap}
+.p-ok{background:var(--okb);color:var(--ok)}.p-warn{background:var(--warnb);color:var(--warn)}.p-na{background:var(--nab);color:var(--na)}
+.fl{list-style:none;margin:0;padding:0}
+.fl li{display:flex;gap:8px;align-items:baseline;padding:3px 0;flex-wrap:wrap}
+.fl li+li{border-top:1px dashed var(--ln)}
+.fl .fc{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;min-width:64px}
+.fl .fn{flex:1;min-width:160px}
+.fl .cat{font-size:12px;color:var(--mut)}
+a.tg{border:1px solid var(--ln);background:var(--card);color:var(--pri);border-radius:8px;padding:3px 10px;font-size:12.5px;white-space:nowrap;text-decoration:none;font-weight:600}
+a.tg:hover{border-color:var(--pri)}
+.mini{font-size:11px;color:var(--mut);margin-top:2px}
+.vazio{color:var(--mut);padding:16px 8px}
+.mais{display:block;margin:12px auto;font:inherit;font-size:13px;padding:7px 16px;border-radius:8px;border:1px solid var(--ln);background:var(--card);color:var(--tx);cursor:pointer}
+@media (max-width:760px){
+  thead{display:none} table,tbody,tr,td{display:block;width:100%} tr{border-bottom:2px solid var(--ln);padding:6px 0}
+  td{border:0;padding:4px 10px} td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--mut);text-transform:uppercase}
+}
 </style>
 </head>
 <body>
-<header>
-  <h1>Catálogos técnicos FDE — orientação por serviço do orçamento</h1>
-  <div class="row">
-    <input id="q" type="search" placeholder="Código do serviço (ex.: 15.02.025) ou palavra (ex.: porta, pintura)" autocomplete="off">
-    <span class="tabs"><button id="tS" aria-pressed="true">Serviços do orçamento</button> <button id="tF" aria-pressed="false">Todas as fichas</button></span>
-  </div>
-</header>
+<header class="top"><h1>Catálogos técnicos FDE</h1><a href="./">← voltar ao painel</a></header>
 <main>
+  <div class="barra">
+    <label class="f q">Buscar<input id="q" type="search" placeholder="código do serviço (ex.: 15.02.025) ou palavra (ex.: porta, pintura)" autocomplete="off"></label>
+    <label class="f">Mostrar<select id="modo"><option value="S">Serviços do orçamento</option><option value="F">Todas as fichas</option></select></label>
+    <label class="f">Catálogo<select id="cat"><option value="">todos</option></select></label>
+  </div>
+  <div class="kpi" id="kpi"></div>
   <p class="nota" id="nota"></p>
   <div id="res"></div>
 </main>
 <script src="catalogo.js"></script>
 <script>
 const C=window.CATFDE, F=C.f, M=C.m, $=id=>document.getElementById(id);
-let modo='S', lim=40;
+let lim=40;
 const norm=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const GRUPOS=[['d','A ficha cita este serviço','d'],['c','Componente citado na descrição','d'],['s','Fichas do mesmo subcapítulo','s'],['g','Orientação geral do capítulo','g']];
-function ficha(i,tag){const f=F[i]; return `<div class="f"><span class="fc">${esc(f[0])}</span><span class="fn">${esc(f[1])} <span class="cat">· ${esc(f[2])}</span>${tag?` <span class="tag">${esc(tag)}</span>`:''}</span>${f[3]?`<a href="${esc(f[3])}" target="_blank" rel="noopener">Abrir ficha ↗</a>`:''}</div>`;}
-function item(c){const x=M[c]; if(!x) return '';
-  let h=`<div class="it"><h2><span class="cod">${c}</span> ${esc(x[0])} <span class="un">${esc(x[1])}</span></h2>`;
-  if(!x[2].length) h+='<div class="vazio">Nenhuma ficha relacionada.</div>';
-  for(const [k,tit] of GRUPOS){const L=x[2].filter(r=>r[1][0]===k); if(!L.length) continue;
-    h+=`<div class="grp">${tit}</div>`+L.map(r=>ficha(r[0], k==='c'?r[1].slice(2):'')).join('');}
-  return h+'</div>';}
+const fmt=n=>n.toLocaleString('pt-BR');
+const GR={d:['ficha cita o serviço','p-ok'],c:['componente da descrição','p-ok'],s:['mesmo subcapítulo','p-warn'],g:['orientação geral do capítulo','p-na']};
+const cats=[...new Set(F.map(f=>f[2]))].sort((a,b)=>a.localeCompare(b,'pt'));
+$('cat').innerHTML+=cats.map(c=>`<option>${esc(c)}</option>`).join('');
+const proprias=Object.values(M).filter(x=>x[2].some(r=>r[1]==='d'||r[1][0]==='c')).length;
+$('kpi').innerHTML=[[fmt(F.length),'fichas nos catálogos'],[fmt(Object.keys(M).length),'serviços do boletim FDE'],[fmt(proprias),'serviços com ficha própria'],[C.ger,'índice gerado em']]
+  .map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join('');
+function fichaLi(i,tag){const f=F[i]; return `<li><span class="fc">${esc(f[0])}</span><span class="fn">${esc(f[1])} <span class="cat">· ${esc(f[2])}</span>${tag||''}</span>${f[3]?`<a class="tg" href="${esc(f[3])}" target="_blank" rel="noopener">abrir ficha ↗</a>`:''}</li>`;}
+function linhaServ(c){const x=M[c], cf=$('cat').value;
+  let L=x[2]; if(cf) L=L.filter(r=>F[r[0]][2]===cf);
+  const ordem='dcsg'; L=[...L].sort((a,b)=>ordem.indexOf(a[1][0])-ordem.indexOf(b[1][0]));
+  const k=L.length?L[0][1][0]:''; const pill=k?`<span class="pill ${GR[k][1]}">${GR[k][0]}</span>`:'<span class="pill p-na">sem ficha</span>';
+  const lis=L.map(r=>fichaLi(r[0], r[1][0]!==k?` <span class="pill ${GR[r[1][0]][1]}">${GR[r[1][0]][0]}</span>`:(r[1][0]==='c'?` <span class="mini">${esc(r[1].slice(2))}</span>`:''))).join('');
+  return `<tr><td data-l="Código" class="cod">${c}</td><td data-l="Serviço" class="obra"><b>${esc(x[0])}</b><span>${esc(x[1])}</span></td><td data-l="Relação">${pill}</td><td data-l="Fichas">${lis?`<ul class="fl">${lis}</ul>`:'<span class="mini">—</span>'}</td></tr>`;}
 function busca(){
-  const q=$('q').value.trim(), nq=norm(q), out=$('res');
-  history.replaceState(null,'',q?('?'+(modo==='F'?'f=':'c=')+encodeURIComponent(q)):location.pathname);
+  const q=$('q').value.trim(), nq=norm(q), modo=$('modo').value, cf=$('cat').value, out=$('res');
+  const P=new URLSearchParams(); if(q) P.set(modo==='F'?'f':'c',q); if(cf) P.set('cat',cf);
+  history.replaceState(null,'',location.pathname+(P.toString()?'?'+P:''));
+  const palavras=nq.split(/\s+/).filter(Boolean);
   if(modo==='S'){
     let ks=Object.keys(M);
-    if(q){ const cm=q.match(/^\d{2}(\.\d{0,2}(\.\d{0,3})?)?$/);
-      ks = cm ? ks.filter(k=>k.startsWith(q)) : ks.filter(k=>{const t=norm(k+' '+M[k][0]); return nq.split(/\s+/).every(w=>t.includes(w));}); }
+    if(q){ ks = /^\d{2}(\.\d{0,2}(\.\d{0,3})?)?$/.test(q) ? ks.filter(k=>k.startsWith(q)) : ks.filter(k=>{const t=norm(k+' '+M[k][0]); return palavras.every(w=>t.includes(w));}); }
     else ks=ks.filter(k=>M[k][2].some(r=>r[1]==='d'));
-    $('nota').textContent = q ? `${ks.length} serviço(s) do boletim FDE encontrados.` :
-      `Digite o código do serviço do orçamento ou uma palavra. Abaixo, os serviços que têm ficha própria no catálogo (${ks.length}). Índice gerado em ${C.ger}.`;
-    out.innerHTML = ks.length ? ks.slice(0,lim).map(item).join('')+(ks.length>lim?'<button class="mais" id="mais">Mostrar mais</button>':'') : '<div class="vazio">Nada encontrado.</div>';
+    if(cf) ks=ks.filter(k=>M[k][2].some(r=>F[r[0]][2]===cf));
+    $('nota').textContent = q ? `${fmt(ks.length)} serviço(s) do boletim FDE encontrado(s).` :
+      `Digite o código do serviço do orçamento ou uma palavra. Abaixo, os ${fmt(ks.length)} serviços que têm ficha própria no catálogo.`;
+    out.innerHTML = ks.length ? `<table><thead><tr><th>Código</th><th>Serviço</th><th>Relação</th><th>Fichas do catálogo</th></tr></thead><tbody>${ks.slice(0,lim).map(linhaServ).join('')}</tbody></table>`+(ks.length>lim?'<button class="mais" id="mais">mostrar mais</button>':'') : '<div class="vazio">Nada encontrado.</div>';
   } else {
-    let L=F.map((f,i)=>i); if(q) L=L.filter(i=>{const t=norm(F[i].slice(0,3).join(' ')); return nq.split(/\s+/).every(w=>t.includes(w));});
-    $('nota').textContent=`${L.length} ficha(s) de ${F.length} nos catálogos técnicos da FDE.`;
-    out.innerHTML = L.length ? '<div class="it">'+L.slice(0,lim*5).map(i=>ficha(i,'')).join('')+'</div>'+(L.length>lim*5?'<button class="mais" id="mais">Mostrar mais</button>':'') : '<div class="vazio">Nada encontrado.</div>';
+    let L=F.map((f,i)=>i); if(cf) L=L.filter(i=>F[i][2]===cf);
+    if(q) L=L.filter(i=>{const t=norm(F[i].slice(0,3).join(' ')); return palavras.every(w=>t.includes(w));});
+    $('nota').textContent=`${fmt(L.length)} ficha(s) de ${fmt(F.length)} nos catálogos técnicos da FDE.`;
+    out.innerHTML = L.length ? `<table><thead><tr><th>Código</th><th>Ficha</th><th>Catálogo</th><th></th></tr></thead><tbody>${L.slice(0,lim*4).map(i=>{const f=F[i];
+      return `<tr><td data-l="Código" class="cod">${esc(f[0])}</td><td data-l="Ficha">${esc(f[1])}</td><td data-l="Catálogo" class="mini">${esc(f[2])}</td><td>${f[3]?`<a class="tg" href="${esc(f[3])}" target="_blank" rel="noopener">abrir ficha ↗</a>`:''}</td></tr>`;}).join('')}</tbody></table>`+(L.length>lim*4?'<button class="mais" id="mais">mostrar mais</button>':'') : '<div class="vazio">Nada encontrado.</div>';
   }
   const b=$('mais'); if(b) b.onclick=()=>{lim+=40; busca();};
 }
-function setModo(m){modo=m; lim=40; $('tS').setAttribute('aria-pressed',m==='S'); $('tF').setAttribute('aria-pressed',m==='F'); busca();}
-$('tS').onclick=()=>setModo('S'); $('tF').onclick=()=>setModo('F');
 let tm; $('q').addEventListener('input',()=>{clearTimeout(tm); lim=40; tm=setTimeout(busca,200);});
-const P=new URLSearchParams(location.search);
-if(P.get('f')){ $('q').value=P.get('f'); setModo('F'); } else { $('q').value=P.get('c')||''; busca(); }
+$('modo').onchange=()=>{lim=40; busca();}; $('cat').onchange=()=>{lim=40; busca();};
+const P0=new URLSearchParams(location.search);
+if(P0.get('cat')) $('cat').value=P0.get('cat');
+if(P0.get('f')){ $('modo').value='F'; $('q').value=P0.get('f'); } else $('q').value=P0.get('c')||'';
+busca();
 </script>
 </body>
 </html>
