@@ -121,7 +121,7 @@ function render(){
   var y=window.scrollY, foco=document.activeElement&&document.activeElement.id;
   var engs={}; D.obras.forEach(function(o){ if(o.e) engs[o.e]=1; });
   var OB=obrasF(), tF=0, tP=0, tN=0;
-  OB.forEach(function(o){ o.itens.forEach(function(i){ var s=val(o.c+'|'+i.id,'st'); if(i.st==='falta'){ if(!s) tF++; else if(s==='ped') tP++; else if(s==='nao') tN++; } }); });
+  OB.forEach(function(o){ o.itens.forEach(function(i){ var s=val(o.c+'|'+i.id,'st'); if(i.st==='falta'){ if(!s) tF++; else if(s==='ped') tP++; else tN++; } }); });
   var h='<div class="barra">'+
     '<label class="f">Lote<select id="fLote"><option value="">41 e 42</option><option'+(F.lote==='41'?' selected':'')+'>41</option><option'+(F.lote==='42'?' selected':'')+'>42</option></select></label>'+
     '<label class="f">Engenheiro<select id="fEng"><option value="">todos</option>'+Object.keys(engs).sort().map(function(e){ return '<option'+(e===F.eng?' selected':'')+'>'+esc(e)+'</option>'; }).join('')+'</select></label>'+
@@ -131,7 +131,7 @@ function render(){
     '<label class="chk"><input type="checkbox" id="fClim"'+(F.clim?' checked':'')+'> incluir climatização</label>'+
     '<label class="f" style="margin-left:auto">Marcando como<input id="fQuem" value="'+esc(ls(QCH)||'')+'" placeholder="seu nome"></label></div>';
   h+='<div class="kpi"><div><b>'+OB.length+'</b><span>obras</span></div><div><b style="color:var(--bad)">'+tF+'</b><span>itens faltando pedir</span></div>'+
-     '<div><b style="color:var(--ok)">'+tP+'</b><span>marcados como pedidos</span></div><div><b>'+tN+'</b><span>marcados “não precisa”</span></div></div>';
+     '<div><b style="color:var(--ok)">'+tP+'</b><span>marcados como pedidos</span></div><div><b>'+tN+'</b><span>marcados “já tem” / “não precisa”</span></div></div>';
   h+='<p class="sync" id="sync"></p>';
   OB.forEach(function(o){
     var L=itensF(o), nf=o.itens.filter(function(i){ return i.st==='falta'&&!val(o.c+'|'+i.id,'st'); }).length;
@@ -153,6 +153,7 @@ function render(){
           '<td data-l="Serviço"><div class="mini" style="margin:0">'+esc(i.sv)+'</div></td>'+
           '<td data-l="Situação"><span class="pill '+sp[1]+'">'+sp[0]+'</span>'+(i.det?'<div class="mini">'+esc(i.det)+'</div>':'')+'</td>'+
           '<td data-l="Marcar"><div class="btns"><button class="tg'+(s==='ped'?' on':'')+'" data-k="'+k+'" data-v="ped">'+(s==='ped'?'✓ pedido feito':'pedido feito')+'</button>'+
+          '<button class="tg'+(s==='tem'?' on':'')+'" data-k="'+k+'" data-v="tem">'+(s==='tem'?'✓ já tem na obra':'já tem na obra')+'</button>'+
           '<button class="tg'+(s==='nao'?' on no':'')+'" data-k="'+k+'" data-v="nao">'+(s==='nao'?'✕ não precisa':'não precisa')+'</button></div></td>'+
           '<td data-l="Observação"><input class="obs" id="o_'+k.replace(/[|.]/g,'_')+'" data-k="'+k+'" value="'+esc(val(k,'obs')||'')+'" placeholder="ex.: pedir p/ semana que vem">'+
           (q?'<div class="mini">'+esc(q.por)+' · '+esc(q.quando)+'</div>':'')+'</td></tr>';
