@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Materiais a pedir — Obras FDE</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--bg:#f4f3ef;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--ln:#dcdad3;--pri:#1f4e79;--ok:#2f6f4e;--okb:#e6f4ec;--bad:#b3261e;--badb:#fbe0de;--warn:#9a6b00;--warnb:#fdf4de;--na:#6b6b66;--nab:#eeede8}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#22221f;--tx:#ecebe6;--mut:#a3a29c;--ln:#3a3935;--pri:#7fb0de;--ok:#7fc7a0;--okb:#1f3a2c;--bad:#f08a80;--badb:#4a2220;--warn:#e5c062;--warnb:#3d3420;--na:#a3a29c;--nab:#2c2b28}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header.top{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header.top h1{font-size:16px;margin:0;flex:1;min-width:200px}
+header.top a{color:#fff;font-size:13px;opacity:.85}
+main{max-width:1240px;margin:0 auto;padding:12px 16px 60px}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:10px 12px}
+label.f{display:flex;flex-direction:column;font-size:12px;color:var(--mut);gap:3px}
+input,select{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--ln);border-radius:8px;padding:6px 8px;min-height:34px}
+.chk{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--tx)}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.kpi div{background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:8px 10px}
+.kpi b{display:block;font-size:20px}.kpi span{font-size:12px;color:var(--mut)}
+.sync{font-size:12.5px;color:var(--mut)}.sync.ok{color:var(--ok)}.sync.err{color:var(--bad)}
+h2{font-size:14px;margin:18px 0 6px;color:var(--pri)}
+table{border-collapse:collapse;width:100%;background:var(--card);border:1px solid var(--ln);border-radius:10px;overflow:hidden}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;color:var(--mut);text-align:left;padding:7px 8px;border-bottom:1px solid var(--ln);background:var(--nab)}
+td{padding:7px 8px;border-bottom:1px solid var(--ln);vertical-align:middle}
+tr.okrow td{background:color-mix(in srgb,var(--okb) 45%,transparent)}
+.obra b{display:block}.obra span{font-size:12px;color:var(--mut)}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;white-space:nowrap}
+.p-ok{background:var(--okb);color:var(--ok)}.p-bad{background:var(--badb);color:var(--bad)}.p-warn{background:var(--warnb);color:var(--warn)}.p-na{background:var(--nab);color:var(--na)}
+.tg{border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:5px 10px;font:inherit;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.tg.on{background:var(--okb);border-color:var(--ok);color:var(--ok);font-weight:650}
+.tg.on.no{background:var(--badb);border-color:var(--bad);color:var(--bad)}
+.mini{font-size:11px;color:var(--mut);margin-top:2px}
+.obs{width:100%;min-width:140px}
+.auto{font-size:11px;color:var(--mut)}
+@media (max-width:760px){
+  thead{display:none} table,tbody,tr,td{display:block;width:100%} tr{border-bottom:2px solid var(--ln);padding:6px 0}
+  td{border:0;padding:4px 10px} td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--mut);text-transform:uppercase}
+}
+
+.card{background:var(--card);border:1px solid var(--ln);border-radius:12px;margin:10px 0;overflow:hidden}
+.card>summary{list-style:none;cursor:pointer;padding:10px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.card>summary::-webkit-details-marker{display:none}
+.card>summary .t{flex:1;min-width:220px}.card>summary .t b{display:block}.card>summary .t span{font-size:12px;color:var(--mut)}
+.card[open]>summary{border-bottom:1px solid var(--ln)}
+.card table{border:0;border-radius:0}
+tr.g td{background:var(--nab);font-size:11.5px;font-weight:700;color:var(--pri);text-transform:uppercase;letter-spacing:.3px;padding:5px 8px}
+td.mat b{font-weight:600}td.q{white-space:nowrap;text-align:right}
+tr.feito td{opacity:.55}
+.p-blue{background:color-mix(in srgb,var(--pri) 14%,transparent);color:var(--pri)}
+.leg{font-size:12px;color:var(--mut);margin:6px 0 0}
+.btns{display:flex;gap:6px;flex-wrap:wrap}
+@media (max-width:760px){ td.q{text-align:left} .card>summary .t{flex:1 1 100%;min-width:0} }
+</style>
+</head>
+<body>
+<header class="top"><h1>Materiais a pedir</h1><a href="./">← voltar ao painel</a></header>
+<main id="app"><p>Carregando…</p></main>
+<script src="mat.js"></script>
+<script src="entregas.js"></script>
+<script>
+(function(){
+'use strict';
+/* 06/10/2026 — checklist de materiais a pedir por obra.
+   L41: levantamento feito a mão, revalidado contra o medido (portal) e o Sienge.
+   Demais obras: automático — lista de insumos das composições FDE do orçamento x Sienge (pedidos e
+   solicitações) x medido. Só é "falta pedir" o insumo sem nenhuma compra/solicitação e com o serviço
+   ainda não medido. Marcações (pedido feito / não precisa / obs) vão para o servidor comum do painel
+   como JSON {tipo:'mat', k:'obra|item', campo, v, por, quando}. */
+var D=window.MAT, SRV=window.ENTREGAS_SRV||{}, QCH='fdeEntregasQuem', FCH='matFila';
+var app=document.getElementById('app');
+if(!D){ app.innerHTML='<p>Os dados (mat.js) não carregaram. Atualize a página.</p>'; return; }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
+function agora(){ var d=new Date(); return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
+function ts(q){ var m=/^(\d{2})\/(\d{2})\/(\d{4})[ ,]+(\d{2}):(\d{2})/.exec(q||''); return m?new Date(+m[3],+m[2]-1,+m[1],+m[4],+m[5]).getTime():0; }
+var ST={falta:['Falta pedir','p-bad'],verificar:['Verificar','p-warn'],parcial:['Já pedido em parte','p-na'],comprado:['Já comprado/solicitado','p-na'],executado:['Serviço já medido','p-na']};
+var F={lote:ls('matLote')||'', eng:ls('matEng')||'', sit:ls('matSit')||'falta', clim:ls('matClim')==='1', busca:'', obra:''};
+var M={}, SY={st:'carregando',hora:''}, ABERTO={};
+function csv(t){ var L=[], r=[], f='', q=false; for(var i=0;i<t.length;i++){ var ch=t[i];
+  if(q){ if(ch==='"'){ if(t[i+1]==='"'){ f+='"'; i++; } else q=false; } else f+=ch; }
+  else if(ch==='"') q=true; else if(ch===','){ r.push(f); f=''; }
+  else if(ch==='\n'){ r.push(f); L.push(r); r=[]; f=''; } else if(ch!=='\r') f+=ch; }
+  if(f||r.length){ r.push(f); L.push(r); } return L; }
+function fila(){ try{ return JSON.parse(ls(FCH)||'[]'); }catch(e){ return []; } }
+function aplica(m){ var id=m.k+'|'+m.campo, a=M[id]; if(!a||ts(m.quando)>=ts(a.quando)) M[id]={v:m.v,por:m.por||'',quando:m.quando||''}; }
+function puxa(){
+  if(!SRV.ler){ SY.st='local'; fila().forEach(aplica); render(); return Promise.resolve(); }
+  return fetch(SRV.ler+'&t='+Date.now()).then(function(r){ return r.text(); }).then(function(t){
+    if(/<html/i.test(t.slice(0,200))) throw new Error('privada');
+    M={}; csv(t).slice(1).forEach(function(l){ var m; try{ m=JSON.parse(l[1]); }catch(e){ return; } if(m&&m.tipo==='mat'&&m.k&&m.campo) aplica(m); });
+    var l=fila().filter(function(x){ var a=M[x.k+'|'+x.campo]; return !(a&&a.quando===x.quando&&String(a.v)===String(x.v)); });
+    ls(FCH,JSON.stringify(l)); l.forEach(aplica);
+    SY.st=l.length?'pend':'ok'; SY.hora=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); render();
+  }).catch(function(){ fila().forEach(aplica); SY.st='erro'; render(); });
+}
+function envia(){ var l=fila(); if(!SRV.form||!l.length) return;
+  Promise.all(l.map(function(m){ var fd=new FormData(); fd.append(SRV.entry,JSON.stringify(m)); return fetch(SRV.form,{method:'POST',mode:'no-cors',body:fd}); }))
+   .then(function(){ setTimeout(puxa,2500); }).catch(function(){ SY.st='erro'; pintaSync(); }); }
+function marca(k,campo,v){
+  var q=(ls(QCH)||'').trim(); if(!q){ var e=document.getElementById('fQuem'); if(e){ e.focus(); e.style.borderColor='var(--bad)'; e.placeholder='digite seu nome para marcar'; } return false; }
+  var m={tipo:'mat',k:k,campo:campo,v:v,por:q,quando:agora()};
+  var l=fila().filter(function(x){ return !(x.k===k&&x.campo===campo); }); l.push(m); ls(FCH,JSON.stringify(l));
+  aplica(m); SY.st='pend'; clearTimeout(marca._t); marca._t=setTimeout(envia,700); return true; }
+function val(k,c){ var a=M[k+'|'+c]; return a?a.v:null; }
+function quem(k){ var b=null; ['st','obs'].forEach(function(c){ var a=M[k+'|'+c]; if(a&&(!b||ts(a.quando)>ts(b.quando))) b=a; }); return b; }
+function pintaSync(){ var e=document.getElementById('sync'); if(!e) return;
+  var n=fila().length; e.className='sync '+(SY.st==='ok'?'ok':SY.st==='erro'?'err':'');
+  e.textContent=SY.st==='ok'?('✓ marcações salvas para todos · '+SY.hora):SY.st==='erro'?('⚠ sem conexão com o servidor — '+n+' marcação(ões) guardada(s) neste aparelho'):SY.st==='local'?'⚠ servidor não configurado — marcação só neste aparelho':(n?'salvando… ('+n+')':'carregando…'); }
+function obrasF(){ return D.obras.filter(function(o){
+  return (!F.lote||o.l===F.lote)&&(!F.eng||o.e===F.eng)&&(F.clim||!o.clim)&&(!F.obra||String(o.c)===F.obra)&&
+    (!F.busca||(o.c+' '+o.u+' '+o.cid).toLowerCase().indexOf(F.busca.toLowerCase())>=0); }); }
+function itensF(o){ return o.itens.filter(function(i){ var k=o.c+'|'+i.id, s=val(k,'st');
+  if(F.sit==='falta') return i.st==='falta'&&!s;
+  if(F.sit==='marc') return !!s;
+  return true; }); }
+function render(){
+  var y=window.scrollY, foco=document.activeElement&&document.activeElement.id;
+  var engs={}; D.obras.forEach(function(o){ if(o.e) engs[o.e]=1; });
+  var OB=obrasF(), tF=0, tP=0, tN=0;
+  OB.forEach(function(o){ o.itens.forEach(function(i){ var s=val(o.c+'|'+i.id,'st'); if(i.st==='falta'){ if(!s) tF++; else if(s==='ped') tP++; else if(s==='nao') tN++; } }); });
+  var h='<div class="barra">'+
+    '<label class="f">Lote<select id="fLote"><option value="">41 e 42</option><option'+(F.lote==='41'?' selected':'')+'>41</option><option'+(F.lote==='42'?' selected':'')+'>42</option></select></label>'+
+    '<label class="f">Engenheiro<select id="fEng"><option value="">todos</option>'+Object.keys(engs).sort().map(function(e){ return '<option'+(e===F.eng?' selected':'')+'>'+esc(e)+'</option>'; }).join('')+'</select></label>'+
+    '<label class="f">Obra<select id="fObra"><option value="">todas</option>'+D.obras.filter(function(o){return F.clim||!o.clim;}).map(function(o){ return '<option value="'+o.c+'"'+(String(o.c)===F.obra?' selected':'')+'>'+o.l+'.'+o.c+' '+esc(o.u.slice(0,28))+'</option>'; }).join('')+'</select></label>'+
+    '<label class="f">Mostrar<select id="fSit"><option value="falta"'+(F.sit==='falta'?' selected':'')+'>só o que falta pedir</option><option value="marc"'+(F.sit==='marc'?' selected':'')+'>já marcados</option><option value="todos"'+(F.sit==='todos'?' selected':'')+'>todos os itens</option></select></label>'+
+    '<label class="f">Buscar<input id="fBusca" value="'+esc(F.busca)+'" placeholder="nº, escola ou cidade"></label>'+
+    '<label class="chk"><input type="checkbox" id="fClim"'+(F.clim?' checked':'')+'> incluir climatização</label>'+
+    '<label class="f" style="margin-left:auto">Marcando como<input id="fQuem" value="'+esc(ls(QCH)||'')+'" placeholder="seu nome"></label></div>';
+  h+='<div class="kpi"><div><b>'+OB.length+'</b><span>obras</span></div><div><b style="color:var(--bad)">'+tF+'</b><span>itens faltando pedir</span></div>'+
+     '<div><b style="color:var(--ok)">'+tP+'</b><span>marcados como pedidos</span></div><div><b>'+tN+'</b><span>marcados “não precisa”</span></div></div>';
+  h+='<p class="sync" id="sync"></p>';
+  OB.forEach(function(o){
+    var L=itensF(o), nf=o.itens.filter(function(i){ return i.st==='falta'&&!val(o.c+'|'+i.id,'st'); }).length;
+    if(!L.length&&F.sit!=='todos'&&!F.obra) return;
+    var ab=ABERTO[o.c]!==undefined?ABERTO[o.c]:(!!F.obra);
+    h+='<details class="card" data-c="'+o.c+'"'+(ab?' open':'')+'><summary><div class="t"><b>'+o.l+'.'+o.c+' — '+esc(o.u)+'</b><span>'+esc(o.cid)+(o.e?' · eng. '+esc(o.e):'')+' · '+
+      (o.fonte==='levantamento'?'levantamento manual (revalidado '+esc(D.ger.slice(0,10))+')':'automático: insumos do orçamento × Sienge × medido')+(o.clim?' · climatização':'')+'</span></div>'+
+      '<span class="pill '+(nf?'p-bad':'p-ok')+'">'+(nf?nf+' a pedir':'nada a pedir')+'</span>'+
+      (o.n.parcial+o.n.comprado?'<span class="pill p-na">'+(o.n.parcial+o.n.comprado)+' já comprados</span>':'')+
+      (o.n.executado?'<span class="pill p-na">'+o.n.executado+' já executados</span>':'')+'</summary>';
+    if(o.aviso) h+='<p class="mini" style="padding:8px 12px">'+esc(o.aviso)+'</p>';
+    if(L.length){
+      h+='<table><thead><tr><th>Material</th><th>Qtd. prevista</th><th>Serviço do orçamento</th><th>Situação</th><th>Marcar</th><th>Observação</th></tr></thead><tbody>';
+      var g='';
+      L.forEach(function(i){ var k=o.c+'|'+i.id, s=val(k,'st'), q=quem(k), sp=ST[i.st];
+        if(i.g!==g){ g=i.g; h+='<tr class="g"><td colspan="6">'+esc(g)+'</td></tr>'; }
+        h+='<tr class="'+(s?'feito':'')+'"><td class="mat" data-l="Material"><b>'+esc(i.m)+'</b></td>'+
+          '<td class="q" data-l="Qtd. prevista">'+esc(i.q)+' '+esc(i.un)+'</td>'+
+          '<td data-l="Serviço"><div class="mini" style="margin:0">'+esc(i.sv)+'</div></td>'+
+          '<td data-l="Situação"><span class="pill '+sp[1]+'">'+sp[0]+'</span>'+(i.det?'<div class="mini">'+esc(i.det)+'</div>':'')+'</td>'+
+          '<td data-l="Marcar"><div class="btns"><button class="tg'+(s==='ped'?' on':'')+'" data-k="'+k+'" data-v="ped">'+(s==='ped'?'✓ pedido feito':'pedido feito')+'</button>'+
+          '<button class="tg'+(s==='nao'?' on no':'')+'" data-k="'+k+'" data-v="nao">'+(s==='nao'?'✕ não precisa':'não precisa')+'</button></div></td>'+
+          '<td data-l="Observação"><input class="obs" id="o_'+k.replace(/[|.]/g,'_')+'" data-k="'+k+'" value="'+esc(val(k,'obs')||'')+'" placeholder="ex.: pedir p/ semana que vem">'+
+          (q?'<div class="mini">'+esc(q.por)+' · '+esc(q.quando)+'</div>':'')+'</td></tr>';
+      });
+      h+='</tbody></table>';
+    } else h+='<p class="mini" style="padding:8px 12px">Nenhum item com esse filtro.</p>';
+    if(o.irris) h+='<p class="leg" style="padding:0 12px 8px">'+o.irris+' insumo(s) de quantidade irrisória (&lt; 1 m/m²/kg/l) e miúdos de consumo não aparecem.</p>';
+    h+='</details>';
+  });
+  h+='<p class="mini" style="margin-top:16px">“Falta pedir” = insumo do orçamento sem nenhum pedido ou solicitação no Sienge e com o serviço ainda não medido. '+
+     'O que já foi comprado em parte ou já foi executado não entra. Dados de '+esc(D.ger)+'. Quem marca “pedido feito” ou “não precisa” tira o item da lista de todos.</p>';
+  app.innerHTML=h; pintaSync();
+  if(foco){ var f=document.getElementById(foco); if(f){ f.focus(); if(f.setSelectionRange&&f.value) f.setSelectionRange(f.value.length,f.value.length); } }
+  window.scrollTo(0,y);
+}
+app.addEventListener('click',function(e){ var t=e.target.closest('.tg'); if(!t) return; e.preventDefault();
+  var k=t.dataset.k, v=t.dataset.v, cur=val(k,'st'); if(marca(k,'st',cur===v?'':v)) render(); });
+app.addEventListener('toggle',function(e){ var d=e.target; if(d.classList&&d.classList.contains('card')) ABERTO[d.dataset.c]=d.open; },true);
+app.addEventListener('change',function(e){ var t=e.target;
+  if(t.id==='fLote'){ F.lote=t.value; ls('matLote',F.lote); render(); }
+  else if(t.id==='fEng'){ F.eng=t.value; ls('matEng',F.eng); render(); }
+  else if(t.id==='fObra'){ F.obra=t.value; render(); }
+  else if(t.id==='fSit'){ F.sit=t.value; ls('matSit',F.sit); render(); }
+  else if(t.id==='fClim'){ F.clim=t.checked; ls('matClim',F.clim?'1':'0'); render(); }
+  else if(t.classList.contains('obs')){ if(t.value!==(val(t.dataset.k,'obs')||'')&&marca(t.dataset.k,'obs',t.value)) render(); }
+});
+app.addEventListener('input',function(e){ var t=e.target;
+  if(t.id==='fQuem'){ ls(QCH,t.value); t.style.borderColor=''; }
+  else if(t.id==='fBusca'){ F.busca=t.value; clearTimeout(render._t); render._t=setTimeout(render,250); }
+});
+var qs=/[?&]obra=(\d+)/.exec(location.search); if(qs){ F.obra=qs[1]; }
+render(); puxa().then(envia);
+setInterval(function(){ if(document.visibilityState==='visible'&&!fila().length) puxa(); },60000);
+})();
+</script>
+</body>
+</html>
