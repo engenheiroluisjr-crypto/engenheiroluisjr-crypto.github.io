@@ -1,0 +1,34 @@
+{
+ "tipo": "semanal",
+ "obra": 228,
+ "lote": "42",
+ "unidade": "NERCY AMELIA MARTELINI DAHER PROFESSORA",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 1,
+ "pct": "79",
+ "servicos": [
+  "EXECUÇÃO DE MURO",
+  "EXECUÇÃO DE PINTURA EM ESTRUTURA METÁLICA",
+  "EXECUÇÃO DE FORRO DE GESSO NA SALA DE LEITURA"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "sem_pedido": [
+  28391,
+  28483,
+  28607,
+  28610,
+  28624,
+  29583
+ ],
+ "sem_entrega": [],
+ "pedidos_em": "06/10/2026 11:17",
+ "gerado": "2026-10-06T11:17:49",
+ "avanco": {
+  "aprovado": 65.0114326995697,
+  "engenheiro": 79.0,
+  "fiscal_lo": 57.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_NERCY AMELIA MARTELINI DAHER PROFESSORA · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *65%* · Engenheiro *79%* · Fiscal FDE *57%* (LO 18/09)\n\n🔨 *Executado na semana*\n• EXECUÇÃO DE MURO\n• EXECUÇÃO DE PINTURA EM ESTRUTURA METÁLICA\n• EXECUÇÃO DE FORRO DE GESSO NA SALA DE LEITURA\n\n🛒 *Solicitado e ainda sem pedido de compra* — 6\n• sol. 28391 (15/05) — FINALIDADE: MURO DE DIVISA\n• sol. 28483 (19/05) — FINALIDADE: QE-02 E QE-03 * DE 2KIT COMPLETO DA \n• sol. 28607 (22/05) — FINALIDADE: WC ALUNOS LT-06\n• sol. 28610 (22/05) — FINALIDADE: WC ALUNOS\n• sol. 28624 (25/05) — FINALIDADE: ESTRUTURAS DE AÇO (FERRAGEM TELHADO)\n• sol. 29583 (13/07) — FINALIDADE: FORMA QE-37\n\n_Situação dos pedidos em 06/10/2026 11:17_\n\n_Luis Júnior — Engenharia Atlântica_"
+}

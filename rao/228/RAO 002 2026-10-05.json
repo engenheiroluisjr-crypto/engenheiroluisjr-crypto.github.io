@@ -1,0 +1,138 @@
+{
+ "tipo": "diario",
+ "obra": 228,
+ "lote": "42",
+ "unidade": "NERCY AMELIA MARTELINI DAHER PROFESSORA",
+ "data": "2026-10-05",
+ "numero": 2,
+ "pct": "79",
+ "avanco": {
+  "aprovado": 65.0114326995697,
+  "engenheiro": 79.0,
+  "fiscal_lo": 57.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-06T11:16:58",
+ "ficha": {
+  "funcionarios": "5",
+  "mao_de_obra": "Suficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "79",
+  "ritmo": "Normal",
+  "limpeza": "Boa",
+  "previsao": null,
+  "visita": "10:50",
+  "responsavel": null
+ },
+ "servicos": [
+  "EXECUÇÃO DE MURO",
+  "EXECUÇÃO DE PINTURA EM ESTRUTURA METÁLICA",
+  "EXECUÇÃO DE FORRO DE GESSO NA SALA DE LEITURA"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [
+  "INÍCIO DA EXECUÇÃO DE TELA DA QUADRA POLIESPORTIVA",
+  "APÓS A REGULARIZAÇÃO, ENVIAR FOTOS NO GRUPO PARA REGISTRO"
+ ],
+ "pendencias": [
+  "01 - VERIFICAR COM O ENCANADOR O PRAZO NECESSÁRIO PARA EXECUÇÃO DO SERVIÇO, A FIM DE PROGRAMAR A INTERVENÇÃO NO RESERVATÓRIO DURANTE O FERIADO",
+  "02 - PRIORIZAR E INTENSIFICAR A EXECUÇÃO DO MURO",
+  "03 - VERIFICAR E REGULARIZAR O ABASTECIMENTO DE ÁGUA DOS MICTÓRIOS",
+  "04 - VERIFICAR E REGULARIZAR AS HIDRAS QUE NÃO ESTÃO FUNCIONANDO",
+  "05 - TORNEIRAS ANTIVANDALISMO COM AVARIAS"
+ ],
+ "alertas": [],
+ "pedidos_estado": {
+  "49594": "ENTREGUE",
+  "50301": "ENTREGUE",
+  "50453": "ENTREGUE",
+  "50454": "ENTREGUE",
+  "50609": "ENTREGUE",
+  "50828": "ENTREGUE",
+  "50829": "ENTREGUE",
+  "50830": "ENTREGUE",
+  "50831": "ENTREGUE",
+  "51099": "ENTREGUE",
+  "51209": "ENTREGUE",
+  "51650": "ENTREGUE",
+  "52015": "ENTREGUE",
+  "53206": "ENTREGUE",
+  "53296": "ENTREGUE",
+  "53686": "ENTREGUE",
+  "54084": "ENTREGUE",
+  "54776": "ENTREGUE",
+  "54796": "ENTREGUE",
+  "55568": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv228-muw6nzyff00xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 02"
+  },
+  {
+   "arquivo": "painelv228-muw6nzyff01xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "SEM LIGAÇÃO"
+  },
+  {
+   "arquivo": "painelv228-muw6nzyff02xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 02"
+  },
+  {
+   "arquivo": "painelv228-muw6nzyff03xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv228-muw6nzyff04xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv228-muw6nzyff05xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "FORRO DE GESSO"
+  },
+  {
+   "arquivo": "painelv228-muw6nzyff06xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "SEM LIGAÇÃO"
+  },
+  {
+   "arquivo": "painelv228-muw6nzyff07xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 03 E 04"
+  },
+  {
+   "arquivo": "painelv228-muw6nzyff08xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 05"
+  },
+  {
+   "arquivo": "painelv228-muw6nzyff09xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv228-muw6nzyff10xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "COMEÇAR ALAMBRADO"
+  },
+  {
+   "arquivo": "painelv228-muw6nzyff11xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "FORRO DE GESSO"
+  }
+ ],
+ "m001": "42.228_M004_EE-NERCY-AMELIA_rev00.xlsx",
+ "autor": "Eng. Leonardo",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_NERCY AMELIA MARTELINI DAHER PROFESSORA · 2026.ATA.FDE.42.228 · PIRAPORA DO BOM JESUS_\n\n👷 Efetivo: 5 · ☀️ Tempo seco · Ritmo normal · Limpeza boa\n📊 Aprovado *65%* · Engenheiro *79%* · Fiscal FDE *57%* (LO 18/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• EXECUÇÃO DE MURO\n• EXECUÇÃO DE PINTURA EM ESTRUTURA METÁLICA\n• EXECUÇÃO DE FORRO DE GESSO NA SALA DE LEITURA\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• 01 - VERIFICAR COM O ENCANADOR O PRAZO NECESSÁRIO PARA EXECUÇÃO DO SERVIÇO, A FIM DE PROGRAMAR A INTERVENÇÃO NO RESERVATÓRIO DURANTE O FERIADO\n• 02 - PRIORIZAR E INTENSIFICAR A EXECUÇÃO DO MURO\n• 03 - VERIFICAR E REGULARIZAR O ABASTECIMENTO DE ÁGUA DOS MICTÓRIOS\n• 04 - VERIFICAR E REGULARIZAR AS HIDRAS QUE NÃO ESTÃO FUNCIONANDO\n• 05 - TORNEIRAS ANTIVANDALISMO COM AVARIAS\n\n❗ *Recomendações*\n• INÍCIO DA EXECUÇÃO DE TELA DA QUADRA POLIESPORTIVA\n• APÓS A REGULARIZAÇÃO, ENVIAR FOTOS NO GRUPO PARA REGISTRO\n\n_Relatório nº 2 · Eng. Leonardo · Engenharia Atlântica_"
+}

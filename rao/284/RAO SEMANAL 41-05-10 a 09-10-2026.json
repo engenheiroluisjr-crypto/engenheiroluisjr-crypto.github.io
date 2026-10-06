@@ -1,0 +1,30 @@
+{
+ "tipo": "semanal",
+ "obra": 284,
+ "lote": "42",
+ "unidade": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 1,
+ "pct": "99",
+ "servicos": [
+  "OBRA COM ENTREGA PREVISTA PARA QUINTA-FEIRA",
+  "CONFORME ALINHADO COM O FISCAL"
+ ],
+ "chegou": [],
+ "pendentes": [
+  "57239"
+ ],
+ "sem_pedido": [],
+ "sem_entrega": [
+  "57239"
+ ],
+ "pedidos_em": "06/10/2026 11:17",
+ "gerado": "2026-10-06T11:17:36",
+ "avanco": {
+  "aprovado": 42.234308637217104,
+  "engenheiro": 99.0,
+  "fiscal_lo": 45.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EE PROFA IGNES AMELIA OLIVEIRA MACHADO · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *42,2%* · Engenheiro *99%* · Fiscal FDE *45%* (LO 10/09)\n\n🔨 *Executado na semana*\n• OBRA COM ENTREGA PREVISTA PARA QUINTA-FEIRA\n• CONFORME ALINHADO COM O FISCAL\n\n📦 *Ainda sem entrega até 06/10/2026* — 1 pedido(s), R$ 400,00\n• 57239 — Fechadura tipo livre / ocupado — *5 dias* em aberto\n\n_Situação dos pedidos em 06/10/2026 11:17_\n\n_Luis Júnior — Engenharia Atlântica_"
+}

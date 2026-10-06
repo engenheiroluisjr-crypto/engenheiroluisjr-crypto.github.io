@@ -1,0 +1,139 @@
+{
+ "tipo": "diario",
+ "obra": 276,
+ "lote": "42",
+ "unidade": "REPUBLICA DO EQUADOR",
+ "data": "2026-10-06",
+ "numero": 1,
+ "pct": "37",
+ "avanco": {
+  "aprovado": 17.146093033968132,
+  "engenheiro": 37.0,
+  "fiscal_lo": 25.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-06T11:17:24",
+ "ficha": {
+  "funcionarios": "1",
+  "mao_de_obra": "Insuficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "37",
+  "ritmo": "Lento",
+  "limpeza": "Regular",
+  "previsao": null,
+  "visita": "16:00",
+  "responsavel": null
+ },
+ "servicos": [
+  "ASSENTAMENTO DE PORCELANATO",
+  "REVISÃO ELÉTRICA",
+  "COLOCAÇÃO DE PORTAS"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [
+  "APÓS A REGULARIZAÇÃO, ENVIAR FOTOS NO GRUPO PARA REGISTRO"
+ ],
+ "pendencias": [
+  "01 - AUMENTAR O EFETIVO NA OBRA, CONFORME ACORDADO COM O EMPREITEIRO",
+  "02 - INÍCIO DA DEMOLIÇÃO DO MURO DE DIVISA"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "medio",
+   "Ritmo da obra: lento"
+  ],
+  [
+   "medio",
+   "Organização e limpeza da obra: regular"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 1 funcionário(s) na visita"
+  ],
+  [
+   "medio",
+   "1 pedido(s) de material sem entrega há 60 dias ou mais"
+  ]
+ ],
+ "pedidos_estado": {
+  "52697": "ENTREGUE",
+  "53161": "ENTREGUE",
+  "53215": "ENTREGUE",
+  "53233": "ENTREGUE",
+  "53527": "PARCIAL",
+  "53698": "ENTREGUE",
+  "53758": "ENTREGUE",
+  "53850": "ENTREGUE",
+  "54398": "ENTREGUE",
+  "54601": "ENTREGUE",
+  "54717": "ENTREGUE",
+  "55674": "ENTREGUE",
+  "56711": "ENTREGUE",
+  "57416": "PENDENTE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv276-muw75jwwf00xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv276-muw75jwwf01xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv276-muw75jwwf02xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv276-muw75jwwf03xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 02 E 01"
+  },
+  {
+   "arquivo": "painelv276-muw75jwwf04xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv276-muw75jwwf05xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv276-muw75jwwf06xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv276-muw75jwwf07xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 02 E 01"
+  },
+  {
+   "arquivo": "painelv276-muw75jwwf08xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv276-muw75jwwf09xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  }
+ ],
+ "m001": "42.276_M003_REPUBLICA-DO-EQUADOR_rev00.xlsx",
+ "autor": "Eng. Leonardo",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 06/10/2026*\n_REPUBLICA DO EQUADOR · 2026.ATA.FDE.42.276 · BARUERI_\n\n👷 Efetivo: 1 · ☀️ Tempo seco · Ritmo lento · Limpeza regular\n📊 Aprovado *17,1%* · Engenheiro *37%* · Fiscal FDE *25%* (LO 22/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• ASSENTAMENTO DE PORCELANATO\n• REVISÃO ELÉTRICA\n• COLOCAÇÃO DE PORTAS\n\n📦 *Materiais — pedidos sem entrega até 06/10/2026*\n⚠️ 2 pedido(s), R$ 8.232,35 ainda por receber\n• 53527 — CONDULETE 3/4 COM TAMPA +5 itens — *75 dias* em aberto\n• 57416 — PORTA DE BANHEIRO DE MADEIRA, BOX, — *1 dias* em aberto\n\n📌 *Pendências*\n• 01 - AUMENTAR O EFETIVO NA OBRA, CONFORME ACORDADO COM O EMPREITEIRO\n• 02 - INÍCIO DA DEMOLIÇÃO DO MURO DE DIVISA\n\n❗ *Recomendações*\n• APÓS A REGULARIZAÇÃO, ENVIAR FOTOS NO GRUPO PARA REGISTRO\n\n_Relatório nº 1 · Eng. Leonardo · Engenharia Atlântica_"
+}

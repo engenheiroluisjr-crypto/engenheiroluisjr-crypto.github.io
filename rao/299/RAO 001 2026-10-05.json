@@ -1,0 +1,92 @@
+{
+ "tipo": "diario",
+ "obra": 299,
+ "lote": "42",
+ "unidade": "MYRTHES THEREZINHA ASSAD VILLELA PROFA",
+ "data": "2026-10-05",
+ "numero": 1,
+ "pct": "91",
+ "avanco": {
+  "aprovado": 33.11919555357111,
+  "engenheiro": 91.0,
+  "fiscal_lo": 35.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-06T11:17:11",
+ "ficha": {
+  "funcionarios": "3",
+  "mao_de_obra": "Suficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "91",
+  "ritmo": "Normal",
+  "limpeza": "Boa",
+  "previsao": null,
+  "visita": "14:37",
+  "responsavel": null
+ },
+ "servicos": [
+  "FINALIZAÇÃO DA EXECUÇÃO DA VALA PARA PASSAGEM DA TUBULAÇÃO DE GÁS"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [
+  "FINALIZAÇÃO DA OBRA, POIS A ENTREGA COM O FISCAL ESTÁ AGENDADA PARA QUINTA-FEIRA"
+ ],
+ "recomendacoes": [],
+ "pendencias": [
+  "01 - EXECUÇÃO DE RAMPA PARA TROCA DE GÁS",
+  "02 - EXECUÇÃO DE ACABAMENTO NA CASA DE GÁS",
+  "03 - FINALIZAÇÃO DA CANALETA"
+ ],
+ "alertas": [],
+ "pedidos_estado": {},
+ "fotos": [
+  {
+   "arquivo": "painelv299-muw6wn7uf00xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv299-muw6wn7uf01xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv299-muw6wn7uf02xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "DEMOLIÇÃO"
+  },
+  {
+   "arquivo": "painelv299-muw6wn7uf03xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "DEMOLIÇÃO"
+  },
+  {
+   "arquivo": "painelv299-muw6wn7uf04xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 03"
+  },
+  {
+   "arquivo": "painelv299-muw6wn7uf05xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 03"
+  },
+  {
+   "arquivo": "painelv299-muw6wn7uf06xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "TAPUME"
+  },
+  {
+   "arquivo": "painelv299-muw6wn7uf07xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 02"
+  }
+ ],
+ "m001": "42.299_M003_MYRTHES-THEREZINHA-ASSAD-VILLELA-PROFA_ACUMULADO_rev00.xlsx",
+ "autor": "Eng. Leonardo",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_MYRTHES THEREZINHA ASSAD VILLELA PROFA · 2026.ATA.FDE.42.299 · BARUERI_\n\n👷 Efetivo: 3 · ☀️ Tempo seco · Ritmo normal · Limpeza boa\n📊 Aprovado *33,1%* · Engenheiro *91%* · Fiscal FDE *35%* (LO 10/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• FINALIZAÇÃO DA EXECUÇÃO DA VALA PARA PASSAGEM DA TUBULAÇÃO DE GÁS\n\n🚨 *Pontos de atenção*\n• FINALIZAÇÃO DA OBRA, POIS A ENTREGA COM O FISCAL ESTÁ AGENDADA PARA QUINTA-FEIRA\n\n📌 *Pendências*\n• 01 - EXECUÇÃO DE RAMPA PARA TROCA DE GÁS\n• 02 - EXECUÇÃO DE ACABAMENTO NA CASA DE GÁS\n• 03 - FINALIZAÇÃO DA CANALETA\n\n_Relatório nº 1 · Eng. Leonardo · Engenharia Atlântica_"
+}

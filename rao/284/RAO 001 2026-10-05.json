@@ -1,0 +1,153 @@
+{
+ "tipo": "diario",
+ "obra": 284,
+ "lote": "42",
+ "unidade": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO",
+ "data": "2026-10-05",
+ "numero": 1,
+ "pct": "99",
+ "avanco": {
+  "aprovado": 42.234308637217104,
+  "engenheiro": 99.0,
+  "fiscal_lo": 45.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-06T11:16:46",
+ "ficha": {
+  "funcionarios": "0",
+  "mao_de_obra": "Insuficiente",
+  "material": "Insuficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Obra paralisada",
+  "pct": "99",
+  "ritmo": "Parado",
+  "limpeza": "Boa",
+  "previsao": null,
+  "visita": "09:13",
+  "responsavel": null
+ },
+ "servicos": [
+  "OBRA COM ENTREGA PREVISTA PARA QUINTA-FEIRA",
+  "CONFORME ALINHADO COM O FISCAL"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [
+  "APÓS A REGULARIZAÇÃO, ENVIAR FOTOS NO GRUPO PARA REGISTRO"
+ ],
+ "pendencias": [
+  "01 - PENDÊNCIA DE ACABAMENTOS DOS REGISTROS HIDRÁULICOS",
+  "02 - INSTALAÇÃO DE TRINCOS NAS PORTAS DOS BOXES",
+  "03 - FALTA DE ACABAMENTO NAS PORTAS DOS BOXES, COM MASSA APARENTE",
+  "04 - FALTA DE DESCARGAS NOS MICTÓRIOS"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Material em canteiro insuficiente"
+  ],
+  [
+   "alto",
+   "Ritmo da obra: parado"
+  ],
+  [
+   "alto",
+   "Andamento: Obra paralisada"
+  ]
+ ],
+ "pedidos_estado": {
+  "53223": "ENTREGUE",
+  "53829": "ENTREGUE",
+  "54391": "ENTREGUE",
+  "55719": "ENTREGUE",
+  "55725": "ENTREGUE",
+  "57239": "PENDENTE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv284-muw6893af00xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 03"
+  },
+  {
+   "arquivo": "painelv284-muw6893af01xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af02xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af03xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 04"
+  },
+  {
+   "arquivo": "painelv284-muw6893af04xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af05xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af06xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af07xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af08xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af09xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af10xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af11xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af12xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af13xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv284-muw6893af14xxxx.jpg",
+   "data": "2026-10-06",
+   "legenda": "PENDÊNCIA 02"
+  }
+ ],
+ "m001": "42.284_M003_EE-PROFA-IGNES-AMELIA-OLIVEIRA-MACHADO_rev00.xlsx",
+ "autor": "Eng. Leonardo",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 05/10/2026*\n_EE PROFA IGNES AMELIA OLIVEIRA MACHADO · 2026.ATA.FDE.42.284 · ITAPEVI_\n\n👷 Efetivo: 0 · ☀️ Tempo seco · Ritmo parado · Limpeza boa\n📊 Aprovado *42,2%* · Engenheiro *99%* · Fiscal FDE *45%* (LO 10/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• OBRA COM ENTREGA PREVISTA PARA QUINTA-FEIRA\n• CONFORME ALINHADO COM O FISCAL\n\n📦 *Materiais — pedidos sem entrega até 05/10/2026*\n⚠️ 1 pedido(s), R$ 400,00 ainda por receber\n• 57239 — Fechadura tipo livre / ocupado — *5 dias* em aberto\n\n📌 *Pendências*\n• 01 - PENDÊNCIA DE ACABAMENTOS DOS REGISTROS HIDRÁULICOS\n• 02 - INSTALAÇÃO DE TRINCOS NAS PORTAS DOS BOXES\n• 03 - FALTA DE ACABAMENTO NAS PORTAS DOS BOXES, COM MASSA APARENTE\n• 04 - FALTA DE DESCARGAS NOS MICTÓRIOS\n\n❗ *Recomendações*\n• APÓS A REGULARIZAÇÃO, ENVIAR FOTOS NO GRUPO PARA REGISTRO\n\n_Relatório nº 1 · Eng. Leonardo · Engenharia Atlântica_"
+}
