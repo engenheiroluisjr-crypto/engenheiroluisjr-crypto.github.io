@@ -3,14 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f4f3ef">
+<script>
+/* 06/10: segue o tema escolhido no painel (mesma chave painelTema). Antes esta pagina so
+   olhava o prefers-color-scheme, entao quem punha o painel no escuro e clicava aqui caia
+   numa pagina clara. Roda antes de pintar para nao piscar. */
+(function(){var t;try{t=localStorage.getItem('painelTema');}catch(e){}
+ if(t!=='claro'&&t!=='escuro'){t=(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'claro':'escuro';}
+ document.documentElement.setAttribute('data-tema',t);
+ var m=document.querySelector('meta[name="theme-color"]');
+ if(m)m.setAttribute('content',t==='claro'?'#f4f3ef':'#161615');})();
+</script>
 <title>Checklist de medições — Obras FDE</title>
 <meta name="robots" content="noindex">
 <style>
-:root{--bg:#f4f3ef;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--ln:#dcdad3;--pri:#1f4e79;--ok:#2f6f4e;--okb:#e6f4ec;--bad:#b3261e;--badb:#fbe0de;--warn:#9a6b00;--warnb:#fdf4de;--na:#6b6b66;--nab:#eeede8}
-@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#22221f;--tx:#ecebe6;--mut:#a3a29c;--ln:#3a3935;--pri:#7fb0de;--ok:#7fc7a0;--okb:#1f3a2c;--bad:#f08a80;--badb:#4a2220;--warn:#e5c062;--warnb:#3d3420;--na:#a3a29c;--nab:#2c2b28}}
+:root{--bg:#f4f3ef;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--ln:#dcdad3;--pri:#c2501f;--priBar:#c2501f;--ok:#2f6f4e;--okb:#e6f4ec;--bad:#b3261e;--badb:#fbe0de;--warn:#9a6b00;--warnb:#fdf4de;--na:#6b6b66;--nab:#eeede8}
+/* 06/10: o tema agora vem do data-tema (painelTema); o prefers-color-scheme fica
+   so para quem abrir sem JS. --pri clareia para servir de texto no escuro e a barra
+   do topo ganha --priBar, que escurece: antes ela clareava com o texto branco em
+   cima e o contraste caia para 2,29:1. */
+@media (prefers-color-scheme:dark){html:not([data-tema]){--bg:#161615;--card:#22221f;--tx:#ecebe6;--mut:#a3a29c;--ln:#3a3935;--pri:#e8825a;--priBar:#a6431a;--ok:#7fc7a0;--okb:#1f3a2c;--bad:#f08a80;--badb:#4a2220;--warn:#e5c062;--warnb:#3d3420;--na:#a3a29c;--nab:#2c2b28}}
+html[data-tema="escuro"]{--bg:#161615;--card:#22221f;--tx:#ecebe6;--mut:#a3a29c;--ln:#3a3935;--pri:#e8825a;--priBar:#a6431a;--ok:#7fc7a0;--okb:#1f3a2c;--bad:#f08a80;--badb:#4a2220;--warn:#e5c062;--warnb:#3d3420;--na:#a3a29c;--nab:#2c2b28}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-header.top{position:sticky;top:0;z-index:5;background:var(--pri);color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header.top{position:sticky;top:0;z-index:5;background:var(--priBar);color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 header.top h1{font-size:16px;margin:0;flex:1;min-width:200px}
 header.top a{color:#fff;font-size:13px;opacity:.85}
 main{max-width:1240px;margin:0 auto;padding:12px 16px 60px}
