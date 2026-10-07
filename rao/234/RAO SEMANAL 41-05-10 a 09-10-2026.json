@@ -5,15 +5,17 @@
  "unidade": "EE EE PROF DR EURICO DA SILVA BASTOS",
  "de": "2026-10-05",
  "ate": "2026-10-09",
- "diarios": 1,
- "pct": "50",
+ "diarios": 2,
+ "pct": "30",
  "servicos": [
-  "Instalando pingadeira de concreto"
+  "Instalando pingadeira de concreto",
+  "Sant masculino, acabamentos",
+  "Muro instalação de pingadeira"
  ],
- "chegou": [],
- "pendentes": [
+ "chegou": [
   "57358"
  ],
+ "pendentes": [],
  "sem_pedido": [
   27966,
   27967,
@@ -34,15 +36,13 @@
   30590,
   30833
  ],
- "sem_entrega": [
-  "57358"
- ],
- "pedidos_em": "06/10/2026 11:18",
- "gerado": "2026-10-06T11:18:26",
+ "sem_entrega": [],
+ "pedidos_em": "07/10/2026 01:43",
+ "gerado": "2026-10-07T01:43:11",
  "avanco": {
   "aprovado": 66.29256131121774,
-  "engenheiro": 50.0,
+  "engenheiro": 30.0,
   "fiscal_lo": 43.0
  },
- "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EE EE PROF DR EURICO DA SILVA BASTOS · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *66,3%* · Engenheiro *50%* · Fiscal FDE *43%* (LO 10/09)\n\n🔨 *Executado na semana*\n• Instalando pingadeira de concreto\n\n📦 *Ainda sem entrega até 06/10/2026* — 1 pedido(s), R$ 3.157,69\n• 57358 — MAO DE OBRA — *4 dias* em aberto\n\n🛒 *Solicitado e ainda sem pedido de compra* — 18\n• sol. 27966 (28/04) — FINALIDADE: MURO DIVISA *IMAGEM EM ANEXO*\n• sol. 27967 (28/04) — FINALIDADE: MURO DIVISA *IMAGEM EM ANEXO*\n• sol. 27968 (28/04) — FINALIDADE: MURO DE DIVISA *IMAGEM EM ANEXO*\n• sol. 27969 (28/04) — FINALIDADE: MURO DE DIVISA FD-16\n• sol. 28516 (21/05) — FINALIDADE: GRANITO COZINHA\n• sol. 28519 (21/05) — FINALIDADE: ARMADURA QE-37\n• ... e mais 12 solicitação(ões)\n\n_Situação dos pedidos em 06/10/2026 11:18_\n\n_Luis Júnior — Engenharia Atlântica_"
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EE EE PROF DR EURICO DA SILVA BASTOS · 05/10/2026 a 09/10/2026_\n\n📅 2 visita(s) na semana · 1 dia(s) de chuva\n📊 Aprovado *66,3%* · Engenheiro *30%* · Fiscal FDE *43%* (LO 10/09)\n\n🔨 *Executado na semana*\n• Instalando pingadeira de concreto\n• Sant masculino, acabamentos\n• Muro instalação de pingadeira\n\n✅ *Chegou na semana*\n• pedido 57358 — ZANAO PRINT LTDA\n\n🛒 *Solicitado e ainda sem pedido de compra* — 18\n• sol. 27966 (28/04) — FINALIDADE: MURO DIVISA *IMAGEM EM ANEXO*\n• sol. 27967 (28/04) — FINALIDADE: MURO DIVISA *IMAGEM EM ANEXO*\n• sol. 27968 (28/04) — FINALIDADE: MURO DE DIVISA *IMAGEM EM ANEXO*\n• sol. 27969 (28/04) — FINALIDADE: MURO DE DIVISA FD-16\n• sol. 28516 (21/05) — FINALIDADE: GRANITO COZINHA\n• sol. 28519 (21/05) — FINALIDADE: ARMADURA QE-37\n• ... e mais 12 solicitação(ões)\n\n_Situação dos pedidos em 07/10/2026 01:43_\n\n_Luis Júnior — Engenharia Atlântica_"
 }
