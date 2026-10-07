@@ -4,14 +4,15 @@
  "unidade": "EE PROF JOSÉ SILVEIRA DA MOTTA",
  "de": "2026-10-05",
  "ate": "2026-10-11",
- "n": 1,
- "cls": "BOM",
- "medpond": 1.0,
+ "n": 2,
+ "cls": "ÓTIMO",
+ "medpond": 0.9230769230769231,
  "vistorias": [
-  "214-muv5l5xj"
+  "214-muv5l5xj",
+  "214-muyhxorj"
  ],
- "whats": "🦺 *SEGURANÇA DO TRABALHO — SEMANA 41*\n_EE PROF JOSÉ SILVEIRA DA MOTTA · obra 214 · 05/10 a 09/10/2026_\n\n📅 1 vistoria(s): 05/10 BOM\n📋 Situação atual: *BOM* (média 1,000)\n\n✅ Nenhuma não conformidade em aberto.\n\n_Luis Júnior — Engenharia Atlântica_",
- "gerado": "2026-10-05T11:35:21",
+ "whats": "🦺 *SEGURANÇA DO TRABALHO — SEMANA 41*\n_EE PROF JOSÉ SILVEIRA DA MOTTA · obra 214 · 05/10 a 09/10/2026_\n\n📅 2 vistoria(s): 05/10 BOM · 07/10 ÓTIMO\n📋 Situação atual: *ÓTIMO* (média 0,923)\n\n✅ Nenhuma não conformidade em aberto.\n\n_Luis Júnior — Engenharia Atlântica_",
+ "gerado": "2026-10-07T19:37:29",
  "pdf_completo": "SST_SEMANAL_214_EE-PROF-JOSE-SILVEIRA-DA-MOTTA_S41_09-10-2026.pdf",
  "pdf": "SST_SEMANAL_214_EE-PROF-JOSE-SILVEIRA-DA-MOTTA_S41_09-10-2026.pdf"
 }
