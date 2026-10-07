@@ -1,0 +1,114 @@
+{
+ "tipo": "diario",
+ "obra": 282,
+ "lote": "42",
+ "unidade": "EE/CEL FRANCISCO MATARAZZO SOBRINHO (OSASCO/SP)",
+ "data": "2026-10-07",
+ "numero": 1,
+ "pct": "15",
+ "avanco": {
+  "aprovado": 15.393918038452432,
+  "engenheiro": 15.0,
+  "fiscal_lo": 17.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-07T18:10:19",
+ "ficha": {
+  "funcionarios": "3",
+  "mao_de_obra": "Insuficiente",
+  "material": "Insuficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "15",
+  "ritmo": "Lento",
+  "limpeza": "Regular",
+  "previsao": null,
+  "visita": "14:30",
+  "responsavel": null
+ },
+ "servicos": [
+  "Rejuntamento da bacia sanitária",
+  "Instalação de bancada de granito"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [
+  "Uso de Epi e isolamento local de trabalho"
+ ],
+ "pendencias": [
+  "Execução do forro drywall e pedido do material",
+  "Execução da pintura",
+  "Instalação das divisorias e portas de madeira",
+  "Instalação do lavatório de granito",
+  "Tubulação reservatorio"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Material em canteiro insuficiente"
+  ],
+  [
+   "medio",
+   "Ritmo da obra: lento"
+  ],
+  [
+   "medio",
+   "Organização e limpeza da obra: regular"
+  ]
+ ],
+ "pedidos_estado": {
+  "55135": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv282-muydzmgjf00xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Forro wc alunos masc"
+  },
+  {
+   "arquivo": "painelv282-muydzmgjf01xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Ralo quebrado"
+  },
+  {
+   "arquivo": "painelv282-muydzmgjf02xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Acabamento azulejo parede"
+  },
+  {
+   "arquivo": "painelv282-muydzmgjf03xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Bancada de granito in loco"
+  },
+  {
+   "arquivo": "painelv282-muydzmgjf04xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Rejuntamento bacia sanitaria"
+  },
+  {
+   "arquivo": "painelv282-muydzmgjf05xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Falta instalar soleira"
+  },
+  {
+   "arquivo": "painelv282-muydzmgjf06xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Organização ferramentas e isolamento"
+  },
+  {
+   "arquivo": "painelv282-muydzmgjf07xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Piso externo"
+  }
+ ],
+ "m001": "42.282_M002_EE-CEL-FRANCISCO-MATARAZZO-SOBRINHO-OSASCO-SP_rev00.xlsx",
+ "autor": "Eng. Luis Júnior",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 07/10/2026*\n_EE/CEL FRANCISCO MATARAZZO SOBRINHO (OSASCO/SP) · 2026.ATA.FDE.42.282 · OSASCO_\n\n👷 Efetivo: 3 · ☀️ Tempo seco · Ritmo lento · Limpeza regular\n📊 Aprovado *15,4%* · Engenheiro *15%* · Fiscal FDE *17%* (LO 29/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Rejuntamento da bacia sanitária\n• Instalação de bancada de granito\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• Execução do forro drywall e pedido do material\n• Execução da pintura\n• Instalação das divisorias e portas de madeira\n• Instalação do lavatório de granito\n• Tubulação reservatorio\n\n❗ *Recomendações*\n• Uso de Epi e isolamento local de trabalho\n\n_Relatório nº 1 · Eng. Luis Júnior · Engenharia Atlântica_"
+}

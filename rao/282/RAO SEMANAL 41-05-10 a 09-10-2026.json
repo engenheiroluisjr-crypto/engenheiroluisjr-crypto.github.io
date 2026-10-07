@@ -1,0 +1,26 @@
+{
+ "tipo": "semanal",
+ "obra": 282,
+ "lote": "42",
+ "unidade": "EE/CEL FRANCISCO MATARAZZO SOBRINHO (OSASCO/SP)",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 1,
+ "pct": "15",
+ "servicos": [
+  "Rejuntamento da bacia sanitária",
+  "Instalação de bancada de granito"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "sem_pedido": [],
+ "sem_entrega": [],
+ "pedidos_em": "07/10/2026 18:10",
+ "gerado": "2026-10-07T18:10:33",
+ "avanco": {
+  "aprovado": 15.393918038452432,
+  "engenheiro": 15.0,
+  "fiscal_lo": 17.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EE/CEL FRANCISCO MATARAZZO SOBRINHO (OSASCO/SP) · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *15,4%* · Engenheiro *15%* · Fiscal FDE *17%* (LO 29/09)\n\n🔨 *Executado na semana*\n• Rejuntamento da bacia sanitária\n• Instalação de bancada de granito\n\n_Situação dos pedidos em 07/10/2026 18:10_\n\n_Luis Júnior — Engenharia Atlântica_"
+}

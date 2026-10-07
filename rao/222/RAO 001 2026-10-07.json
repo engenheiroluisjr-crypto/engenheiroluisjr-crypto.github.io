@@ -1,0 +1,102 @@
+{
+ "tipo": "diario",
+ "obra": 222,
+ "lote": "42",
+ "unidade": "ETEC Doutor Celso Giglio",
+ "data": "2026-10-07",
+ "numero": 1,
+ "pct": "35",
+ "avanco": {
+  "aprovado": 20.73321269445703,
+  "engenheiro": 35.0,
+  "fiscal_lo": 23.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-07T18:08:19",
+ "ficha": {
+  "funcionarios": "3",
+  "mao_de_obra": "Suficiente",
+  "material": "Insuficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "35",
+  "ritmo": "Normal",
+  "limpeza": "Regular",
+  "previsao": null,
+  "visita": "13:51",
+  "responsavel": null
+ },
+ "servicos": [
+  "Pintura laboratório de informática e circulacao"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [],
+ "pendencias": [
+  "Uso de EPI e isolamento dos locais de trabalho"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Material em canteiro insuficiente"
+  ],
+  [
+   "medio",
+   "Organização e limpeza da obra: regular"
+  ]
+ ],
+ "pedidos_estado": {
+  "53061": "ENTREGUE",
+  "53062": "ENTREGUE",
+  "53081": "ENTREGUE",
+  "53088": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv222-muyclzs9f00xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Isolamento equipamentos"
+  },
+  {
+   "arquivo": "painelv222-muyclzs9f01xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Pintura área administrativa"
+  },
+  {
+   "arquivo": "painelv222-muyclzs9f02xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Pintura a ser corrigida, escada administrativa"
+  },
+  {
+   "arquivo": "painelv222-muyclzs9f03xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Respingo pintura piso, confirmar se equipe da obra executou"
+  },
+  {
+   "arquivo": "painelv222-muyclzs9f04xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv222-muyclzs9f05xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Aguardando definição piso vinilico"
+  },
+  {
+   "arquivo": "painelv222-muyclzs9f06xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Pintura laboratorio"
+  },
+  {
+   "arquivo": "painelv222-muyclzs9f07xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Pintura laboratorio"
+  }
+ ],
+ "m001": "42.222_M004_EE-DOUTOR-CELSO-GIGLIO_rev00.xlsx",
+ "autor": "Eng. Luis Júnior",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 07/10/2026*\n_ETEC Doutor Celso Giglio · 2026.ATA.FDE.42.222 · OSASCO_\n\n👷 Efetivo: 3 · ☀️ Tempo seco · Ritmo normal · Limpeza regular\n📊 Aprovado *20,7%* · Engenheiro *35%* · Fiscal FDE *23%* (LO 21/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Pintura laboratório de informática e circulacao\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• Uso de EPI e isolamento dos locais de trabalho\n\n_Relatório nº 1 · Eng. Luis Júnior · Engenharia Atlântica_"
+}
