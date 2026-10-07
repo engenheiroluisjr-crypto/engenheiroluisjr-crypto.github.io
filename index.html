@@ -1752,6 +1752,13 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
 
   <!-- ==================== 3. RECEBIMENTO (o caixa) ==================== -->
   <section id="secReceb" class="oculto">
+    <!-- 07/10: competencia MULTIPLA so desta aba (pedido do Luis). Nenhuma marcada = todas. -->
+    <div class="filtros" style="margin:0 0 10px;align-items:flex-end">
+      <div><label class="f">Competência (mês da medição)</label><div class="ms" id="rCompR"></div></div>
+      <span style="font-size:11.5px;color:var(--text-muted);line-height:1.5;flex:1 1 300px">
+        Marque um ou mais meses. Nenhum marcado = todas as competências.
+        Contrato, lote, cidade, engenheiro, fiscal e empreiteira: filtros do topo.</span>
+    </div>
     <div id="faixaReceb" style="margin:0 0 14px;padding:13px 16px;border-radius:10px;
       background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--terceiro)">
       <span id="frTexto" style="font-size:clamp(15px,1.5vw,21px);font-weight:600;line-height:1.3;color:var(--text-primary)">–</span>
@@ -1808,6 +1815,19 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
         do mês pelo Relatório de Vistoria.
       </p>
       <div class="rol"><table class="tbl" id="rTabMes"></table></div>
+      </div>
+    </details>
+
+    <!-- 07/10: lista das obras/medicoes que compoem os numeros da aba (pedido do Luis) -->
+    <details class="drill" open id="drObrasReceb">
+      <summary>Obras e medições do recebimento<span class="qt" id="rQtObrasR"></span></summary>
+      <div>
+      <p style="font-size:11px;color:var(--text-muted);margin:-6px 0 10px;line-height:1.6">
+        Cada linha é uma medição, na ordem do pagamento previsto. <b>Firme</b> = aprovada (aprovação + 30 dias).
+        <b>Estimado</b> = em tramitação ou previsão lançada (competência + ciclo medido).
+        <span style="color:var(--good)">Recebido</span> = marcado na coluna “recebido” do CTR.</p>
+      <div id="rResObrasR" style="margin:0 0 10px"></div>
+      <div class="rol"><table class="tbl" id="rTabObrasR"></table></div>
       </div>
     </details>
 
@@ -4520,7 +4540,10 @@ function renderReceb(){
   // competência nem pelo status da obra -- obra concluída ainda recebe a medição final,
   // e a competência do mês corrente nunca tem aprovada (a aba abria zerada). O que o
   // CTR já marca como recebido (col. 19) sai do 'já venceu' e aparece à parte.
-  const medsF=RC.meds.filter(rFiltro('Aprovada','fStatus')).filter(m=>(m.v||0)>0.005); // medição de R$ 0 não é caixa
+  const cR=(MS['rCompR']?msVals('rCompR'):[]), naCR=m=>!cR.length||cR.includes((m.r||'').slice(0,7));
+  const escCR=!cR.length?'todas as competências':cR.length===1?'competência '+mesAno(cR[0])
+    :cR.length+' competências ('+cR.slice().sort().map(mesAno).join(', ')+')';
+  const medsF=RC.meds.filter(rFiltro('Aprovada','fStatus')).filter(m=>(m.v||0)>0.005).filter(naCR); // medição de R$ 0 não é caixa
   const recebF=medsF.filter(m=>m.rb), aRecF=medsF.filter(m=>!m.rb);
   const soma=a=>a.reduce((x,y)=>x+(y.v||0),0);
   const mes=mesRef();
@@ -4545,7 +4568,7 @@ function renderReceb(){
   const medsK=meds.filter(naComp), tramK=tram.filter(naComp),
         prevK=prevl.filter(naComp), semK=sem.filter(naComp);
   const escopo=todasC?'todas as competências':escopoMes();
-  if($('cxFirmeEsc')) $('cxFirmeEsc').textContent=' · pela data de pagamento · todas as competências, inclusive obras concluídas';
+  if($('cxFirmeEsc')) $('cxFirmeEsc').textContent=' · pela data de pagamento · '+escCR+', inclusive obras concluídas';
   if($('cxIncertoEsc')) $('cxIncertoEsc').textContent=escopo?' · '+escopo:'';
   const j30=aRecF.filter(m=>m.p>HOJE_ISO&&m.p<=D30), j60=aRecF.filter(m=>m.p>D30&&m.p<=D60);
   const venc=aRecF.filter(m=>m.p<=HOJE_ISO);
@@ -4582,7 +4605,7 @@ function renderReceb(){
     if(!partes.length) partes.push('Nada a receber no filtro');
     $('frTexto').innerHTML=partes.join(' · ').replace(/·([^·]*)$/,'e$1');
     $('frSub').textContent=
-      `dinheiro firme ${brl(firme)} (pela data de pagamento) · depende de aprovação ${brl(incerto)} (${escopo}) · `+
+      `${escCR} · dinheiro firme ${brl(firme)} (pela data de pagamento) · `+
       `ciclo medido ${RC.lag} dias para aprovar + ${RC.pag} para pagar`;
     $('faixaReceb').style.borderLeftColor =
       (soma(venc)>500000||semK.length>=50)?'var(--critical)'
@@ -4590,6 +4613,42 @@ function renderReceb(){
     const q=$('rQtMed'); if(q) q.textContent=' · '+doMes.length+' medições';
   })();
 
+
+  // ---- 07/10: OBRAS E MEDIÇÕES do recebimento (o que compõe os números da aba)
+  (function(){
+    const tb=$('rTabObrasR'); if(!tb) return;
+    const fL=rFiltro(undefined,'fStatus');
+    const tramL=RC.tram.filter(m=>!ehPrev(m)).filter(fL).filter(naCR).filter(m=>(m.v||0)>0.005);
+    const prevL=RC.tram.filter(ehPrev).filter(fL).filter(naCR).filter(m=>(m.v||0)>0.005);
+    const sit=m=>m.rb?['Recebido (CTR)','var(--good)',0]
+      : m.p<=HOJE_ISO?['Já venceu','var(--critical)',1]
+      : m.p<=D30?['Entra em até 30 dias','var(--realizado)',2]
+      : m.p<=D60?['Entra em 31–60 dias','var(--realizado)',3]:['Firme · após 60 dias','var(--realizado)',4];
+    const L=[].concat(
+      medsF.map(m=>({m:m,s:sit(m),firme:1})),
+      tramL.map(m=>({m:m,s:['Em tramitação · estimado','var(--warning)',5],firme:0})),
+      prevL.map(m=>({m:m,s:['Previsão lançada · estimado','var(--text-muted)',6],firme:0})))
+      .sort((a,b)=>a.s[2]-b.s[2]||(a.m.p<b.m.p?-1:a.m.p>b.m.p?1:a.m.c-b.m.c));
+    // resumo por situacao
+    const res={}; L.forEach(x=>{const k=x.s[0]; res[k]=res[k]||{n:0,v:0,cor:x.s[1],o:new Set(),ord:x.s[2]}; res[k].n++; res[k].v+=x.m.v||0; res[k].o.add(x.m.c);});
+    $('rResObrasR').innerHTML=Object.entries(res).sort((a,b)=>a[1].ord-b[1].ord).map(([k,r])=>
+      `<span class="lote" style="border-color:${r.cor};color:${r.cor};margin:0 6px 6px 0;display:inline-block">`+
+      `${k}: <b>${brl(r.v)}</b> · ${r.n} med. · ${r.o.size} obra${r.o.size>1?'s':''}</span>`).join('')||
+      '<span style="color:var(--text-muted);font-size:12px">Nenhuma medição no filtro.</span>';
+    $('rQtObrasR').textContent=' · '+new Set(L.map(x=>x.m.c)).size+' obras · '+L.length+' medições · '+escCR;
+    const lin=x=>{const m=x.m,o=OBRA[m.c]||{};
+      return `<tr><td>${m.c}</td><td>${o.unidade||''}</td><td>${o.fiscal||'—'}</td><td>${o.empreiteira||'—'}</td>`+
+        `<td class="num">${m.n||''}</td><td>${dbr(m.r)}</td>`+
+        `<td>${x.firme?dbr(m.a):'<span style="color:var(--text-muted)">'+(m.sit||m.sp||'—')+'</span>'}</td>`+
+        `<td><b>${dbr(m.p)}</b>${x.firme?'':' <span style="font-size:10px;color:var(--text-muted)">(est.)</span>'}</td>`+
+        `<td class="num"><b>${brl2(m.v)}</b></td>`+
+        `<td style="color:${x.s[1]};font-weight:600;white-space:nowrap">${x.s[0]}</td></tr>`;};
+    const tot=L.reduce((a,x)=>a+(x.m.v||0),0);
+    tb.innerHTML='<thead><tr><th>Nº</th><th>Unidade</th><th>Fiscal</th><th>Empreiteira</th><th class="num">Med.</th>'+
+      '<th>Competência</th><th>Aprovação / situação</th><th>Pagamento previsto</th><th class="num">Valor FDE</th><th>Recebimento</th></tr></thead><tbody>'+
+      (L.length?L.map(lin).join('')+`<tr><td colspan="8" style="text-align:right"><b>total</b></td><td class="num"><b>${brl2(tot)}</b></td><td></td></tr>`
+        :'<tr><td colspan="10" style="color:var(--text-muted)">Nenhuma medição no filtro.</td></tr>')+'</tbody>';
+  })();
 
   // ---- série mensal do recebimento
   const agg={};
@@ -4599,14 +4658,15 @@ function renderReceb(){
     const c=comp||'?';
     agg[k].ori[c]=agg[k].ori[c]||{c:c,m:0,t:0,p:0};
     agg[k].ori[c][campo]+=v;};
-  meds.forEach(m=>põe(m.p.slice(0,7),'m',m.v,(m.r||'').slice(0,7)));
-  tram.forEach(m=>põe(m.p.slice(0,7),'t',m.v,(m.r||'').slice(0,7)));
+  meds.filter(naCR).forEach(m=>põe(m.p.slice(0,7),'m',m.v,(m.r||'').slice(0,7)));
+  tram.filter(naCR).forEach(m=>põe(m.p.slice(0,7),'t',m.v,(m.r||'').slice(0,7)));
   // a previsao lancada continua no caixa (senao abre um buraco), mas na faixa 'p'
-  prevl.forEach(m=>põe(m.p.slice(0,7),'p',m.v,(m.r||'').slice(0,7)));
+  prevl.filter(naCR).forEach(m=>põe(m.p.slice(0,7),'p',m.v,(m.r||'').slice(0,7)));
   const temFiltro = msVals('rContrato').length||msVals('rLote').length||msVals('rFiscal').length
                  || msVals('rPortal').length||$('rBusca').value.trim()
                  || filtradas().length!==D.obras.length;
   if(!temFiltro) (RC.prev||[]).forEach((x,i)=>{const c=(RC.prevComp||[])[i];
+    if(cR.length&&!(c&&cR.includes(c.k))) return;
     põe(x.k,'p',x.v,c?c.k:'');});
   const serie=Object.values(agg).filter(s=>s.m+s.t+s.p>0.005)
     .sort((a,b)=>a.k<b.k?-1:1);
@@ -4626,7 +4686,7 @@ function renderReceb(){
   // competencia -> aprovacao -> caixa ficava sem o elo do meio. Este agregado
   // devolve o elo: qual mes de aprovacao gerou o dinheiro de cada mes.
   const aprovMes={};
-  meds.forEach(m=>{const k=(m.p||'').slice(0,7), am=(m.a||'').slice(0,7);
+  meds.filter(naCR).forEach(m=>{const k=(m.p||'').slice(0,7), am=(m.a||'').slice(0,7);
     if(!k||!am) return;
     (aprovMes[k]=aprovMes[k]||{})[am]=(aprovMes[k][am]||0)+(m.v||0);});
   const chipAp=k=>{
@@ -5298,6 +5358,9 @@ function irMed(){ mostra('med'); renderReceb(); window.scrollTo(0,0); }
     msLabel('rMes'); }
   msInit('rContrato',uniq(o=>o.contratoAta),'Todos',null,renderReceb);
   msInit('rLote',uniq(o=>o.lote),'Todos',x=>'Lote '+x,renderReceb);
+  // 07/10: competencia multipla da aba Recebimento (nenhuma = todas)
+  if($('rCompR')) msInit('rCompR',[...new Set([...RC.meds,...RC.tram].map(m=>(m.r||'').slice(0,7)).filter(k=>k&&k<='2099'))].sort().reverse(),
+    'Todas as competências',k=>mesAno(k),renderReceb);
   msInit('rFiscal',uniq(o=>o.fiscal),'Todos',null,renderReceb);
   // lista de status na ordem real da fila da FDE, montada do que existe no dado
   msInit('rPortal',[...new Set([].concat(
@@ -7676,7 +7739,7 @@ aoFiltrar();
 </script>
 
 <!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
-<script src="fech.js?v=202610072116"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
+<script src="fech.js?v=202610072118"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
 <script>
 const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andrade", "cid": "BARUERI", "emp": "LEONARDO ZANAO", "sit": "5. CONCLUÍDA", "contrato": 235271.25, "taxa": 0.06, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 14116.27, "ap": 212526.4, "tr": 7207.92, "emp_ap": 12751.58, "emp_tot": 13184.06, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 12751.58, "saldo_tot": 13184.06}, "199": {"num": 199, "uni": "EE SEBASTIAO DE MORAES CARDOSO", "cid": "ITAPECERICA DA SERRA", "emp": "REINALDO", "sit": "5. CONCLUÍDA", "contrato": 186643.95, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 37328.79, "ap": 131576.49, "tr": 12451.6, "emp_ap": 26315.3, "emp_tot": 28805.62, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26315.3, "saldo_tot": 28805.62}, "200": {"num": 200, "uni": "EE OREDO RODRIGUES DA CRUZ", "cid": "JUQUITIBA", "emp": "ANTONIO CABELO", "sit": "5. CONCLUÍDA", "contrato": 171519.72, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 34303.94, "ap": 130434.87, "tr": 0.0, "emp_ap": 26086.97, "emp_tot": 26086.97, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26086.97, "saldo_tot": 26086.97}, "223": {"num": 223, "uni": "ETEC Antonio furlan", "cid": "BARUERI", "emp": "REINALDO", "sit": "4. EXECUÇÃO", "contrato": 1935375.91, "taxa": 0.538489, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 1042178.64, "ap": 413291.43, "tr": 273284.71, "emp_ap": 222552.89, "emp_tot": 369713.7, "mat": 127178.11, "serv": 19199.0, "sienge": 146945.42, "npedidos": 18, "top": [["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)", "m²", 731.4, 23331.66], ["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET", "m2", 450.0, 17946.0], ["Torneira de acionamento manual e com ciclo de ", "un", 18.0, 17457.3], ["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ", "un", 30.0, 14830.5], ["Tinta esmalte cinza médio 3,6 LT", "gl", 50.0, 5781.0], ["PORTA DE MADEIRA COMPLETA 0,92X2,10", "un", 6.0, 4296.0], ["TELA Q-92 2X3 M", "un", 60.0, 3996.0], ["Divisoria de Granilite frontal (DV-03) 0,40x1,", "un", 25.0, 3802.5], ["FERRO CHATO 5/8 X 3/16", "br", 90.0, 3780.0], ["LUMINÁRIA IL-45 - COM LÂMPADA LED", "un", 42.0, 3766.14], ["PR-09 C=2MM", "un", 12.0, 2808.0], ["Tinta Esmalte base d'água Branco 18l", "lt", 20.0, 2500.0], ["Esmalte Brilhante Branco Coralit 3, 6l", "gl", 20.0, 2500.0], ["TINTA ESMALTE BASE ÁGUA CINZA", "lt", 20.0, 2361.2], ["Coral Rende Muito Branco Neve 18l", "lt", 6.0, 2010.0], ["TINTA PISO CINZA MÉDIO 18L", "lt", 5.0, 1725.0], ["DV-04 C=1,2M", "un", 3.0, 1368.9], ["Divisórias de granilite 0,35 X 1,80 Conforme D", "un", 10.0, 1331.1], ["Cabo flex 6mm² preto", "rol", 2.0, 1295.0], ["Cabo flex 4mm² preto", "rol", 2.0, 864.8]], "saldo_ap": 75607.47, "saldo_tot": 222768.28, "absorv": 84486.46, "estoque": 61890.65, "saldo_ap_prop": 138066.43, "saldo_tot_prop": 285227.24}, "224": {"num": 224, "uni": "ELIZA DE OLIVEIRA RIBEIRO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1486645.35, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 486290.92, "tr": 274008.61, "emp_ap": null, "emp_tot": null, "mat": 2852.39, "serv": 0.0, "sienge": 2852.39, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "230": {"num": 230, "uni": "EE MARIA ANTONIETA MARTINS", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1979042.22, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 1083172.19, "tr": 179925.01, "emp_ap": null, "emp_tot": null, "mat": 1976.74, "serv": 0.0, "sienge": 1976.74, "npedidos": 9, "top": [], "saldo_ap": null, "saldo_tot": null}, "231": {"num": 231, "uni": "EE MARIA JOSE ANTUNES FERRAZ", "cid": "TABOÃO DA SERRA", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1912108.62, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 776720.04, "tr": 58057.26, "emp_ap": null, "emp_tot": null, "mat": 712.0, "serv": 0.0, "sienge": 712.0, "npedidos": 7, "top": [], "saldo_ap": null, "saldo_tot": null}, "232": {"num": 232, "uni": "EE NEIDE CELESTINA DE OLIVEIRA", "cid": "EMBU GUAÇU", "emp": "CRISTIAN GUIDO", "sit": "4. EXECUÇÃO", "contrato": 1394560.14, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 500062.77, "tr": 68313.36, "emp_ap": null, "emp_tot": null, "mat": 2080.0, "serv": 0.0, "sienge": 2080.0, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}, "269": {"num": 269, "uni": "EE JD CAMPESTRE", "cid": "EMBU GUAÇU", "emp": "RENILDO", "sit": "4. EXECUÇÃO", "contrato": 1328935.74, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 661977.78, "tr": 45518.87, "emp_ap": null, "emp_tot": null, "mat": 1113.72, "serv": 0.0, "sienge": 1113.72, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "274": {"num": 274, "uni": "ETEC EMBU", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1568182.98, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 104600.06, "tr": 468976.52, "emp_ap": null, "emp_tot": null, "mat": 1410.0, "serv": 0.0, "sienge": 1410.0, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "278": {"num": 278, "uni": "EE GERTRUDES EDER", "cid": "ITAPECERICA DA SERRA", "emp": "LEONARDO ZANAO", "sit": "4. EXECUÇÃO", "contrato": 2152584.69, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 156359.02, "tr": 57537.42, "emp_ap": null, "emp_tot": null, "mat": 4272.3, "serv": 0.0, "sienge": 4272.3, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "284": {"num": 284, "uni": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 114889.32, "taxa": 0.46, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 52849.09, "ap": 3522.17, "tr": 45000.54, "emp_ap": 1620.2, "emp_tot": 22320.45, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 1620.2, "saldo_tot": 22320.45}, "287": {"num": 287, "uni": "EEPROF LAERT ALMEIDA SÃO BERNARDO", "cid": "TABOÃO DA SERRA", "emp": "PEDRO", "sit": "4. EXECUÇÃO", "contrato": 1950390.3, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 32747.41, "tr": 273322.99, "emp_ap": null, "emp_tot": null, "mat": 1088.58, "serv": 0.0, "sienge": 1088.58, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "288": {"num": 288, "uni": "EE EDUARDO VAZ", "cid": "EMBU DAS ARTES", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1756795.6, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 2378.4, "tr": 156047.64, "emp_ap": null, "emp_tot": null, "mat": 8399.5, "serv": 0.0, "sienge": 8399.5, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}};
 (function(){
@@ -7893,10 +7956,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
-<script src="sienge.js?v=202610072116"></script>
-<script src="sienge_itens.js?v=202610072116"></script>
-<script src="sienge_solic.js?v=202610072116"></script>
-<script src="entregas.js?v=202610072116"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
+<script src="sienge.js?v=202610072118"></script>
+<script src="sienge_itens.js?v=202610072118"></script>
+<script src="sienge_solic.js?v=202610072118"></script>
+<script src="entregas.js?v=202610072118"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -8609,10 +8672,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: SUB-ABA FISCALIZAÇÃO (Livros de Ocorrência) ================= -->
-<script src="lo.js?v=202610072116"></script>
-<script src="seg.js?v=202610072116"></script>
-<script src="rao.js?v=202610072116"></script>
-<script src="relsem.js?v=202610072116"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
+<script src="lo.js?v=202610072118"></script>
+<script src="seg.js?v=202610072118"></script>
+<script src="rao.js?v=202610072118"></script>
+<script src="relsem.js?v=202610072118"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
 <style>
   #loBox .loK{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
   #loBox .loK>div{flex:1 1 150px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:10px 12px;background:var(--cd,#fff)}
@@ -8897,7 +8960,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
-<script src="consolidado.js?v=202610072116"></script>
+<script src="consolidado.js?v=202610072118"></script>
 <style>
   #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
   #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
@@ -9432,6 +9495,6 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   try{ if(window.SEC&&window.SEC.push) window.SEC.push({p:'RAO',rot:'Relatório de visita'}); }catch(e){}
 })();
 </script>
-<script src="mat_aba.js?v=202610072116"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
+<script src="mat_aba.js?v=202610072118"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
 </body>
 </html>
