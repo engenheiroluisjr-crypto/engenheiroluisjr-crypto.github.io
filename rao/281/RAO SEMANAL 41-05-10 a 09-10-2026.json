@@ -1,0 +1,26 @@
+{
+ "tipo": "semanal",
+ "obra": 281,
+ "lote": "41",
+ "unidade": "EE BAIRRO DOS BARNABES",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 2,
+ "pct": "0",
+ "servicos": [
+  "Piso cozinha",
+  "Rede de esgoto"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "sem_pedido": [],
+ "sem_entrega": [],
+ "pedidos_em": "07/10/2026 15:13",
+ "gerado": "2026-10-07T15:13:55",
+ "avanco": {
+  "aprovado": 11.487436306470387,
+  "engenheiro": 0.0,
+  "fiscal_lo": 0.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EE BAIRRO DOS BARNABES · 05/10/2026 a 09/10/2026_\n\n📅 2 visita(s) na semana\n📊 Aprovado *11,5%* · Engenheiro *0%* · Fiscal FDE *0%* (LO 03/08)\n\n🔨 *Executado na semana*\n• Piso cozinha\n• Rede de esgoto\n\n_Situação dos pedidos em 07/10/2026 15:13_\n\n_Luis Júnior — Engenharia Atlântica_"
+}

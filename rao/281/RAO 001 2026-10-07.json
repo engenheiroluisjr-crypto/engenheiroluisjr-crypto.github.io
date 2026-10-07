@@ -1,0 +1,86 @@
+{
+ "tipo": "diario",
+ "obra": 281,
+ "lote": "41",
+ "unidade": "EE BAIRRO DOS BARNABES",
+ "data": "2026-10-07",
+ "numero": 1,
+ "pct": "0",
+ "avanco": {
+  "aprovado": 11.487436306470387,
+  "engenheiro": 0.0,
+  "fiscal_lo": 0.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-07T15:13:02",
+ "ficha": {
+  "funcionarios": "0",
+  "mao_de_obra": "Insuficiente",
+  "material": "Insuficiente",
+  "equipamentos": "Insuficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Não iniciada",
+  "pct": "0",
+  "ritmo": "Parado",
+  "limpeza": "Boa",
+  "previsao": null,
+  "visita": "10:15",
+  "responsavel": null
+ },
+ "servicos": [
+  "Piso cozinha"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [],
+ "pendencias": [
+  "Porcelanato",
+  "Argamassa"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Material em canteiro insuficiente"
+  ],
+  [
+   "medio",
+   "Equipamentos insuficientes"
+  ],
+  [
+   "alto",
+   "Ritmo da obra: parado"
+  ]
+ ],
+ "pedidos_estado": {
+  "51917": "ENTREGUE",
+  "55028": "ENTREGUE",
+  "55834": "ENTREGUE",
+  "56874": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv281-muy6wwo5f00xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv281-muy6wwo5f01xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv281-muy6wwo5f02xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  }
+ ],
+ "m001": "41.281_M002_EE-BAIRRO-DOS-BARNABES_rev00.xlsx",
+ "autor": "Eng. Douglas",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 07/10/2026*\n_EE BAIRRO DOS BARNABES · 2026.ATA.FDE.41.281 · JUQUITIBA_\n\n👷 Efetivo: 0 · ☀️ Tempo seco · Ritmo parado · Limpeza boa\n📊 Aprovado *11,5%* · Engenheiro *0%* · Fiscal FDE *0%* (LO 03/08)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Piso cozinha\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• Porcelanato\n• Argamassa\n\n_Relatório nº 1 · Eng. Douglas · Engenharia Atlântica_"
+}

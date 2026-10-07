@@ -1,0 +1,162 @@
+{
+ "tipo": "diario",
+ "obra": 278,
+ "lote": "41",
+ "unidade": "EE GERTRUDES EDER",
+ "data": "2026-10-06",
+ "numero": 1,
+ "pct": "10",
+ "avanco": {
+  "aprovado": 9.936725880922252,
+  "engenheiro": 10.0,
+  "fiscal_lo": 24.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-07T15:12:33",
+ "ficha": {
+  "funcionarios": "3",
+  "mao_de_obra": "Insuficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "10",
+  "ritmo": "Lento",
+  "limpeza": "Regular",
+  "previsao": null,
+  "visita": "11:23",
+  "responsavel": null
+ },
+ "servicos": [
+  "INICIANDO ESTRUTURA COBERTURA"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [
+  "FINALIZAR ZELADORIA - LOUÇAS E METAIS",
+  "ZELADORIA - VIDROS COMPRAR VIDROS CAIXILHOS",
+  "CUMIEIRA ENTREGUE SEM PINTURA- REALIZAR PINTURA NA OBRA"
+ ],
+ "recomendacoes": [
+  "AUEMNTAR EFETIVO, PARA EXECUÇÃO DE COBERTURA"
+ ],
+ "pendencias": [
+  "ELETRICA ZELADORIA"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "medio",
+   "Ritmo da obra: lento"
+  ],
+  [
+   "medio",
+   "Organização e limpeza da obra: regular"
+  ]
+ ],
+ "pedidos_estado": {
+  "52668": "ENTREGUE",
+  "53962": "ENTREGUE",
+  "54223": "ENTREGUE",
+  "54582": "ENTREGUE",
+  "54667": "ENTREGUE",
+  "54950": "ENTREGUE",
+  "54952": "ENTREGUE",
+  "54957": "ENTREGUE",
+  "55358": "ENTREGUE",
+  "56102": "ENTREGUE",
+  "56146": "ENTREGUE",
+  "56239": "ENTREGUE",
+  "56324": "ENTREGUE",
+  "56392": "ENTREGUE",
+  "56665": "ENTREGUE",
+  "56793": "ENTREGUE",
+  "56887": "ENTREGUE",
+  "57147": "ENTREGUE",
+  "57359": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv278-muxyt3btf00xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf01xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf02xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf03xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf04xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf05xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf06xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf07xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf08xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf09xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf10xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf11xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf12xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf13xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv278-muxyt3btf14xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  }
+ ],
+ "m001": "41.278_M003_EE-GERTRUDES-EDER_rev00.xlsx",
+ "autor": "Eng. Douglas",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 06/10/2026*\n_EE GERTRUDES EDER · 2026.ATA.FDE.41.278 · ITAPECERICA DA SERRA_\n\n👷 Efetivo: 3 · ☀️ Tempo seco · Ritmo lento · Limpeza regular\n📊 Aprovado *9,9%* · Engenheiro *10%* · Fiscal FDE *24%* (LO 17/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• INICIANDO ESTRUTURA COBERTURA\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n🚨 *Pontos de atenção*\n• FINALIZAR ZELADORIA - LOUÇAS E METAIS\n• ZELADORIA - VIDROS COMPRAR VIDROS CAIXILHOS\n• CUMIEIRA ENTREGUE SEM PINTURA- REALIZAR PINTURA NA OBRA\n\n📌 *Pendências*\n• ELETRICA ZELADORIA\n\n❗ *Recomendações*\n• AUEMNTAR EFETIVO, PARA EXECUÇÃO DE COBERTURA\n\n_Relatório nº 1 · Eng. Douglas · Engenharia Atlântica_"
+}

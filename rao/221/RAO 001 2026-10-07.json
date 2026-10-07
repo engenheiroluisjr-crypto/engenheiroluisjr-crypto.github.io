@@ -1,0 +1,159 @@
+{
+ "tipo": "diario",
+ "obra": 221,
+ "lote": "42",
+ "unidade": "ETEC PROF ANDRE BOGASIAN",
+ "data": "2026-10-07",
+ "numero": 1,
+ "pct": "75",
+ "avanco": {
+  "aprovado": 83.50209395204237,
+  "engenheiro": 75.0,
+  "fiscal_lo": 83.5
+ },
+ "previsao": "",
+ "gerado": "2026-10-07T15:13:20",
+ "ficha": {
+  "funcionarios": "0",
+  "mao_de_obra": "Insuficiente",
+  "material": "Insuficiente",
+  "equipamentos": "Insuficiente",
+  "tempo": "Seco",
+  "falhas": "Sim",
+  "placa": null,
+  "andamento": "Obra paralisada",
+  "pct": "75",
+  "ritmo": "Parado",
+  "limpeza": "Boa",
+  "previsao": null,
+  "visita": "11:58",
+  "responsavel": null
+ },
+ "servicos": [
+  "Nenhum serviço em execução"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [],
+ "pendencias": [
+  "Troca de telhas bloco administrativo",
+  "Revisão telhado refeitório",
+  "Revisão telhado sala de aula ( sala 9 e 10 com infiltrações)",
+  "Pendente trocas de soleiras",
+  "Iluminação estacionamento pendente"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Material em canteiro insuficiente"
+  ],
+  [
+   "medio",
+   "Equipamentos insuficientes"
+  ],
+  [
+   "alto",
+   "Falhas construtivas a corrigir — registrar quais e o prazo"
+  ],
+  [
+   "alto",
+   "Ritmo da obra: parado"
+  ],
+  [
+   "alto",
+   "Andamento: Obra paralisada"
+  ]
+ ],
+ "pedidos_estado": {
+  "49341": "ENTREGUE",
+  "49511": "ENTREGUE",
+  "51050": "ENTREGUE",
+  "52426": "ENTREGUE",
+  "52539": "ENTREGUE",
+  "55144": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv221-muy8mwkcf00xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Andaime armazenados no estacionamento"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf01xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Infiltração secretaria"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf02xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Infiltração almoxarifado"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf03xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Infiltração refeitório"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf04xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Furo no piso para puxador portão- pendente"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf05xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Pintura do corrimão não executada"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf06xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Infiltração sala 09"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf07xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Troca bandeira da porta pendente"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf08xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Buraco sala de aula 01"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf09xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Pintura com bolha"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf10xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Pintura externa aguardando fiscalizacao"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf11xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Soleira auditório não trocada"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf12xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Soleira banheiro e salas próximo auditório não trocada"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf13xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Infiltração sala arquivo"
+  },
+  {
+   "arquivo": "painelv221-muy8mwkcf14xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Soleira não trocada"
+  }
+ ],
+ "m001": "42.221_M005_ETEC-ANDRE-BOGASIAN_rev00.xlsx",
+ "autor": "Eng. Luis Júnior",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 07/10/2026*\n_ETEC PROF ANDRE BOGASIAN · 2026.ATA.FDE.42.221 · OSASCO_\n\n👷 Efetivo: 0 · ☀️ Tempo seco · Ritmo parado · Limpeza boa\n📊 Aprovado *83,5%* · Engenheiro *75%* · Fiscal FDE *83,5%* (LO 21/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Nenhum serviço em execução\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• Troca de telhas bloco administrativo\n• Revisão telhado refeitório\n• Revisão telhado sala de aula ( sala 9 e 10 com infiltrações)\n• Pendente trocas de soleiras\n• Iluminação estacionamento pendente\n\n_Relatório nº 1 · Eng. Luis Júnior · Engenharia Atlântica_"
+}

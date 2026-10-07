@@ -1,0 +1,91 @@
+{
+ "tipo": "diario",
+ "obra": 217,
+ "lote": "42",
+ "unidade": "PEI ROSA BONFIGLIO",
+ "data": "2026-10-07",
+ "numero": 1,
+ "pct": "0",
+ "avanco": {
+  "aprovado": 71.42788544436569,
+  "engenheiro": 0.0,
+  "fiscal_lo": 73.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-07T15:12:53",
+ "ficha": {
+  "funcionarios": "1",
+  "mao_de_obra": "Suficiente",
+  "material": "Insuficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "00",
+  "ritmo": "Normal",
+  "limpeza": "Boa",
+  "previsao": null,
+  "visita": "11:07",
+  "responsavel": null
+ },
+ "servicos": [
+  "Demolição WC funcionários"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [
+  "Obrigatório uso de Epi e isolamento"
+ ],
+ "pendencias": [
+  "Alambrado do muro no estacionamento ainda não executado",
+  "Passa prato da cozinha não arrumado, conforme equipe da cozinha solicitou, relatado hoje a pendência"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Material em canteiro insuficiente"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 1 funcionário(s) na visita"
+  ]
+ ],
+ "pedidos_estado": {
+  "48851": "ENTREGUE",
+  "49403": "ENTREGUE",
+  "49621": "ENTREGUE",
+  "49964": "ENTREGUE",
+  "50589": "ENTREGUE",
+  "50601": "ENTREGUE",
+  "51405": "ENTREGUE",
+  "52167": "ENTREGUE",
+  "52669": "ENTREGUE",
+  "53144": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv217-muy6rduzf00xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Muro estacionamento"
+  },
+  {
+   "arquivo": "painelv217-muy6rduzf01xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Organização material"
+  },
+  {
+   "arquivo": "painelv217-muy6rduzf02xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Demolição WC Funcionários"
+  },
+  {
+   "arquivo": "painelv217-muy6rduzf03xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Passa prato"
+  }
+ ],
+ "m001": "42.217_M005_PEI-ROSA-BONFIGLIO_rev00.xlsx",
+ "autor": "Eng. Luis Júnior",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 07/10/2026*\n_PEI ROSA BONFIGLIO · 2026.ATA.FDE.42.217 · OSASCO_\n\n👷 Efetivo: 1 · ☀️ Tempo seco · Ritmo normal · Limpeza boa\n📊 Aprovado *71,4%* · Engenheiro *0%* · Fiscal FDE *73%* (LO 29/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Demolição WC funcionários\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n📌 *Pendências*\n• Alambrado do muro no estacionamento ainda não executado\n• Passa prato da cozinha não arrumado, conforme equipe da cozinha solicitou, relatado hoje a pendência\n\n❗ *Recomendações*\n• Obrigatório uso de Epi e isolamento\n\n_Relatório nº 1 · Eng. Luis Júnior · Engenharia Atlântica_"
+}

@@ -1,0 +1,157 @@
+{
+ "tipo": "diario",
+ "obra": 218,
+ "lote": "42",
+ "unidade": "EE CEL ANTONIO PAIVA DE SAMPAIO",
+ "data": "2026-10-07",
+ "numero": 1,
+ "pct": "85",
+ "avanco": {
+  "aprovado": 59.77921591849069,
+  "engenheiro": 85.0,
+  "fiscal_lo": 78.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-07T15:12:42",
+ "ficha": {
+  "funcionarios": "6",
+  "mao_de_obra": "Suficiente",
+  "material": "Insuficiente",
+  "equipamentos": "Insuficiente",
+  "tempo": "Seco",
+  "falhas": "Sim",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "85",
+  "ritmo": "Normal",
+  "limpeza": "Regular",
+  "previsao": null,
+  "visita": "10:02",
+  "responsavel": null
+ },
+ "servicos": [
+  "Limpeza com jato de água fria piso externo de concreto",
+  "Pintura mureta da quadra",
+  "Será iniciado montagem de forro na sala"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [
+  "Piso da quadra de esporte está sujo de tinta e massa, danificando a pintura atual"
+ ],
+ "recomendacoes": [
+  "Cuidado com a pintura do piso da quadra para não ser necessário repintura de alguns trechos",
+  "Necessário uso de Epi e calça/uniforme, funcionário com vestimenta inapropriado"
+ ],
+ "pendencias": [
+  "Execução de forro pendente em banheiro e salas de aula",
+  "Pintura do forro executado pendente em alguns ambientes"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Material em canteiro insuficiente"
+  ],
+  [
+   "medio",
+   "Equipamentos insuficientes"
+  ],
+  [
+   "alto",
+   "Falhas construtivas a corrigir — registrar quais e o prazo"
+  ],
+  [
+   "medio",
+   "Organização e limpeza da obra: regular"
+  ]
+ ],
+ "pedidos_estado": {
+  "50263": "ENTREGUE",
+  "50392": "ENTREGUE",
+  "50423": "ENTREGUE",
+  "50561": "ENTREGUE",
+  "53138": "ENTREGUE",
+  "53893": "ENTREGUE",
+  "55103": "ENTREGUE",
+  "56851": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv218-muy4t89yf00xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf01xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Caçamba para remoção de entulho"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf02xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Resíduo de massa do forro no portão acesso administrativo"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf03xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Corredor administrativo - pintura não finalizada"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf04xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Corredor administrativo - não finalizada pintura"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf05xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Forro não executado wc alunos masculino"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf06xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Forro - depósito material"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf07xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Forro não executado wc alunos feminino"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf08xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Forro não executado sala de aula"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf09xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Extensão fora da norma - apontado pela segurança do trabalho"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf10xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Quadra de esportes - pintura mureta"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf11xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Piso quadra sujo de tinta e massa"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf12xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Piso da quadra sujo"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf13xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Limpeza piso externo"
+  },
+  {
+   "arquivo": "painelv218-muy4t89yf14xxxx.jpg",
+   "data": "2026-10-07",
+   "legenda": "Trabalho em altura"
+  }
+ ],
+ "m001": "42.218_M005_EE-CEL-ANTONIO-PAIVA-DE-SAMPAIO_rev00.xlsx",
+ "autor": "Eng. Luis Júnior",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 07/10/2026*\n_EE CEL ANTONIO PAIVA DE SAMPAIO · 2026.ATA.FDE.42.218 · OSASCO_\n\n👷 Efetivo: 6 · ☀️ Tempo seco · Ritmo normal · Limpeza regular\n📊 Aprovado *59,8%* · Engenheiro *85%* · Fiscal FDE *78%* (LO 29/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Limpeza com jato de água fria piso externo de concreto\n• Pintura mureta da quadra\n• Será iniciado montagem de forro na sala\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n🚨 *Pontos de atenção*\n• Piso da quadra de esporte está sujo de tinta e massa, danificando a pintura atual\n\n📌 *Pendências*\n• Execução de forro pendente em banheiro e salas de aula\n• Pintura do forro executado pendente em alguns ambientes\n\n❗ *Recomendações*\n• Cuidado com a pintura do piso da quadra para não ser necessário repintura de alguns trechos\n• Necessário uso de Epi e calça/uniforme, funcionário com vestimenta inapropriado\n\n_Relatório nº 1 · Eng. Luis Júnior · Engenharia Atlântica_"
+}

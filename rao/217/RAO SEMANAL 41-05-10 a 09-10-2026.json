@@ -1,0 +1,37 @@
+{
+ "tipo": "semanal",
+ "obra": 217,
+ "lote": "42",
+ "unidade": "PEI ROSA BONFIGLIO",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 1,
+ "pct": "0",
+ "servicos": [
+  "Demolição WC funcionários"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "sem_pedido": [
+  27566,
+  27878,
+  27879,
+  27880,
+  27881,
+  27882,
+  28318,
+  28651,
+  28716,
+  28919,
+  29071
+ ],
+ "sem_entrega": [],
+ "pedidos_em": "07/10/2026 15:13",
+ "gerado": "2026-10-07T15:13:47",
+ "avanco": {
+  "aprovado": 71.42788544436569,
+  "engenheiro": 0.0,
+  "fiscal_lo": 73.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_PEI ROSA BONFIGLIO · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *71,4%* · Engenheiro *0%* · Fiscal FDE *73%* (LO 29/09)\n\n🔨 *Executado na semana*\n• Demolição WC funcionários\n\n🛒 *Solicitado e ainda sem pedido de compra* — 11\n• sol. 27566 (06/04) — FINALIDADE: TAPUME FDE ISOLAMENTO TALUDE\n• sol. 27878 (23/04) — FINALIDADE: MURO DE DIVISA FD -16\n• sol. 27879 (23/04) — FINALIDADE: MURO DE DIVISA FD-16\n• sol. 27880 (23/04) — FINALIDADE: MURO DIVISA\n• sol. 27881 (23/04) — FINALIDADE: MURO DIVISA *IMAGEM EM ANEXO*\n• sol. 27882 (23/04) — FINALIDADE: MURO DIVISA\n• ... e mais 5 solicitação(ões)\n\n_Situação dos pedidos em 07/10/2026 15:13_\n\n_Luis Júnior — Engenharia Atlântica_"
+}
