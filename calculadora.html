@@ -82,7 +82,7 @@ html.emb body{padding-bottom:0}</style>
 <body>
 <header class="top"><h1>Calculadora de materiais FDE</h1><a href="./">← voltar ao painel</a></header>
 <main id="app"><p>Carregando…</p></main>
-<script src="comp.js?v=202610081947"></script>
+<script src="comp.js?v=202610081953"></script>
 <script src="libs/xlsx.mini.min.js"></script>
 <script>
 (function(){
@@ -146,6 +146,118 @@ var PADROES=[
   {c:'06.03.035', n:'GR-02 · grade de proteção / guichê (122×105 cm)'},
   {c:'16.06.023', n:'AL-01 · abrigo para lixo'}
 ].filter(function(p){ return S[p.c]&&C[p.c]; });
+
+/* ===========================================================================
+   PEÇAS E FICHA TÉCNICA — lido dos desenhos do Catálogo de Componentes da FDE
+   (00. CATALOGOS TECNICOS FDE/07 - Componentes), em 08/10/2026.
+
+   Regra que eu mesmo me impus aqui: só entra CONTAGEM onde o desenho e a
+   composição do boletim FECHAM entre si. Onde não fecham, entra só a ficha
+   técnica — o que o catálogo diz, com as palavras dele. Número de obra pública
+   derivado de leitura de desenho sem conferência vira glosa.
+
+   FD-16 — fecha. Desenho FD16_20_03_19 rev.7: pilaretes 14x14 a 253cm EIXO A
+   EIXO (MÁX.), broca ø25 com 3,00m mínimo, viga baldrame 25x20 corrida.
+   Conferência contra a composição (0,13715 m³/m de FCK 25):
+       baldrame 0,25x0,20 ......................... 0,05000
+       broca ø25 x 3,00m, 1 a cada 2,53m .......... 0,05821
+       pilarete 14x14 x 2,35m, 1 a cada 2,53m ..... 0,01821
+       soma ....................................... 0,12641
+       falta para a composição .................... 0,01074
+   e o Det.01 dá a cimalha em 0,23 x 0,05 = 0,0115 m². Fecha.
+
+   FD-24 — NÃO fecha, e por isso não tem contagem aqui. A composição do boletim
+   (16.01.029) traz 0,07412 m³/m de FCK 25, mas só o baldrame 25x20 (0,05) mais
+   a broca ø25 x 2,50m a cada 2,17m (0,05655) já dão 0,10655. E os montantes:
+   o desenho diz 217cm entre eles (0,4608/m), a composição traz 0,667/m. Os dois
+   números do próprio FDE discordam — então aqui eu não escolho um.
+
+   Os demais são medidos em m² de painel pronto: a contagem de peças já está na
+   composição (montante, painel, tela) e aparece na tabela de material.
+=========================================================================== */
+var FICHA={
+ '16.01.016':{t:'FD-16 · muro de divisa em bloco, h=235cm',
+   l:['Pilarete de concreto 14×14 cm, a cada <b>253 cm eixo a eixo (máximo)</b>',
+      'Armação do pilarete: 4 × ø12,5 mm, estribos ø5 mm a cada 12 cm',
+      'Broca ø25 cm, <b>profundidade mínima 3,00 m</b> quando não indicado em projeto',
+      'Armação da broca: 4 × ø12,5 mm, estribos ø4,2 mm a cada 15 cm',
+      'Viga baldrame 25 × 20 cm: 4 × ø10 mm corridos, estribos ø5 mm a cada 12 cm',
+      'Bloco vazado 14×19×39 cm, classe C, família M-15 · junta de 1 cm desencontrada',
+      'Canaleta armada 2 × ø6,3 mm corridos, enchimento em graute',
+      'Amarração dos blocos ao pilarete a cada 2 fiadas: ø6,3 mm, C = 80 cm',
+      'Alvenaria de embasamento: mínimo 30 cm enterrada',
+      'Junta de dilatação de 2 cm <b>a cada 30,00 m no máximo</b>',
+      'Assentamento: argamassa 1:0,5:4,5 (cimento, cal, areia) · chapisco fino nas duas faces'],
+   f:'FD16_20_03_19 rev.7'},
+ '16.01.029':{t:'FD-24 · divisa com gradil eletrofundido, h=235cm',
+   l:['Distância entre montantes: <b>217 cm</b> (desenho)',
+      'Pilarete de concreto 14×14 cm: 4 × ø12,5 mm, estribos ø5 mm a cada 12 cm',
+      'Broca ø25 cm, <b>profundidade 2,50 m</b> quando não indicado em projeto',
+      'Viga baldrame 25 × 20 cm: 4 × ø10 mm corridos, estribos ø5 mm a cada 12 cm',
+      'Gradil h=171,8 cm · altura total 235 cm (o FD-23 é o mesmo com h total 185 cm)',
+      'Alvenaria de embasamento: mínimo 30 cm enterrada',
+      'Junta de dilatação de 2 cm a cada 30 m no máximo'],
+   f:'FD23_e_FD24_20_03_19 rev.1',
+   av:'O desenho e a composição do boletim discordam neste padrão — ver a nota embaixo da tabela.'},
+ '16.04.019':{t:'FQ-01 · fechamento de quadra, fundos',
+   l:['Pilarete de concreto 14×14 cm: 4 × ø12,5 mm, estribos ø5 mm a cada 12 cm',
+      'Fundação em baldrame sobre brocas ou sapatas corridas, conforme o terreno e o projeto',
+      'Bloco vazado 14×19×39 cm, 2 furos, fck ≥ 2 MPa · canaleta armada 2 × ø6,3 mm com graute',
+      'Amarração dos blocos ao pilarete a cada 2 fiadas: ø6,3 mm, <b>C = 75 cm</b>',
+      '<b>Buzinotes de PVC ø2": 4 unidades por mureta</b> dos fundos, desaguando nas canaletas externas',
+      'Montantes verticais em tubo de aço galvanizado a fogo ø2" e=2 mm, com tamponamento e grapas',
+      'Tela de arame galvanizado fio 10 (3,4 mm), malha quadrada 2"'],
+   f:'FQ01_18_09_09'},
+ '16.04.031':{t:'FQ-01 · fechamento de quadra, laterais',
+   l:['Mesmos constituintes dos fundos, sem os buzinotes',
+      'Pilarete de concreto 14×14 cm: 4 × ø12,5 mm, estribos ø5 mm a cada 12 cm',
+      'Amarração dos blocos ao pilarete a cada 2 fiadas: ø6,3 mm, C = 75 cm',
+      'Montantes em tubo de aço galvanizado a fogo ø2" e=2 mm',
+      'Tela de arame galvanizado fio 10, malha quadrada 2"'],
+   f:'FQ01_18_09_09'},
+ '16.04.034':{t:'FQ-02 · alambrado sobre divisa',
+   l:['Montantes ø2" e=2 mm, <b>chumbados 50 cm no mínimo</b> dentro do pilarete de concreto',
+      'Mínimo de 2 grapas soldadas por montante',
+      'Escoramentos ø1¼" e=2 mm, com barra chata 3/16" — 2 conjuntos de parafuso por escoramento',
+      'Travamentos horizontais superior e inferior em ø1¼" e=2 mm',
+      'Tela fio 10 (3,4 mm), malha quadrada 2", pontas dobradas (standard)',
+      'Amarração da tela com arame galvanizado fio 14: nos montantes de extremidade e nos travamentos, <b>todas as malhas</b>; nos demais, malha sim, malha não',
+      'Em muro escalonado: montantes chumbados em bloco preenchido com graute e escoramento a cada desnível',
+      'Medido em m² no plano vertical'],
+   f:'FQ02_11_09_06'},
+ '16.01.090':{t:'FE-01 · setorização em alambrado',
+   l:['Base de concreto 20 × 20 cm com <b>broca ø20 cm</b>, bloco 19×19×19 classe A, concreto fck 20 MPa',
+      'Ressalto de 5 cm acima do piso, cimento desempenado, caído nas 4 faces',
+      'Montantes em tubo industrial galvanizado a fogo ø38,1 mm e=2 mm, mínimo 2 grapas por peça',
+      'Requadros da tela em barra chata galvanizada 19,05 × 4,76 mm',
+      'Tela fio 10 (3,4 mm), malha quadrada 2"',
+      'Medido em m² no plano vertical · altura se especifica em projeto'],
+   f:'FE01_24_01_17'},
+ '16.01.091':{t:'FE-02 · setorização em gradil eletrofundido',
+   l:['Base de concreto 20 × 20 cm com <b>broca ø20 cm</b>, bloco 19×19×19 classe A, concreto fck 20 MPa',
+      'Ressalto de 5 cm acima do piso, cimento desempenado, com caimento',
+      'Painel em malha retangular 65 × 132 mm: barras chatas portantes 25 × 2 mm e fio ø4,8 mm',
+      'Montante vertical em barra chata 76 × 8 mm, <b>chumbado 30 cm no mínimo</b>',
+      '2 conjuntos de parafuso anti-roubo por montante',
+      'Medido em m² no plano vertical · altura e cor se especificam em projeto'],
+   f:'FE02_24_01_17'}
+};
+
+/* contagem só onde o desenho e a composição fecham — hoje, só o FD-16 */
+var PECAS={
+ '16.01.016': function(L){
+    var e=2.53, vaos=Math.ceil(L/e - 1e-9), pil=vaos+1;
+    return {nota:'Pilaretes a 2,53 m <b>no máximo</b> — então esta é a quantidade <b>mínima</b>. '+
+             'Canto, portão e escalonamento pedem pilarete próprio e não estão contados aqui.',
+            l:[['Vãos entre pilaretes', vaos, '', 'L ÷ 2,53 m, arredondado para cima'],
+               ['Pilaretes 14×14 cm', pil, 'un', 'vãos + 1'],
+               ['Brocas ø25 cm', pil, 'un', '1 sob cada pilarete'],
+               ['Perfuração total', (pil*3).toFixed(2).replace('.',','), 'm', 'brocas × 3,00 m (profundidade mínima)'],
+               ['Viga baldrame 25×20', L.toFixed(2).replace('.',','), 'm', 'corrida, em todo o comprimento'],
+               ['Cimalha com pingadeira', L.toFixed(2).replace('.',','), 'm', 'idem'],
+               ['Juntas de dilatação 2 cm', Math.max(0,Math.ceil(L/30-1e-9)-1), 'un', 'a cada 30,00 m no máximo']]};
+ }
+};
 
 var P=[];            /* o projeto: [{c:cod, q:quantidade}] */
 try{ P=JSON.parse(localStorage.getItem(CH)||'[]')||[]; }catch(e){ P=[]; }
@@ -214,6 +326,22 @@ function render(){
     h+='<div class="acoes naoImp"><button class="bt" id="limpar">Limpar projeto</button>'+
        '<button class="bt" id="imprimir">Imprimir / PDF</button>'+
        '<button class="bt" id="xls">Baixar em Excel</button></div>';
+
+    /* ---- 3a. peças e ficha técnica dos padrões ---- */
+    var comPeca=P.filter(function(it){ return PECAS[it.c]; });
+    var comFicha=P.filter(function(it){ return FICHA[it.c]; });
+    if(comPeca.length){
+      h+='<h2>Peças do projeto <span class="mini">— contagem pelo desenho do Catálogo de Componentes</span></h2>';
+      comPeca.forEach(function(it){
+        var R=PECAS[it.c](it.q), fi=FICHA[it.c]||{};
+        h+='<div class="card" style="margin-bottom:10px"><b>'+esc(fi.t||S[it.c][0])+'</b>'+
+           '<span class="mini"> · '+nm(it.q,2)+' '+esc(S[it.c][1])+'</span>'+
+           '<table style="margin-top:8px"><thead><tr><th>Peça</th><th class="n">Quantidade</th><th>Un</th><th>Como sai</th></tr></thead><tbody>'+
+           R.l.map(function(r){ return '<tr><td data-l="Peça">'+esc(r[0])+'</td><td class="n" data-l="Quantidade"><b>'+r[1]+'</b></td>'+
+             '<td data-l="Un">'+esc(r[2])+'</td><td class="mini" data-l="Como sai">'+esc(r[3])+'</td></tr>'; }).join('')+
+           '</tbody></table><p class="aviso" style="margin:8px 0 0">'+R.nota+'</p></div>';
+      });
+    }
 
     /* ---- 3b. valor do servico, pelo preco dos contratos ----------------------
        Este e o numero que ele usa para orcar. O preco do servico varia entre
@@ -284,6 +412,24 @@ function render(){
        'supõe que o serviço inteiro foi gasto naquele insumo. <b>Para orçar, use o quadro «Valor do serviço» acima.</b></p>';
   }
 
+  if(P.filter(function(it){ return FICHA[it.c]; }).length){
+    h+='<h2>Ficha técnica dos padrões <span class="mini">— o que o Catálogo de Componentes da FDE exige</span></h2>';
+    P.forEach(function(it){ var fi=FICHA[it.c]; if(!fi) return;
+      h+='<div class="card" style="margin-bottom:10px"><b>'+esc(fi.t)+'</b>'+
+         '<span class="mini"> · prancha '+esc(fi.f)+'</span>'+
+         (fi.av?'<p class="aviso" style="margin:6px 0 0;color:var(--warn)"><b>Atenção.</b> '+esc(fi.av)+'</p>':'')+
+         '<ul style="margin:8px 0 0;padding-left:18px;font-size:12.5px;line-height:1.65">'+
+         fi.l.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul></div>';
+    });
+    if(P.some(function(it){ return it.c==='16.01.029'; })){
+      h+='<p class="aviso"><b>A divergência do FD-24, em números.</b> A composição do boletim (16.01.029) traz '+
+         '<b>0,07412 m³/m</b> de concreto FCK 25. Só a viga baldrame 25×20 corrida dá 0,05000 m³/m, e a broca '+
+         'ø25 de 2,50 m a cada 2,17 m dá mais 0,05655 — <b>0,10655 m³/m só nesses dois</b>, sem contar pilarete. '+
+         'E os montantes: o desenho diz 217 cm entre eles (0,461/m), a composição traz 0,667/m. '+
+         'São dois números do próprio FDE que não fecham; por isso aqui não há contagem de peças para o FD-24. '+
+         'Na dúvida de medição, vale o que estiver no projeto da obra.</p>';
+    }
+  }
   h+='<p class="aviso" style="margin-top:18px">Banco de composições montado em '+esc(D.ger||'—')+
      ' a partir de '+(D.orcamentos||0)+' orçamentos publicados · '+Object.keys(C).length+
      ' serviços. Coeficiente conferido obra a obra: nenhuma divergência.</p>';
