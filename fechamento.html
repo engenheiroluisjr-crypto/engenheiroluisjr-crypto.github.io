@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f4f3ef">
+<script>
+(function(){var t;try{t=localStorage.getItem('painelTema');}catch(e){}
+ if(t!=='claro'&&t!=='escuro'){t=(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'claro':'escuro';}
+ document.documentElement.setAttribute('data-tema',t);})();
+</script>
+<title>Simulação de fechamento — Obras FDE</title>
+<meta name="robots" content="noindex">
+<!-- 08/10/2026 (Luis: "esse tipo de fechamento é o que precisa ser feito para cada obra, adaptar o portal pra isso").
+     Modelo aprovado: medido aprovado pela FDE item a item × taxa do empreiteiro, menos o pago nas atas,
+     menos o comprado no Sienge (pedido a pedido) e o adiantamento a abater.
+     Dados: fech.js (CTR + atas), med_itens.js (PDFs do portal), sienge.js + sienge_itens.js, entregas (servidor). -->
+<style>
+:root{--bg:#f4f3ef;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--ln:#dcdad3;--pri:#c2501f;--priBar:#c2501f;--ok:#2f6f4e;--okb:#e6f4ec;--bad:#b3261e;--badb:#fbe0de}
+html[data-tema="escuro"]{--bg:#161615;--card:#22221f;--tx:#ecebe6;--mut:#a3a29c;--ln:#3a3935;--pri:#e8825a;--priBar:#a6431a;--ok:#7fc7a0;--okb:#1f3a2c;--bad:#f08a80;--badb:#4a2220}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header.top{position:sticky;top:0;z-index:20;background:var(--priBar);color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header.top h1{font-size:16px;margin:0;flex:1;min-width:200px}
+header.top a{color:#fff;font-size:13px;opacity:.85}
+.ctl{max-width:1300px;margin:12px auto 0;padding:0 16px}
+.barra{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:10px 12px}
+label.f{display:flex;flex-direction:column;font-size:12px;color:var(--mut);gap:3px}
+select,input{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--ln);border-radius:8px;padding:6px 8px;min-height:34px}
+.bt{border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:8px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap;min-height:34px}
+.bt.pri{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}
+.dd{position:relative}.dd>summary{list-style:none;cursor:pointer;border:1px solid var(--ln);border-radius:8px;padding:6px 10px;min-height:34px;min-width:230px;background:var(--card)}
+.dd>summary::-webkit-details-marker{display:none}
+.ddp{position:absolute;z-index:30;top:38px;left:0;width:min(560px,92vw);max-height:420px;overflow:auto;background:var(--card);border:1px solid var(--ln);border-radius:10px;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.ddp label{display:flex;gap:8px;padding:5px 6px;border-radius:6px;font-size:13px;align-items:flex-start;cursor:pointer}.ddp label:hover{background:var(--bg)}
+.ddp i{margin-left:auto;font-style:normal;color:var(--mut);font-size:12px;white-space:nowrap}
+.dica{font-size:12.5px;color:var(--mut);margin:8px 2px 0}
+.vazio{max-width:1300px;margin:30px auto;padding:0 16px;color:var(--mut)}
+/* ---------- o relatório (papel) ---------- */
+#rel{max-width:1300px;margin:14px auto 50px;padding:0 16px}
+.pg{background:#fff;color:#1d2433;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.12);padding:18px 22px;margin-bottom:16px;font-family:"DejaVu Sans",Arial,sans-serif;font-size:11.5px;line-height:1.35}
+.cab{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #b8461b;padding-bottom:6px;margin-bottom:9px;gap:10px}
+.cab h1{font-size:19px;margin:0;color:#b8461b}.cab .s{font-size:11px;color:#555}.cab .d{text-align:right;font-size:10.5px;color:#555;white-space:nowrap}
+.pg h2{font-size:14.5px;margin:13px 0 5px;color:#1d2433;border-left:4px solid #b8461b;padding-left:7px}
+.pg h3{font-size:12px;margin:9px 0 4px;color:#444}
+.cards{display:flex;gap:7px;margin:6px 0 9px;flex-wrap:wrap}.cardx{flex:1;min-width:140px;border:1px solid #d5d9e0;border-radius:7px;padding:6px 8px;border-top:4px solid #888}
+.cardx .l{font-size:9.5px;color:#667085;text-transform:uppercase;letter-spacing:.03em}.cardx .v{font-size:16px;font-weight:700;margin-top:2px}.cardx .x{font-size:9.5px;color:#667085}
+.pos{color:#1a7f37}.neg{color:#c0392b}.c-pos{border-top-color:#1a7f37}.c-neg{border-top-color:#c0392b}.c-azul{border-top-color:#2563eb}.c-lar{border-top-color:#b8461b}
+.pg table{width:100%;border-collapse:collapse;margin:3px 0 8px}.pg th{background:#1d2433;color:#fff;font-weight:600;text-align:left;padding:4px 5px;font-size:10.5px}
+.pg td{border-bottom:1px solid #e3e6eb;padding:3px 5px;vertical-align:top}.pg tr:nth-child(even) td{background:#f7f8fa}
+.pg td.n,.pg th.n{text-align:right;white-space:nowrap}.tot td{font-weight:700;background:#eef0f4!important;border-top:2px solid #1d2433}
+.res td{font-weight:800;font-size:12.5px}.sub td{background:#fbf3ee!important;font-weight:600}
+.box{border-radius:7px;padding:7px 10px;margin:6px 0 9px;font-size:11px}
+.info{background:#eef4ff;border-left:4px solid #2563eb}.alerta{background:#fdf0ec;border-left:4px solid #c0392b}.okb{background:#eef6f0;border-left:4px solid #1a7f37}
+.mini{font-size:9.5px;color:#555}.it td{font-size:10px;padding:2px 5px}.pedh td{background:#f1f3f6!important;font-weight:600}.ped td{background:#fff!important}
+.dois{display:flex;gap:12px;flex-wrap:wrap}.dois>div{flex:1;min-width:300px}
+.box ul{margin:4px 0 0 16px;padding:0}.box li{margin:2px 0}
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  body{background:#fff}header.top,.ctl,.vazio{display:none!important}
+  #rel{max-width:none;margin:0;padding:0}.pg{box-shadow:none;border-radius:0;padding:0;margin:0;page-break-after:always;font-size:8.6pt}
+  .pg:last-child{page-break-after:auto}.pg tr{page-break-inside:avoid}.pg h2,.pg h3{page-break-after:avoid}
+  .cab h1{font-size:15pt}.cardx .v{font-size:12pt}.it td{font-size:7.6pt}.pg th{font-size:7.8pt}
+}
+</style>
+</head>
+<body>
+<header class="top"><h1>Simulação de fechamento do empreiteiro</h1><a href="./">← voltar ao painel</a></header>
+<div class="ctl">
+  <div class="barra">
+    <label class="f">Empreiteiro<select id="fEmp"></select></label>
+    <label class="f">Lote<select id="fLote"><option value="">41 e 42</option><option value="41">41</option><option value="42">42</option></select></label>
+    <label class="f">Engenheiro<select id="fEng"></select></label>
+    <label class="f">Mostrar<select id="fSit"><option value="ap">obras com medição aprovada</option><option value="exec">todas em execução</option><option value="todas">execução e concluídas</option></select></label>
+    <label class="f">Obras<details class="dd" id="ddObras"><summary id="ddLab">nenhuma</summary><div class="ddp" id="ddLista"></div></details></label>
+    <button class="bt" id="btTodas">marcar todas da lista</button>
+    <button class="bt" id="btLimpa">limpar</button>
+    <span style="flex:1"></span>
+    <button class="bt pri" id="btPdf">Imprimir / salvar PDF</button>
+    <button class="bt" id="btXls">Baixar Excel</button>
+  </div>
+  <div class="dica" id="dica"></div>
+</div>
+<div id="vazio" class="vazio"></div>
+<div id="rel"></div>
+<script src="fech.js?v=202610080129"></script>
+<script src="med_itens.js?v=202610080129"></script>
+<script src="sienge.js?v=202610080129"></script>
+<script src="sienge_itens.js?v=202610080129"></script>
+<script src="entregas.js?v=202610080129"></script>
+<script src="libs/xlsx.mini.min.js"></script>
+<script>
+(function(){
+var F=(window.FECH&&window.FECH.obras)||{}, MI=window.MED_ITENS||{}, SG=(window.SIENGE&&window.SIENGE.obras)||{}, SI=window.SIENGE_ITENS||{};
+var SRV=window.ENTREGAS_SRV||{}, MARCAS=Object.assign({},window.ENTREGAS||{});
+var $=function(i){return document.getElementById(i);};
+function r2(x){ return Math.round((x+(x>=0?1e-9:-1e-9))*100)/100; }
+function br(v,d){ d=d==null?2:d; if(v==null||isNaN(v)) return '—'; return v.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function rs(v){ if(v==null) return '—'; if(Math.abs(v)<0.005) return 'R$ 0,00'; return (v<0?'−R$ ':'R$ ')+br(Math.abs(v)); }
+function e(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function tit(s){ s=String(s||'').toLowerCase(); return s.replace(/(^|[\s\/(.-])([a-zà-ú])/g,function(m,a,b){return a+b.toUpperCase();}).replace(/\b(De|Da|Do|Das|Dos|E)\b/g,function(m){return m.toLowerCase();}).replace(/\bEe\b/g,'EE').replace(/\bEtec\b/g,'ETEC').replace(/\bEmef\b/g,'EMEF'); }
+function dt(iso){ if(!iso) return '—'; var m=String(iso).match(/^(\d{4})-(\d\d)-(\d\d)/); return m? m[3]+'/'+m[2]+'/'+m[1] : iso; }
+function cat(ins){ var u=String(ins||'').toUpperCase();
+  if(/CAÇAMBA|CACAMBA/.test(u)) return 'Caçamba / entulho';
+  if(/ANDAIME|SAPATA NIVELADORA|PISO MET[ÁA]LICO|TRAVA DIAGONAL|ESCORA|GUARDA-CORPO|PLATAFORMA/.test(u)) return 'Locação (andaime)';
+  if(/M[ÃA]O DE OBRA|SERVI[ÇC]O|REEMBOLSO|LOCA[ÇC][ÃA]O/.test(u)) return 'Serviço / mão de obra';
+  return 'Material'; }
+function cc(o){ return o.lote==='42'?'B&B':(o.lote==='41'?'Atlântica':'—'); }
+
+/* ---- marcas de entrega do servidor (mesma planilha do painel) ---- */
+function csv(t){ var L=[], r=[], f='', q=false; for(var i=0;i<t.length;i++){ var ch=t[i];
+  if(q){ if(ch==='"'){ if(t[i+1]==='"'){ f+='"'; i++; } else q=false; } else f+=ch; }
+  else if(ch==='"') q=true; else if(ch===','){ r.push(f); f=''; } else if(ch==='\n'){ r.push(f); L.push(r); r=[]; f=''; } else if(ch!=='\r') f+=ch; }
+  if(f||r.length){ r.push(f); L.push(r); } return L; }
+function puxaMarcas(){ if(!SRV.ler) return Promise.resolve();
+  return fetch(SRV.ler+'&t='+Date.now()).then(function(r){return r.text();}).then(function(t){
+    if(/<html/i.test(t.slice(0,200))) return;
+    csv(t).slice(1).forEach(function(l){ var m; try{ m=JSON.parse(l[1]); }catch(x){ return; } if(m&&m.pedido!=null) MARCAS[String(m.pedido)]=m; });
+  }).catch(function(){}); }
+
+/* ---- cálculo de uma obra (mesma regra da simulação de 08/10) ---- */
+function calc(cod){
+  var o=F[cod]; if(!o) return null;
+  var meds=(o.meds||[]).filter(function(m){return m.sit==='4. APROVADO';}).sort(function(a,b){return a.n-b.n;});
+  var medAp=r2(meds.reduce(function(s,m){return s+(m.v||0);},0));
+  var taxa=o.taxa;
+  var pg=o.pg||null;
+  var pago=pg?(pg.pago||0):0, matDesc=pg?Math.abs(pg.desc||0):0, adto=pg?(pg.adto||0):0, dadto=pg?Math.abs(pg.dadto||0):0;
+  // itens medidos (PDFs do portal)
+  var acc={}, ordem=[], faltaIt=[];
+  meds.forEach(function(m){ var x=(MI[cod]||{})[String(m.n)];
+    if(m.v>0.005 && (!x||!x.it||!x.it.length)){ faltaIt.push(m.n); return; }
+    if(!x) return;
+    x.it.forEach(function(i){ var a=acc[i[0]]; if(!a){ a=acc[i[0]]={cod:i[0],desc:i[1],un:i[2],vu:i[3],q:0,v:0,por:{}}; ordem.push(i[0]); }
+      a.q+=i[4]; a.v+=i[5]; a.por[m.n]=(a.por[m.n]||0)+i[5]; }); });
+  var itens=ordem.sort().map(function(k){return acc[k];});
+  // Sienge
+  var s=SG[cod]||{}, its=SI[cod]||{}, peds=(s.ped||[]).slice().sort(function(a,b){ var A=String(a[0]).split('/').reverse().join(''), B=String(b[0]).split('/').reverse().join(''); return A<B?-1:A>B?1:(a[1]-b[1]); });
+  var mat=0, porcat={}, naoEnt=0, lista=[];
+  peds.forEach(function(p){ var li=its[String(p[1])]||[]; var tp=li.length?li.reduce(function(a,i){return a+(i[5]||0);},0):(p[3]||0);
+    mat+=tp; li.forEach(function(i){ var c=cat(i[0]); porcat[c]=(porcat[c]||0)+(i[5]||0); });
+    if(!li.length){ porcat['Material']=(porcat['Material']||0)+tp; }
+    var mk=MARCAS[String(p[1])], se=(s.se||{})[String(p[1])], st='', stc='';
+    if(mk&&mk.s){ st={E:'entregue (marcado)',P:'entregue parcial (marcado)',N:'não entregue (marcado)',C:'cancelado (marcado)'}[mk.s]||''; if(mk.obs) st+=' — '+mk.obs; stc=mk.s; }
+    else if(se&&se[0]==='E'){ st='entregue no Sienge'; stc='E'; }
+    else if(o.lote==='42'){ st='Sienge sem baixa (lote 42)'; }
+    else if(se&&se[0]==='P'){ st='parcial no Sienge'; stc='P'; }
+    else { st='pendente no Sienge'; stc='N'; }
+    if(stc==='N'||stc==='C') naoEnt+=tp;
+    lista.push({p:p, it:li, tot:r2(tp), st:st, stc:stc}); });
+  mat=r2(mat);
+  var r={cod:cod,o:o,meds:meds,medAp:medAp,taxa:taxa,pg:pg,pago:pago,matDesc:matDesc,adtoPend:r2(Math.max(0,adto-dadto)),
+         itens:itens,faltaIt:faltaIt,peds:lista,mat:mat,porcat:porcat,naoEnt:r2(naoEnt)};
+  if(taxa){ r.emp=r2(medAp*taxa); r.aPagarMed=r2(r.emp-pago); r.matNow=r2(Math.max(0,mat-matDesc)); r.res=r2(r.aPagarMed-r.matNow-r.adtoPend); }
+  // alertas automáticos
+  var al=[];
+  if(!taxa) al.push('sem taxa do empreiteiro na coluna M do CTR — a conta não sai até preencher');
+  if(taxa && pago>r.emp+0.01){
+    /* descobre se a ata pagou alguma medição pelo valor LANÇADO (col. 12) e não pelo aprovado:
+       testa, para cada prefixo de medições, as combinações lançado×aprovado que fecham com o pago */
+    var expl=null;
+    for(var k=1;k<=meds.length&&!expl;k++){ var pre=meds.slice(0,k), nn=pre.length;
+      for(var mask=1;mask<(1<<nn)&&!expl;mask++){ var s=0, usa=[];
+        for(var j=0;j<nn;j++){ var m=pre[j]; if((mask>>j)&1){ if(m.lanc==null){ s=null; break; } s+=m.lanc; usa.push(m); } else s+=m.v; }
+        if(s!=null && Math.abs(r2(s*taxa)-pago)<1.5) expl={k:k,usa:usa}; } }
+    if(expl) al.push('as atas pagaram '+expl.usa.map(function(m){return 'a MED'+('0'+m.n).slice(-2)+' pelo valor lançado ('+rs(m.lanc)+'), mas a FDE aprovou '+rs(m.v);}).join(' e ')+' — o empreiteiro recebeu '+rs(r2(expl.usa.reduce(function(s,m){return s+(m.lanc-m.v);},0)*taxa))+' a mais'+(expl.k<meds.length?' (e as medições seguintes ainda não foram pagas)':''));
+    else al.push('já foi pago '+rs(pago)+', mais que a empreita do medido aprovado ('+rs(r.emp)+') — '+rs(pago-r.emp)+' pago a maior');
+  }
+  if(faltaIt.length) al.push('itens da '+faltaIt.map(function(n){return 'MED'+('0'+n).slice(-2);}).join(', ')+' não encontrados (PDF da medição não está em 02. MEDICAO/Portal FDE) — o total vale, o detalhe fica incompleto');
+  if(r.naoEnt>0.005 && taxa) al.push('pedidos marcados como não entregues/cancelados ou pendentes somam '+rs(r.naoEnt)+' e estão no desconto; se ficarem para quando chegarem, o resultado vira '+rs(r.res+Math.min(r.naoEnt,r.matNow)));
+  if(r.adtoPend>0.005) al.push('adiantamento de '+rs(r.adtoPend)+' ainda não abatido');
+  if(pg && pg.nao_faturado) al.push('há '+rs(pg.nao_faturado)+' de medição calculada em ata sem nota fiscal pedida');
+  r.al=al; return r;
+}
+
+/* ---- filtros / seleção ---- */
+var SEL={}, P=new URLSearchParams(location.search);
+var cods=Object.keys(F).filter(function(k){ return F[k].sit==='4. EXECUÇÃO'||F[k].sit==='5. CONCLUÍDA'; });
+function lista(){ var emp=$('fEmp').value, lt=$('fLote').value, eng=$('fEng').value, sit=$('fSit').value;
+  return cods.filter(function(k){ var o=F[k];
+    if(emp && String(o.emp||'').trim().toUpperCase()!==emp) return false;
+    if(lt && o.lote!==lt) return false;
+    if(eng && String(o.eng||'').trim().toLowerCase()!==eng) return false;
+    if(sit==='ap' && !(o.meds||[]).some(function(m){return m.sit==='4. APROVADO'&&m.v>0.005;})) return false;
+    if(sit!=='todas' && o.sit!=='4. EXECUÇÃO') return false;
+    return true; }).sort(function(a,b){return a-b;}); }
+function opts(){ var emps={}, engs={};
+  cods.forEach(function(k){ var o=F[k], em=String(o.emp||'').trim().toUpperCase(); if(em) emps[em]=(emps[em]||0)+1; var en=String(o.eng||'').trim(); if(en) engs[en.toLowerCase()]=en; });
+  $('fEmp').innerHTML='<option value="">todos</option>'+Object.keys(emps).sort().map(function(x){return '<option value="'+e(x)+'">'+e(x)+' ('+emps[x]+')</option>';}).join('');
+  $('fEng').innerHTML='<option value="">todos</option>'+Object.keys(engs).sort().map(function(x){return '<option value="'+e(x)+'">'+e(engs[x])+'</option>';}).join(''); }
+function pintaLista(){ var L=lista();
+  $('ddLista').innerHTML=L.length?L.map(function(k){ var o=F[k], ap=(o.meds||[]).filter(function(m){return m.sit==='4. APROVADO';}).reduce(function(s,m){return s+m.v;},0);
+    return '<label><input type="checkbox" data-c="'+k+'"'+(SEL[k]?' checked':'')+'> <span><b>'+(o.lote?o.lote+'.':'')+k+'</b> '+e(tit(o.uni))+'<br><span style="font-size:11.5px;color:var(--mut)">'+e(o.emp||'—')+' · '+e(tit(o.cid))+(o.taxa?' · '+br(o.taxa*100)+'%':' · sem taxa')+'</span></span><i>'+rs(ap)+'</i></label>'; }).join('')
+    :'<div style="padding:8px;color:var(--mut)">nenhuma obra com esses filtros</div>';
+  var n=Object.keys(SEL).length; $('ddLab').textContent=n?(n===1?'obra '+Object.keys(SEL)[0]:n+' obras selecionadas'):'escolher obras…';
+  $('dica').textContent=L.length+' obra(s) na lista · '+n+' selecionada(s). Medições aprovadas do CTR (fech.js de '+dt((window.FECH||{}).geradoEm)+'), itens dos PDFs do portal ('+(window.MED_ITENS_EM||'—')+'), Sienge '+(((window.SIENGE||{}).periodo)||'')+', atas de fechamento e marcações de entrega do painel.'; }
+
+/* ---- relatório ---- */
+function cabec(t,s){ return '<div class="cab"><div><h1>'+t+'</h1><div class="s">'+s+'</div></div><div class="d">ATLÂNTICA · gestão de obras<br>simulação emitida em '+new Date().toLocaleDateString('pt-BR')+'</div></div>'; }
+function m2(n){ return 'MED'+('0'+n).slice(-2); }
+function render(){
+  var ks=Object.keys(SEL).sort(function(a,b){return a-b;});
+  if(!ks.length){ $('rel').innerHTML=''; $('vazio').innerHTML='Escolha o <b>empreiteiro</b> (ou as obras) acima — a simulação aparece aqui no mesmo modelo do PDF, pronta para imprimir ou baixar em Excel.'; return; }
+  $('vazio').innerHTML='';
+  var R=ks.map(calc).filter(Boolean), H=[];
+  var C=R.filter(function(r){return r.taxa;});
+  var T={}; ['medAp','emp','pago','aPagarMed','mat','matDesc','matNow','adtoPend','res'].forEach(function(k){ T[k]=r2(C.reduce(function(s,r){return s+(r[k]||0);},0)); });
+  var pos=r2(C.filter(function(r){return r.res>0;}).reduce(function(s,r){return s+r.res;},0)), neg=r2(C.filter(function(r){return r.res<0;}).reduce(function(s,r){return s+r.res;},0));
+  var emps={}; R.forEach(function(r){ emps[String(r.o.emp||'—').trim()]=1; }); var empN=Object.keys(emps);
+  var tx={}; C.forEach(function(r){ tx[br(r.taxa*100)+'% ('+cc(r.o)+')']=1; });
+  var p1=cabec('Simulação de fechamento do empreiteiro — '+R.length+' obra'+(R.length>1?'s':''), 'Empreiteiro '+e(empN.join(', '))+' · medido aprovado pela FDE × compras do Sienge · medições aprovadas até '+dt((window.FECH||{}).geradoEm));
+  p1+='<div class="cards">'+
+    '<div class="cardx c-azul"><div class="l">Medido aprovado (acumulado)</div><div class="v">'+rs(T.medAp)+'</div><div class="x">'+C.length+' obra(s)</div></div>'+
+    '<div class="cardx c-lar"><div class="l">Empreita sobre o medido</div><div class="v">'+rs(T.emp)+'</div><div class="x">'+e(Object.keys(tx).join(' e '))+'</div></div>'+
+    '<div class="cardx"><div class="l">Já pago nas atas</div><div class="v">'+rs(T.pago)+'</div><div class="x">'+(C.filter(function(r){return r.pago;}).map(function(r){return r.cod;}).join(', ')||'nenhuma ata')+'</div></div>'+
+    '<div class="cardx"><div class="l">Comprado no Sienge</div><div class="v">'+rs(T.mat)+'</div><div class="x">'+rs(T.matDesc)+' já descontado nas atas</div></div>'+
+    '<div class="cardx c-pos"><div class="l">Obras com saldo a pagar</div><div class="v pos">'+rs(pos)+'</div><div class="x">'+C.filter(function(r){return r.res>0;}).map(function(r){return r.cod;}).join(', ')+'</div></div>'+
+    '<div class="cardx c-neg"><div class="l">Saldo a favor da Atlântica</div><div class="v neg">'+rs(neg)+'</div><div class="x">'+C.filter(function(r){return r.res<0;}).map(function(r){return r.cod;}).join(', ')+'</div></div></div>';
+  p1+='<div class="box info"><b>Como a conta é feita (para cada obra).</b> (1) Somam-se as medições <b>aprovadas pela FDE</b> (valor principal do portal). (2) Aplica-se a taxa do empreiteiro: <b>empreita = medido × taxa</b>. (3) Desconta-se o que já foi pago nas atas de fechamento. (4) Desconta-se o material e os serviços comprados pela Atlântica no Sienge para a obra, menos o que já foi descontado nas atas. (5) Desconta-se o adiantamento ainda não abatido. <b>Resultado positivo = a pagar ao empreiteiro; negativo = saldo a favor da Atlântica</b>, que fica para as próximas medições.</div>';
+  var rows=R.map(function(r){ var o=r.o, c=r.res>0?'pos':'neg';
+    return '<tr><td style="white-space:nowrap"><b>'+(o.lote?o.lote+'.':'')+r.cod+'</b></td><td><b>'+e(tit(o.uni))+'</b> <span class="mini">· '+e(tit(o.cid))+' · '+cc(o)+(o.pi?' · PI '+e(o.pi):'')+(empN.length>1?' · '+e(o.emp):'')+'</span></td>'+
+      '<td class="n">'+rs(r.medAp)+'</td><td class="n">'+(r.taxa?br(r.taxa*100)+'%':'—')+'</td><td class="n">'+rs(r.emp)+'</td><td class="n">'+rs(-r.pago)+'</td><td class="n">'+rs(r.aPagarMed)+'</td>'+
+      '<td class="n">'+(r.taxa?rs(-r.matNow):'—')+'</td><td class="n">'+rs(-r.adtoPend)+'</td><td class="n '+c+'"><b>'+(r.taxa?rs(r.res):'sem taxa')+'</b></td></tr>'; }).join('');
+  rows+='<tr class="tot"><td colspan="2">TOTAL</td><td class="n">'+rs(T.medAp)+'</td><td></td><td class="n">'+rs(T.emp)+'</td><td class="n">'+rs(-T.pago)+'</td><td class="n">'+rs(T.aPagarMed)+'</td><td class="n">'+rs(-T.matNow)+'</td><td class="n">'+rs(-T.adtoPend)+'</td><td class="n '+(T.res>0?'pos':'neg')+'">'+rs(T.res)+'</td></tr>';
+  p1+='<h2>Resumo por obra</h2><table><thead><tr><th>Obra</th><th style="min-width:180px">Unidade</th><th class="n">Medido aprovado</th><th class="n">Taxa</th><th class="n">Empreita</th><th class="n">(−) Já pago</th><th class="n">= Medição a pagar</th><th class="n">(−) Sienge a descontar</th><th class="n">(−) Adiant. pendente</th><th class="n">Resultado</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  var als=R.filter(function(r){return r.al.length;});
+  p1+='<div class="dois"><div class="box okb"><b>A pagar agora (obras com saldo positivo):</b> '+(C.filter(function(r){return r.res>0;}).map(function(r){return r.cod+' '+e(tit(r.o.uni))+' '+rs(r.res);}).join(' · ')||'nenhuma')+' — total <b>'+rs(pos)+'</b>.'+
+    (R.length>1&&empN.length===1?' Se o saldo das obras for compensado entre si (mesmo empreiteiro), o resultado líquido é <b>'+rs(T.res)+'</b>'+(T.res<0?' a favor da Atlântica e não há pagamento nesta rodada.':' a pagar.'):'')+'</div>'+
+    (als.length?'<div class="box alerta"><b>Pontos de atenção.</b><ul>'+als.map(function(r){return r.al.map(function(a){return '<li><b>'+r.cod+'</b>: '+e(a)+'</li>';}).join('');}).join('')+'</ul></div>':'')+'</div>';
+  H.push('<div class="pg">'+p1+'</div>');
+  R.forEach(function(r){ H.push('<div class="pg">'+pagObra(r)+'</div>'); });
+  H.push('<div class="pg">'+cabec('Fontes e critérios','de onde vem cada número')+'<table><tbody>'+
+    '<tr><td><b>Medido</b></td><td>Valor principal de cada medição aprovada no CTR (conferido pela varredura do portal SMV/FDE). Itens e quantidades lidos dos PDFs "c/ memória" das medições, pasta 02. MEDICAO/Portal FDE de cada obra.</td></tr>'+
+    '<tr><td><b>Taxa</b></td><td>Coluna M (CTR) da aba OBRAS.</td></tr>'+
+    '<tr><td><b>Já pago / descontado</b></td><td>Atas de fechamento dos empreiteiros: pago, adiantamentos, desconto de adiantamento e material já descontado, até a última ata de cada obra.</td></tr>'+
+    '<tr><td><b>Sienge</b></td><td>Relação de Pedidos de Compra ('+e(((window.SIENGE||{}).periodo)||'')+'), itens de cada pedido. Todo pedido da obra entra no desconto (material, locação, caçamba). A coluna de entrega mostra a marcação feita no painel ou a baixa do Sienge.</td></tr>'+
+    '<tr><td><b>Não entra</b></td><td>Medições em tramitação ou previsão e solicitações do Sienge ainda sem pedido de compra.</td></tr>'+
+    '<tr><td><b>Natureza</b></td><td>Simulação para conferência — não substitui a ata de fechamento.</td></tr></tbody></table></div>');
+  $('rel').innerHTML=H.join('');
+  window.__R=R;
+}
+function pagObra(r){
+  var o=r.o, h=cabec((o.lote?o.lote+'.':'')+r.cod+' — '+e(tit(o.uni)), e(tit(o.cid))+' · centro de custo '+cc(o)+(o.pi?' · PI '+e(o.pi):'')+(o.ctfde?' · contrato FDE '+e(o.ctfde):'')+' · empreiteiro '+e(o.emp||'—')+(r.taxa?' · taxa '+br(r.taxa*100)+'%':''));
+  if(!r.taxa){ return h+'<div class="box alerta">Sem taxa do empreiteiro no CTR (coluna M). Preencha a taxa para a simulação sair.</div>'; }
+  var ult=r.meds.length?r.meds[r.meds.length-1]:null, c=r.res>0?'pos':'neg';
+  var pagoTxt=r.pg?('atas até '+dt(r.pg.ult)):'sem fechamento anterior';
+  h+='<div class="cards"><div class="cardx c-azul"><div class="l">Medido aprovado</div><div class="v">'+rs(r.medAp)+'</div><div class="x">'+r.meds.filter(function(m){return m.v>0.005;}).length+' medição(ões) com valor'+(ult?' · última '+m2(ult.n)+(ult.dap?' aprovada '+e(ult.dap):''):'')+'</div></div>'+
+    '<div class="cardx c-lar"><div class="l">Empreita (× '+br(r.taxa*100)+'%)</div><div class="v">'+rs(r.emp)+'</div><div class="x">o que o empreiteiro tem pelo medido</div></div>'+
+    '<div class="cardx"><div class="l">Já pago</div><div class="v">'+rs(r.pago)+'</div><div class="x">'+pagoTxt+'</div></div>'+
+    '<div class="cardx"><div class="l">Comprado no Sienge</div><div class="v">'+rs(r.mat)+'</div><div class="x">'+r.peds.length+' pedido(s) · '+rs(r.matDesc)+' já descontado</div></div>'+
+    '<div class="cardx c-'+c+'"><div class="l">'+(r.res>0?'A pagar ao empreiteiro':'Saldo a favor da Atlântica')+'</div><div class="v '+c+'">'+rs(r.res)+'</div><div class="x">resultado da simulação</div></div></div>';
+  var q=[['Medido aprovado pela FDE (acumulado)',r.medAp,''],['Empreita = medido × '+br(r.taxa*100)+'%',r.emp,'sub'],
+    ['(−) Já pago nas atas'+(r.pg?' — '+pagoTxt:' — sem fechamento anterior'),-r.pago,''],['= Medição a pagar',r.aPagarMed,'sub'],
+    ['(−) Comprado no Sienge ('+rs(r.mat)+') menos o já descontado nas atas ('+rs(r.matDesc)+')',-r.matNow,''],
+    ['(−) Adiantamento pendente'+(r.pg?' (adiantado '+rs(r.pg.adto||0)+', já abatido '+rs(Math.abs(r.pg.dadto||0))+')':''),-r.adtoPend,''],
+    ['RESULTADO DA SIMULAÇÃO — '+(r.res>0?'a pagar ao empreiteiro':'saldo a favor da Atlântica'),r.res,'res']];
+  var tb=q.map(function(x){ return '<tr class="'+x[2]+'"><td>'+e(x[0])+'</td><td class="n '+(x[2]==='res'?c:'')+'">'+rs(x[1])+'</td></tr>'; }).join('');
+  var mt=r.meds.map(function(m){ var lan=(m.lanc!=null&&Math.abs(m.lanc-m.v)>1)?'lançada '+rs(m.lanc):(m.v<0.005?'sem valor':'');
+    return '<tr><td>'+m2(m.n)+'</td><td>'+dt(m.ref)+'</td><td>'+e(m.dap||'—')+'</td><td class="n">'+rs(m.v)+'</td><td class="n">'+rs(r2(m.v*r.taxa))+'</td><td class="mini">'+lan+'</td></tr>'; }).join('')+
+    '<tr class="tot"><td colspan="3">Acumulado aprovado</td><td class="n">'+rs(r.medAp)+'</td><td class="n">'+rs(r.emp)+'</td><td></td></tr>';
+  if(!r.meds.length) mt='<tr><td colspan="6">nenhuma medição aprovada</td></tr>';
+  var pc=Object.keys(r.porcat).sort(function(a,b){return r.porcat[b]-r.porcat[a];}).map(function(k){ return '<tr><td>'+k+'</td><td class="n">'+rs(r.porcat[k])+'</td><td class="n">'+br(r.mat?r.porcat[k]/r.mat*100:0,1)+'%</td></tr>'; }).join('')||'<tr><td colspan="3">nenhum pedido no Sienge para esta obra</td></tr>';
+  h+='<div class="dois"><div style="flex:1.25"><h2>Quadro de fechamento</h2><table><tbody>'+tb+'</tbody></table>'+
+     (r.al.length?'<div class="box alerta"><b>Atenção:</b><ul>'+r.al.map(function(a){return '<li>'+e(a)+'</li>';}).join('')+'</ul></div>':'')+'</div>'+
+     '<div><h2>Medições</h2><table><thead><tr><th>Med.</th><th>Competência</th><th>Aprovada</th><th class="n">Valor FDE</th><th class="n">Empreita</th><th>Obs.</th></tr></thead><tbody>'+mt+'</tbody></table>'+
+     '<h3>Sienge por tipo de compra</h3><table><thead><tr><th>Tipo</th><th class="n">Valor</th><th class="n">%</th></tr></thead><tbody>'+pc+'</tbody></table></div></div>';
+  // itens medidos
+  var cols=r.meds.filter(function(m){return m.v>0.005;}).map(function(m){return m.n;}), ant=[];
+  if(cols.length>6){ ant=cols.slice(0,cols.length-5); cols=cols.slice(-5); }
+  var ih=(ant.length?'<th class="n">'+m2(ant[0])+'–'+m2(ant[ant.length-1])+'</th>':'')+cols.map(function(n){return '<th class="n">'+m2(n)+'</th>';}).join('');
+  var vv=function(a,n){ return a.por[n]?br(a.por[n]):'—'; };
+  var it=r.itens.map(function(a){ var sa=ant.reduce(function(s,n){return s+(a.por[n]||0);},0);
+    return '<tr><td>'+e(a.cod)+'</td><td>'+e(String(a.desc).slice(0,95))+'</td><td>'+e(a.un)+'</td><td class="n">'+br(a.q)+'</td><td class="n">'+br(a.vu)+'</td>'+
+      (ant.length?'<td class="n">'+(sa?br(sa):'—')+'</td>':'')+cols.map(function(n){return '<td class="n">'+vv(a,n)+'</td>';}).join('')+
+      '<td class="n"><b>'+br(a.v)+'</b></td><td class="n">'+br(r2(a.v*r.taxa))+'</td></tr>'; }).join('');
+  var somaIt=r2(r.itens.reduce(function(s,a){return s+a.v;},0));
+  it+='<tr class="tot"><td colspan="5">Total medido aprovado'+(Math.abs(somaIt-r.medAp)>0.05?' (itens lidos: '+rs(somaIt)+')':'')+'</td>'+(ant.length?'<td class="n">'+br(r.itens.reduce(function(s,a){return s+ant.reduce(function(t,n){return t+(a.por[n]||0);},0);},0))+'</td>':'')+
+      cols.map(function(n){return '<td class="n">'+br(r.itens.reduce(function(s,a){return s+(a.por[n]||0);},0))+'</td>';}).join('')+'<td class="n">'+br(r.medAp)+'</td><td class="n">'+br(r.emp)+'</td></tr>';
+  h+='<h2>O que foi medido — serviços aprovados pela FDE, acumulado</h2>'+(r.itens.length?'<table class="it"><thead><tr><th>Código</th><th>Serviço</th><th>Un</th><th class="n">Qtd acum.</th><th class="n">R$ unit.</th>'+ih+'<th class="n">Total medido</th><th class="n">Empreita</th></tr></thead><tbody>'+it+'</tbody></table>':'<div class="box alerta">Itens das medições não encontrados (PDFs do portal fora da pasta 02. MEDICAO/Portal FDE).</div>');
+  // sienge
+  if(r.peds.length){ var sp='';
+    r.peds.forEach(function(x){ var p=x.p;
+      sp+='<tr class="pedh"><td>'+p[1]+'</td><td>'+e(p[0])+'</td><td colspan="3">'+e(p[2])+'</td><td class="mini">'+e(x.st)+'</td><td class="n">'+rs(x.tot)+'</td></tr>';
+      x.it.forEach(function(i){ sp+='<tr class="ped"><td></td><td></td><td>'+e(i[0])+'</td><td class="n">'+br(i[2])+' '+e(i[1])+'</td><td class="n">'+br(i[4])+'</td><td class="mini">'+cat(i[0])+(i[3]>0.0001&&o.lote!=='42'?' · falta '+br(i[3]):'')+'</td><td class="n">'+br(i[5]||0)+'</td></tr>'; }); });
+    sp+='<tr class="tot"><td colspan="6">Total comprado no Sienge para a obra</td><td class="n">'+rs(r.mat)+'</td></tr>';
+    h+='<h2>O que foi comprado — pedidos do Sienge, item a item</h2><table class="it"><thead><tr><th>Pedido</th><th>Data</th><th>Fornecedor / insumo</th><th class="n">Qtd</th><th class="n">R$ unit.</th><th>Entrega / tipo</th><th class="n">Valor</th></tr></thead><tbody>'+sp+'</tbody></table>';
+  } else h+='<h2>O que foi comprado — pedidos do Sienge</h2><div class="box okb">Nenhum pedido de compra no Sienge para esta obra.</div>';
+  return h;
+}
+
+/* ---- Excel ---- */
+function excel(){ var R=window.__R||[]; if(!R.length||!window.XLSX){ return; }
+  var wb=XLSX.utils.book_new();
+  var A=[['Obra','Unidade','Cidade','C. custo','Empreiteiro','Medido aprovado','Taxa','Empreita','Já pago','Medição a pagar','Sienge total','Sienge já descontado','Sienge a descontar','Adiant. pendente','Resultado','Atenção']];
+  R.forEach(function(r){ var o=r.o; A.push([(o.lote?o.lote+'.':'')+r.cod,tit(o.uni),tit(o.cid),cc(o),o.emp||'',r.medAp,r.taxa||'',r.emp==null?'':r.emp,r.pago,r.aPagarMed==null?'':r.aPagarMed,r.mat,r.matDesc,r.matNow==null?'':r.matNow,r.adtoPend,r.res==null?'':r.res,r.al.join(' | ')]); });
+  var w=XLSX.utils.aoa_to_sheet(A); w['!cols']=[{wch:8},{wch:34},{wch:16},{wch:9},{wch:14},{wch:15},{wch:7},{wch:14},{wch:14},{wch:15},{wch:14},{wch:14},{wch:15},{wch:14},{wch:15},{wch:80}];
+  XLSX.utils.book_append_sheet(wb,w,'RESUMO');
+  var M=[['Obra','Medição','Competência','Aprovada','Valor FDE','Lançado','Empreita']];
+  R.forEach(function(r){ r.meds.forEach(function(m){ M.push([r.cod,m2(m.n),dt(m.ref),m.dap||'',m.v,m.lanc==null?'':m.lanc,r.taxa?r2(m.v*r.taxa):'']); }); });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(M),'MEDICOES');
+  var I=[['Obra','Código','Serviço','Un','Qtd acumulada','R$ unit.','Total medido','Empreita']];
+  R.forEach(function(r){ r.itens.forEach(function(a){ I.push([r.cod,a.cod,a.desc,a.un,r2(a.q),a.vu,r2(a.v),r.taxa?r2(a.v*r.taxa):'']); }); });
+  var wi=XLSX.utils.aoa_to_sheet(I); wi['!cols']=[{wch:6},{wch:10},{wch:70},{wch:5},{wch:12},{wch:10},{wch:13},{wch:12}]; XLSX.utils.book_append_sheet(wb,wi,'MEDIDO');
+  var S=[['Obra','Pedido','Data','Fornecedor','Insumo','Un','Qtd','R$ unit.','Valor','Qtd pendente','Tipo','Entrega']];
+  R.forEach(function(r){ r.peds.forEach(function(x){ (x.it.length?x.it:[[ '(sem itens)','',0,0,0,x.tot]]).forEach(function(i){ S.push([r.cod,x.p[1],x.p[0],x.p[2],i[0],i[1],i[2],i[4],i[5],i[3],cat(i[0]),x.st]); }); }); });
+  var ws=XLSX.utils.aoa_to_sheet(S); ws['!cols']=[{wch:6},{wch:8},{wch:11},{wch:38},{wch:48},{wch:5},{wch:9},{wch:10},{wch:12},{wch:10},{wch:18},{wch:36}]; XLSX.utils.book_append_sheet(wb,ws,'SIENGE');
+  var hoje=new Date(), dd=('0'+hoje.getDate()).slice(-2)+('0'+(hoje.getMonth()+1)).slice(-2)+hoje.getFullYear();
+  var emp=(R.length&&R.every(function(r){return r.o.emp===R[0].o.emp;}))?String(R[0].o.emp).replace(/\W+/g,'-'):'VARIOS';
+  XLSX.writeFile(wb,'SIMULACAO-FECHAMENTO_'+emp+'_'+R.length+'-OBRAS_'+dd+'.xlsx');
+}
+
+/* ---- eventos ---- */
+opts();
+if(P.get('emp')) $('fEmp').value=String(P.get('emp')).toUpperCase();
+if(P.get('obras')){ $('fSit').value='todas'; String(P.get('obras')).split(',').forEach(function(k){ k=k.trim(); if(F[k]) SEL[k]=1; }); }
+else if(P.get('emp')){ lista().forEach(function(k){ SEL[k]=1; }); }
+['fEmp','fLote','fEng','fSit'].forEach(function(id){ $(id).onchange=function(){ if(id==='fEmp'&&$('fEmp').value){ SEL={}; lista().forEach(function(k){SEL[k]=1;}); render(); } pintaLista(); }; });
+$('ddLista').addEventListener('change',function(ev){ var c=ev.target.dataset&&ev.target.dataset.c; if(!c) return; if(ev.target.checked) SEL[c]=1; else delete SEL[c]; pintaLista(); render(); });
+document.addEventListener('click',function(ev){ if(!ev.target.closest('#ddObras')) $('ddObras').open=false; });
+$('btTodas').onclick=function(){ lista().forEach(function(k){SEL[k]=1;}); pintaLista(); render(); };
+$('btLimpa').onclick=function(){ SEL={}; pintaLista(); render(); };
+$('btPdf').onclick=function(){ if(!Object.keys(SEL).length) return; var t=document.title; var R=window.__R||[];
+  document.title='SIMULACAO-FECHAMENTO_'+((R.length&&R[0].o.emp)?String(R[0].o.emp).replace(/\W+/g,'-'):'')+'_'+R.length+'-OBRAS'; window.print(); setTimeout(function(){document.title=t;},800); };
+$('btXls').onclick=excel;
+pintaLista(); render();
+puxaMarcas().then(function(){ render(); });
+})();
+</script>
+</body>
+</html>
