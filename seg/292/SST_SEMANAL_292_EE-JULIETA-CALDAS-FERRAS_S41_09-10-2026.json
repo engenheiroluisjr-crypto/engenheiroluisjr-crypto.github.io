@@ -4,14 +4,15 @@
  "unidade": "EE JULIETA CALDAS FERRAS",
  "de": "2026-10-05",
  "ate": "2026-10-11",
- "n": 1,
+ "n": 2,
  "cls": "REGULAR / ATENÇÃO",
- "medpond": 1.588235294117647,
+ "medpond": 1.5945945945945945,
  "vistorias": [
-  "265-muwmi945"
+  "265-muwmi945",
+  "265-muzr5q02"
  ],
- "whats": "🦺 *SEGURANÇA DO TRABALHO — SEMANA 41*\n_EE JULIETA CALDAS FERRAS · obra 292 · 05/10 a 09/10/2026_\n\n📅 1 vistoria(s): 05/10 REGULAR / ATENÇÃO\n📋 Situação atual: *REGULAR / ATENÇÃO* (média 1,588)\n\n⚠️ *Não conformidades em aberto (1)*\n• Tapumes não segue o pessoa o padrão FDE  — prazo 06/10/2026 · resp. Thiago \n\n_Luis Júnior — Engenharia Atlântica_",
- "gerado": "2026-10-06T12:46:57",
+ "whats": "🦺 *SEGURANÇA DO TRABALHO — SEMANA 41*\n_EE JULIETA CALDAS FERRAS · obra 292 · 05/10 a 09/10/2026_\n\n📅 2 vistoria(s): 05/10 REGULAR / ATENÇÃO · 08/10 REGULAR / ATENÇÃO\n📋 Situação atual: *REGULAR / ATENÇÃO* (média 1,595)\n\n⚠️ *Não conformidades em aberto (2)*\n• Tapumes não segue o pessoa o padrão FDE  — prazo 06/10/2026 · resp. Thiago \n• Colaborador JOEL não utilizava EPI  — prazo 08/10/2026 · resp. Thiago ",
+ "gerado": "2026-10-08T18:18:48",
  "pdf_completo": "SST_SEMANAL_292_EE-JULIETA-CALDAS-FERRAS_S41_09-10-2026.pdf",
  "pdf": "SST_SEMANAL_292_EE-JULIETA-CALDAS-FERRAS_S41_09-10-2026.pdf"
 }
