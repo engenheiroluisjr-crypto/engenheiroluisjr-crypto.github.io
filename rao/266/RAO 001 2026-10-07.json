@@ -1,0 +1,170 @@
+{
+ "tipo": "diario",
+ "obra": 266,
+ "lote": "42",
+ "unidade": "ETEC JOSE MIGUEL SOARES",
+ "data": "2026-10-07",
+ "numero": 1,
+ "pct": "43",
+ "avanco": {
+  "aprovado": 53.89087959769425,
+  "engenheiro": 43.0,
+  "fiscal_lo": 35.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-08T17:13:34",
+ "ficha": {
+  "funcionarios": "5",
+  "mao_de_obra": "Insuficiente",
+  "material": "Insuficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Sim",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "43",
+  "ritmo": "Lento",
+  "limpeza": "Regular",
+  "previsao": null,
+  "visita": "14:19",
+  "responsavel": null
+ },
+ "servicos": [
+  "EXECUÇÃO DE MURO DE ARRIMO",
+  "EXECUÇÃO DE REJUNTAMENTO DO PISO DO AUDITÓRIO"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [
+  "CONFORME ALINHADO COM A DIREÇÃO, DEIXAR A QUADRA 100% PRONTA E EM PLENAS CONDIÇÕES PARA A FORMATURA"
+ ],
+ "recomendacoes": [
+  "AUMENTAR O EFETIVO DA OBRA",
+  "APÓS A REGULARIZAÇÃO DAS PENDÊNCIAS, REALIZAR REGISTRO FOTOGRÁFICO E ENVIAR AS FOTOS NO GRUPO"
+ ],
+ "pendencias": [
+  "01 - CALHA DA QUADRA JÁ SUBSTITUÍDA, PORÉM AINDA HÁ RELATOS DE INFILTRAÇÃO. REALIZAR NOVA VISTORIA PARA IDENTIFICAR A ORIGEM DO PROBLEMA E PROVIDENCIAR A CORREÇÃO COM URGÊNCIA, VISANDO GARANTIR QUE A QUADRA ESTEJA EM PLENAS CONDIÇÕES PARA A FORMATURA NO FINAL DO ANO",
+  "02 - FALTA DE TAPUMES E NECESSIDADE DE ORGANIZAÇÃO DOS MATERIAIS DA OBRA, QUE ESTÃO COM ACESSO AOS ALUNOS. PROVIDENCIAR O ISOLAMENTO E A ORGANIZAÇÃO ADEQUADA DOS MATERIAIS, GARANTINDO A SEGURANÇA DOS ALUNOS",
+  "03 - RESERVATÓRIO COM VAZAMENTO, NECESSITANDO DE VERIFICAÇÃO E CORREÇÃO DO SISTEMA DE TUBULAÇÕES"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Material em canteiro insuficiente"
+  ],
+  [
+   "alto",
+   "Falhas construtivas a corrigir — registrar quais e o prazo"
+  ],
+  [
+   "medio",
+   "Ritmo da obra: lento"
+  ],
+  [
+   "medio",
+   "Organização e limpeza da obra: regular"
+  ],
+  [
+   "medio",
+   "2 pedido(s) de material sem entrega há 60 dias ou mais"
+  ]
+ ],
+ "pedidos_estado": {
+  "50394": "ENTREGUE",
+  "50695": "ENTREGUE",
+  "50794": "PENDENTE",
+  "51010": "ENTREGUE",
+  "51026": "ENTREGUE",
+  "51943": "ENTREGUE",
+  "52564": "ENTREGUE",
+  "52591": "ENTREGUE",
+  "52890": "ENTREGUE",
+  "53568": "ENTREGUE",
+  "54049": "ENTREGUE",
+  "54111": "PENDENTE",
+  "54453": "PENDENTE",
+  "54612": "ENTREGUE",
+  "54692": "PENDENTE",
+  "54892": "ENTREGUE",
+  "54995": "ENTREGUE",
+  "55309": "ENTREGUE",
+  "55393": "ENTREGUE",
+  "56694": "ENTREGUE",
+  "57537": "PENDENTE",
+  "57538": "PENDENTE",
+  "57629": "PENDENTE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv266-muzqfrbhf00xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf01xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 03"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf02xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf03xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf04xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf05xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf06xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 02"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf07xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 02"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf08xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf09xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf10xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf11xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv266-muzqfrbhf12xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 01"
+  }
+ ],
+ "m001": "42.266_M004_ETEC-JOSE-MIGUEL-SOARES_rev00.xlsx",
+ "autor": "Eng. Leonardo",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 07/10/2026*\n_ETEC JOSE MIGUEL SOARES · 2026.ATA.FDE.42.266 · ITAPEVI_\n\n👷 Efetivo: 5 · ☀️ Tempo seco · Ritmo lento · Limpeza regular\n📊 Aprovado *53,9%* · Engenheiro *43%* · Fiscal FDE *35%* (LO 30/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• EXECUÇÃO DE MURO DE ARRIMO\n• EXECUÇÃO DE REJUNTAMENTO DO PISO DO AUDITÓRIO\n\n📦 *Materiais — pedidos sem entrega até 07/10/2026*\n⚠️ 7 pedido(s), R$ 78.162,56 ainda por receber\n• 50794 — TC-11 TAMPA DE CONCRETO PRE-MOLDAD — *138 dias* em aberto\n• 54111 — MATERIAL E MÃO DE OBRA — *65 dias* em aberto\n• 54453 — REEMBOLSO — *59 dias* em aberto\n• 54692 — LAMPADA LED TUBULAR 120CM T8 18W 6 — *57 dias* em aberto\n• 57537 — TELHA GALVALUME / AÇO GALVANIZADO, — *1 dias* em aberto\n• 57538 — Eletrodo 2,5mm +2 itens — *1 dias* em aberto\n• ... e mais 1 pedido(s) pendente(s)\n\n🚨 *Pontos de atenção*\n• CONFORME ALINHADO COM A DIREÇÃO, DEIXAR A QUADRA 100% PRONTA E EM PLENAS CONDIÇÕES PARA A FORMATURA\n\n📌 *Pendências*\n• 01 - CALHA DA QUADRA JÁ SUBSTITUÍDA, PORÉM AINDA HÁ RELATOS DE INFILTRAÇÃO. REALIZAR NOVA VISTORIA PARA IDENTIFICAR A ORIGEM DO PROBLEMA E PROVIDENCIAR A CORREÇÃO COM URGÊNCIA, VISANDO GARANTIR QUE A QUADRA ESTEJA EM PLENAS CONDIÇÕES PARA A FORMATURA NO FINAL DO ANO\n• 02 - FALTA DE TAPUMES E NECESSIDADE DE ORGANIZAÇÃO DOS MATERIAIS DA OBRA, QUE ESTÃO COM ACESSO AOS ALUNOS. PROVIDENCIAR O ISOLAMENTO E A ORGANIZAÇÃO ADEQUADA DOS MATERIAIS, GARANTINDO A SEGURANÇA DOS ALUNOS\n• 03 - RESERVATÓRIO COM VAZAMENTO, NECESSITANDO DE VERIFICAÇÃO E CORREÇÃO DO SISTEMA DE TUBULAÇÕES\n\n❗ *Recomendações*\n• AUMENTAR O EFETIVO DA OBRA\n• APÓS A REGULARIZAÇÃO DAS PENDÊNCIAS, REALIZAR REGISTRO FOTOGRÁFICO E ENVIAR AS FOTOS NO GRUPO\n\n_Relatório nº 1 · Eng. Leonardo · Engenharia Atlântica_"
+}

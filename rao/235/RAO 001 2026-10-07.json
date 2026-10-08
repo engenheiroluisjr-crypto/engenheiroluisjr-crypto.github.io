@@ -1,0 +1,176 @@
+{
+ "tipo": "diario",
+ "obra": 235,
+ "lote": "41",
+ "unidade": "EE PROF MARIA CONCEICAO APARECIDA PEREIRA ISMAEL",
+ "data": "2026-10-07",
+ "numero": 1,
+ "pct": "80",
+ "avanco": {
+  "aprovado": 81.87243121195426,
+  "engenheiro": 80.0,
+  "fiscal_lo": 70.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-08T17:13:14",
+ "ficha": {
+  "funcionarios": "0",
+  "mao_de_obra": "Insuficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Sim",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "80",
+  "ritmo": "Normal",
+  "limpeza": "Regular",
+  "previsao": null,
+  "visita": "11:50",
+  "responsavel": null
+ },
+ "servicos": [
+  "Cobertura e pintura"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [
+  "Remover telha pendurada em muro",
+  "Vazamentos calha e rufo"
+ ],
+ "recomendacoes": [
+  "Finalizwr pintura de muros",
+  "Estrutura cobertura,  remover da passagem de alunos"
+ ],
+ "pendencias": [],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Falhas construtivas a corrigir — registrar quais e o prazo"
+  ],
+  [
+   "medio",
+   "Organização e limpeza da obra: regular"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 0 funcionário(s) na visita"
+  ]
+ ],
+ "pedidos_estado": {
+  "49574": "ENTREGUE",
+  "49613": "ENTREGUE",
+  "49763": "ENTREGUE",
+  "50940": "ENTREGUE",
+  "51003": "ENTREGUE",
+  "51007": "ENTREGUE",
+  "51145": "ENTREGUE",
+  "51159": "ENTREGUE",
+  "51201": "ENTREGUE",
+  "51323": "ENTREGUE",
+  "51345": "ENTREGUE",
+  "51348": "ENTREGUE",
+  "51685": "ENTREGUE",
+  "51704": "ENTREGUE",
+  "52617": "ENTREGUE",
+  "52984": "ENTREGUE",
+  "53342": "ENTREGUE",
+  "53837": "ENTREGUE",
+  "53838": "ENTREGUE",
+  "54186": "ENTREGUE",
+  "54523": "ENTREGUE",
+  "54541": "ENTREGUE",
+  "54583": "ENTREGUE",
+  "54784": "ENTREGUE",
+  "55703": "ENTREGUE",
+  "56135": "ENTREGUE",
+  "56138": "ENTREGUE",
+  "56446": "ENTREGUE",
+  "57035": "ENTREGUE",
+  "57056": "ENTREGUE",
+  "57100": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv235-muysqfj6f00xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f01xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f02xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f03xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f04xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f05xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f06xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f07xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f08xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f09xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f10xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f11xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f12xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f13xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv235-muysqfj6f14xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  }
+ ],
+ "m001": "41.235_M005_EE-MARIA-CONCEICAO-APARECIDA-PEREIRA-ISMAEL_rev00.xlsx",
+ "autor": "Eng. Douglas",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 07/10/2026*\n_EE PROF MARIA CONCEICAO APARECIDA PEREIRA ISMAEL · 2026.ATA.FDE.41.235 · JUQUITIBA_\n\n👷 Efetivo: 0 · ☀️ Tempo seco · Ritmo normal · Limpeza regular\n📊 Aprovado *81,9%* · Engenheiro *80%* · Fiscal FDE *70%* (LO 29/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Cobertura e pintura\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n🚨 *Pontos de atenção*\n• Remover telha pendurada em muro\n• Vazamentos calha e rufo\n\n❗ *Recomendações*\n• Finalizwr pintura de muros\n• Estrutura cobertura,  remover da passagem de alunos\n\n_Relatório nº 1 · Eng. Douglas · Engenharia Atlântica_"
+}

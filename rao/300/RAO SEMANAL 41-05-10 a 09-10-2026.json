@@ -1,0 +1,28 @@
+{
+ "tipo": "semanal",
+ "obra": 300,
+ "lote": "41",
+ "unidade": "EE LEVI PEREIRA MARTINS",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 1,
+ "pct": "80",
+ "servicos": [
+  "Infra elétrica",
+  "Todas e variadores sala de aula"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "sem_pedido": [
+  31073
+ ],
+ "sem_entrega": [],
+ "pedidos_em": "08/10/2026 17:13",
+ "gerado": "2026-10-08T17:13:43",
+ "avanco": {
+  "aprovado": 44.95580242553512,
+  "engenheiro": 80.0,
+  "fiscal_lo": 48.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EE LEVI PEREIRA MARTINS · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *45%* · Engenheiro *80%* · Fiscal FDE *48%* (LO 19/09)\n\n🔨 *Executado na semana*\n• Infra elétrica\n• Todas e variadores sala de aula\n\n🛒 *Solicitado e ainda sem pedido de compra* — 1\n• sol. 31073 (09/09) — FINALIDADE: ELETRICA\n\n_Situação dos pedidos em 08/10/2026 17:13_\n\n_Luis Júnior — Engenharia Atlântica_"
+}

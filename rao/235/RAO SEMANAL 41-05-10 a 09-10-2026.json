@@ -1,0 +1,32 @@
+{
+ "tipo": "semanal",
+ "obra": 235,
+ "lote": "41",
+ "unidade": "EE PROF MARIA CONCEICAO APARECIDA PEREIRA ISMAEL",
+ "de": "2026-10-05",
+ "ate": "2026-10-09",
+ "diarios": 1,
+ "pct": "80",
+ "servicos": [
+  "Cobertura e pintura"
+ ],
+ "chegou": [],
+ "pendentes": [],
+ "sem_pedido": [
+  27770,
+  27771,
+  27933,
+  28588,
+  30259,
+  30310
+ ],
+ "sem_entrega": [],
+ "pedidos_em": "08/10/2026 17:13",
+ "gerado": "2026-10-08T17:13:52",
+ "avanco": {
+  "aprovado": 81.87243121195426,
+  "engenheiro": 80.0,
+  "fiscal_lo": 70.0
+ },
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EE PROF MARIA CONCEICAO APARECIDA PEREIRA ISMAEL · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *81,9%* · Engenheiro *80%* · Fiscal FDE *70%* (LO 29/09)\n\n🔨 *Executado na semana*\n• Cobertura e pintura\n\n🛒 *Solicitado e ainda sem pedido de compra* — 6\n• sol. 27770 (17/04) — FINALIDADE: COBERTURA METALICA\n• sol. 27771 (17/04) — FINALIDADE: REPARO PNTURA\n• sol. 27933 (27/04) — FINALIDADE: PREPARAÇÃO DE ESTRUTURA\n• sol. 28588 (22/05) — FINALIDADE: PINTURA TETO\n• sol. 30259 (07/08) — FINALIDADE: LIMPEZA DE OBRA\n• sol. 30310 (10/08) — FINALIDADE: ENTULHO\n\n_Situação dos pedidos em 08/10/2026 17:13_\n\n_Luis Júnior — Engenharia Atlântica_"
+}

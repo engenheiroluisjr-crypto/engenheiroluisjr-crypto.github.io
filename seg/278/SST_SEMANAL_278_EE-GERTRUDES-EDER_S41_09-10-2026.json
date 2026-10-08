@@ -4,14 +4,15 @@
  "unidade": "EE GERTRUDES EDER",
  "de": "2026-10-05",
  "ate": "2026-10-11",
- "n": 1,
+ "n": 2,
  "cls": "REGULAR / ATENÇÃO",
- "medpond": 1.8108108108108107,
+ "medpond": 1.5490196078431373,
  "vistorias": [
-  "278-muvhr4o5"
+  "278-muvhr4o5",
+  "278-muzfwghc"
  ],
- "whats": "🦺 *SEGURANÇA DO TRABALHO — SEMANA 41*\n_EE GERTRUDES EDER · obra 278 · 05/10 a 09/10/2026_\n\n📅 1 vistoria(s): 05/10 REGULAR / ATENÇÃO\n📋 Situação atual: *REGULAR / ATENÇÃO* (média 1,811)\n\n✅ Nenhuma não conformidade em aberto.\n\n_Luis Júnior — Engenharia Atlântica_",
- "gerado": "2026-10-05T18:34:25",
+ "whats": "🦺 *SEGURANÇA DO TRABALHO — SEMANA 41*\n_EE GERTRUDES EDER · obra 278 · 05/10 a 09/10/2026_\n\n📅 2 vistoria(s): 05/10 REGULAR / ATENÇÃO · 08/10 REGULAR / ATENÇÃO\n📋 Situação atual: *REGULAR / ATENÇÃO* (média 1,549)\n\n⚠️ *Não conformidades em aberto (1)*\n• Providenciar bancada até 1.5 m — prazo 08/10/2026 · resp. Leonardo zanao ",
+ "gerado": "2026-10-08T17:19:48",
  "pdf_completo": "SST_SEMANAL_278_EE-GERTRUDES-EDER_S41_09-10-2026.pdf",
  "pdf": "SST_SEMANAL_278_EE-GERTRUDES-EDER_S41_09-10-2026.pdf"
 }

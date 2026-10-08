@@ -1,0 +1,151 @@
+{
+ "tipo": "diario",
+ "obra": 300,
+ "lote": "41",
+ "unidade": "EE LEVI PEREIRA MARTINS",
+ "data": "2026-10-07",
+ "numero": 1,
+ "pct": "80",
+ "avanco": {
+  "aprovado": 44.95580242553512,
+  "engenheiro": 80.0,
+  "fiscal_lo": 48.0
+ },
+ "previsao": "",
+ "gerado": "2026-10-08T17:13:05",
+ "ficha": {
+  "funcionarios": "0",
+  "mao_de_obra": "Insuficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Sim",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "80",
+  "ritmo": "Normal",
+  "limpeza": "Regular",
+  "previsao": null,
+  "visita": "21:20",
+  "responsavel": null
+ },
+ "servicos": [
+  "Infra elétrica",
+  "Todas e variadores sala de aula"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [
+  "Finalizar distribuição"
+ ],
+ "recomendacoes": [
+  "Limpeza material gerado,  organização  e",
+  "Tampão em conduletes e fechamentos de quadros"
+ ],
+ "pendencias": [],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "alto",
+   "Falhas construtivas a corrigir — registrar quais e o prazo"
+  ],
+  [
+   "medio",
+   "Organização e limpeza da obra: regular"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 0 funcionário(s) na visita"
+  ]
+ ],
+ "pedidos_estado": {
+  "54749": "ENTREGUE",
+  "55322": "ENTREGUE",
+  "55802": "ENTREGUE",
+  "56358": "ENTREGUE",
+  "56594": "ENTREGUE",
+  "57212": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv300-muysmbdif00xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif01xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif02xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif03xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif04xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif05xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif06xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif07xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif08xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif09xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif10xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif11xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif12xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif13xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv300-muysmbdif14xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "Registro da visita"
+  }
+ ],
+ "m001": "41.300_M002_EE-LEVI-PEREIRA-MARTINS_rev00.xlsx",
+ "autor": "Eng. Douglas",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 07/10/2026*\n_EE LEVI PEREIRA MARTINS · 2026.ATA.FDE.41.300 · ITAPECERICA DA SERRA_\n\n👷 Efetivo: 0 · ☀️ Tempo seco · Ritmo normal · Limpeza regular\n📊 Aprovado *45%* · Engenheiro *80%* · Fiscal FDE *48%* (LO 19/09)\n📅 Previsão de término: ?\n\n🔨 *Executado no dia*\n• Infra elétrica\n• Todas e variadores sala de aula\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n🚨 *Pontos de atenção*\n• Finalizar distribuição\n\n❗ *Recomendações*\n• Limpeza material gerado,  organização  e\n• Tampão em conduletes e fechamentos de quadros\n\n_Relatório nº 1 · Eng. Douglas · Engenharia Atlântica_"
+}

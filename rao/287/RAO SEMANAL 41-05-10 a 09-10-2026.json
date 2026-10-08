@@ -12,44 +12,40 @@
   "Sanitário",
   "Elétrica"
  ],
- "chegou": [],
+ "chegou": [
+  "56759"
+ ],
  "pendentes": [
-  "56759",
-  "57491"
+  "57637",
+  "57641"
  ],
  "sem_pedido": [
-  29585,
   29586,
-  29588,
   29598,
-  29600,
   29601,
   30337,
   30589,
   30653,
   30654,
-  30661,
   31118,
   31119,
-  31120,
   31121,
   31289,
   31455,
   31457,
   31461,
-  31622,
   31636
  ],
  "sem_entrega": [
-  "56759",
-  "57491"
+  "57637",
+  "57641"
  ],
- "pedidos_em": "07/10/2026 01:45",
- "gerado": "2026-10-07T01:45:01",
+ "pedidos_em": "08/10/2026 17:16",
+ "gerado": "2026-10-08T17:16:32",
  "avanco": {
   "aprovado": 10.523119398204555,
   "engenheiro": 20.0,
   "fiscal_lo": 20.0
  },
- "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EEPROF LAERT ALMEIDA SÃO BERNARDO · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *10,5%* · Engenheiro *20%* · Fiscal FDE *20%* (LO 30/09)\n\n🔨 *Executado na semana*\n• Muro\n• Sanitário\n• Elétrica\n\n📦 *Ainda sem entrega até 07/10/2026* — 2 pedido(s), R$ 3.591,40\n• 56759 — CIMENTO +1 itens — *15 dias* em aberto\n• 57491 — THINNER 18l — *1 dias* em aberto\n\n🛒 *Solicitado e ainda sem pedido de compra* — 21\n• sol. 29585 (13/07) — FINALIDADE: LINHAS DEMARCATÓRIAS DA QUADRA DE ES\n• sol. 29586 (13/07) — FINALIDADE: COMPONENTE ESPORTIVO\n• sol. 29588 (13/07) — FINALIDADE: TAPUME FDE ISOLAMENTO TALUDE\n• sol. 29598 (13/07) — FINALIDADE: MURO DE DIVISA\n• sol. 29600 (13/07) — FINALIDADE: TAPUME FDE ISOLAMENTO TALUDE\n• sol. 29601 (13/07) — FINALIDADE: AGUAS PLUVIAIS\n• ... e mais 15 solicitação(ões)\n\n_Situação dos pedidos em 07/10/2026 01:45_\n\n_Luis Júnior — Engenharia Atlântica_"
+ "whats": "📋 *RELATÓRIO SEMANAL — semana 41*\n_EEPROF LAERT ALMEIDA SÃO BERNARDO · 05/10/2026 a 09/10/2026_\n\n📅 1 visita(s) na semana\n📊 Aprovado *10,5%* · Engenheiro *20%* · Fiscal FDE *20%* (LO 30/09)\n\n🔨 *Executado na semana*\n• Muro\n• Sanitário\n• Elétrica\n\n✅ *Chegou na semana*\n• pedido 56759 — KPR COMERCIO DE MATERIAIS PARA\n\n📦 *Ainda sem entrega até 08/10/2026* — 2 pedido(s), R$ 2.960,00\n• 57637 — Rodízio — *1 dias* em aberto\n• 57641 — CAÇAMBA — *1 dias* em aberto\n\n🛒 *Solicitado e ainda sem pedido de compra* — 15\n• sol. 29586 (13/07) — FINALIDADE: COMPONENTE ESPORTIVO\n• sol. 29598 (13/07) — FINALIDADE: MURO DE DIVISA\n• sol. 29601 (13/07) — FINALIDADE: AGUAS PLUVIAIS\n• sol. 30337 (10/08) — FINALIDADE: DESCIDA PLUVIAL\n• sol. 30589 (19/08) — FINALIDADE: TAPUME E MURO\n• sol. 30653 (21/08) — FINALIDADE: TAPUME\n• ... e mais 9 solicitação(ões)\n\n_Situação dos pedidos em 08/10/2026 17:16_\n\n_Luis Júnior — Engenharia Atlântica_"
 }

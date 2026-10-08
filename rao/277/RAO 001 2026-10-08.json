@@ -1,0 +1,136 @@
+{
+ "tipo": "diario",
+ "obra": 277,
+ "lote": "42",
+ "unidade": "HENRIQUE FERNANDO GOMES ESTUDANTE",
+ "data": "2026-10-08",
+ "numero": 1,
+ "pct": "40",
+ "avanco": {
+  "aprovado": 25.308230701272116,
+  "engenheiro": 40.0,
+  "fiscal_lo": 34.0
+ },
+ "previsao": "21/02/2027",
+ "gerado": "2026-10-08T17:13:24",
+ "ficha": {
+  "funcionarios": "2",
+  "mao_de_obra": "Insuficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "40",
+  "ritmo": "Lento",
+  "limpeza": "Boa",
+  "previsao": null,
+  "visita": "09:52",
+  "responsavel": null
+ },
+ "servicos": [
+  "EXECUÇÃO DE INSTALAÇÕES HIDRÁULICAS NO BANHEIRO MASCULINO"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [
+  "CONFORME SOLICITAÇÃO DA DIREÇÃO, OS SERVIÇOS QUE GERAM RUÍDO NÃO SERÃO EXECUTADOS DURANTE O HORÁRIO DIURNO. O SERVIÇO NO LABORATÓRIO DE CIÊNCIAS NECESSITA DE QUEBRAS PARA ADEQUAÇÃO DOS PONTOS DE ÁGUA E ELÉTRICA. A EXECUÇÃO SERÁ PROGRAMADA PARA O PERÍODO NOTURNO OU FINAL DE SEMANA, EM DATA A SER ALINHADA"
+ ],
+ "recomendacoes": [],
+ "pendencias": [
+  "01 - AUMENTAR O EFETIVO NA OBRA",
+  "02 - PRIORIZAR E INTENSIFICAR AS FRENTES DE SERVIÇO DO LABORATÓRIO DE CIÊNCIAS"
+ ],
+ "alertas": [
+  [
+   "alto",
+   "Mão de obra insuficiente"
+  ],
+  [
+   "medio",
+   "Ritmo da obra: lento"
+  ],
+  [
+   "medio",
+   "Efetivo baixo: 2 funcionário(s) na visita"
+  ]
+ ],
+ "pedidos_estado": {
+  "52906": "ENTREGUE",
+  "53224": "ENTREGUE",
+  "53324": "ENTREGUE",
+  "53501": "ENTREGUE",
+  "53635": "ENTREGUE",
+  "53844": "ENTREGUE",
+  "54051": "ENTREGUE",
+  "54604": "ENTREGUE",
+  "54769": "ENTREGUE",
+  "54817": "ENTREGUE",
+  "54854": "ENTREGUE",
+  "55190": "ENTREGUE",
+  "55383": "ENTREGUE",
+  "55389": "ENTREGUE",
+  "55536": "ENTREGUE",
+  "55913": "ENTREGUE",
+  "56127": "ENTREGUE",
+  "56184": "ENTREGUE",
+  "56712": "ENTREGUE",
+  "56962": "ENTREGUE",
+  "57311": "ENTREGUE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv277-muzjxpatf00xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv277-muzjxpatf01xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv277-muzjxpatf02xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv277-muzjxpatf03xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv277-muzjxpatf04xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv277-muzjxpatf05xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIA 01"
+  },
+  {
+   "arquivo": "painelv277-muzjxpatf06xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIAS 01 E 02"
+  },
+  {
+   "arquivo": "painelv277-muzjxpatf07xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIAS 01 E 02"
+  },
+  {
+   "arquivo": "painelv277-muzjxpatf08xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIAS 01 E 02"
+  },
+  {
+   "arquivo": "painelv277-muzjxpatf09xxxx.jpg",
+   "data": "2026-10-08",
+   "legenda": "PENDÊNCIAS 01 E 02"
+  }
+ ],
+ "m001": "42.277_M003_HENRIQUE-FERNANDO-GOMES-ESTUDANTE_rev00.xlsx",
+ "autor": "Eng. Leonardo",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 08/10/2026*\n_HENRIQUE FERNANDO GOMES ESTUDANTE · 2026.ATA.FDE.42.277 · BARUERI_\n\n👷 Efetivo: 2 · ☀️ Tempo seco · Ritmo lento · Limpeza boa\n📊 Aprovado *25,3%* · Engenheiro *40%* · Fiscal FDE *34%* (LO 30/09)\n📅 Previsão de término: 21/02/2027\n\n🔨 *Executado no dia*\n• EXECUÇÃO DE INSTALAÇÕES HIDRÁULICAS NO BANHEIRO MASCULINO\n\n📦 *Materiais* — nenhum pedido pendente de entrega.\n\n🚨 *Pontos de atenção*\n• CONFORME SOLICITAÇÃO DA DIREÇÃO, OS SERVIÇOS QUE GERAM RUÍDO NÃO SERÃO EXECUTADOS DURANTE O HORÁRIO DIURNO. O SERVIÇO NO LABORATÓRIO DE CIÊNCIAS NECESSITA DE QUEBRAS PARA ADEQUAÇÃO DOS PONTOS DE ÁGUA E ELÉTRICA. A EXECUÇÃO SERÁ PROGRAMADA PARA O PERÍODO NOTURNO OU FINAL DE SEMANA, EM DATA A SER ALINHADA\n\n📌 *Pendências*\n• 01 - AUMENTAR O EFETIVO NA OBRA\n• 02 - PRIORIZAR E INTENSIFICAR AS FRENTES DE SERVIÇO DO LABORATÓRIO DE CIÊNCIAS\n\n_Relatório nº 1 · Eng. Leonardo · Engenharia Atlântica_"
+}
