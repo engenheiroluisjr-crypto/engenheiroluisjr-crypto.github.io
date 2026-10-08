@@ -58,6 +58,14 @@ tr.okrow td{background:color-mix(in srgb,var(--okb) 45%,transparent)}
   td{border:0;padding:4px 10px} td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--mut);text-transform:uppercase}
 }
 </style>
+<!-- 08/10: quando o painel abre esta pagina dentro de uma aba (iframe da mesma
+     origem), o "voltar ao painel" nao serve: ele recarregaria o painel inteiro
+     DENTRO do quadro. Some, e o quadro cresce ate a altura do conteudo para nao
+     existir rolagem dentro de rolagem. -->
+<style>html.emb .top a[href="./"]{display:none}
+html.emb,html.emb body{overflow-x:hidden}
+html.emb body{padding-bottom:0}</style>
+<script>if(window.parent!==window){document.documentElement.className+=' emb';}</script>
 </head>
 <body>
 <header class="top"><h1>Checklist de medições</h1><a href="./">← voltar ao painel</a></header>
@@ -83,7 +91,7 @@ var MES=['','janeiro','fevereiro','março','abril','maio','junho','julho','agost
 function mesNome(k){ var p=k.split('-'); return MES[+p[1]]+'/'+p[0]; }
 
 /* 08/10: sem escolha salva, abre na competencia que esta sendo inserida agora (ate o dia 20 = mes anterior) */
-var F={mes:ls('chkMes')||((new Date().getDate()<=20&&D.meses[1])?D.meses[1]:D.meses[0]), eng:ls('chkEng')||'', lote:'', pend:ls('chkPend')==='1', lib:ls('chkLib')==='1', busca:''};
+var F={mes:ls('chkMes')||((new Date().getDate()<=20&&D.meses[1])?D.meses[1]:D.meses[0]), eng:ls('chkEng')||'', lote:'', pend:ls('chkPend')==='1', lib:ls('chkLib')==='1', busca:'', obra:''};
 if(D.meses.indexOf(F.mes)<0) F.mes=D.meses[0];
 var M={}; /* k|campo -> {v,por,quando} vindo do servidor + fila local */
 var SY={st:'carregando',hora:''};
@@ -142,7 +150,8 @@ function sitPill(m){ if(!m) return '<span class="pill p-bad">sem medição no CT
 function linhas(){
   var med=D.med[F.mes]||{};
   return D.obras.filter(function(o){ return (med[String(o.c)]||/^4\./.test(o.s)); })
-    .filter(function(o){ return (!F.eng||o.e===F.eng)&&(!F.lote||o.l===F.lote)&&
+    .filter(function(o){ return (!F.obra||String(o.c)===F.obra)&&
+      (!F.eng||o.e===F.eng)&&(!F.lote||o.l===F.lote)&&
       (!F.busca||(o.c+' '+o.u).toLowerCase().indexOf(F.busca.toLowerCase())>=0); })
     .map(function(o){ var m=med[String(o.c)]||null, k=o.c+'|'+F.mes, rf=((D.rf||{})[String(o.c)]||{})[F.mes]||'';
       var pMan=val(k,'portal'), em=val(k,'email'), rfe=val(k,'rfenv');
@@ -237,6 +246,16 @@ app.addEventListener('input',function(e){ var t=e.target;
   if(t.id==='fQuem'){ ls(QCH,t.value); t.style.borderColor=''; }
   else if(t.id==='fBusca'){ F.busca=t.value; clearTimeout(render._t); render._t=setTimeout(render,250); }
 });
+/* 08/10: contexto vindo do painel. A pagina agora abre dentro de uma aba do
+   painel (iframe da mesma origem), entao ela nasce ja com o recorte que estava
+   na tela -- engenheiro, lote, obra, mes -- em vez de voltar para as 330. */
+(function(){ var P=new URLSearchParams(location.search);
+  if(P.get('obra')){ F.obra=P.get('obra'); F.pend=false; F.lib=false; }
+  if(P.get('eng')) F.eng=P.get('eng');
+  if(P.get('lote')) F.lote=P.get('lote');
+  if(P.get('q')) F.busca=P.get('q');
+  if(P.get('mes')&&D.meses.indexOf(P.get('mes'))>=0) F.mes=P.get('mes');
+})();
 render(); puxa().then(envia);
 setInterval(function(){ if(document.visibilityState==='visible'&&!fila().length) puxa(); },60000);
 })();

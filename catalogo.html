@@ -62,6 +62,14 @@ a.tg:hover{border-color:var(--pri)}
   td{border:0;padding:4px 10px} td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--mut);text-transform:uppercase}
 }
 </style>
+<!-- 08/10: quando o painel abre esta pagina dentro de uma aba (iframe da mesma
+     origem), o "voltar ao painel" nao serve: ele recarregaria o painel inteiro
+     DENTRO do quadro. Some, e o quadro cresce ate a altura do conteudo para nao
+     existir rolagem dentro de rolagem. -->
+<style>html.emb .top a[href="./"]{display:none}
+html.emb,html.emb body{overflow-x:hidden}
+html.emb body{padding-bottom:0}</style>
+<script>if(window.parent!==window){document.documentElement.className+=' emb';}</script>
 </head>
 <body>
 <header class="top"><h1>Catálogos técnicos FDE</h1><a href="./">← voltar ao painel</a></header>

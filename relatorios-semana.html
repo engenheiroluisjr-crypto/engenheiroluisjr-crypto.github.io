@@ -58,6 +58,14 @@ tr.just td{opacity:.6}
   td{border:0;padding:4px 10px} td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--mut);text-transform:uppercase}
 }
 </style>
+<!-- 08/10: quando o painel abre esta pagina dentro de uma aba (iframe da mesma
+     origem), o "voltar ao painel" nao serve: ele recarregaria o painel inteiro
+     DENTRO do quadro. Some, e o quadro cresce ate a altura do conteudo para nao
+     existir rolagem dentro de rolagem. -->
+<style>html.emb .top a[href="./"]{display:none}
+html.emb,html.emb body{overflow-x:hidden}
+html.emb body{padding-bottom:0}</style>
+<script>if(window.parent!==window){document.documentElement.className+=' emb';}</script>
 </head>
 <body>
 <header class="top"><h1>Relatórios da semana — acompanhamento (RAO) e segurança (SST)</h1><a href="./">← voltar ao painel</a></header>
@@ -252,6 +260,14 @@ app.addEventListener('input',function(e){ var t=e.target;
   else if(t.id==='fBusca'){ F.busca=t.value; clearTimeout(render._t); render._t=setTimeout(render,250); }
 });
 var qs=/[?&]eng=([^&]+)/.exec(location.search); if(qs){ var en=engN(decodeURIComponent(qs[1])); F.eng=en; }
+/* 08/10: contexto vindo do painel. A pagina agora abre dentro de uma aba do
+   painel (iframe da mesma origem), entao ela nasce ja com o recorte que estava
+   na tela -- engenheiro, lote, obra, mes -- em vez de voltar para as 330. */
+(function(){ var P=new URLSearchParams(location.search);
+  if(P.get('eng')) F.eng=P.get('eng');
+  if(P.get('lote')) F.lote=P.get('lote');
+  if(P.get('q')) F.busca=P.get('q');
+})();
 render(); puxa().then(envia);
 setInterval(function(){ if(document.visibilityState==='visible'&&!fila().length) puxa(); },60000);
 })();

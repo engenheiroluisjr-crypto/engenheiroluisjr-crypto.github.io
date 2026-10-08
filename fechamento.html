@@ -63,6 +63,14 @@ select,input{font:inherit;color:var(--tx);background:var(--card);border:1px soli
   .cab h1{font-size:15pt}.cardx .v{font-size:12pt}.it td{font-size:7.6pt}.pg th{font-size:7.8pt}
 }
 </style>
+<!-- 08/10: quando o painel abre esta pagina dentro de uma aba (iframe da mesma
+     origem), o "voltar ao painel" nao serve: ele recarregaria o painel inteiro
+     DENTRO do quadro. Some, e o quadro cresce ate a altura do conteudo para nao
+     existir rolagem dentro de rolagem. -->
+<style>html.emb .top a[href="./"]{display:none}
+html.emb,html.emb body{overflow-x:hidden}
+html.emb body{padding-bottom:0}</style>
+<script>if(window.parent!==window){document.documentElement.className+=' emb';}</script>
 </head>
 <body>
 <header class="top"><h1>Simulação de fechamento do empreiteiro</h1><a href="./">← voltar ao painel</a></header>
@@ -83,11 +91,11 @@ select,input{font:inherit;color:var(--tx);background:var(--card);border:1px soli
 </div>
 <div id="vazio" class="vazio"></div>
 <div id="rel"></div>
-<script src="fech.js?v=202610082147"></script>
-<script src="med_itens.js?v=202610082147"></script>
-<script src="sienge.js?v=202610082147"></script>
-<script src="sienge_itens.js?v=202610082147"></script>
-<script src="entregas.js?v=202610082147"></script>
+<script src="fech.js?v=202610081908"></script>
+<script src="med_itens.js?v=202610081908"></script>
+<script src="sienge.js?v=202610081908"></script>
+<script src="sienge_itens.js?v=202610081908"></script>
+<script src="entregas.js?v=202610081908"></script>
 <script src="libs/xlsx.mini.min.js"></script>
 <script>
 (function(){
@@ -311,6 +319,10 @@ function excel(){ var R=window.__R||[]; if(!R.length||!window.XLSX){ return; }
 
 /* ---- eventos ---- */
 opts();
+/* 08/10: lote e engenheiro tambem vem do painel, que agora abre esta pagina
+   dentro de uma aba (iframe) em vez de perder o recorte numa aba nova. */
+if(P.get('lote')) $('fLote').value=String(P.get('lote'));
+if(P.get('eng')) $('fEng').value=String(P.get('eng'));
 if(P.get('emp')) $('fEmp').value=String(P.get('emp')).toUpperCase();
 if(P.get('obras')){ $('fSit').value='todas'; String(P.get('obras')).split(',').forEach(function(k){ k=k.trim(); if(F[k]) SEL[k]=1; }); }
 else if(P.get('emp')){ lista().forEach(function(k){ SEL[k]=1; }); }
