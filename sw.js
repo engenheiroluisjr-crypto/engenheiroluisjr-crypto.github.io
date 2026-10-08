@@ -22,9 +22,12 @@
 /* v8 (06/10/2026): 'mat' e 'mat_aba' faltavam. O mat.js tem 1,1 MB e e o maior arquivo de
    dados do site; fora desta lista ele cai no ramo com ignoreSearch e fica preso na primeira
    versao baixada para sempre. O mat_aba.js e pior: o index carrega ele SEM carimbo ?v=. */
-const VERSAO = 'painel-v8';
+/* v9 (08/10/2026): 'comp' (banco de composicoes da calculadora, 365 KB) entra em DADOS:
+   fora desta lista ele cairia no ramo com ignoreSearch, onde o ?v= nao conta, e ficaria
+   preso na primeira versao baixada para sempre. */
+const VERSAO = 'painel-v9';
 const PRE = ['./', 'libs/jspdf.umd.min.js', 'libs/jspdf.plugin.autotable.min.js', 'libs/xlsx.mini.min.js'];
-const DADOS = /\/(fech|lo|seg|rao|relsem|catalogo|consolidado|sienge|sienge_itens|sienge_solic|entregas|sst_modelo|chk|mat|mat_aba)\.js$/;
+const DADOS = /\/(fech|lo|seg|rao|relsem|catalogo|consolidado|sienge|sienge_itens|sienge_solic|entregas|sst_modelo|chk|mat|mat_aba|comp)\.js$/;
 
 self.addEventListener('install', ev => {
   ev.waitUntil(caches.open(VERSAO).then(c => Promise.allSettled(PRE.map(u => c.add(u)))).then(() => self.skipWaiting()));
