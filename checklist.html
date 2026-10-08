@@ -82,7 +82,8 @@ function dbr(iso){ var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso||''); return m?m[3]
 var MES=['','janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 function mesNome(k){ var p=k.split('-'); return MES[+p[1]]+'/'+p[0]; }
 
-var F={mes:ls('chkMes')||D.meses[0], eng:ls('chkEng')||'', lote:'', pend:ls('chkPend')==='1', busca:''};
+/* 08/10: sem escolha salva, abre na competencia que esta sendo inserida agora (ate o dia 20 = mes anterior) */
+var F={mes:ls('chkMes')||((new Date().getDate()<=20&&D.meses[1])?D.meses[1]:D.meses[0]), eng:ls('chkEng')||'', lote:'', pend:ls('chkPend')==='1', lib:ls('chkLib')==='1', busca:''};
 if(D.meses.indexOf(F.mes)<0) F.mes=D.meses[0];
 var M={}; /* k|campo -> {v,por,quando} vindo do servidor + fila local */
 var SY={st:'carregando',hora:''};
@@ -115,6 +116,26 @@ function marca(k,campo,v){
 function val(k,c){ var a=M[k+'|'+c]; return a?a.v:null; }
 function quem(k,cs){ var b=null; cs.forEach(function(c){ var a=M[k+'|'+c]; if(a&&(!b||ts(a.quando)>ts(b.quando))) b=a; }); return b; }
 
+/* 08/10: LIBERADA PARA INSERIR. Regra do Luis: o portal so abre a medicao do mes quando a
+   medicao anterior esta APROVADA. Usa o historico da obra (D.hist: [comp, n, situacao, data aprov.]),
+   ignorando 0. PREVISAO (nao e medicao lancada). Primeira medicao da obra = liberada. */
+function mesAnt(k){ var p=k.split('-'), y=+p[0], m=+p[1]-1; if(!m){ m=12; y--; } return y+'-'+(m<10?'0':'')+m; }
+function mesCurto(k){ var p=k.split('-'); return MES[+p[1]].slice(0,3)+'/'+p[0].slice(2); }
+function sitTxt(s){ var r=String(s||'').replace(/^[\d.]+\s*/,''); return r?r.charAt(0)+r.slice(1).toLowerCase():'—'; }
+function libera(o,k){
+  var h=((D.hist||{})[String(o.c)]||[]).filter(function(x){ return !/^0/.test(x[2]); });
+  var ja=null, ant=null; h.forEach(function(x){ if(x[0]===k) ja=x; else if(x[0]<k) ant=x; });
+  if(ja) return {st:'ins', m:ja};
+  if(!ant) return {st:'lib', prim:true};
+  if(/^4/.test(ant[2])) return ant[0]===mesAnt(k)?{st:'lib', ant:ant}:{st:'falta', ant:ant, falta:mesAnt(k)};
+  return {st:'trav', ant:ant};
+}
+function libCel(L){
+  if(L.st==='ins') return '<span class="pill p-na">já inserida</span><div class="mini">M'+esc(L.m[1])+' · '+esc(sitTxt(L.m[2]))+'</div>';
+  if(L.st==='lib') return '<span class="pill p-ok">✓ liberada</span><div class="mini">'+(L.prim?'1ª medição da obra':'M'+esc(L.ant[1])+' ('+mesCurto(L.ant[0])+') aprovada'+(L.ant[3]?' em '+esc(L.ant[3]):''))+'</div>';
+  if(L.st==='falta') return '<span class="pill p-warn">falta '+mesCurto(L.falta)+'</span><div class="mini">última: M'+esc(L.ant[1])+' ('+mesCurto(L.ant[0])+') aprovada — inserir '+mesCurto(L.falta)+' primeiro</div>';
+  return '<span class="pill p-bad">travada</span><div class="mini">M'+esc(L.ant[1])+' ('+mesCurto(L.ant[0])+') em '+esc(sitTxt(L.ant[2]))+'</div>';
+}
 function sitPill(m){ if(!m) return '<span class="pill p-bad">sem medição no CTR</span>';
   var s=m.sit||'', rot=s.replace(/^[\d.]+\s*/,''), c=/^4/.test(s)?'p-ok':/^3/.test(s)?'p-warn':/^[12]/.test(s)?'p-warn':'p-bad';
   return '<span class="pill '+c+'">'+esc(rot?rot.charAt(0)+rot.slice(1).toLowerCase():'—')+'</span>'; }
@@ -130,8 +151,8 @@ function linhas(){
       /* 02/10: RF enviado por WhatsApp e/ou e-mail (rfwa / rfem); 'rfenv' antigo continua valendo */
       var sim=function(v){ return v===true||v==='1'; }, rfwa=sim(val(k,'rfwa')), rfem=sim(val(k,'rfem'));
       var rfok=sim(rfe)||rfwa||rfem;
-      return {o:o,m:m,k:k,rf:rf,ins:ins,auto:!!(m&&m.portal),em:sim(em),envio:envio,rfg:!!rf,rfok:rfok,rfwa:rfwa,rfem:rfem,rfant:sim(rfe)&&!rfwa&&!rfem,ok:envio&&rfok,obs:val(k,'obs')||''}; })
-    .filter(function(x){ return !F.pend||!x.ok; });
+      return {lib:libera(o,F.mes),o:o,m:m,k:k,rf:rf,ins:ins,auto:!!(m&&m.portal),em:sim(em),envio:envio,rfg:!!rf,rfok:rfok,rfwa:rfwa,rfem:rfem,rfant:sim(rfe)&&!rfwa&&!rfem,ok:envio&&rfok,obs:val(k,'obs')||''}; })
+    .filter(function(x){ return (!F.pend||!x.ok)&&(!F.lib||x.lib.st==='lib'); });
 }
 function pintaSync(){ var e=document.getElementById('sync'); if(!e) return;
   var n=fila().length; e.className='sync '+(SY.st==='ok'?'ok':SY.st==='erro'?'err':'');
@@ -140,6 +161,7 @@ function render(){
   var y=window.scrollY, foco=document.activeElement&&document.activeElement.id;
   var engs={}; D.obras.forEach(function(o){ if(o.e) engs[o.e]=1; });
   var L=linhas(), tot=L.length;
+  var nFal=L.filter(function(x){return x.lib.st==='falta';}).length, nLib=L.filter(function(x){return x.lib.st==='lib';}).length, nTrav=L.filter(function(x){return x.lib.st==='trav';}).length;
   var nIns=L.filter(function(x){return x.ins;}).length, nEm=L.filter(function(x){return x.em;}).length,
       nRfg=L.filter(function(x){return x.rfg;}).length, nRf=L.filter(function(x){return x.rfok;}).length, nOk=L.filter(function(x){return x.ok;}).length;
   var h='<div class="barra">'+
@@ -148,20 +170,36 @@ function render(){
     '<label class="f">Lote<select id="fLote"><option value="">41 e 42</option><option'+(F.lote==='41'?' selected':'')+'>41</option><option'+(F.lote==='42'?' selected':'')+'>42</option></select></label>'+
     '<label class="f">Buscar obra<input id="fBusca" value="'+esc(F.busca)+'" placeholder="nº ou escola"></label>'+
     '<label class="chk"><input type="checkbox" id="fPend"'+(F.pend?' checked':'')+'> só pendentes</label>'+
+    '<label class="chk"><input type="checkbox" id="fLib"'+(F.lib?' checked':'')+'> só liberadas para inserir</label>'+
     '<label class="f" style="margin-left:auto">Marcando como<input id="fQuem" value="'+esc(ls(QCH)||'')+'" placeholder="seu nome"></label></div>';
   h+='<div class="kpi"><div><b>'+tot+'</b><span>obras em '+mesNome(F.mes)+'</span></div>'+
      '<div><b>'+nIns+'</b><span>inseridas no portal</span></div><div><b>'+nEm+'</b><span>enviadas por e-mail</span></div>'+
      '<div><b>'+nRfg+'</b><span>RF gerado (pasta da obra)</span></div><div><b>'+nRf+'</b><span>RF enviado</span></div>'+
-     '<div><b style="color:var('+(nOk===tot?'--ok':'--bad')+')">'+(tot-nOk)+'</b><span>com pendência</span></div></div>';
+     '<div><b style="color:var('+(nOk===tot?'--ok':'--bad')+')">'+(tot-nOk)+'</b><span>com pendência</span></div>'+
+     '<div><b style="color:var(--ok)">'+nLib+'</b><span>liberadas para inserir</span></div><div><b style="color:var(--bad)">'+nTrav+'</b><span>travadas (anterior não aprovada)</span></div>'+
+     (nFal?'<div><b style="color:var(--warn)">'+nFal+'</b><span>falta inserir '+mesCurto(mesAnt(F.mes))+'</span></div>':'')+'</div>';
+  /* 08/10: quadro de conferencia rapida — o que da para inserir agora no portal */
+  var LL=L.filter(function(x){ return x.lib.st==='lib'; }).sort(function(a,b){ return a.o.l.localeCompare(b.o.l)||a.o.c-b.o.c; });
+  h+='<h2>Liberadas para inserir em '+mesNome(F.mes)+' · '+LL.length+' obra(s)</h2>';
+  if(LL.length){ h+='<table><thead><tr><th>Obra</th><th>Lote</th><th>Engenheiro</th><th>Medição anterior</th><th>Observação</th></tr></thead><tbody>'+
+    LL.map(function(x){ var o=x.o, A=x.lib.ant; return '<tr><td class="obra" data-l="Obra"><b>'+o.c+' — '+esc(o.u)+'</b><span>'+esc(o.cid||'')+(o.ct?' · '+esc(o.ct):'')+'</span></td>'+
+      '<td data-l="Lote">L'+esc(o.l)+'</td><td data-l="Engenheiro">'+esc(o.e||'—')+'</td>'+
+      '<td data-l="Medição anterior">'+(A?'M'+esc(A[1])+' · '+mesCurto(A[0])+' · aprovada'+(A[3]?' '+esc(A[3]):''):'1ª medição da obra')+'</td>'+
+      '<td data-l="Observação">'+(x.o.s&&!/^4/.test(x.o.s)?esc(x.o.s):'')+'</td></tr>'; }).join('')+'</tbody></table>'; }
+  else h+='<p class="mini">Nenhuma obra liberada com esse filtro.</p>';
+  var LF=L.filter(function(x){ return x.lib.st==='falta'; });
+  if(LF.length) h+='<p class="mini" style="color:var(--warn);margin-top:6px">'+LF.length+' obra(s) com a última medição aprovada antes de '+mesCurto(mesAnt(F.mes))+' e sem a de '+mesCurto(mesAnt(F.mes))+' no CTR — precisam inserir '+mesCurto(mesAnt(F.mes))+' primeiro: '+
+    LF.map(function(x){ return x.o.c; }).join(', ')+'.</p>';
   h+='<p class="sync" id="sync"></p>';
   var por={}; L.forEach(function(x){ (por[x.o.e||'Sem engenheiro']=por[x.o.e||'Sem engenheiro']||[]).push(x); });
   Object.keys(por).sort().forEach(function(e){
     var g=por[e];
     h+='<h2>'+esc(e)+' · '+g.filter(function(x){return x.ok;}).length+' de '+g.length+' completas</h2><table><thead><tr>'+
-      '<th>Obra</th><th>Medição</th><th>Situação</th><th>Inserida no portal</th><th>Enviada por e-mail</th><th>RF gerado</th><th>RF enviado</th><th>Observação</th></tr></thead><tbody>';
+      '<th>Obra</th><th>Liberada p/ inserir</th><th>Medição</th><th>Situação</th><th>Inserida no portal</th><th>Enviada por e-mail</th><th>RF gerado</th><th>RF enviado</th><th>Observação</th></tr></thead><tbody>';
     g.forEach(function(x){ var o=x.o, m=x.m, q=quem(x.k,['portal','email','rfenv','rfwa','rfem','obs']);
       h+='<tr class="'+(x.ok?'okrow':'')+'">'+
         '<td class="obra" data-l="Obra"><b>'+o.c+' — '+esc(o.u)+'</b><span>L'+esc(o.l)+(o.cid?' · '+esc(o.cid):'')+(o.ct?' · '+esc(o.ct):'')+'</span></td>'+
+        '<td data-l="Liberada p/ inserir">'+libCel(x.lib)+'</td>'+
         '<td data-l="Medição">'+(m?'<b>M'+esc(m.n)+'</b><div class="mini">ref. '+mesNome(F.mes)+'</div>':'—')+'</td>'+
         '<td data-l="Situação">'+sitPill(m)+(m&&m.dp?'<div class="mini">desde '+dbr(m.dp)+'</div>':'')+(m&&m.ap&&/^4/.test(m.sit)?'<div class="mini">aprovada '+esc(m.ap.slice(0,10))+'</div>':'')+'</td>'+
         '<td data-l="Inserida no portal">'+(x.auto?'<span class="pill p-ok">✓ no portal</span><div class="auto">pela varredura</div>':
@@ -178,7 +216,8 @@ function render(){
   });
   if(!L.length) h+='<p class="mini" style="margin-top:14px">Nenhuma obra com esse filtro.</p>';
   h+='<p class="mini" style="margin-top:16px">Situação e “inserida no portal” vêm da varredura do portal (CTR) · “RF gerado” é o arquivo RF … '+F.mes.split('-')[1]+'-'+F.mes.split('-')[0]+' na pasta da obra · dados de '+esc(D.ger)+'. '+
-     'E-mail e RF enviado (WhatsApp ou e-mail) ficam salvos para todos os aparelhos.</p>';
+     'E-mail e RF enviado (WhatsApp ou e-mail) ficam salvos para todos os aparelhos. '+
+     '<b>Liberada para inserir</b>: a medição do mês anterior ao escolhido está aprovada no portal (ou é a 1ª medição da obra); <b>travada</b>: a anterior ainda está em análise/edição; <b>falta</b>: a obra não tem a medição do mês anterior — inserir aquela primeiro.</p>';
   app.innerHTML=h; pintaSync();
   if(foco){ var f=document.getElementById(foco); if(f){ f.focus(); if(f.setSelectionRange&&f.value) f.setSelectionRange(f.value.length,f.value.length); } }
   window.scrollTo(0,y);
@@ -191,6 +230,7 @@ app.addEventListener('change',function(e){ var t=e.target;
   else if(t.id==='fEng'){ F.eng=t.value; ls('chkEng',F.eng); render(); }
   else if(t.id==='fLote'){ F.lote=t.value; render(); }
   else if(t.id==='fPend'){ F.pend=t.checked; ls('chkPend',F.pend?'1':'0'); render(); }
+  else if(t.id==='fLib'){ F.lib=t.checked; ls('chkLib',F.lib?'1':'0'); render(); }
   else if(t.classList.contains('obs')){ if(t.value!==(val(t.dataset.k,'obs')||'')&&marca(t.dataset.k,'obs',t.value)) render(); }
 });
 app.addEventListener('input',function(e){ var t=e.target;
