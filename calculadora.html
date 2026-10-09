@@ -82,7 +82,7 @@ html.emb body{padding-bottom:0}</style>
 <body>
 <header class="top"><h1>Calculadora de materiais FDE</h1><a href="./">← voltar ao painel</a></header>
 <main id="app"><p>Carregando…</p></main>
-<script src="comp.js?v=202610090235"></script>
+<script src="comp.js?v=202610091103"></script>
 <script src="libs/xlsx.mini.min.js"></script>
 <script>
 (function(){
@@ -259,47 +259,369 @@ var PECAS={
  }
 };
 
-var P=[];            /* o projeto: [{c:cod, q:quantidade}] */
+/* ===========================================================================
+   MODELOS PELO DESENHO — 09/10/2026
+   Regra do Luis: quando o desenho do projeto padrão e a composição da FDE
+   discordam, VALE O DESENHO. A composição continua aparecendo ao lado, para a
+   conferência da medição.
+
+   Cada modelo recebe as medidas digitadas e devolve as linhas de quantitativo
+   com a conta escrita (memória de cálculo). As linhas com "ins" substituem o
+   insumo de mesmo código da composição FDE na lista de material; as demais são
+   informativas (volumes de argamassa, graute, áreas de revestimento).
+
+   Fonte de cada número: as pranchas do Catálogo de Componentes da FDE em
+   00. CATALOGOS TECNICOS FDE/07 - Componentes, lidas em 09/10/2026.
+=========================================================================== */
+var KGM={'4.2':0.109,'5':0.154,'6.3':0.245,'8':0.395,'10':0.617,'12.5':0.963};
+var BARRA_CHATA={'1x1/4':1.266,'1/2x1/8':0.3165,'19x4.76':0.712,'76x8':4.773};
+var PI=Math.PI;
+function r2(v){ return Math.round(v*100)/100; }
+function f2(v,d){ return Number(v).toLocaleString('pt-BR',{minimumFractionDigits:d==null?2:d,maximumFractionDigits:d==null?2:d}); }
+function ceil(v){ return Math.ceil(v-1e-9); }
+
+/* acumulador de aço: soma metros por bitola, guarda a conta de cada parcela */
+function Aco(){ this.m={}; this.c={}; }
+Aco.prototype.add=function(d,metros,conta){
+  this.m[d]=(this.m[d]||0)+metros; (this.c[d]=this.c[d]||[]).push(conta+' = '+f2(metros)+' m'); };
+Aco.prototype.linhas=function(sec,ca50,ca60){
+  var L=[], self=this;
+  Object.keys(this.m).sort(function(a,b){return +b-+a;}).forEach(function(d){
+    var m=self.m[d], kg=m*KGM[d], fino=(+d<=5);
+    var ins=fino&&ca60?ca60:ca50;
+    L.push({sec:sec, item:'Aço '+(fino&&ca60?'CA-60':'CA-50')+' ø'+d.replace('.',',')+' mm', q:kg, un:'kg', ins:ins,
+      conta:self.c[d].join(' · ')+' → '+f2(m)+' m × '+f2(KGM[d],3)+' kg/m',
+      extra:ceil(m/12)+' barra(s) de 12 m', bit:d, metros:m});
+  });
+  return L;
+};
+
+/* trespasse de barra corrida: 50 diâmetros a cada 12 m */
+function corrida(L,d){ return L*(1+0.05*(+d)/12); }
+
+/* ---------------------------------------------------------------- muros FD */
+/* FD-16 e FD-24 têm a mesma fundação: broca ø25 + baldrame 25×20 + pilarete 14×14 */
+function muroBase(o){
+  var L=o.L, out=[], aco=new Aco();
+  var vaos=ceil(L/o.esp), pil=vaos+1, Lalv=Math.max(L-pil*0.14,0);
+  out.push({sec:'Peças', item:'Vãos entre pilaretes', q:vaos, un:'un', conta:'L ÷ '+f2(o.esp)+' m = '+f2(L/o.esp)+', arredondado para cima'});
+  out.push({sec:'Peças', item:'Pilaretes 14×14 cm', q:pil, un:'un', conta:'vãos + 1'});
+  out.push({sec:'Peças', item:'Brocas ø25 cm × '+f2(o.prof)+' m', q:pil, un:'un', conta:'1 sob cada pilarete'});
+  out.push({sec:'Peças', item:'Juntas de dilatação 2 cm', q:Math.max(0,ceil(L/30)-1), un:'un', conta:'a cada 30,00 m no máximo'});
+  var vBroca=pil*PI*0.125*0.125*o.prof, vBald=L*0.25*0.20, vPil=pil*0.14*0.14*o.hp, vCim=L*0.0110;
+  out.push({sec:'Concreto fck 25', item:'Brocas', q:vBroca, un:'m³', ins:'2.05.36', conta:pil+' × π × 0,125² × '+f2(o.prof)});
+  out.push({sec:'Concreto fck 25', item:'Viga baldrame 25×20', q:vBald, un:'m³', ins:'2.05.36', conta:f2(L)+' × 0,25 × 0,20'});
+  out.push({sec:'Concreto fck 25', item:'Pilaretes 14×14', q:vPil, un:'m³', ins:'2.05.36', conta:pil+' × 0,14 × 0,14 × '+f2(o.hp)+' (topo do baldrame à cimalha)'});
+  out.push({sec:'Concreto fck 25', item:'Cimalha com pingadeira', q:vCim, un:'m³', ins:'2.05.36', conta:f2(L)+' × 0,0110 m² (Det. 01: 23×5 cm menos a pingadeira)'});
+  /* aço */
+  aco.add('12.5', pil*4*(o.prof+0.15), 'brocas: '+pil+' × 4 × ('+f2(o.prof)+' + 0,15 ancoragem)');
+  var nEb=Math.floor(o.prof/0.15)+1;
+  aco.add('4.2', pil*nEb*(PI*0.19+0.10), 'estribos broca: '+pil+' × '+nEb+' × (π×0,19 + 0,10)');
+  aco.add('10', 4*corrida(L,'10'), 'baldrame: 4 × '+f2(L)+' + trespasse');
+  var nEv=ceil(L/0.12)+1;
+  aco.add('5', nEv*0.76, 'estribos baldrame: '+nEv+' × 0,76 (19×14 + ganchos)');
+  aco.add('12.5', pil*4*(o.hp+0.25), 'pilaretes: '+pil+' × 4 × ('+f2(o.hp)+' + 0,25 ancoragem)');
+  var nEp=ceil(o.hp/0.12)+1;
+  aco.add('5', pil*nEp*0.46, 'estribos pilarete: '+pil+' × '+nEp+' × 0,46 (9×9 + ganchos)');
+  aco.add('6.3', o.canaletas*2*corrida(L,'6.3'), 'canaletas: '+o.canaletas+' × 2 × '+f2(L)+' + trespasse');
+  var lados=Math.max(2*pil-2,0), niv=Math.floor(o.fiadas/2);
+  aco.add('6.3', lados*niv*0.80, 'amarração bloco/pilarete: '+lados+' lados × '+niv+' níveis × 0,80');
+  /* alvenaria */
+  var nB=o.blocosFiadas*Lalv/0.40, nC=o.canaletas*Lalv/0.40;
+  out.push({sec:'Alvenaria', item:'Bloco de concreto 14×19×39', q:nB, un:'un', ins:'2.25.77',
+    conta:o.blocosFiadas+' fiadas × '+f2(Lalv)+' m ÷ 0,40 (L menos '+pil+' pilaretes de 0,14)'});
+  out.push({sec:'Alvenaria', item:'Bloco canaleta 14×19×39', q:nC, un:'un', ins:'2.25.96',
+    conta:o.canaletas+' fiada(s) × '+f2(Lalv)+' m ÷ 0,40'});
+  out.push({info:1,sec:'Argamassas (volume)', item:'Graute das canaletas', q:o.canaletas*Lalv*0.0135, un:'m³',
+    conta:o.canaletas+' × '+f2(Lalv)+' × 0,0135 m² (vazio da canaleta 9×15 cm)'});
+  if(o.enchidas) out.push({info:1,sec:'Argamassas (volume)', item:'Graute dos blocos enterrados (com enchimento)', q:o.enchidas*Lalv*0.0133, un:'m³',
+    conta:o.enchidas+' fiadas × '+f2(Lalv)+' × 0,0133 m³/m (2 furos por bloco)'});
+  var aAlv=Lalv*o.halv;
+  out.push({info:1,sec:'Argamassas (volume)', item:'Argamassa de assentamento 1:0,5:4,5', q:aAlv*0.0103, un:'m³',
+    conta:f2(aAlv)+' m² de alvenaria × 0,0103 m³/m² (junta de 1 cm)'});
+  out.push({info:1,sec:'Revestimento', item:'Chapisco fino, duas faces', q:2*L*o.hfora, un:'m²',
+    conta:'2 × '+f2(L)+' × '+f2(o.hfora)+' (acima do terreno)'});
+  out.push({info:1,sec:'Impermeabilização', item:'Cristalização: baldrame + embasamento + 15 cm', q:L*(0.25+2*0.20+2*(0.30+0.15)), un:'m²',
+    conta:f2(L)+' × (0,25 + 2×0,20 + 2×0,45)'});
+  return {out:out, aco:aco, pil:pil, vaos:vaos};
+}
+
+var MODELOS={
+ '16.01.016':{
+   campos:[{k:'L',r:'Comprimento (m)'}],
+   medida:function(d){ return d.L; },
+   calc:function(d){
+     var b=muroBase({L:d.L, esp:2.53, prof:3.00, hp:2.60, fiadas:13, blocosFiadas:11, canaletas:2,
+                     halv:2.60, hfora:2.30});
+     var out=b.out.concat(b.aco.linhas('Aço','2.15.25',null));
+     return {linhas:out, notas:[
+       'Pilaretes a 2,53 m <b>no máximo</b>: a contagem é a mínima. Canto, portão e escalonamento pedem pilarete próprio.',
+       'Alvenaria de 2,60 m do baldrame à cimalha (Corte AA: 99,95 + 20 + 120 + 20): 13 fiadas, das quais 2 em canaleta.',
+       'Estribos ø4,2 e ø5 lançados como CA-50, como a composição e o texto da prancha (S4.01).']};
+   }},
+ '16.01.029':{
+   campos:[{k:'L',r:'Comprimento (m)'}],
+   medida:function(d){ return d.L; },
+   calc:function(d){
+     var b=muroBase({L:d.L, esp:2.17, prof:2.50, hp:0.85, fiadas:4, blocosFiadas:3, canaletas:1, enchidas:2,
+                     halv:0.80, hfora:0.53});
+     var out=b.out.concat(b.aco.linhas('Aço','2.15.25','2.15.38'));
+     out.push({sec:'Gradil', item:'Painel gradil eletrofundido H=1718 C=2170', q:b.vaos, un:'un', ins:'3.14.07', conta:'1 por vão de 2,17 m'});
+     out.push({sec:'Gradil', item:'Montante p/ gradil H=2114 (barra chata 76×8)', q:b.pil, un:'un', ins:'3.10.91', conta:'1 em cada pilarete, chumbado 30 cm'});
+     out.push({sec:'Gradil', item:'Conjunto parafuso anti-roubo', q:2*b.pil, un:'cj', conta:'2 por montante'});
+     return {linhas:out, notas:[
+       'Montantes a cada <b>2,17 m</b> (Vista externa e Exemplo de escalonamento). A composição do boletim usa 0,667 montante e 0,607 painel por metro — '+
+       'o desenho dá '+f2((b.pil)/d.L,3)+' e '+f2(b.vaos/d.L,3)+'. <b>Vale o desenho.</b>',
+       'Mureta de 85 cm do baldrame à cimalha (Det. 2): 4 fiadas (3 blocos + 1 canaleta), as 2 de baixo com enchimento; broca de 2,50 m.']};
+   }},
+ '16.04.019':{ /* FQ-01 fundos */
+   campos:[{k:'L',r:'Comprimento (m)'}],
+   medida:function(d){ return d.L; },
+   calc:function(d){ return fq01(d.L,'fundos'); }},
+ '16.04.031':{ /* FQ-01 laterais */
+   campos:[{k:'L',r:'Comprimento (m)'},{k:'ext',r:'Encontro com os fundos (nº de pontas)',def:2,int:1}],
+   medida:function(d){ return d.L; },
+   calc:function(d){ return fq01(d.L,'laterais',d.ext); }},
+ '16.04.034':{ /* FQ-02 */
+   campos:[{k:'L',r:'Comprimento (m)'},{k:'H',r:'Altura da tela (m)'}],
+   medida:function(d){ return d.L*d.H; },
+   calc:function(d){
+     var L=d.L, H=d.H, vaos=ceil(L/2.55), mont=vaos+1, pares=Math.max(0,ceil(vaos/4)-1);
+     var esc=2+2*pares, lEsc=0.75*H/Math.cos(PI/6), lMont=H+0.10+0.50;
+     var out=[
+      {sec:'Peças', item:'Vãos (255 cm no máximo)', q:vaos, un:'un', conta:'L ÷ 2,55, para cima'},
+      {sec:'Peças', item:'Montantes', q:mont, un:'un', conta:'vãos + 1'},
+      {sec:'Peças', item:'Escoramentos', q:esc, un:'un', conta:'1 em cada ponta + 1 par a cada 4 vãos ('+pares+' par(es))'},
+      {sec:'Tubos', item:'Montante ø2" e=2 mm', q:mont*lMont, un:'m', ins:'6.05.16', conta:mont+' × ('+f2(H)+' + 0,10 + 0,50 chumbado)'},
+      {sec:'Tubos', item:'Travamentos superior e inferior ø1¼"', q:2*L, un:'m', ins:'6.05.15', conta:'2 × '+f2(L)},
+      {sec:'Tubos', item:'Escoramentos ø1¼"', q:esc*lEsc, un:'m', ins:'6.05.15', conta:esc+' × (0,75×'+f2(H)+' ÷ cos 30°)'},
+      {sec:'Tela', item:'Tela fio 10 malha 2"', q:L*H, un:'m²', ins:'2.75.09', conta:f2(L)+' × '+f2(H)},
+      {sec:'Acessórios', item:'Grapas soldadas (2 por montante)', q:2*mont, un:'un', conta:'2 × '+mont},
+      {sec:'Acessórios', item:'Conjunto parafuso 3/8" (2 por escoramento)', q:2*esc, un:'cj', conta:'2 × '+esc}];
+     return {linhas:out, notas:['Montantes a <b>2,55 m no máximo</b>, chumbados no mínimo 50 cm no pilarete do muro; 10 cm entre o muro e o travamento inferior.',
+       'Muro escalonado: escoramento em todos os seccionamentos — some 2 escoramentos por degrau.']};
+   }},
+ '16.01.090':{ /* FE-01 */
+   campos:[{k:'L',r:'Comprimento (m)'},{k:'H',r:'Altura (1,20 a 2,00 m)'}],
+   medida:function(d){ return d.L*d.H; },
+   calc:function(d){
+     var L=d.L, H=d.H, vaos=ceil(L/1.80), mont=vaos+1, vao=L/vaos, lMont=H+0.10+0.50;
+     var vB=mont*(PI*0.10*0.10*0.62+0.15*0.15*0.19);
+     var out=[
+      {sec:'Peças', item:'Vãos (180 cm)', q:vaos, un:'un', conta:'L ÷ 1,80, para cima'},
+      {sec:'Peças', item:'Montantes / bases', q:mont, un:'un', conta:'vãos + 1'},
+      {sec:'Base', item:'Bloco de concreto 19×19×19', q:mont, un:'un', ins:'2.25.09', conta:'1 por base'},
+      {sec:'Base', item:'Concreto fck 20 — broca ø20 + enchimento do bloco', q:vB, un:'m³', ins:'2.05.35',
+        conta:mont+' × (π×0,10²×0,62 + 0,15×0,15×0,19)'},
+      {info:1,sec:'Serralheria', item:'Montante tubo galv. ø38,1 e=2 mm', q:mont*lMont, un:'m', conta:mont+' × ('+f2(H)+' + 0,10 + 0,50 chumbado)'},
+      {info:1,sec:'Serralheria', item:'Travamentos ø38,1 (superior e inferior)', q:2*L, un:'m', conta:'2 × '+f2(L)},
+      {info:1,sec:'Serralheria', item:'Requadro barra chata 19,05×4,76', q:vaos*2*((vao-0.04)+H), un:'m', conta:vaos+' × 2 × ('+f2(vao-0.04)+' + '+f2(H)+')',
+        extra:f2(vaos*2*((vao-0.04)+H)*BARRA_CHATA['19x4.76'],1)+' kg'},
+      {info:1,sec:'Tela', item:'Tela fio 10 malha 2"', q:L*H, un:'m²', conta:f2(L)+' × '+f2(H)},
+      {sec:'Fornecimento', item:'FE-01 gradil tipo alambrado completo', q:L*H, un:'m²', ins:'3.15.96', conta:f2(L)+' × '+f2(H)}];
+     return {linhas:out, notas:['Montantes a cada <b>1,80 m</b>, base de concreto 20×20 com broca ø20 (80 cm mínimo abaixo do piso), chumbamento mínimo de 50 cm.',
+       'A composição 16.01.090 traz <b>0,03472 bloco por m²</b>; o desenho pede 1 bloco por base, ou '+f2(mont/(L*H),3)+'/m² nesta medida — '+
+       'o coeficiente do boletim parece ter uma casa decimal a menos. <b>Vale o desenho.</b>']};
+   }},
+ '16.01.091':{ /* FE-02 */
+   campos:[{k:'L',r:'Comprimento (m)'},{k:'H',r:'Altura do gradil',sel:[[0.662,'66,2 cm'],[0.926,'92,6 cm'],[1.322,'132,2 cm'],[1.718,'171,8 cm']],def:1.322}],
+   medida:function(d){ return d.L*d.H; },
+   calc:function(d){
+     var L=d.L, H=d.H, pain=ceil(L/2.17), mont=pain+1;
+     var vB=mont*(PI*0.10*0.10*0.62+0.15*0.15*0.19);
+     var out=[
+      {sec:'Gradil', item:'Painel gradil eletrofundido C=2170 H='+f2(H*100,1)+' cm', q:pain, un:'un', ins:'3.14.07', conta:'L ÷ 2,17, para cima'},
+      {sec:'Gradil', item:'Montante barra chata 76×8 (chumbado 30 cm)', q:mont, un:'un', ins:'3.10.91', conta:'painéis + 1'},
+      {sec:'Gradil', item:'Conjunto parafuso cab. sextavada', q:2*mont, un:'cj', conta:'2 por montante'},
+      {sec:'Base', item:'Bloco de concreto 19×19×19', q:mont, un:'un', ins:'2.25.09', conta:'1 por base'},
+      {sec:'Base', item:'Concreto fck 20 — broca ø20 + enchimento do bloco', q:vB, un:'m³', ins:'2.05.35',
+        conta:mont+' × (π×0,10²×0,62 + 0,15×0,15×0,19)'}];
+     return {linhas:out, notas:['A composição 16.01.091 é calculada para o gradil de <b>132,2 cm</b> (0,349 painel/m² = 1 ÷ (2,17 × 1,322)). '+
+       'Em outra altura o coeficiente por m² não vale: aqui a contagem sai por painel.',
+       'Painéis e montantes da tabela de alturas da prancha; montante chumbado 30 cm na base de concreto.']};
+   }},
+ '06.03.032':{ /* GR-01 */
+   campos:[{k:'W',r:'Largura (m)'},{k:'H',r:'Altura (m)'},{k:'n',r:'Quantas grades iguais',def:1,int:1}],
+   medida:function(d){ return d.W*d.H*d.n; },
+   calc:function(d){
+     var W=d.W, H=d.H, n=d.n, nv=ceil((W-0.02)/0.15)+1, nh=ceil((H-0.02)/0.15)+1;
+     var m=(nv*H+nh*W), kg=m*BARRA_CHATA['1x1/4'];
+     var lado=ceil((H-0.16)/0.60)+1, topo=Math.max(0,ceil((W-0.16)/0.60)-1), fx=2*lado+2*topo;
+     var out=[
+      {info:1,sec:'Grade', item:'Barras verticais', q:nv*n, un:'un', conta:'('+f2(W)+' − 0,02) ÷ 0,15, para cima, + 1 — por grade'},
+      {info:1,sec:'Grade', item:'Barras horizontais', q:nh*n, un:'un', conta:'('+f2(H)+' − 0,02) ÷ 0,15, para cima, + 1 — por grade'},
+      {info:1,sec:'Grade', item:'Barra chata 1"×1/4"', q:m*n, un:'m', conta:n+' × ('+nv+'×'+f2(H)+' + '+nh+'×'+f2(W)+')'},
+      {sec:'Grade', item:'Gradil de ferro (peso)', q:kg*n, un:'kg', ins:'3.12.15', conta:f2(m*n)+' m × 1,266 kg/m'},
+      {sec:'Fixação', item:'Parafuso + bucha S8 + espaçador ø½"', q:fx*n, un:'un', ins:'2.67.46',
+        conta:n+' × ('+lado+' por lado × 2 + '+topo+' no topo/base × 2) — a 8 cm dos cantos, 60 cm no máximo'},
+      {sec:'Fixação', item:'Bucha nylon S8 (cento)', q:fx*n/100, un:'cento', ins:'2.67.77', conta:fx*n+' ÷ 100'}];
+     return {linhas:out, notas:['Malha de <b>15 × 15 cm no máximo</b> em barra chata 1"×1/4"; a grade em 1,00 × 1,00 m dá 20,26 kg, '+
+       'o mesmo da composição (20,24 kg/m²) — aqui a conta segue o tamanho real do vão.']};
+   }},
+ '06.03.035':{ /* GR-02 */
+   campos:[{k:'n',r:'Quantidade (un)',int:1}],
+   medida:function(d){ return d.n; },
+   calc:function(d){
+     var n=d.n, m=9*1.15+9*1.20, kg=m*BARRA_CHATA['1/2x1/8'];
+     var out=[
+      {info:1,sec:'Grade', item:'Barras verticais 1/2"×1/8" (8 × 14,75 = 118)', q:9*n, un:'un', conta:'9 por grade'},
+      {info:1,sec:'Grade', item:'Barras horizontais 1/2"×1/8" (8 × 14,25 = 114)', q:9*n, un:'un', conta:'9 por grade'},
+      {info:1,sec:'Grade', item:'Barra chata 1/2"×1/8"', q:m*n, un:'m', conta:n+' × (9×1,15 + 9×1,20)', extra:f2(kg*n,1)+' kg'},
+      {sec:'Grade', item:'GR-02 gradil de proteção/guichê 122×105', q:n, un:'un', ins:'3.10.81', conta:'1 por grade'},
+      {sec:'Fixação', item:'Parafuso + bucha S8 + espaçador ø½"', q:8*n, un:'un', ins:'2.67.46', conta:'3 por lado + 1 no topo e 1 na base'}];
+     return {linhas:out, notas:['Guichê de 120 × 130 cm (grade 118 × 114 + 15 cm de balcão GS-03/GS-04), barra chata 1/2"×1/8".']};
+   }},
+ '16.06.023':{ /* AL-01 */
+   campos:[{k:'n',r:'Quantidade (un)',int:1}],
+   medida:function(d){ return d.n; },
+   calc:function(d){
+     var n=d.n, aAlv=2.68*1.40+2*0.74*1.40+2.40*0.20, nb=aAlv*12.5;
+     var laje=2.78*1.23*0.10, piso=2.68*0.88*0.10;
+     var mTela=(ceil(1.23/0.05)+1)*2.78+(ceil(2.78/0.05)+1)*1.23;
+     var az=2*0.60*1.40+2.40*1.40+2.40*0.60+2.40*0.29;
+     var out=[
+      {sec:'Alvenaria', item:'Bloco de concreto 9×19×39', q:nb*n, un:'un', ins:'2.25.02',
+        conta:n+' × '+f2(aAlv)+' m² (fundo 2,68×1,40 + laterais 2×0,74×1,40 + soleira 2,40×0,20) × 12,5 bl/m²'},
+      {sec:'Concreto fck 20', item:'Laje de cobertura 10 cm com beiral', q:laje*n, un:'m³', ins:'2.05.35', conta:n+' × 2,78 × 1,23 × 0,10'},
+      {sec:'Concreto fck 20', item:'Base / piso 10 cm', q:piso*n, un:'m³', ins:'2.05.35', conta:n+' × 2,68 × 0,88 × 0,10'},
+      {sec:'Aço', item:'Aço CA-60 ø4,2 malha 5×5 cm (laje)', q:mTela*KGM['4.2']*n, un:'kg', ins:'2.15.38',
+        conta:n+' × '+f2(mTela)+' m × 0,109 kg/m', extra:ceil(mTela*n/12)+' barra(s) de 12 m'},
+      {sec:'Revestimento', item:'Azulejo branco (paredes internas, piso e soleira)', q:az*n, un:'m²', ins:'3.20.01',
+        conta:n+' × (2×0,60×1,40 + 2,40×1,40 + 2,40×0,60 + 2,40×0,29)'},
+      {info:1,sec:'Revestimento', item:'Chapisco + emboço + pintura externa', q:(2.68*1.50+2*0.88*1.50+2*0.14*1.40)*n, un:'m²',
+        conta:n+' × (2,68×1,50 + 2×0,88×1,50 + 2×0,14×1,40)'}];
+     return {linhas:out, notas:['Abrigo de 2,68 × 0,88 m externos, interno 2,40 × 0,60 m, paredes de 1,40 m, laje de 10 cm com beiral frontal de 30 cm.',
+       'Laje armada com CA-60 ø4,2 em malha de <b>5 × 5 cm</b>, como está escrito na prancha (Execução, Cobertura).']};
+   }}
+};
+
+/* FQ-01: fundos (mureta 120, tela 4,00) e laterais (mureta 60, tela 2,40) */
+function fq01(L,tipo,ext){
+  var fun=(tipo==='fundos'), Hm=fun?1.20:0.60, Ht=fun?4.00:2.40, fi=fun?6:3, bl=fi-1;
+  var vaos=Math.max(1,ceil(L/2.50)), mont=vaos+1, pil=mont, Lalv=Math.max(L-pil*0.14,0);
+  var pares=Math.max(0,ceil(L/10)-1), out=[], aco=new Aco();
+  out.push({sec:'Peças', item:'Vãos (250 cm)', q:vaos, un:'un', conta:'L ÷ 2,50, para cima'});
+  out.push({sec:'Peças', item:'Pilaretes 14×14 / montantes', q:pil, un:'un', conta:'vãos + 1'});
+  out.push({sec:'Peças', item:'Brocas ø20 × 3,00 m', q:pil, un:'un', conta:'1 sob cada pilarete'});
+  out.push({sec:'Concreto fck 25', item:'Brocas', q:pil*PI*0.10*0.10*3.0, un:'m³', ins:'2.05.36', conta:pil+' × π × 0,10² × 3,00'});
+  out.push({sec:'Concreto fck 25', item:'Viga baldrame 20×20', q:L*0.20*0.20, un:'m³', ins:'2.05.36', conta:f2(L)+' × 0,20 × 0,20'});
+  out.push({sec:'Concreto fck 25', item:'Pilaretes 14×14', q:pil*0.14*0.14*Hm, un:'m³', ins:'2.05.36', conta:pil+' × 0,14 × 0,14 × '+f2(Hm)});
+  aco.add('10', 4*corrida(L,'10'), 'baldrame: 4 × '+f2(L)+' + trespasse');
+  var nEv=ceil(L/0.12)+1; aco.add('5', nEv*0.66, 'estribos baldrame: '+nEv+' × 0,66 (14×14 + ganchos)');
+  aco.add('10', pil*4*(Hm+0.20), 'pilaretes: '+pil+' × 4 × ('+f2(Hm)+' + 0,20 ancoragem)');
+  var nEp=ceil(Hm/0.12)+1; aco.add('5', pil*nEp*0.46, 'estribos pilarete: '+pil+' × '+nEp+' × 0,46');
+  aco.add('6.3', 2*corrida(L,'6.3'), 'canaleta: 2 × '+f2(L)+' + trespasse');
+  var lados=Math.max(2*pil-2,0), niv=Math.floor(fi/2);
+  aco.add('6.3', lados*niv*0.75, 'amarração: '+lados+' lados × '+niv+' níveis × 0,75');
+  out=out.concat(aco.linhas('Aço','2.15.25',null));
+  out.push({sec:'Alvenaria', item:'Bloco de concreto 14×19×39', q:bl*Lalv/0.40, un:'un', ins:'2.25.77', conta:bl+' fiadas × '+f2(Lalv)+' ÷ 0,40'});
+  out.push({sec:'Alvenaria', item:'Bloco canaleta 14×19×39', q:Lalv/0.40, un:'un', ins:'2.25.96', conta:'1 fiada × '+f2(Lalv)+' ÷ 0,40'});
+  out.push({info:1,sec:'Argamassas (volume)', item:'Graute da canaleta', q:Lalv*0.0135, un:'m³', conta:f2(Lalv)+' × 0,0135 m²'});
+  out.push({info:1,sec:'Argamassas (volume)', item:'Argamassa de assentamento 1:0,5:4,5', q:Lalv*Hm*0.0103, un:'m³', conta:f2(Lalv*Hm)+' m² × 0,0103'});
+  out.push({info:1,sec:'Revestimento', item:'Chapisco + emboço + látex, duas faces', q:2*L*(Hm-0.30), un:'m²', conta:'2 × '+f2(L)+' × '+f2(Hm-0.30)+' (acima do piso)'});
+  /* serralheria */
+  var lMont=Ht+0.10+Hm, nExt=fun?0:(ext==null?2:ext);
+  out.push({sec:'Tubos', item:'Montante ø2" e=2 mm', q:mont*lMont+nExt*2.20, un:'m', ins:'6.05.16',
+    conta:mont+' × ('+f2(Ht)+' + 0,10 + '+f2(Hm)+' chumbado no pilarete)'+(nExt?' + '+nExt+' × 2,20 (pontas junto aos fundos)':'')});
+  out.push({sec:'Tubos', item:'Travamentos superior e inferior ø1¼"', q:2*L, un:'m', ins:'6.05.15', conta:'2 × '+f2(L)});
+  var lE=fun?(Ht+0.10-0.80-0.10)/Math.cos(PI/6):1.50/Math.cos(PI/6);
+  var lPonta=fun?lE:(Ht+2.20+0.10-0.80-0.10)/Math.cos(PI/6);
+  var qEsc=2*lPonta+2*pares*lE;
+  out.push({sec:'Tubos', item:'Escoramentos ø1¼" (2 nas pontas + '+pares+' par(es))', q:qEsc, un:'m', ins:'6.05.15',
+    conta:'2 × '+f2(lPonta)+' + '+(2*pares)+' × '+f2(lE)+' (30° com o montante)'});
+  out.push({sec:'Tela', item:'Tela fio 10 malha 2"', q:L*Ht, un:'m²', ins:'2.75.09', conta:f2(L)+' × '+f2(Ht)});
+  if(fun) out.push({sec:'Acessórios', item:'Buzinote PVC ø2"', q:Math.max(1,ceil(L/6.30)), un:'un', conta:'a cada 6,30 m (4 por mureta de 20 m)'});
+  out.push({sec:'Acessórios', item:'Conjunto parafuso 3/8" (escoramentos)', q:2*(2+2*pares), un:'cj', conta:'2 por escoramento'});
+  return {linhas:out, notas:[
+    (fun?'Fundos':'Laterais')+' da quadra: mureta de '+f2(Hm*100,0)+' cm ('+fi+' fiadas, 1 em canaleta), tela de '+f2(Ht)+' m, montantes a 2,50 m.',
+    'Pilarete com <b>4 × ø10 mm</b>, como está no desenho (Vistas e Det. pilarete); o texto da prancha fala em 4 × ø12,5 — os dois são do próprio FDE. Vale o desenho.',
+    'Os escoramentos conferem com a composição: nos fundos, 2,74 m de tubo ø1¼" por metro, igual ao boletim.',
+    'A composição traz cerca de 3 kg/m de aço a mais que o desenho: é a armadura da broca ø20, que o Detalhe 3 não indica. Se o projeto da obra pedir broca armada, some à parte.']};
+}
+
+var P=[];            /* o projeto: [{c:cod, q:quantidade, d:{medidas do desenho}}] */
 try{ P=JSON.parse(localStorage.getItem(CH)||'[]')||[]; }catch(e){ P=[]; }
 P=P.filter(function(x){ return x&&S[x.c]&&x.q>0; });
 function salva(){ try{ localStorage.setItem(CH,JSON.stringify(P)); }catch(e){} }
 
-function junta(cod,q){
-  var i=P.findIndex(function(x){ return x.c===cod; });
+var PERDA=5;   /* % somado no "Pedir" das quantidades que saem do desenho (líquidas) */
+try{ var _p=parseFloat(localStorage.getItem('calcFdePerda')); if(_p>=0&&_p<=50) PERDA=_p; }catch(e){}
+
+function junta(cod,q,d){
+  if(d&&MODELOS[cod]){ P.push({c:cod,q:q,d:d}); salva(); render(); return; }
+  var i=P.findIndex(function(x){ return x.c===cod&&!x.d; });
   if(i>=0) P[i].q=Math.round((P[i].q+q)*1e6)/1e6; else P.push({c:cod,q:q});
   salva(); render();
 }
+function descD(it){
+  var M=MODELOS[it.c]; if(!M||!it.d) return '';
+  return M.campos.map(function(f){ var v=it.d[f.k];
+    if(f.sel){ var o=f.sel.filter(function(x){return x[0]===v;})[0]; return f.r+': '+(o?o[1]:nm(v,2)); }
+    return f.r.replace(/ \(.*\)/,'')+' '+nm(v,f.int?0:2); }).join(' · ');
+}
+function calcIt(it){ return (MODELOS[it.c]&&it.d)?MODELOS[it.c].calc(it.d):null; }
 
-/* ---- insumos somados do projeto inteiro ---- */
+/* ---- insumos somados do projeto inteiro ----------------------------------
+   Item com modelo de desenho: o que o desenho quantifica SUBSTITUI o insumo de
+   mesmo código da composição (regra: vale o desenho); o resto da composição
+   (mão de obra, fôrma, cimento, cal, areia, pintura...) continua pelo
+   coeficiente da FDE. A coluna "composição" guarda o que o boletim daria. */
 function somar(){
-  var m={};
+  var m={}, ordem={exato:0,apertado:1,indicativo:2,frouxo:3};
+  function lin(k,nome,un,pl,base){ return m[k]||(m[k]={cod:k,nome:nome,un:un,q:0,qc:0,temC:false,pl:pl,base:base,fonte:{},extra:[]}); }
   P.forEach(function(it){
+    var R=calcIt(it), cob={};
+    if(R){
+      R.linhas.forEach(function(l){
+        if(l.info||l.sec==='Peças') return;
+        var x=l.ins?(C[it.c]||[]).filter(function(y){return y[0]===l.ins;})[0]:null;
+        var k=l.ins?('D:'+l.ins):('d:'+l.item+'|'+l.un);
+        var nome=l.ins?((x&&x[1])||(S[l.ins]&&S[l.ins][0])||l.item):l.item;
+        var r=lin(k,nome,l.un.toUpperCase(),x?x[4]:null,x?x[5]:null);
+        if(l.ins&&!x){ r.nome=l.item; }
+        r.q+=l.q; r.fonte.desenho=1;
+        if(l.ins){ cob[l.ins]=1; r.subm=r.subm||{}; var sk=l.bit?l.item:l.item; r.subm[sk]=(r.subm[sk]||0)+l.q; }
+        if(l.bit){ r.bit=r.bit||{}; r.bit[l.bit]=(r.bit[l.bit]||0)+l.metros; }
+        else if(l.extra) r.extra.push(l.extra);
+      });
+      /* o que o boletim daria para os mesmos insumos, para comparar */
+      (C[it.c]||[]).forEach(function(x){ var k2='D:'+x[0]; if(cob[x[0]]&&m[k2]){ m[k2].qc+=x[3]*it.q; m[k2].temC=true; } });
+    }
     (C[it.c]||[]).forEach(function(x){
-      var k=x[0], r=m[k]||(m[k]={cod:k,nome:x[1],un:x[2],q:0,pl:x[4],base:x[5],de:[]});
-      var q=x[3]*it.q; r.q+=q;
-      r.de.push({c:it.c,q:q});
-      /* base mais frouxa manda: o teto do conjunto nao pode ser melhor que o pior pedaco */
-      var ordem={exato:0,apertado:1,indicativo:2,frouxo:3};
+      if(cob[x[0]]) return;
+      var r=lin(x[0],x[1],x[2],x[4],x[5]);
+      r.q+=x[3]*it.q; r.qc+=x[3]*it.q; r.temC=true; r.fonte.composicao=1;
       if((ordem[x[5]]||0)>(ordem[r.base]||0)) r.base=x[5];
     });
   });
   return Object.keys(m).map(function(k){ return m[k]; });
+}
+function ehDes(r){ return !!r.fonte.desenho; }
+function pedir(r){
+  var q=ehDes(r)?r.q*(1+PERDA/100):r.q;
+  return pedido(q,r.un);
 }
 
 function render(){
   var h='';
 
   /* ---- 1. projetos padrao ---- */
-  h+='<h2>Projetos padrão da FDE <span class="mini">— informe a medida e a composição da própria FDE faz o resto</span></h2>';
+  h+='<h2>Projetos padrão da FDE <span class="mini">— quantitativo pelo desenho do Catálogo de Componentes</span></h2>';
+  h+='<p class="aviso naoImp" style="margin:0 0 10px"><b>Vale o desenho.</b> Concreto, aço por bitola, blocos, tubos, tela, gradis e fixações saem '+
+     'das pranchas da FDE, com a conta escrita linha a linha. Mão de obra, fôrma, cimento, cal, areia e pintura continuam pelo coeficiente da composição. '+
+     'Ao lado de cada número do desenho aparece o que a composição do boletim daria, para a conferência da medição.</p>';
   h+='<div class="pads naoImp">'+PADROES.map(function(p){
-    var s=S[p.c], un=s[1];
-    var campos = un==='M2'
-      ? '<label class="f">Comprimento (m)<input type="number" min="0" step="0.01" id="pc_'+p.c+'"></label>'+
-        '<label class="f">Altura (m)<input type="number" min="0" step="0.01" id="pa_'+p.c+'"></label>'
-      : '<label class="f">'+(un==='M'?'Comprimento (m)':'Quantidade ('+esc(un)+')')+
-        '<input type="number" min="0" step="0.01" id="pc_'+p.c+'"></label>';
-    return '<div class="pad"><span class="cod">'+esc(p.c)+' · medido em '+esc(un)+' · '+
-      (C[p.c]||[]).length+' insumos</span><span class="nm">'+esc(p.n)+'</span>'+
+    var s=S[p.c], un=s[1], M=MODELOS[p.c];
+    var campos = M ? M.campos.map(function(f){
+        var id='pf_'+p.c+'_'+f.k;
+        if(f.sel) return '<label class="f">'+esc(f.r)+'<select id="'+id+'">'+f.sel.map(function(o){
+          return '<option value="'+o[0]+'"'+(o[0]===f.def?' selected':'')+'>'+esc(o[1])+'</option>'; }).join('')+'</select></label>';
+        return '<label class="f">'+esc(f.r)+'<input type="number" min="0" step="'+(f.int?'1':'0.01')+'" id="'+id+'"'+
+               (f.def!=null?' value="'+f.def+'"':'')+'></label>'; }).join('')
+      : '<label class="f">Quantidade ('+esc(un)+')<input type="number" min="0" step="0.01" id="pf_'+p.c+'_q"></label>';
+    var fi=FICHA[p.c];
+    return '<div class="pad"><span class="cod">'+esc(p.c)+' · medido em '+esc(un)+(fi&&fi.f?' · prancha '+esc(fi.f):'')+
+      (M?' · <b style="color:var(--ok)">pelo desenho</b>':'')+'</span><span class="nm">'+esc(p.n)+'</span>'+
       '<div class="ent">'+campos+'<button class="bt pri" data-pad="'+p.c+'">Somar ao projeto</button></div></div>';
   }).join('')+'</div>';
 
@@ -316,38 +638,40 @@ function render(){
   if(!P.length){ h+='<div class="vazio">Some um projeto padrão ou escolha um serviço acima. O que você montar fica guardado neste aparelho.</div>'; }
   else{
     h+='<table><thead><tr><th>Código</th><th>Serviço</th><th class="n">Quantidade</th><th>Un</th><th class="naoImp"></th></tr></thead><tbody>'+
-      P.map(function(it,i){ var s=S[it.c];
+      P.map(function(it,i){ var s=S[it.c], dd=descD(it);
         return '<tr><td class="mono" data-l="Código">'+esc(it.c)+'</td>'+
-          '<td data-l="Serviço">'+esc(s[0])+'</td>'+
-          '<td class="n" data-l="Quantidade"><input type="number" min="0" step="0.01" value="'+it.q+'" data-q="'+i+'"></td>'+
+          '<td data-l="Serviço">'+esc(s[0])+(dd?'<div class="mini">'+esc(dd)+' · <b style="color:var(--ok)">pelo desenho</b></div>':'')+'</td>'+
+          '<td class="n" data-l="Quantidade">'+(it.d?nm(it.q,2):'<input type="number" min="0" step="0.01" value="'+it.q+'" data-q="'+i+'">')+'</td>'+
           '<td data-l="Un">'+esc(s[1])+'</td>'+
           '<td class="naoImp"><button class="bt del" data-rm="'+i+'">remover</button></td></tr>';
       }).join('')+'</tbody></table>';
     h+='<div class="acoes naoImp"><button class="bt" id="limpar">Limpar projeto</button>'+
        '<button class="bt" id="imprimir">Imprimir / PDF</button>'+
-       '<button class="bt" id="xls">Baixar em Excel</button></div>';
+       '<button class="bt" id="xls">Baixar em Excel</button>'+
+       '<label class="f" style="flex-direction:row;align-items:center;gap:6px">Perda no pedido (desenho)'+
+       '<input type="number" min="0" max="50" step="1" id="perda" value="'+PERDA+'" style="width:64px"> %</label></div>';
 
-    /* ---- 3a. peças e ficha técnica dos padrões ---- */
-    var comPeca=P.filter(function(it){ return PECAS[it.c]; });
-    var comFicha=P.filter(function(it){ return FICHA[it.c]; });
-    if(comPeca.length){
-      h+='<h2>Peças do projeto <span class="mini">— contagem pelo desenho do Catálogo de Componentes</span></h2>';
-      comPeca.forEach(function(it){
-        var R=PECAS[it.c](it.q), fi=FICHA[it.c]||{};
+    /* ---- 3a. quantitativo pelo desenho ---- */
+    var comMod=P.filter(function(it){ return calcIt(it); });
+    if(comMod.length){
+      h+='<h2>Quantitativo pelo desenho <span class="mini">— memória de cálculo de cada projeto padrão</span></h2>';
+      comMod.forEach(function(it){
+        var R=calcIt(it), fi=FICHA[it.c]||{}, sec='';
         h+='<div class="card" style="margin-bottom:10px"><b>'+esc(fi.t||S[it.c][0])+'</b>'+
-           '<span class="mini"> · '+nm(it.q,2)+' '+esc(S[it.c][1])+'</span>'+
-           '<table style="margin-top:8px"><thead><tr><th>Peça</th><th class="n">Quantidade</th><th>Un</th><th>Como sai</th></tr></thead><tbody>'+
-           R.l.map(function(r){ return '<tr><td data-l="Peça">'+esc(r[0])+'</td><td class="n" data-l="Quantidade"><b>'+r[1]+'</b></td>'+
-             '<td data-l="Un">'+esc(r[2])+'</td><td class="mini" data-l="Como sai">'+esc(r[3])+'</td></tr>'; }).join('')+
-           '</tbody></table><p class="aviso" style="margin:8px 0 0">'+R.nota+'</p></div>';
+           '<span class="mini"> · '+esc(descD(it))+(fi.f?' · prancha '+esc(fi.f):'')+'</span>'+
+           '<table style="margin-top:8px"><thead><tr><th>Item</th><th class="n">Quantidade</th><th>Un</th><th>Conta</th></tr></thead><tbody>';
+        R.linhas.forEach(function(l){
+          if(l.sec!==sec){ sec=l.sec; h+='<tr class="g"><td colspan="4">'+esc(sec)+'</td></tr>'; }
+          var inteiro=(l.un==='un'||l.un==='cj');
+          h+='<tr><td data-l="Item">'+esc(l.item)+(l.extra?'<div class="mini">'+esc(l.extra)+'</div>':'')+'</td>'+
+             '<td class="n" data-l="Quantidade"><b>'+nm(inteiro?Math.ceil(l.q-1e-9):l.q, inteiro?0:(l.un==='m³'?3:2))+'</b></td>'+
+             '<td data-l="Un">'+esc(l.un)+'</td><td class="mini" data-l="Conta">'+esc(l.conta)+'</td></tr>';
+        });
+        h+='</tbody></table>'+R.notas.map(function(n){ return '<p class="aviso" style="margin:8px 0 0">'+n+'</p>'; }).join('')+'</div>';
       });
     }
 
-    /* ---- 3b. valor do servico, pelo preco dos contratos ----------------------
-       Este e o numero que ele usa para orcar. O preco do servico varia entre
-       obras (boletins de datas diferentes), entao sai como FAIXA, dizendo em
-       quantos orcamentos foi visto. Fica ANTES do material de proposito: o teto
-       dos insumos la embaixo e so um limite, nao serve para orcar. */
+    /* ---- 3b. valor do servico ---- */
     var vmin=0, vmax=0, semPreco=0;
     P.forEach(function(it){ var f=S[it.c][2];
       if(f&&f.length===2){ vmin+=f[0]*it.q; vmax+=f[1]*it.q; } else semPreco++; });
@@ -355,84 +679,77 @@ function render(){
     h+='<table><thead><tr><th>Código</th><th>Serviço</th><th class="n">Quantidade</th>'+
        '<th class="n">Preço unitário</th><th class="n">Valor</th></tr></thead><tbody>'+
       P.map(function(it){ var s2=S[it.c], f=s2[2];
-        var pr = (f&&f.length===2)
-          ? (f[0]===f[1] ? brl(f[0]) : brl(f[0])+' a '+brl(f[1]))
-          : '<span class="mini">sem preço nos orçamentos</span>';
-        var vl = (f&&f.length===2)
-          ? (f[0]===f[1] ? brl(f[0]*it.q) : brl(f[0]*it.q)+' a '+brl(f[1]*it.q))
-          : '—';
+        var pr = (f&&f.length===2) ? (f[0]===f[1] ? brl(f[0]) : brl(f[0])+' a '+brl(f[1])) : '<span class="mini">sem preço nos orçamentos</span>';
+        var vl = (f&&f.length===2) ? (f[0]===f[1] ? brl(f[0]*it.q) : brl(f[0]*it.q)+' a '+brl(f[1]*it.q)) : '—';
         return '<tr><td class="mono" data-l="Código">'+esc(it.c)+'</td>'+
           '<td data-l="Serviço">'+esc(s2[0])+'<div class="mini">visto em '+s2[3]+' orçamento(s)</div></td>'+
           '<td class="n" data-l="Quantidade">'+nm(it.q,2)+' '+esc(s2[1])+'</td>'+
           '<td class="n" data-l="Preço">'+pr+'</td><td class="n" data-l="Valor">'+vl+'</td></tr>';
       }).join('')+
       '<tr class="tot"><td colspan="4">Total'+(semPreco?' (faltam '+semPreco+' sem preço)':'')+'</td>'+
-      '<td class="n">'+(vmin===vmax?brl(vmin):brl(vmin)+' a '+brl(vmax))+'</td></tr>'+
-      '</tbody></table>';
+      '<td class="n">'+(vmin===vmax?brl(vmin):brl(vmin)+' a '+brl(vmax))+'</td></tr></tbody></table>';
     h+='<p class="aviso" style="margin-top:8px">Preço do serviço <b>com BDI</b>, como está no orçamento da obra. '+
        'A faixa existe porque obras de boletins diferentes pagam valores diferentes pelo mesmo serviço — '+
-       '<b>para orçar, use o preço do contrato da obra</b>, não esta faixa.</p>';
+       '<b>para orçar, use o preço do contrato da obra</b>, não esta faixa. O pagamento é pelo critério de medição da FDE '+
+       '(m, m² ou un do boletim), não pelo quantitativo do desenho.</p>';
 
     /* ---- 4. material ---- */
     var L=somar(), tot=0;
-    L.forEach(function(r){ tot+=r.pl*r.q; });
-    h+='<h2>Material a pedir <span class="mini">— '+L.length+' insumos</span></h2>';
+    L.forEach(function(r){ if(r.pl) tot+=r.pl*r.q; });
+    h+='<h2>Material a pedir <span class="mini">— '+L.length+' insumos · perda de '+nm(PERDA,0)+'% somada no pedido do que sai do desenho</span></h2>';
     h+='<table><thead><tr><th>Código</th><th>Insumo</th><th>Un</th>'+
-       '<th class="n">Quantidade</th><th class="n">Pedir</th>'+
+       '<th class="n">Quantidade</th><th class="n">Pedir</th><th>Fonte</th><th class="n">Composição FDE</th>'+
        '<th class="n">Preço-limite</th><th>Base</th><th class="n">Valor-limite</th></tr></thead><tbody>';
     ['mat','mo','eq'].forEach(function(g){
-      var lg=L.filter(function(r){ return grupo(r.cod)===g; })
-              .sort(function(a,b){ return (b.pl*b.q)-(a.pl*a.q); });
+      var lg=L.filter(function(r){ return grupo(r.cod.indexOf('d:')===0?'2':r.cod.replace(/^D:/,''))===g; })
+              .sort(function(a,b){ return (ehDes(b)-ehDes(a))||((b.pl||0)*b.q-(a.pl||0)*a.q); });
       if(!lg.length) return;
-      var sg=lg.reduce(function(a,r){ return a+r.pl*r.q; },0);
-      h+='<tr class="g"><td colspan="8">'+GRUPO[g]+' · '+lg.length+' insumo(s) · teto '+brl(sg)+'</td></tr>';
+      var sg=lg.reduce(function(a,r){ return a+(r.pl||0)*r.q; },0);
+      h+='<tr class="g"><td colspan="10">'+GRUPO[g]+' · '+lg.length+' insumo(s) · teto '+brl(sg)+'</td></tr>';
       lg.forEach(function(r){
-        var ex=extra(r.nome,r.q,r.un);
-        h+='<tr><td class="mono" data-l="Código">'+esc(r.cod)+'</td>'+
-          '<td data-l="Insumo">'+esc(r.nome)+(ex?'<div class="mini">'+esc(ex)+'</div>':'')+'</td>'+
+        var ex=extra(r.nome,pedir(r),r.un), des=ehDes(r), inteiro=INTEIRO[String(r.un).toUpperCase()];
+        var dif=(des&&r.temC&&r.qc>0)?(r.q/r.qc-1)*100:null;
+        h+='<tr><td class="mono" data-l="Código">'+(r.cod.indexOf('d:')===0?'—':esc(r.cod.replace(/^D:/,'')))+'</td>'+
+          '<td data-l="Insumo">'+esc(r.nome)+
+            (r.bit?'<div class="mini">'+Object.keys(r.bit).sort(function(x,y){return +y-+x;}).map(function(k){
+                return 'ø'+k.replace('.',',')+': '+nm(r.bit[k]*KGM[k],1)+' kg = '+nm(r.bit[k],1)+' m ('+Math.ceil(r.bit[k]*(1+PERDA/100)/12-1e-9)+' barras de 12 m)'; }).join(' · ')+'</div>'
+              :(r.subm&&Object.keys(r.subm).length>1?'<div class="mini">'+Object.keys(r.subm).map(function(k){
+                return esc(k)+': '+nm(r.subm[k],r.un==='UN'||r.un==='CJ'?0:3); }).join(' · ')+'</div>':''))+
+            (r.extra.length?'<div class="mini">'+esc(r.extra.join(' · '))+'</div>':'')+
+            (ex?'<div class="mini">'+esc(ex)+'</div>':'')+'</td>'+
           '<td data-l="Un">'+esc(r.un)+'</td>'+
           '<td class="n" data-l="Quantidade">'+nm(r.q,3)+'</td>'+
-          '<td class="n" data-l="Pedir"><b>'+nm(pedido(r.q,r.un), INTEIRO[String(r.un).toUpperCase()]?0:2)+'</b></td>'+
-          '<td class="n" data-l="Preço-limite">'+brl(r.pl)+'</td>'+
-          '<td data-l="Base"><span class="pill b-'+esc(r.base)+'">'+esc(r.base)+'</span></td>'+
-          '<td class="n" data-l="Valor-limite">'+brl(r.pl*r.q)+'</td></tr>';
+          '<td class="n" data-l="Pedir"><b>'+nm(pedir(r), inteiro?0:2)+'</b></td>'+
+          '<td data-l="Fonte">'+(des?'<span class="pill b-exato">desenho</span>':'<span class="pill b-apertado">composição</span>')+'</td>'+
+          '<td class="n" data-l="Composição FDE">'+(des?(r.temC?nm(r.qc,3)+(dif!=null&&Math.abs(dif)>=1?'<div class="mini" style="color:'+(Math.abs(dif)>15?'var(--bad)':'var(--warn)')+'">desenho '+(dif>0?'+':'')+nm(dif,0)+'%</div>':''):'<span class="mini">não tem</span>'):'<span class="mini">=</span>')+'</td>'+
+          '<td class="n" data-l="Preço-limite">'+(r.pl?brl(r.pl):'—')+'</td>'+
+          '<td data-l="Base">'+(r.base?'<span class="pill b-'+esc(r.base)+'">'+esc(r.base)+'</span>':'')+'</td>'+
+          '<td class="n" data-l="Valor-limite">'+(r.pl?brl(r.pl*r.q):'—')+'</td></tr>';
       });
     });
-    h+='<tr class="tot"><td colspan="7">Soma dos tetos — <b>não é orçamento</b>, ver a nota abaixo</td><td class="n">'+brl(tot)+'</td></tr>';
+    h+='<tr class="tot"><td colspan="9">Soma dos tetos — <b>não é orçamento</b>, ver a nota abaixo</td><td class="n">'+brl(tot)+'</td></tr>';
     h+='</tbody></table>';
-    h+='<p class="aviso" style="margin-top:10px"><b>O que é teto e o que é exato.</b> '+
-       'A <b>quantidade</b> é exata: é o coeficiente da composição da FDE multiplicado pela medida que você digitou. '+
-       'O <b>preço-limite</b> não: a FDE publica o preço do serviço e os coeficientes, nunca o preço do insumo — '+
-       'o que está aqui é um máximo garantido, e a coluna <b>Base</b> diz o quanto ele é apertado '+
-       '(<span class="pill b-exato">exato</span> um insumo só na composição · '+
-       '<span class="pill b-apertado">apertado</span> 2 ou 3 · '+
-       '<span class="pill b-indicativo">indicativo</span> 4 a 6 · '+
-       '<span class="pill b-frouxo">frouxo</span> 7 ou mais). '+
-       'Somar os tetos de todos os insumos dá um número bem acima do serviço real, porque cada teto já '+
-       'supõe que o serviço inteiro foi gasto naquele insumo. <b>Para orçar, use o quadro «Valor do serviço» acima.</b></p>';
+    h+='<p class="aviso" style="margin-top:10px"><b>Duas fontes.</b> '+
+       '<span class="pill b-exato">desenho</span> é a quantidade <b>líquida</b> tirada da prancha do Catálogo de Componentes (a conta está no quadro «Quantitativo pelo desenho»); '+
+       'o pedido soma a perda escolhida acima. <span class="pill b-apertado">composição</span> é o coeficiente da FDE vezes a medida — já inclui as perdas do boletim. '+
+       'A coluna «Composição FDE» mostra o que o boletim daria para o mesmo insumo: diferença grande é ponto para conferir na medição.<br>'+
+       '<b>O que é teto.</b> A FDE publica o preço do serviço e os coeficientes, nunca o preço do insumo — o preço-limite é um máximo garantido, '+
+       'e a coluna <b>Base</b> diz o quanto ele é apertado. <b>Para orçar, use o quadro «Valor do serviço» acima.</b></p>';
   }
 
   if(P.filter(function(it){ return FICHA[it.c]; }).length){
     h+='<h2>Ficha técnica dos padrões <span class="mini">— o que o Catálogo de Componentes da FDE exige</span></h2>';
-    P.forEach(function(it){ var fi=FICHA[it.c]; if(!fi) return;
+    var vistos={};
+    P.forEach(function(it){ var fi=FICHA[it.c]; if(!fi||vistos[it.c]) return; vistos[it.c]=1;
       h+='<div class="card" style="margin-bottom:10px"><b>'+esc(fi.t)+'</b>'+
          '<span class="mini"> · prancha '+esc(fi.f)+'</span>'+
-         (fi.av?'<p class="aviso" style="margin:6px 0 0;color:var(--warn)"><b>Atenção.</b> '+esc(fi.av)+'</p>':'')+
          '<ul style="margin:8px 0 0;padding-left:18px;font-size:12.5px;line-height:1.65">'+
          fi.l.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul></div>';
     });
-    if(P.some(function(it){ return it.c==='16.01.029'; })){
-      h+='<p class="aviso"><b>A divergência do FD-24, em números.</b> A composição do boletim (16.01.029) traz '+
-         '<b>0,07412 m³/m</b> de concreto FCK 25. Só a viga baldrame 25×20 corrida dá 0,05000 m³/m, e a broca '+
-         'ø25 de 2,50 m a cada 2,17 m dá mais 0,05655 — <b>0,10655 m³/m só nesses dois</b>, sem contar pilarete. '+
-         'E os montantes: o desenho diz 217 cm entre eles (0,461/m), a composição traz 0,667/m. '+
-         'São dois números do próprio FDE que não fecham; por isso aqui não há contagem de peças para o FD-24. '+
-         'Na dúvida de medição, vale o que estiver no projeto da obra.</p>';
-    }
   }
   h+='<p class="aviso" style="margin-top:18px">Banco de composições montado em '+esc(D.ger||'—')+
      ' a partir de '+(D.orcamentos||0)+' orçamentos publicados · '+Object.keys(C).length+
-     ' serviços. Coeficiente conferido obra a obra: nenhuma divergência.</p>';
+     ' serviços. Modelos pelo desenho: '+Object.keys(MODELOS).length+' projetos padrão, pranchas lidas em 09/10/2026.</p>';
 
   document.getElementById('app').innerHTML=h;
   liga();
@@ -461,12 +778,21 @@ function liga(){
   app.onclick=function(ev){
     var t=ev.target.closest('button,[data-rm]'); if(!t) return;
     if(t.dataset.pad){
-      var c=t.dataset.pad, un=S[c][1];
-      var a=parseFloat((document.getElementById('pc_'+c)||{}).value||'0')||0;
-      var b=un==='M2'?(parseFloat((document.getElementById('pa_'+c)||{}).value||'0')||0):1;
-      var q=un==='M2'?a*b:a;
-      if(!(q>0)){ alert(un==='M2'?'Informe comprimento e altura.':'Informe a medida.'); return; }
-      junta(c, Math.round(q*1e6)/1e6); return;
+      var c=t.dataset.pad, M=MODELOS[c];
+      if(!M){
+        var q0=parseFloat((document.getElementById('pf_'+c+'_q')||{}).value||'0')||0;
+        if(!(q0>0)){ alert('Informe a medida.'); return; }
+        junta(c, q0); return;
+      }
+      var d={}, falta=[];
+      M.campos.forEach(function(f){
+        var el=document.getElementById('pf_'+c+'_'+f.k), v=parseFloat((el||{}).value||'0')||0;
+        if(f.int) v=Math.round(v);
+        if(!(v>0)) falta.push(f.r); d[f.k]=v; });
+      if(falta.length){ alert('Informe: '+falta.join(', ')+'.'); return; }
+      if(c==='16.01.090'&&(d.H<1.2||d.H>2.0)){ alert('O FE-01 vai de 1,20 a 2,00 m de altura.'); return; }
+      var q=Math.round(M.medida(d)*1e6)/1e6;
+      junta(c, q, d); return;
     }
     if(t.dataset.sel){
       escolha=t.dataset.sel;
@@ -491,6 +817,8 @@ function liga(){
     junta(escolha, v);
   };
   app.addEventListener('change', function(ev){
+    if(ev.target.id==='perda'){ var pv=parseFloat(ev.target.value||'0'); PERDA=(pv>=0&&pv<=50)?pv:5;
+      try{ localStorage.setItem('calcFdePerda',String(PERDA)); }catch(e){} render(); return; }
     var i=ev.target.dataset&&ev.target.dataset.q; if(i==null) return;
     var v=parseFloat(ev.target.value||'0')||0;
     if(v>0){ P[+i].q=v; } else { P.splice(+i,1); }
@@ -501,14 +829,20 @@ function liga(){
 function excel(){
   if(typeof XLSX==='undefined'){ alert('A planilha não carregou — tente de novo com conexão.'); return; }
   var wb=XLSX.utils.book_new();
-  var A=[['Código','Serviço','Quantidade','Un']];
-  P.forEach(function(it){ A.push([it.c,S[it.c][0],it.q,S[it.c][1]]); });
-  var w1=XLSX.utils.aoa_to_sheet(A); w1['!cols']=[{wch:11},{wch:66},{wch:12},{wch:6}];
+  var A=[['Código','Serviço','Medidas (desenho)','Quantidade','Un']];
+  P.forEach(function(it){ A.push([it.c,S[it.c][0],descD(it),it.q,S[it.c][1]]); });
+  var w1=XLSX.utils.aoa_to_sheet(A); w1['!cols']=[{wch:11},{wch:60},{wch:40},{wch:12},{wch:6}];
   XLSX.utils.book_append_sheet(wb,w1,'PROJETO');
-  var B=[['Código','Insumo','Un','Quantidade','Pedir','Preço-limite','Base','Valor-limite']];
-  somar().sort(function(a,b){ return grupo(a.cod).localeCompare(grupo(b.cod))||(b.pl*b.q)-(a.pl*a.q); })
-    .forEach(function(r){ B.push([r.cod,r.nome,r.un,r.q,pedido(r.q,r.un),r.pl,r.base,r.pl*r.q]); });
-  var w2=XLSX.utils.aoa_to_sheet(B); w2['!cols']=[{wch:10},{wch:58},{wch:6},{wch:13},{wch:11},{wch:13},{wch:12},{wch:14}];
+  var Q=[['Serviço','Medidas','Grupo','Item','Quantidade','Un','Conta (memória de cálculo)','Observação']];
+  P.forEach(function(it){ var R=calcIt(it); if(!R) return;
+    R.linhas.forEach(function(l){ Q.push([it.c,descD(it),l.sec,l.item,Math.round(l.q*1000)/1000,l.un,l.conta,l.extra||'']); }); });
+  if(Q.length>1){ var wq=XLSX.utils.aoa_to_sheet(Q); wq['!cols']=[{wch:11},{wch:30},{wch:18},{wch:44},{wch:12},{wch:6},{wch:80},{wch:22}];
+    XLSX.utils.book_append_sheet(wb,wq,'QUANTITATIVO DESENHO'); }
+  var B=[['Código','Insumo','Un','Quantidade','Pedir','Fonte','Composição FDE','Preço-limite','Base','Valor-limite']];
+  somar().sort(function(a,b){ return (ehDes(b)-ehDes(a))||((b.pl||0)*b.q-(a.pl||0)*a.q); })
+    .forEach(function(r){ B.push([r.cod.indexOf('d:')===0?'':r.cod.replace(/^D:/,''),r.nome,r.un,r.q,pedir(r),ehDes(r)?'desenho':'composição',
+      ehDes(r)?(r.temC?r.qc:''):r.q,r.pl||'',r.base||'',r.pl?r.pl*r.q:'']); });
+  var w2=XLSX.utils.aoa_to_sheet(B); w2['!cols']=[{wch:10},{wch:58},{wch:6},{wch:13},{wch:11},{wch:11},{wch:14},{wch:13},{wch:12},{wch:14}];
   XLSX.utils.book_append_sheet(wb,w2,'MATERIAL');
   var d=new Date(), dd=('0'+d.getDate()).slice(-2)+('0'+(d.getMonth()+1)).slice(-2)+d.getFullYear();
   XLSX.writeFile(wb,'MATERIAL-FDE_'+dd+'.xlsx');
