@@ -141,7 +141,7 @@
   #cCurva{max-width:1140px;margin:0 auto}
 
   /* --- rodizio de obras: o painel fica numa TV, entao ele passa sozinho ---- */
-  /* o rodizio vive na aba Contrato das obras: deixa a aba dinamica em vez de
+  /* o rodizio vive na aba Controle das obras: deixa a aba dinamica em vez de
      so uma lista infinita. No modo TV ele ocupa a tela sozinho. */
   body.tv.tvobras #cardTv{display:flex;flex-direction:column}
   #cardTv h2{margin-bottom:2px}
@@ -1044,35 +1044,93 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
   background:var(--line);margin:0 6px}
 
 </style>
+<style>
+/* ---------- 09/10: menu em 7 grupos ---------------------------------------
+   Eram 17 abas numa fileira so. Agora a primeira linha tem as 7 areas
+   (Visao geral, Obras, Medicao, Empreiteiros, Checklists, Auditoria,
+   Ferramentas) e a segunda linha mostra so as telas da area escolhida.
+   Os botoes antigos continuam existindo, com os mesmos ids e onclick:
+   so ficam escondidos quando nao sao da area ativa. --------------------- */
+header{row-gap:8px}
+.grupos{display:flex;gap:6px;align-items:center;overflow-x:auto;overscroll-behavior-x:contain;
+  scrollbar-width:thin;scrollbar-color:var(--line) transparent;padding-bottom:3px;flex:0 1 auto;min-width:0}
+.tab.grp{font-size:13px;font-weight:600;padding:8px 15px;color:var(--text-primary)}
+.tab.grp[aria-current="true"]{background:var(--acaoBg);border-color:var(--acaoBg);color:#fff}
+.tab.grp #nAud{font-weight:600;color:var(--warning)}
+.tab.grp[aria-current="true"] #nAud{color:#fff}
+.hdrAcoes{display:flex;gap:6px;align-items:center;position:relative;flex:none}
+.tvPop{position:absolute;right:0;top:calc(100% + 6px);z-index:60;display:flex;flex-direction:column;gap:6px;
+  background:var(--surface-1);border:1px solid var(--line);border-radius:10px;padding:8px;
+  box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.tvPop[hidden]{display:none}
+#btTema{min-width:38px;font-size:14px;padding:6px 10px}
+.tabs.sub{flex:1 1 100%;gap:4px;padding:6px 0 3px;border-top:1px solid var(--line);margin-top:2px}
+.tabs.sub .tab{font-size:12px;padding:5px 12px;background:transparent}
+.tabs.sub .tab[aria-selected=true]{background:var(--surface-2);border-color:var(--terceiro);color:var(--text-primary);
+  box-shadow:inset 0 -2px 0 var(--terceiro)}
+.tabs.sub .tab.foraG{display:none}
+.tabs.sub.um{display:none}
+body.tv #btTvMenu,body.tv .tvPop,body.tv #subBar,body.tv .inf{display:none !important}
+@media print{.grupos,.hdrAcoes,#subBar{display:none !important}}
+
+/* o rodizio obra a obra so aparece no modo TV (pedido de 09/10) */
+body:not(.tvobras) #cardTv{display:none !important}
+
+/* ---------- explicacao de cada indicador (09/10) ---------------------------
+   o (i) ao lado do titulo do cartao abre um balao com o que o numero quer
+   dizer em linguagem simples e qual e a faixa boa. Passar o mouse ou tocar. */
+.inf{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;margin-left:4px;
+  border-radius:50%;border:1px solid var(--text-muted);color:var(--text-muted);font-size:9.5px;font-style:normal;
+  font-weight:700;cursor:help;vertical-align:1px;position:relative;text-transform:none;letter-spacing:0;flex:none}
+.inf:hover,.inf:focus,.inf.aberto{border-color:var(--terceiro);color:var(--terceiro);outline:none}
+#infBalao{position:fixed;z-index:200;max-width:320px;background:var(--surface-1);color:var(--text-primary);
+  border:1px solid var(--terceiro);border-radius:9px;padding:10px 12px;font-size:12px;line-height:1.5;
+  box-shadow:0 10px 28px rgba(0,0,0,.4);pointer-events:none;text-transform:none;letter-spacing:0;font-weight:400}
+#infBalao b{color:var(--terceiro)}
+#infBalao .ref{display:block;margin-top:6px;font-size:10.5px;color:var(--text-muted)}
+@media print{.inf,#infBalao{display:none !important}}
+</style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <h1><span class="logo"><i style="height:10px"></i><i style="height:16px"></i><i style="height:22px"></i></span>GESTÃO DE OBRAS - SEDE ALPHAVILLE BARUERI</h1>
-    <div class="tabs" role="tablist">
-      <button class="tab" role="tab" id="tCart" aria-selected="true">Visão geral</button>
-      <button class="tab" role="tab" id="tLista" aria-selected="false">Contrato das obras</button>
-      <button class="tab" role="tab" id="tObra" aria-selected="false">Página da obra</button>
-      <button class="tab" role="tab" id="tEmpr" aria-selected="false">Empreiteiros</button>
-      <button class="tab" role="tab" id="tPrev" aria-selected="false">Previsão do mês</button>
-      <button class="tab" role="tab" id="tPxl" aria-selected="false">Previsão × lançado</button>
-      <button class="tab" role="tab" id="tMed" aria-selected="false">Medição e aprovação</button>
-      <button class="tab" role="tab" id="tReceb" aria-selected="false">Recebimento</button>
-      <button class="tab" role="tab" id="tRel" aria-selected="false">Relatórios</button>
-      <button class="tab" role="tab" id="tAlerta" aria-selected="false">Conferência <span id="nAlerta"></span></button>
-      <button class="tab" role="tab" id="tChk" aria-selected="false" title="medição inserida no portal / enviada por e-mail, situação e relatório fotográfico de cada obra">Checklist de medições</button>
-      <button class="tab" role="tab" id="tRsem" aria-selected="false" title="toda obra em execução precisa de pelo menos 1 RAO e 1 SST por semana — o que já tem e o que falta, por engenheiro">Relatórios da semana</button>
-      <button class="tab" role="tab" id="tMatG" aria-selected="false" title="materiais do orçamento que ainda faltam pedir, por obra (insumos × Sienge × medido)">Materiais a pedir</button>
-      <button class="tab" role="tab" id="tFechG" aria-selected="false" title="simulação de fechamento do empreiteiro: medido aprovado × taxa − pago nas atas − comprado no Sienge">Fechamento</button>
-      <button class="tab" role="tab" id="tCat" aria-selected="false" title="fichas dos Catálogos Técnicos FDE por serviço do boletim (como executar, critério de medição, componentes)">Catálogos FDE</button>
-      <button class="tab" role="tab" id="tCalc" aria-selected="false" title="quanto de cada material entra num muro, alambrado, piso — pela composição da própria FDE">Calculadora de materiais</button>
-      <button class="tab" role="tab" id="tAdeq" aria-selected="false">Adequação <span id="nAdeq"></span></button>
-      <span style="width:1px;height:22px;background:var(--line);margin:0 3px"></span>
-      <button class="tab bttv" id="btTvGeral" title="tela cheia com a visão geral da carteira">▣ TV · visão geral</button>
-      <button class="tab bttv" id="btTvObras" title="tela cheia passando obra a obra">▶ TV · todas as obras</button>
-      <button class="tab bttv" id="btTvSair" style="display:none">✕ sair da TV</button>
-      <span style="width:1px;height:22px;background:var(--line);margin:0 3px"></span>
-      <button class="tab" type="button" id="btTema" aria-pressed="false" title="mudar para fundo claro">☀ Fundo claro</button>
+    <div class="grupos" id="grpBar" aria-label="Áreas do painel">
+      <button class="tab grp" type="button" data-g="cart" title="o resumo da carteira: prazo, meta do mês e curva S">Visão geral</button>
+      <button class="tab grp" type="button" data-g="obras" title="lista de todas as obras e a página de cada uma">Obras</button>
+      <button class="tab grp" type="button" data-g="med" title="previsão do mês, previsto × lançado, aprovação na FDE e recebimento">Medição</button>
+      <button class="tab grp" type="button" data-g="empr" title="empreita, margem e fechamento dos empreiteiros">Empreiteiros</button>
+      <button class="tab grp" type="button" data-g="chk" title="o que falta fazer: medições, relatórios da semana e materiais">Checklists</button>
+      <button class="tab grp" type="button" data-g="aud" title="conferência do controle (CTR) e da planilha de cada obra">Auditoria <span id="nAud"></span></button>
+      <button class="tab grp" type="button" data-g="ferr" title="relatórios em PDF, catálogos técnicos e calculadora">Ferramentas</button>
+    </div>
+    <div class="hdrAcoes">
+      <button class="tab bttv" type="button" id="btTvMenu" aria-expanded="false" aria-controls="tvPop" title="ligar o modo TV">▣ TV ▾</button>
+      <div class="tvPop" id="tvPop" hidden>
+        <button class="tab bttv" type="button" id="btTvGeral" title="tela cheia com a visão geral da carteira">▣ Visão geral da carteira</button>
+        <button class="tab bttv" type="button" id="btTvObras" title="tela cheia passando obra a obra">▶ Passar obra a obra</button>
+      </div>
+      <button class="tab bttv" type="button" id="btTvSair" style="display:none">✕ sair da TV</button>
+      <button class="tab" type="button" id="btTema" aria-pressed="false" title="mudar para fundo claro">☀</button>
+    </div>
+    <div class="tabs sub" role="tablist" id="subBar">
+      <button class="tab" role="tab" id="tCart" data-g="cart" aria-selected="true">Visão geral</button>
+      <button class="tab" role="tab" id="tLista" data-g="obras" aria-selected="false" title="todas as obras com prazo, valores, engenheiro e fiscal — clique na linha para abrir a obra">Controle das obras</button>
+      <button class="tab" role="tab" id="tObra" data-g="obras" aria-selected="false">Página da obra</button>
+      <button class="tab" role="tab" id="tPrev" data-g="med" aria-selected="false" title="o que precisa medir no mês e a conferência previsto × lançado, obra a obra">Previsão do mês</button>
+      <button class="tab" role="tab" id="tPxl" data-g="med" data-esc="1" aria-selected="false">Previsão × lançado</button>
+      <button class="tab" role="tab" id="tMed" data-g="med" aria-selected="false">Medição e aprovação</button>
+      <button class="tab" role="tab" id="tReceb" data-g="med" aria-selected="false">Recebimento</button>
+      <button class="tab" role="tab" id="tEmpr" data-g="empr" aria-selected="false">Empreita e margem</button>
+      <button class="tab" role="tab" id="tFechG" data-g="empr" aria-selected="false" title="simulação de fechamento do empreiteiro: medido aprovado × taxa − pago nas atas − comprado no Sienge">Fechamento</button>
+      <button class="tab" role="tab" id="tChk" data-g="chk" aria-selected="false" title="medição inserida no portal / enviada por e-mail, situação e relatório fotográfico de cada obra">Medições</button>
+      <button class="tab" role="tab" id="tRsem" data-g="chk" aria-selected="false" title="toda obra em execução precisa de pelo menos 1 RAO e 1 SST por semana — o que já tem e o que falta, por engenheiro">Relatórios da semana (RAO e SST)</button>
+      <button class="tab" role="tab" id="tMatG" data-g="chk" aria-selected="false" title="materiais do orçamento que ainda faltam pedir, por obra (insumos × Sienge × medido)">Materiais a pedir</button>
+      <button class="tab" role="tab" id="tAlerta" data-g="aud" aria-selected="false" title="divergências entre o CTR, o portal e as pastas das obras">Conferência do controle (CTR) <span id="nAlerta"></span></button>
+      <button class="tab" role="tab" id="tAdeq" data-g="aud" aria-selected="false" title="itens da planilha de cada obra: o que entrou, saiu e falta equalizar na adequação">Conferência da planilha (adequação) <span id="nAdeq"></span></button>
+      <button class="tab" role="tab" id="tRel" data-g="ferr" aria-selected="false">Relatórios prontos</button>
+      <button class="tab" role="tab" id="tCat" data-g="ferr" aria-selected="false" title="fichas dos Catálogos Técnicos FDE por serviço do boletim (como executar, critério de medição, componentes)">Catálogos FDE</button>
+      <button class="tab" role="tab" id="tCalc" data-g="ferr" aria-selected="false" title="quanto de cada material entra num muro, alambrado, piso — pela composição da própria FDE">Calculadora de materiais</button>
     </div>
   </header>
 
@@ -1256,7 +1314,7 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
     </div>
 
     <div class="card" id="cardLista">
-      <h2>Contrato das obras — clique na linha para abrir a página da obra</h2>
+      <h2>Controle das obras — clique na linha para abrir a página da obra</h2>
       <div class="filtros" style="padding:0;border:0;background:none;margin:-2px 0 10px">
         <div><label class="f">Mostrar</label>
           <select id="lFiltro">
@@ -1374,18 +1432,9 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
       </div>
     </details>
 
-  </section>
-
-  <!-- ==================== PREVISÃO × LANÇADO ====================
-       Aba propria desde 23/09/2026. Antes vivia dentro de "Previsao do mes",
-       e a pagina ficava com DUAS barras de filtro que governavam coisas
-       diferentes: a do topo (competencia/lote/fiscal/status) nao valia aqui.
-       Agora o recorte deste relatorio e fixo, esta escrito no cabecalho, e a
-       barra do topo nao aparece nesta aba -- uma pagina, um filtro. -->
-  <section id="secPxl" class="oculto">
-    <div id="secComp" class="pxl">
+    <div id="secComp" class="pxl" style="margin-top:18px">
       <div class="card" style="margin-top:0;border-left:4px solid var(--previsto)">
-        <h2 style="margin:0">Previsão × Lançado — relatório de conferência</h2>
+        <h2 style="margin:0">Previsto × lançado — conferência obra a obra (SPI e PPC)</h2>
         <p style="font-size:11.5px;color:var(--text-muted);margin:6px 0 0" id="cTit"></p>
         <p style="font-size:11px;color:var(--text-secondary);margin:10px 0 0;line-height:1.6" id="cLeg"></p>
       </div>
@@ -1426,6 +1475,17 @@ nav{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 0;border-bottom:1px solid 
         </div>
       </details>
     </div>
+
+  </section>
+
+  <!-- ==================== PREVISÃO × LANÇADO ====================
+       Aba propria desde 23/09/2026. Antes vivia dentro de "Previsao do mes",
+       e a pagina ficava com DUAS barras de filtro que governavam coisas
+       diferentes: a do topo (competencia/lote/fiscal/status) nao valia aqui.
+       Agora o recorte deste relatorio e fixo, esta escrito no cabecalho, e a
+       barra do topo nao aparece nesta aba -- uma pagina, um filtro. -->
+  <section id="secPxl" class="oculto">
+    <!-- 09/10: o relatorio Previsao x Lancado mudou para dentro da aba Previsao do mes -->
   </section>
 
   <!-- ============================ OBRA ============================ -->
@@ -2395,13 +2455,92 @@ function nivelDe(chave,v){
   if(c.menor) return v<c.al?'al':(v<c.at?'at':'ok');
   return v>=c.al?'al':(v>=c.at?'at':'ok');
 }
+
+/* ===========================================================================
+   09/10 -- O QUE CADA NUMERO QUER DIZER. O painel e apresentado para gente
+   tecnica e para quem nao e: cada cartao ganha um (i) com a explicacao em
+   linguagem simples, a faixa boa e, quando houver, a referencia (PMBOK / ISO).
+   A chave e o titulo do cartao; titulo sem texto aqui fica sem (i).
+   =========================================================================== */
+const INFO={
+  'Obras no filtro':['Quantas obras entram no recorte escolhido nos filtros do topo.'],
+  'Obras no controle':['Quantas obras estão no controle (CTR) dentro do recorte escolhido.'],
+  'Contratado':['Soma do valor de contrato das obras do recorte: o tamanho da carteira.'],
+  'Aprovado pela FDE':['Medição que a FDE já aprovou. É o dinheiro garantido — vai virar pagamento.'],
+  'Em tramitação':['Medição já lançada no portal da FDE, mas ainda em análise (fiscal, SCM, gerente…). Ainda não é dinheiro garantido.'],
+  'Em tramitação no portal':['Medição já lançada no portal da FDE, mas ainda em análise. Ainda não é dinheiro garantido.'],
+  'Saldo a medir':['Quanto do contrato ainda falta medir: contratado menos o que já foi aprovado. Quanto menor, mais perto do fim a obra está.'],
+  'Com prazo vencido':['Obras em andamento cujo término previsto (início + prazo do contrato) já passou.','<b>Bom:</b> zero.','Desvio de prazo'],
+  'Vencem em até 15 dias':['Obras que chegam ao fim do prazo nos próximos 15 dias. Pedem atenção agora para não vencer.','<b>Bom:</b> zero.','Desvio de prazo'],
+  'Atrasadas no cronograma':['Obras cujo medido está abaixo do que o cronograma (a linha de base do Relatório de Vistoria) manda estar hoje.','<b>Bom:</b> zero.','Desvio de prazo · aderência ao cronograma'],
+  'Obras atrasadas':['Obras cujo medido está abaixo do que o cronograma (a linha de base) manda estar hoje.','<b>Bom:</b> zero.','Desvio de prazo · aderência ao cronograma'],
+  'SPI da carteira':['Índice de desempenho de prazo: o que a FDE aprovou ÷ o que o cronograma planejava até o mês passado. 1,00 = exatamente em dia; 0,90 = 10% atrás.','<b>Bom:</b> 0,95 ou mais · <b>atenção:</b> 0,85 a 0,95 · <b>alerta:</b> abaixo de 0,85.','PMBOK — gerenciamento do valor agregado (EVM)'],
+  'SV':['Desvio de prazo em reais: quanto a carteira mediu a mais (+) ou a menos (−) do que o cronograma previa até o mês passado.','<b>Bom:</b> zero ou positivo.','PMBOK — EVM (SV = EV − PV)'],
+  'PPC':['Percentual de Planos Concluídos: de cada obra que lançou previsão para o mês, quantas cumpriram pelo menos 95% do que prometeram. Mede a confiabilidade do planejamento de curto prazo.','<b>Bom:</b> 80% ou mais das obras.','Last Planner · ISO 9001 (9.1 — monitoramento)'],
+  'Aderência':['Quanto já foi lançado no portal frente à previsão que você fez no controle para o mês. 100% = lançou tudo o que previu.','<b>Bom:</b> 100% ou mais no fim do mês.'],
+  'Desvio contra o cronograma':['Diferença entre o que a obra mediu e o que o cronograma previa até agora, em % do contrato. Negativo = atrasada.','<b>Bom:</b> −5% ou melhor.','Desvio de prazo'],
+  'Falta medir para a meta':['Quanto ainda falta lançar ou aprovar para cumprir o que o cronograma manda medir no mês, somado obra a obra.','<b>Bom:</b> até 25% da meta no meio do mês.'],
+  'Já lançado no mês':['Parte da meta do mês que já está no portal — aprovada ou em análise.','<b>Bom:</b> 60% ou mais.'],
+  'Atraso vindo de trás':['Valor que deveria ter sido medido em meses anteriores e não foi. Ele se soma à meta deste mês.','<b>Bom:</b> até 20% da meta.'],
+  'Se só valer o aprovado':['Quantas vezes o ritmo normal do mês seria preciso se só contasse o que a FDE já aprovou.','<b>Bom:</b> até 1,3×.'],
+  'Previsão lançada · fora do portal':['Previsão que você lançou no controle (CTR) e que ainda não foi lançada no portal da FDE.'],
+  'Veio de competência anterior':['Medição de um mês anterior que só foi aprovada agora.'],
+  'Obras que precisam medir':['Obras em andamento que têm valor a medir no mês pelo cronograma.'],
+  'Margem da ATLÂNTICA':['O que fica para a empresa depois de pagar a empreita: (valor da obra − empreita) ÷ valor da obra.','<b>Bom:</b> 45% ou mais.','Desvio de orçamento'],
+  'Empreita contratada':['Parte do valor das obras que é repassada aos empreiteiros.','<b>Bom:</b> até 55%.','Desvio de orçamento'],
+  'Empreita em tramitação':['Parte da empreita cuja medição ainda não foi aprovada pela FDE: pagar antes é adiantar com risco.','<b>Bom:</b> até 30%.'],
+  'Concentração no maior':['Quanto da carteira está nas mãos de um único empreiteiro. Muito alto é risco: se ele parar, várias obras param.','<b>Bom:</b> até 30%.','ISO 9001 (6.1 — riscos)'],
+  'Pontos a conferir':['Divergências entre o controle (CTR), o portal da FDE e as pastas das obras, que precisam ser corrigidas.','<b>Bom:</b> zero.','ISO 9001 (7.5 — informação documentada)'],
+  'Obras sem cronograma':['Obras em andamento sem cronograma. Sem linha de base não dá para dizer se estão atrasadas.','<b>Bom:</b> zero.','PMBOK — linha de base do cronograma'],
+  'Aprovadas sem data':['Medições aprovadas que estão sem data de aprovação no controle. Ficam fora do fluxo de caixa até a data ser preenchida.','<b>Bom:</b> zero.'],
+  'Aprovado sem data de aprovação':['Medições aprovadas que estão sem data de aprovação no controle. Ficam fora do fluxo de caixa até a data ser preenchida.','<b>Bom:</b> zero.'],
+  'Já venceu · deve estar na conta':['Recebimentos cuja data prevista já passou: o dinheiro já deveria ter entrado.'],
+  'Itens não adequados':['Itens da planilha da obra que ainda não foram ajustados ao que foi medido de verdade (adequação de planilha).'],
+  'Entrou fora do orçamento':['Serviços que entraram na obra e não estavam no orçamento original.'],
+  'Saiu por redução':['Valor de itens reduzidos ou retirados do orçamento. É a folga que compensa o que entrou.'],
+  'Falta equalizar':['Diferença entre o que entrou e o que saiu que ainda precisa ser compensada na adequação.'],
+  'Sem como cobrir':['Acréscimos que não têm redução para compensar: risco de executar e não receber.','<b>Bom:</b> zero.']
+};
+function infoI(titulo){
+  const k=String(titulo||'').replace(/<[^>]*>/g,'').trim();
+  const x=INFO[k]; if(!x) return '';
+  const html='<b>'+k+'</b><br>'+x[0]+(x[1]?'<br>'+x[1]:'')+(x[2]?'<span class="ref">'+x[2]+'</span>':'');
+  return ' <i class="inf" tabindex="0" role="button" aria-label="o que é '+esc(k)+'" data-inf="'+
+    html.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'">i</i>';
+}
+(function(){
+  let bal=null, dono=null;
+  function abre(el){
+    if(!bal){ bal=document.createElement('div'); bal.id='infBalao'; document.body.appendChild(bal); }
+    bal.innerHTML=el.dataset.inf; bal.style.display='block';
+    const r=el.getBoundingClientRect(), w=bal.offsetWidth, h=bal.offsetHeight;
+    let x=Math.min(Math.max(8,r.left+r.width/2-w/2), window.innerWidth-w-8);
+    let y=r.bottom+8; if(y+h>window.innerHeight-8) y=Math.max(8,r.top-h-8);
+    bal.style.left=x+'px'; bal.style.top=y+'px';
+    if(dono&&dono!==el) dono.classList.remove('aberto');
+    dono=el; el.classList.add('aberto');
+  }
+  function fecha(){ if(bal) bal.style.display='none'; if(dono) dono.classList.remove('aberto'); dono=null; }
+  document.addEventListener('mouseover',e=>{ const el=e.target.closest&&e.target.closest('.inf'); if(el) abre(el); });
+  document.addEventListener('mouseout',e=>{ const el=e.target.closest&&e.target.closest('.inf'); if(el&&!el.contains(e.relatedTarget)) fecha(); });
+  document.addEventListener('focusin',e=>{ const el=e.target.closest&&e.target.closest('.inf'); if(el) abre(el); });
+  document.addEventListener('focusout',e=>{ if(e.target.closest&&e.target.closest('.inf')) fecha(); });
+  // no toque (celular) o clique abre/fecha; e NAO deixa o clique abrir a janela do cartao
+  document.addEventListener('click',e=>{
+    const el=e.target.closest&&e.target.closest('.inf');
+    if(el){ e.stopPropagation(); e.preventDefault(); if(dono===el) fecha(); else abre(el); return; }
+    fecha();
+  },true);
+  window.addEventListener('scroll',fecha,{passive:true});
+})();
+
 function cartaoTopo({icone,titulo,valor,sub,chave,bruto,cor:corFixa,opacidade,acao}){
   const nv=nivelDe(chave,bruto);
   const cor=corFixa||(nv==='al'?'var(--critical)':nv==='at'?'var(--warning)':'var(--good)');
   // com 'acao' o cartao vira botao: clicar abre a janela com as obras que formaram o numero
   const att=acao?` data-acao="${acao}" role="button" tabindex="0" title="ver as obras deste número"`:'';
   return `<div class="card kpiA${acao?' clic':''}"${att} data-nv="${nv}">`+
-    `<span class="t">${icone||''} ${titulo}</span>`+
+    `<span class="t">${icone||''} ${titulo}${infoI(titulo,chave)}</span>`+
     (acao?`<span class="ver">ver obras &rsaquo;</span>`:'')+
     `<span class="v" style="color:${cor}${opacidade?';opacity:'+opacidade:''}">${valor}</span>`+
     `<span class="s">${sub||''}</span>`+
@@ -3054,7 +3193,7 @@ function renderLista(){
   $('lQt').textContent=L.length+' de '+linhas.length+' obras nesta lista';
 
   $('tabLista').innerHTML='<thead><tr>'+
-    '<th>Nº</th><th>Unidade</th><th>Lote</th><th>Cidade</th><th>Engenheiro</th>'+
+    '<th>Nº</th><th>Unidade</th><th>Lote</th><th>Cidade</th><th>Engenheiro</th><th>Fiscal</th>'+
     '<th>Empreiteira</th><th>Contrato / PI</th><th>Status</th>'+
     '<th>Término previsto</th><th class="num">Dias</th>'+
     '<th class="num">Contratado</th><th class="num">Aprovado</th>'+
@@ -3067,6 +3206,7 @@ function renderLista(){
       `<td><span style="border-bottom:1px dotted var(--terceiro)">${esc(o.unidade||'')}</span></td>`+
       `<td><span class="lote">${o.lote?('L'+o.lote):(o.contratoAta||'—')}</span></td>`+
       `<td>${esc(o.cidade||'')}</td><td>${esc((o.engs||[]).join(' · ')||'—')}</td>`+
+      `<td>${esc(o.fiscal||'—')}</td>`+
       `<td>${esc(o.empreiteira||'—')}</td>`+
       `<td class="mono">${o.contrato||'—'}<br><span style="color:var(--text-muted)">PI ${o.pi||'—'}</span></td>`+
       `<td style="color:${COR[o.status]}">${o.status}</td>`+
@@ -3082,7 +3222,7 @@ function renderLista(){
           ?'<span style="color:var(--good)">Relatório de Vistoria</span>'
           :'<span style="color:var(--warning)">M001 — sem RV</span>')
         :'<span style="color:var(--critical)">sem cronograma</span>'}</td></tr>`).join('')
-      :'<tr><td colspan="17" style="color:var(--text-muted)">Nenhuma obra neste recorte.</td></tr>')+'</tbody>';
+      :'<tr><td colspan="18" style="color:var(--text-muted)">Nenhuma obra neste recorte.</td></tr>')+'</tbody>';
   $('tabLista').querySelectorAll('tr.clic').forEach(tr=>{
     tr.style.cursor='pointer';
     tr.addEventListener('click',()=>abrirObra(+tr.dataset.cod));});
@@ -3204,8 +3344,9 @@ function tvAgenda(){
   },250);
 }
 function tvAtivo(){
-  return document.body.classList.contains('tvobras')
-      || !$('secLista').classList.contains('oculto'); }
+  // 09/10: o rodizio so anda no modo TV. Na aba Controle das obras ele nao aparece
+  // nem troca de obra sozinho -- era isso que "mexia" na tela durante o uso normal.
+  return document.body.classList.contains('tvobras'); }
 function tvIniciar(obras){
   const antes=TV.lista.length?TV.lista[TV.i].cod:null;
   TV.lista=tvOrdenar(obras);
@@ -3950,7 +4091,9 @@ function irPrev(){ mostra('prev'); renderPrev(); window.scrollTo(0,0); }
 function pxlLinhas(lote){
   const MES=MES_REF;
   const ATIVA=o=>['Execução','Atenção','Atrasado'].includes(o.status);
-  return D.obras.filter(o=>o.lote===lote&&ATIVA(o)).map(o=>{
+  // 09/10: segue os filtros do topo. O "Filtro padrão" (2026 · em obra · lotes 41/42)
+  // reproduz exatamente o recorte fixo que o relatorio tinha.
+  return filtradas().filter(o=>o.lote===lote&&ATIVA(o)).map(o=>{
     const S=o.serie||[];
     // ---- lado acumulado (EVM). So competencia ANTERIOR ao mes corrente: o mes de hoje
     // ainda esta aberto, e entrar com ele no SPI penalizaria toda obra so por nao ter
@@ -4064,7 +4207,11 @@ function pxlTabela(l){
 }
 function renderPxL(){
   const MES=MES_REF, ANT=mesAno(pxlMesAnt(MES));
-  const L41=pxlFiltra(pxlLinhas('41')), L42=pxlFiltra(pxlLinhas('42'));
+  const R41=pxlLinhas('41'), R42=pxlLinhas('42');
+  const L41=pxlFiltra(R41), L42=pxlFiltra(R42);
+  // lote fora do filtro do topo: o quadro dele some em vez de aparecer vazio
+  if($('cardComp41')) $('cardComp41').style.display=R41.length?'':'none';
+  if($('cardComp42')) $('cardComp42').style.display=R42.length?'':'none';
   const tudo=L41.concat(L42), S=f=>tudo.reduce((a,x)=>a+f(x),0);
   const pv=S(x=>x.pv), ev=S(x=>x.ev), evt=S(x=>x.evt);
   const spi=pv>0.5?ev/pv:null, spiT=pv>0.5?evt/pv:null, sv=pv>0.5?ev-pv:null;
@@ -4073,16 +4220,16 @@ function renderPxL(){
   $('cTit').textContent='desempenho de prazo até '+ANT+' e previsão × lançado em '+mesAno(MES)+
     ' — posição de '+new Date(D.gerado+'T12:00:00').toLocaleDateString('pt-BR');
   $('cKpis').innerHTML=
-    `<div class="card kpi"><span class="v">${tudo.length}</span><span class="l">Obras em andamento no relatório<br><span style="color:var(--text-muted)">escopo fechado, não depende de filtro</span></span></div>`+
-    `<div class="card kpi"><span class="v" style="color:${pxlCorSPI(spi)}">${pxlN2(spi)}</span><span class="l">SPI da carteira até ${ANT} (só aprovado)</span></div>`+
+    `<div class="card kpi"><span class="v">${tudo.length}</span><span class="l">Obras em andamento no relatório<br><span style="color:var(--text-muted)">segue os filtros do topo</span></span></div>`+
+    `<div class="card kpi"><span class="v" style="color:${pxlCorSPI(spi)}">${pxlN2(spi)}</span><span class="l">SPI da carteira até ${ANT} (só aprovado)${infoI('SPI da carteira')}</span></div>`+
     `<div class="card kpi"><span class="v" style="color:${pxlCorSPI(spiT)}">${pxlN2(spiT)}</span><span class="l">SPI contando o que está em tramitação</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:${sv>=0?'var(--good)':'var(--critical)'}">${sv===null?'—':(sv>=0?'+':'−')+brl(Math.abs(sv))}</span><span class="l">Desvio de prazo em R$ (SV = EV − PV)</span></div>`+
+    `<div class="card kpi"><span class="v" style="color:${sv>=0?'var(--good)':'var(--critical)'}">${sv===null?'—':(sv>=0?'+':'−')+brl(Math.abs(sv))}</span><span class="l">Desvio de prazo em R$ (SV = EV − PV)${infoI('SV')}</span></div>`+
     `<div class="card kpi"><span class="v" style="color:var(--previsto)">${brl(vC)}</span><span class="l">Previsto pelo cronograma em ${mesAno(MES)}<br><span style="color:var(--text-muted)">neste relatório</span></span></div>`+
     `<div class="card kpi"><span class="v" style="color:var(--terceiro)">${brl(vP)}</span><span class="l">Previsão que você lançou no CTR<br><span style="color:var(--text-muted)">neste relatório</span></span></div>`+
     `<div class="card kpi"><span class="v" style="color:${vA>0.5?'var(--good)':'var(--text-muted)'}">${brl(vA)}</span><span class="l">Já aprovado pela FDE no mês<br><span style="color:var(--text-muted)">neste relatório</span></span></div>`+
     `<div class="card kpi"><span class="v" style="color:var(--warning)">${brl(vT)}</span><span class="l">Lançado mas ainda não aprovado<br><span style="color:var(--text-muted)">neste relatório</span></span></div>`+
-    `<div class="card kpi"><span class="v" style="color:${com.length&&ok/com.length>=0.8?'var(--good)':'var(--warning)'}">${com.length?ok+'/'+com.length:'—'}</span><span class="l">PPC — obras que já cumpriram a previsão de ${mesAno(MES)}</span></div>`+
-    `<div class="card kpi"><span class="v" style="color:${vR>=vP?'var(--good)':'var(--warning)'}">${pct(vP?vR/vP:0)}</span><span class="l">Aderência financeira à previsão</span></div>`;
+    `<div class="card kpi"><span class="v" style="color:${com.length&&ok/com.length>=0.8?'var(--good)':'var(--warning)'}">${com.length?ok+'/'+com.length:'—'}</span><span class="l">PPC — obras que já cumpriram a previsão de ${mesAno(MES)}${infoI('PPC')}</span></div>`+
+    `<div class="card kpi"><span class="v" style="color:${vR>=vP?'var(--good)':'var(--warning)'}">${pct(vP?vR/vP:0)}</span><span class="l">Aderência financeira à previsão${infoI('Aderência')}</span></div>`;
   $('cLeg').innerHTML=
     '<b>Como ler.</b> <b>PV</b> (planejado) é o que o cronograma da obra — planilha M001 ou Relatório de Vistoria — '+
     'manda medir; <b>EV</b> (agregado) é a medição que a FDE <b>aprovou</b>. '+
@@ -4092,8 +4239,8 @@ function renderPxL(){
     '<b>PPC</b> (Percentual de Planos Concluídos) trata a previsão do mês como compromisso: '+
     '<b>cumpriu</b> ≥ 95% do previsto, <b>parcial</b> ≥ 50%, senão <b>abaixo</b> ou <b>não lançou</b>. '+
     'Mede a confiabilidade do planejamento, não o desempenho da obra — por isso anda separado do SPI.<br>'+
-    '<span style="color:var(--text-muted)">Entram só obras em execução, atenção ou atraso. '+
-    'Recorte fixo, para apresentar: por isso esta aba não tem a barra de filtros do topo. '+
+    '<span style="color:var(--text-muted)">Entram só obras em execução, atenção ou atraso, dentro dos filtros do topo. '+
+    'Para apresentar o relatório completo, use <b>Filtro padrão</b> (2026 · em obra · lotes 41 e 42). '+
     'Custo real ainda não entra, então não há CPI nem EAC.</span>';
   const nota=(l)=>{
     const p=l.reduce((a,x)=>a+x.pv,0), e=l.reduce((a,x)=>a+x.ev,0);
@@ -4123,10 +4270,13 @@ function renderPrev(){
     const ant=k=>S.filter(x=>x.k<MES).reduce((a,x)=>a+(x[k]||0),0);
     const mes=S.find(x=>x.k===MES)||{p:0,m:0,t:0};
     const prevAnt=ant('p'), aprAnt=ant('m'), traAnt=ant('t');
-    const atrasoT=Math.max(prevAnt-aprAnt-traAnt,0);
-    const atrasoA=Math.max(prevAnt-aprAnt,0);
+    const sAntT=prevAnt-aprAnt-traAnt, sAntA=prevAnt-aprAnt;
+    const atrasoT=Math.max(sAntT,0);
+    const atrasoA=Math.max(sAntA,0);
     const metaM=mes.p||0, aprM=mes.m||0, traM=mes.t||0;
-    const faltaT=Math.max(metaM-aprM-traM,0), faltaA=Math.max(metaM-aprM,0);
+    // 09/10: obra adiantada nos meses anteriores abate a meta deste mes -- a mesma
+    // conta acumulada, obra a obra, do cartao "Falta medir para a meta" da Visao geral
+    const faltaT=Math.max(metaM-aprM-traM+Math.min(sAntT,0),0), faltaA=Math.max(metaM-aprM+Math.min(sAntA,0),0);
     const pvM=(S.find(x=>x.k===MES)||{}).v||0;   // previsao lancada a mao no CTR
     return {o, prevAnt, aprAnt, traAnt, atrasoT, atrasoA, metaM, aprM, traM, pvM,
             faltaT, faltaA, totalT:faltaT+atrasoT, totalA:faltaA+atrasoA};
@@ -6137,7 +6287,7 @@ const REL = (function(){
   }
 
   /* ============ 4. CONTRATO DAS OBRAS — A4 PAISAGEM (21/09) ===============
-     O mesmo recorte da aba "Contrato das obras": filtros do topo + o "Mostrar"
+     O mesmo recorte da aba "Controle das obras": filtros do topo + o "Mostrar"
      e o "Ordenar" da própria aba. Blocos escolhidos no cartão. */
   const BLOCOS_C = [
     {id:'kpi',   rot:'Resumo (obras, prazo vencido, 15 dias, atrasadas, saldo)'},
@@ -6176,7 +6326,7 @@ const REL = (function(){
     if(!todas.length) return null;
     const OP=opcC();
     const doc=novo('l'); const LW=doc.internal.pageSize.getWidth(), W=LW-2*MARGEM;
-    cabecalho(doc,'Contrato das obras','Lista: '+fTxt+' · '+escopo());
+    cabecalho(doc,'Controle das obras','Lista: '+fTxt+' · '+escopo());
     let y=27;
     if(OP.kpi){
       const venc=todas.filter(x=>x.radar&&x.d<0), d15=todas.filter(x=>x.radar&&x.d>=0&&x.d<=15);
@@ -6208,14 +6358,14 @@ const REL = (function(){
             dt(x.o.fimPrev),diasTxt(x.d),'R$ '+n2(x.sal),pc(x.o.valor?x.o.medido/x.o.valor:null),
             x.o.cronograma?pc(x.o.valor?x.prevHoje/x.o.valor:null):'–']),
           columnStyles:{0:{cellWidth:11},5:{halign:'right',cellWidth:24},6:{halign:'right'},7:{halign:'right',cellWidth:15},8:{halign:'right',cellWidth:15}},
-          didDrawPage:dp=>{ if(dp.pageNumber>1) cabecalho(doc,'Contrato das obras (continuação)','Lista: '+fTxt); },
+          didDrawPage:dp=>{ if(dp.pageNumber>1) cabecalho(doc,'Controle das obras (continuação)','Lista: '+fTxt); },
           didParseCell:c=>{ if(c.section==='body'&&c.column.index===5){ c.cell.styles.textColor=cor(R[c.row.index].d); c.cell.styles.fontStyle='bold'; } }
         }));
         y=doc.lastAutoTable.finalY+6;
       } else { doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(110); doc.text('Nenhuma obra vence nos próximos 60 dias.',MARGEM,y+3); y+=8; }
     }
     if(OP.tab){
-      if(OP.kpi||OP.radar){ if(y>150){ doc.addPage(); cabecalho(doc,'Contrato das obras (continuação)','Lista: '+fTxt); y=27; } }
+      if(OP.kpi||OP.radar){ if(y>150){ doc.addPage(); cabecalho(doc,'Controle das obras (continuação)','Lista: '+fTxt); y=27; } }
       const tot=L.reduce((a,x)=>{a.v+=x.o.valor||0;a.m+=x.o.medido||0;a.t+=x.o.tramitacao||0;a.s+=x.sal;return a;},{v:0,m:0,t:0,s:0});
       const body=L.map(x=>{const o=x.o; return [o.cod,o.unidade||'',o.lote?'L'+o.lote:(o.contratoAta||'—'),o.cidade||'',
         (o.engs||[]).join(' · ')||'—',o.empreiteira||'—',(o.contrato||'—')+'\nPI '+(o.pi||'—'),o.status||'',
@@ -6235,7 +6385,7 @@ const REL = (function(){
         columnStyles:{0:{cellWidth:8},1:{cellWidth:34},2:{cellWidth:8},3:{cellWidth:20},4:{cellWidth:14},5:{cellWidth:18},6:{cellWidth:25},7:{cellWidth:14},8:{cellWidth:14},9:{halign:'right',cellWidth:11},
           10:{halign:'right',cellWidth:20},11:{halign:'right',cellWidth:20},12:{halign:'right',cellWidth:20},13:{halign:'right',cellWidth:20},14:{halign:'right',cellWidth:10},
           15:{halign:'right',cellWidth:10},16:{cellWidth:7}},
-        didDrawPage:dp=>{ if(dp.pageNumber>1) cabecalho(doc,'Contrato das obras (continuação)','Lista: '+fTxt); },
+        didDrawPage:dp=>{ if(dp.pageNumber>1) cabecalho(doc,'Controle das obras (continuação)','Lista: '+fTxt); },
         didParseCell:c=>{ if(c.section==='body'&&c.row.index<L.length){ const o=L[c.row.index].o;
           if(c.column.index===7) c.cell.styles.textColor= o.status==='Atrasado'?[190,40,40]:o.status==='Atenção'?[200,130,20]:[40,40,40];
           if(c.column.index===9 && L[c.row.index].d!==null && L[c.row.index].d<0){ c.cell.styles.textColor=[190,40,40]; c.cell.styles.fontStyle='bold'; } } }
@@ -6577,8 +6727,8 @@ const REL = (function(){
         return (n===1? L[0].cod+' · '+(L[0].unidade||'')+' · 1 página' : n+' obras no filtro · '+n+' páginas')+
           (folhaVal()==='emp'?' · valores de empreiteiro':'');},
      pdf:folhaObra, pdfNome:()=>nomeArq('FOLHA-DE-OBRA'+sufFolha())+'pdf', xls:xlsObra},
-    {id:'contr', nome:'Contrato das obras', fmt:'A4 paisagem',
-     exp:'O mesmo recorte da aba Contrato das obras: resumo, obras que vencem em até 60 dias e a tabela '+
+    {id:'contr', nome:'Controle das obras', fmt:'A4 paisagem',
+     exp:'O mesmo recorte da aba Controle das obras: resumo, obras que vencem em até 60 dias e a tabela '+
          'com prazo, contratado, aprovado, tramitação, saldo e % real × previsto. Segue o "Mostrar" e o "Ordenar" da aba.',
      opcC:true,
      conta:()=>{const r=linhasContr(); return r.todas.length? r.L.length+' obra'+(r.L.length===1?'':'s')+' na lista · '+r.fTxt : '';},
@@ -6854,7 +7004,7 @@ document.addEventListener('fullscreenchange',()=>{
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.body.classList.contains('tv')) tvSair();
   if(mdAberta()) return;
-  if($('secCarteira').classList.contains('oculto')) return;
+  if(!document.body.classList.contains('tvobras')) return;
   if(e.key==='ArrowRight'){tvProx(1); tvAgenda();}
   if(e.key==='ArrowLeft'){tvProx(-1); tvAgenda();}});
 
@@ -7908,10 +8058,9 @@ $('btImprimirLista').onclick=()=>{
 $('lOrdem').onchange=renderLista;
 $('tEmpr').onclick=irEmpr;
 $('tPrev').onclick=irPrev;
-$('tPxl').onclick=()=>{ mostra('pxl');
-  // renderPxL e quem enche cTit/cKpis/cLeg e as tabelas dos dois lotes
-  try{ renderPxL(); }catch(e){ console.error('Previsão × Lançado:', e); }
-  window.scrollTo(0,0); };
+$('tPxl').onclick=()=>{ irPrev();
+  // 09/10: Previsao x Lancado agora mora dentro de Previsao do mes (renderPrev ja chama renderPxL)
+  const c=$('secComp'); if(c) setTimeout(()=>c.scrollIntoView({block:'start'}),60); };
 $('cFiltro').onchange=renderPxL;
 $('cOrdem').onchange=renderPxL;
 // imprime so o relatorio Previsão × Lançado -- um lote por folha, como o PDF de 27/08
@@ -8117,7 +8266,7 @@ aoFiltrar();
 </script>
 
 <!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
-<script src="fech.js?v=202610081953"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
+<script src="fech.js?v=202610090110"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
 <script>
 const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andrade", "cid": "BARUERI", "emp": "LEONARDO ZANAO", "sit": "5. CONCLUÍDA", "contrato": 235271.25, "taxa": 0.06, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 14116.27, "ap": 212526.4, "tr": 7207.92, "emp_ap": 12751.58, "emp_tot": 13184.06, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 12751.58, "saldo_tot": 13184.06}, "199": {"num": 199, "uni": "EE SEBASTIAO DE MORAES CARDOSO", "cid": "ITAPECERICA DA SERRA", "emp": "REINALDO", "sit": "5. CONCLUÍDA", "contrato": 186643.95, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 37328.79, "ap": 131576.49, "tr": 12451.6, "emp_ap": 26315.3, "emp_tot": 28805.62, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26315.3, "saldo_tot": 28805.62}, "200": {"num": 200, "uni": "EE OREDO RODRIGUES DA CRUZ", "cid": "JUQUITIBA", "emp": "ANTONIO CABELO", "sit": "5. CONCLUÍDA", "contrato": 171519.72, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 34303.94, "ap": 130434.87, "tr": 0.0, "emp_ap": 26086.97, "emp_tot": 26086.97, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26086.97, "saldo_tot": 26086.97}, "223": {"num": 223, "uni": "ETEC Antonio furlan", "cid": "BARUERI", "emp": "REINALDO", "sit": "4. EXECUÇÃO", "contrato": 1935375.91, "taxa": 0.538489, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 1042178.64, "ap": 413291.43, "tr": 273284.71, "emp_ap": 222552.89, "emp_tot": 369713.7, "mat": 127178.11, "serv": 19199.0, "sienge": 146945.42, "npedidos": 18, "top": [["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)", "m²", 731.4, 23331.66], ["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET", "m2", 450.0, 17946.0], ["Torneira de acionamento manual e com ciclo de ", "un", 18.0, 17457.3], ["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ", "un", 30.0, 14830.5], ["Tinta esmalte cinza médio 3,6 LT", "gl", 50.0, 5781.0], ["PORTA DE MADEIRA COMPLETA 0,92X2,10", "un", 6.0, 4296.0], ["TELA Q-92 2X3 M", "un", 60.0, 3996.0], ["Divisoria de Granilite frontal (DV-03) 0,40x1,", "un", 25.0, 3802.5], ["FERRO CHATO 5/8 X 3/16", "br", 90.0, 3780.0], ["LUMINÁRIA IL-45 - COM LÂMPADA LED", "un", 42.0, 3766.14], ["PR-09 C=2MM", "un", 12.0, 2808.0], ["Tinta Esmalte base d'água Branco 18l", "lt", 20.0, 2500.0], ["Esmalte Brilhante Branco Coralit 3, 6l", "gl", 20.0, 2500.0], ["TINTA ESMALTE BASE ÁGUA CINZA", "lt", 20.0, 2361.2], ["Coral Rende Muito Branco Neve 18l", "lt", 6.0, 2010.0], ["TINTA PISO CINZA MÉDIO 18L", "lt", 5.0, 1725.0], ["DV-04 C=1,2M", "un", 3.0, 1368.9], ["Divisórias de granilite 0,35 X 1,80 Conforme D", "un", 10.0, 1331.1], ["Cabo flex 6mm² preto", "rol", 2.0, 1295.0], ["Cabo flex 4mm² preto", "rol", 2.0, 864.8]], "saldo_ap": 75607.47, "saldo_tot": 222768.28, "absorv": 84486.46, "estoque": 61890.65, "saldo_ap_prop": 138066.43, "saldo_tot_prop": 285227.24}, "224": {"num": 224, "uni": "ELIZA DE OLIVEIRA RIBEIRO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1486645.35, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 486290.92, "tr": 274008.61, "emp_ap": null, "emp_tot": null, "mat": 2852.39, "serv": 0.0, "sienge": 2852.39, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "230": {"num": 230, "uni": "EE MARIA ANTONIETA MARTINS", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1979042.22, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 1083172.19, "tr": 179925.01, "emp_ap": null, "emp_tot": null, "mat": 1976.74, "serv": 0.0, "sienge": 1976.74, "npedidos": 9, "top": [], "saldo_ap": null, "saldo_tot": null}, "231": {"num": 231, "uni": "EE MARIA JOSE ANTUNES FERRAZ", "cid": "TABOÃO DA SERRA", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1912108.62, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 776720.04, "tr": 58057.26, "emp_ap": null, "emp_tot": null, "mat": 712.0, "serv": 0.0, "sienge": 712.0, "npedidos": 7, "top": [], "saldo_ap": null, "saldo_tot": null}, "232": {"num": 232, "uni": "EE NEIDE CELESTINA DE OLIVEIRA", "cid": "EMBU GUAÇU", "emp": "CRISTIAN GUIDO", "sit": "4. EXECUÇÃO", "contrato": 1394560.14, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 500062.77, "tr": 68313.36, "emp_ap": null, "emp_tot": null, "mat": 2080.0, "serv": 0.0, "sienge": 2080.0, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}, "269": {"num": 269, "uni": "EE JD CAMPESTRE", "cid": "EMBU GUAÇU", "emp": "RENILDO", "sit": "4. EXECUÇÃO", "contrato": 1328935.74, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 661977.78, "tr": 45518.87, "emp_ap": null, "emp_tot": null, "mat": 1113.72, "serv": 0.0, "sienge": 1113.72, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "274": {"num": 274, "uni": "ETEC EMBU", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1568182.98, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 104600.06, "tr": 468976.52, "emp_ap": null, "emp_tot": null, "mat": 1410.0, "serv": 0.0, "sienge": 1410.0, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "278": {"num": 278, "uni": "EE GERTRUDES EDER", "cid": "ITAPECERICA DA SERRA", "emp": "LEONARDO ZANAO", "sit": "4. EXECUÇÃO", "contrato": 2152584.69, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 156359.02, "tr": 57537.42, "emp_ap": null, "emp_tot": null, "mat": 4272.3, "serv": 0.0, "sienge": 4272.3, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "284": {"num": 284, "uni": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 114889.32, "taxa": 0.46, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 52849.09, "ap": 3522.17, "tr": 45000.54, "emp_ap": 1620.2, "emp_tot": 22320.45, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 1620.2, "saldo_tot": 22320.45}, "287": {"num": 287, "uni": "EEPROF LAERT ALMEIDA SÃO BERNARDO", "cid": "TABOÃO DA SERRA", "emp": "PEDRO", "sit": "4. EXECUÇÃO", "contrato": 1950390.3, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 32747.41, "tr": 273322.99, "emp_ap": null, "emp_tot": null, "mat": 1088.58, "serv": 0.0, "sienge": 1088.58, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "288": {"num": 288, "uni": "EE EDUARDO VAZ", "cid": "EMBU DAS ARTES", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1756795.6, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 2378.4, "tr": 156047.64, "emp_ap": null, "emp_tot": null, "mat": 8399.5, "serv": 0.0, "sienge": 8399.5, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}};
 (function(){
@@ -8337,10 +8486,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
-<script src="sienge.js?v=202610081953"></script>
-<script src="sienge_itens.js?v=202610081953"></script>
-<script src="sienge_solic.js?v=202610081953"></script>
-<script src="entregas.js?v=202610081953"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
+<script src="sienge.js?v=202610090110"></script>
+<script src="sienge_itens.js?v=202610090110"></script>
+<script src="sienge_solic.js?v=202610090110"></script>
+<script src="entregas.js?v=202610090110"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -9023,7 +9172,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   var H=document.documentElement, B=document.getElementById('btTema');
   if(!B) return;
   function rotulo(t){
-    B.textContent = t==='claro' ? '☾ Fundo escuro' : '☀ Fundo claro';
+    B.textContent = t==='claro' ? '☾' : '☀';
     B.title       = t==='claro' ? 'voltar ao fundo escuro' : 'mudar para fundo claro';
     B.setAttribute('aria-pressed', t==='claro' ? 'true' : 'false');
   }
@@ -9053,10 +9202,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: SUB-ABA FISCALIZAÇÃO (Livros de Ocorrência) ================= -->
-<script src="lo.js?v=202610081953"></script>
-<script src="seg.js?v=202610081953"></script>
-<script src="rao.js?v=202610081953"></script>
-<script src="relsem.js?v=202610081953"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
+<script src="lo.js?v=202610090110"></script>
+<script src="seg.js?v=202610090110"></script>
+<script src="rao.js?v=202610090110"></script>
+<script src="relsem.js?v=202610090110"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
 <style>
   #loBox .loK{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
   #loBox .loK>div{flex:1 1 150px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:10px 12px;background:var(--cd,#fff)}
@@ -9341,7 +9490,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
-<script src="consolidado.js?v=202610081953"></script>
+<script src="consolidado.js?v=202610090110"></script>
 <style>
   #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
   #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
@@ -9980,7 +10129,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   },700);
 })();
 </script>
-<script src="mat_aba.js?v=202610081953"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
+<script src="mat_aba.js?v=202610090110"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
 <script>
 /* ---------- sub-aba "Medições (checklist)" na pagina da obra (08/10) --------
    Era o unico dos cinco quadros gerais que NAO tinha recorte por obra: aberto
@@ -10115,5 +10264,61 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 
+<script>
+/* ---------- 09/10: navegacao em dois niveis --------------------------------
+   Linha 1: as 7 areas. Linha 2: as telas da area. Os botoes da linha 2 sao
+   os de sempre (mesmos ids e onclick); aqui so se decide quais aparecem.
+   Quem manda e o aria-selected que a mostra() ja grava: qualquer caminho que
+   troque de tela (clique, link da lista, botao de outra aba, TV) acende o
+   grupo certo sozinho, porque o observador olha esse atributo. */
+(function(){
+  var bar=document.getElementById('subBar'), gb=document.getElementById('grpBar');
+  if(!bar||!gb) return;
+  var subs=[].slice.call(bar.querySelectorAll('.tab[data-g]'));
+  var grps=[].slice.call(gb.querySelectorAll('.tab.grp'));
+  var ult={}, atual=null;
+  function primeiro(g){ var b=subs.filter(function(x){ return x.dataset.g===g&&!x.dataset.esc; })[0]; return b&&b.id; }
+  function pinta(g){
+    atual=g;
+    grps.forEach(function(b){ b.setAttribute('aria-current', b.dataset.g===g?'true':'false'); });
+    var vis=0;
+    subs.forEach(function(b){
+      var fora=b.dataset.g!==g||!!b.dataset.esc;
+      b.classList.toggle('foraG',fora); if(!fora) vis++;
+    });
+    bar.classList.toggle('um', vis<=1);
+  }
+  function sync(){
+    var at=bar.querySelector('.tab[aria-selected="true"]'); if(!at) return;
+    var g=at.dataset.g; if(!g) return;
+    ult[g]=at.dataset.esc?primeiro(g):at.id;
+    if(g!==atual) pinta(g);
+  }
+  grps.forEach(function(b){
+    b.addEventListener('click',function(){
+      var g=b.dataset.g, id=ult[g]||primeiro(g), alvo=document.getElementById(id);
+      if(alvo) alvo.click();
+      pinta(g);
+    });
+  });
+  new MutationObserver(sync).observe(bar,{subtree:true,attributes:true,attributeFilter:['aria-selected']});
+  sync(); if(!atual) pinta('cart');
+
+  /* Auditoria mostra a soma dos dois pontos (CTR + planilha) */
+  function num(id){ var e=document.getElementById(id); var m=e&&(e.textContent||'').match(/\d+/); return m?+m[0]:0; }
+  function badge(){ var n=num('nAlerta')+num('nAdeq'), e=document.getElementById('nAud');
+    if(e) e.textContent=n?'('+n+')':''; }
+  badge(); setTimeout(badge,1500); setInterval(badge,5000);
+
+  /* TV: um botao so, com as duas opcoes num menu */
+  var bt=document.getElementById('btTvMenu'), pop=document.getElementById('tvPop');
+  function fechaPop(){ if(!pop.hidden){ pop.hidden=true; bt.setAttribute('aria-expanded','false'); } }
+  bt.addEventListener('click',function(e){ e.stopPropagation();
+    pop.hidden=!pop.hidden; bt.setAttribute('aria-expanded',pop.hidden?'false':'true'); });
+  pop.addEventListener('click',function(){ fechaPop(); });
+  document.addEventListener('click',function(e){ if(!e.target.closest('.hdrAcoes')) fechaPop(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') fechaPop(); });
+})();
+</script>
 </body>
 </html>
