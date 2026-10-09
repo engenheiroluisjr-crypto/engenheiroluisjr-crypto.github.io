@@ -1,0 +1,159 @@
+{
+ "tipo": "diario",
+ "obra": 223,
+ "lote": "42",
+ "unidade": "ETEC Antonio furlan",
+ "data": "2026-10-07",
+ "numero": 2,
+ "pct": "76",
+ "avanco": {
+  "aprovado": 21.35458170500841,
+  "engenheiro": 76.0,
+  "fiscal_lo": 57.0
+ },
+ "previsao": "14/10/2026",
+ "gerado": "2026-10-09T02:25:58",
+ "ficha": {
+  "funcionarios": "4",
+  "mao_de_obra": "Suficiente",
+  "material": "Suficiente",
+  "equipamentos": "Suficiente",
+  "tempo": "Seco",
+  "falhas": "Não",
+  "placa": null,
+  "andamento": "Em execução",
+  "pct": "76",
+  "ritmo": "Normal",
+  "limpeza": "Boa",
+  "previsao": null,
+  "visita": "08:32",
+  "responsavel": null
+ },
+ "servicos": [
+  "INSTALAÇÃO DE PORTAS NOS BANHEIROS",
+  "EXECUÇÃO DE PINTURA"
+ ],
+ "servicos_da_visita": true,
+ "observacoes": [],
+ "recomendacoes": [
+  "APÓS A REGULARIZAÇÃO DAS PENDÊNCIAS, REALIZAR REGISTRO FOTOGRÁFICO E ENVIAR AS FOTOS NO GRUPO"
+ ],
+ "pendencias": [
+  "01 - INSTALAÇÃO DE 03 PORTAS DE FERRO NA COZINHA, CONFORME ALINHADO COM O FISCAL RODRIGO",
+  "02 - INSTALAÇÃO DE TELA MOSQUITEIRA DE ALUMÍNIO NAS JANELAS DA COZINHA",
+  "03 - RETIRADA URGENTE DO ENTULHO DA ÁREA DA FRENTE DA UNIDADE",
+  "04 - FINALIZAR A INSTALAÇÃO DAS PORTAS DOS BANHEIROS PARA LIBERAÇÃO DA UNIDADE PARA O 2º TURNO DAS ELEIÇÕES"
+ ],
+ "alertas": [
+  [
+   "medio",
+   "76% executado com 96% do prazo decorrido (desvio -20 p.p.)"
+  ],
+  [
+   "alto",
+   "Faltam 7 dia(s) para o término (14/10/2026) com 76% executado"
+  ],
+  [
+   "medio",
+   "2 pedido(s) de material sem entrega há 60 dias ou mais"
+  ]
+ ],
+ "pedidos_estado": {
+  "49451": "ENTREGUE",
+  "50818": "ENTREGUE",
+  "50882": "ENTREGUE",
+  "50902": "PARCIAL",
+  "51337": "ENTREGUE",
+  "51992": "ENTREGUE",
+  "52454": "ENTREGUE",
+  "52619": "ENTREGUE",
+  "53445": "ENTREGUE",
+  "53791": "ENTREGUE",
+  "53858": "ENTREGUE",
+  "54471": "ENTREGUE",
+  "54494": "PARCIAL",
+  "54839": "ENTREGUE",
+  "55427": "PARCIAL",
+  "55713": "ENTREGUE",
+  "55717": "ENTREGUE",
+  "56305": "ENTREGUE",
+  "56841": "ENTREGUE",
+  "57169": "PARCIAL",
+  "57422": "PENDENTE"
+ },
+ "fotos": [
+  {
+   "arquivo": "painelv223-muzt98oqf00xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "PENDÊNCIA 04"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf01xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf02xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf03xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf04xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf05xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf06xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf07xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf08xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf09xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "PENDÊNCIA 04"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf10xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "PENDÊNCIA 04"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf11xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf12xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "Registro da visita"
+  },
+  {
+   "arquivo": "painelv223-muzt98oqf13xxxx.jpg",
+   "data": "2026-10-09",
+   "legenda": "PENDÊNCIA 03"
+  }
+ ],
+ "m001": "42.223_M005_ETEC-ANTONIO-FURLAN_rev00.xlsx",
+ "autor": "Eng. Leonardo",
+ "whats": "🏗️ *ACOMPANHAMENTO DE OBRA — 07/10/2026*\n_ETEC Antonio furlan · 2026.ATA.FDE.42.223 · BARUERI_\n\n👷 Efetivo: 4 · ☀️ Tempo seco · Ritmo normal · Limpeza boa\n📊 Aprovado *21,4%* · Engenheiro *76%* · Fiscal FDE *57%* (LO 30/09)\n📅 Previsão de término: 14/10/2026\n\n🔨 *Executado no dia*\n• INSTALAÇÃO DE PORTAS NOS BANHEIROS\n• EXECUÇÃO DE PINTURA\n\n📦 *Materiais — pedidos sem entrega até 07/10/2026*\n⚠️ 5 pedido(s), R$ 31.142,71 ainda por receber\n• 50902 — Cabo flex 4mm² preto +6 itens — *136 dias* em aberto\n• 54494 — TOMADA 10A +3 itens — *60 dias* em aberto\n• 55427 — TINTA ESMALTE AZUL TURQUESA BASE S +7 itens — *44 dias* em aberto\n• 57169 — PORTA DE BANHEIRO - 1,54 M X 55 CM — *9 dias* em aberto\n• 57422 — CANTONEIRA 3/4 X 1/8 +2 itens — *4 dias* em aberto\n\n📌 *Pendências*\n• 01 - INSTALAÇÃO DE 03 PORTAS DE FERRO NA COZINHA, CONFORME ALINHADO COM O FISCAL RODRIGO\n• 02 - INSTALAÇÃO DE TELA MOSQUITEIRA DE ALUMÍNIO NAS JANELAS DA COZINHA\n• 03 - RETIRADA URGENTE DO ENTULHO DA ÁREA DA FRENTE DA UNIDADE\n• 04 - FINALIZAR A INSTALAÇÃO DAS PORTAS DOS BANHEIROS PARA LIBERAÇÃO DA UNIDADE PARA O 2º TURNO DAS ELEIÇÕES\n\n❗ *Recomendações*\n• APÓS A REGULARIZAÇÃO DAS PENDÊNCIAS, REALIZAR REGISTRO FOTOGRÁFICO E ENVIAR AS FOTOS NO GRUPO\n\n_Relatório nº 2 · Eng. Leonardo · Engenharia Atlântica_"
+}
