@@ -58,6 +58,7 @@ footer.bar .msg{flex:1;font-size:13px;color:var(--mut);min-width:180px}
 .okmsg{background:var(--okb);border:1px solid var(--ok);border-radius:10px;padding:12px;margin:10px 0}
 .mut{color:var(--mut);font-size:12.5px}
 .pd{padding:9px 0;border-bottom:1px dashed var(--ln)}
+.solAdd{display:grid;gap:6px;margin:10px 0 4px;padding:10px;border:1px dashed var(--ln);border-radius:8px}.solAdd input{padding:8px;font:inherit;border:1px solid var(--ln);border-radius:6px;background:transparent;color:inherit}.smx button{padding:6px 10px;font:inherit;border-radius:6px;border:1px solid var(--ln);cursor:pointer;margin-top:4px}.solAdd button{padding:8px;font:inherit;font-weight:600;border-radius:6px;border:1px solid var(--ln);cursor:pointer}
 .pd:last-child{border-bottom:0}
 .pd .h{font-size:14px}.pd .h b{color:var(--pri)}
 .pd .it{font-size:12.5px;color:var(--mut);margin:2px 0 6px}
@@ -153,13 +154,26 @@ function secPedidos(){ var tit='<h2>Materiais — entrega dos pedidos do Sienge 
       var ant=x.ult?('última marca: '+({E:'Entregue',P:'Parcial',N:'Não entregue'}[x.ult]||x.ult)+(x.por?' por '+esc(x.por):'')+(x.quando?' em '+esc(x.quando):'')):(x.se==='S'?'sem baixa no Sienge':x.se==='P'?'parcial pelo Sienge':'pendente no Sienge');
       return '<div class="pd'+(v?'':' falta')+'" data-p="'+x.n+'"><div class="h"><b>'+x.n+'</b> · '+esc(x.data)+' · '+esc(x.forn)+'</div><div class="it">'+(it||'—')+'<br>'+ant+'</div>'+
         '<div class="sb">'+STP.map(function(o){ return '<button data-s="'+o[0]+'" class="'+o[0]+(v===o[0]?' on':'')+'">'+o[1]+'</button>'; }).join('')+'</div></div>'; }).join('')+secSolic()+secCanc()+'</section>'; }
-function secSolic(){ var L=solicAbertas(); if(!L.length) return '';
-  return '<h3 style="margin:16px 0 4px;font-size:15px">Solicitações ainda sem pedido de compra <span class="mut">('+L.length+')</span></h3>'+
+function secSolic(){ var L=solicAbertas(), dt=(window.SIENGE_SOLIC_ABDT||{})[String(S.obra)]||'';
+  /* 09/10 (Luis): pedido de material que ainda não virou ordem de compra TEM de aparecer na visita.
+     A lista vem do Acompanhamento de Solicitações do Sienge; o que foi pedido depois da última
+     atualização ainda não está nela -> o engenheiro acrescenta aqui e vai como pendente no RAO. */
+  return '<h3 style="margin:16px 0 4px;font-size:15px">Pedidos de material ainda sem ordem de compra <span class="mut">('+(L.length+(S.solm||[]).length)+')</span></h3>'+
+    '<p class="mut">Lista do Sienge'+(dt?' atualizada em <b>'+esc(dt)+'</b>':'')+'. Pedido feito depois disso, ou que não esteja aqui, <b>acrescente no fim</b> — entra no relatório como pendente.</p>'+
+    (L.length?'':'<p class="mut">Nenhuma solicitação sem ordem de compra nesta lista.</p>')+
     '<p class="mut">Pedidas no Sienge mas compras ainda não fechou o pedido (sem cotação). Ficam como <b>pendentes</b>. Se puder, diga se ainda precisa, se chegou por outro meio ou se pode cancelar — não é obrigatório.</p>'+
     L.map(function(x){ var v=S.ent[x.k]||'', it=x.itens.slice(0,3).map(function(i){ return esc(String(i[0]).replace(/^\d+\s*-\s*/,''))+' — '+String(i[2]).replace('.',',')+' '+esc(i[1]); }).join(' · ')+(x.itens.length>3?' · +'+(x.itens.length-3)+' item(ns)':'');
       var ant='pendente — sem pedido de compra'+(x.dias?' · solicitada há '+x.dias+' dia(s)':'')+(x.ult?' · última marca: '+(x.obs?esc(x.obs):({N:'ainda precisa',P:'parcial'}[x.ult]||x.ult))+(x.por?' ('+esc(x.por)+')':''):'');
       return '<div class="pd sol" data-p="'+x.k+'"><div class="h"><b>Sol. '+x.sol+'</b> · '+esc(x.data)+' · '+esc(x.fin.slice(0,70))+'</div><div class="it">'+(it||'—')+'<br>'+ant+'</div>'+
-        '<div class="sb">'+STS.map(function(o){ return '<button data-s="'+o[0]+'" class="'+o[0]+(v===o[0]?' on':'')+'">'+o[1]+'</button>'; }).join('')+'</div></div>'; }).join(''); }
+        '<div class="sb">'+STS.map(function(o){ return '<button data-s="'+o[0]+'" class="'+o[0]+(v===o[0]?' on':'')+'">'+o[1]+'</button>'; }).join('')+'</div></div>'; }).join('')+secSolManual(); }
+function secSolManual(){ var M=S.solm||[];
+  return M.map(function(m,i){ return '<div class="pd sol man"><div class="h"><b>'+(m.sol?'Sol. '+esc(m.sol):'Pedido sem nº')+'</b> · informado nesta visita</div><div class="it">'+esc(m.desc)+(m.qtd?' — '+esc(m.qtd):'')+'<br>pendente — ainda sem ordem de compra</div>'+
+      '<div class="smx"><button data-solrm="'+i+'" type="button">Tirar da lista</button></div></div>'; }).join('')+
+    '<div class="solAdd"><b>Acrescentar pedido que não aparece</b>'+
+    '<input id="smSol" inputmode="numeric" placeholder="nº da solicitação (se tiver)">'+
+    '<input id="smDesc" placeholder="material (ex.: cimento CP-II, tubo PVC 50 mm)">'+
+    '<input id="smQtd" placeholder="quantidade (ex.: 20 sacos)">'+
+    '<button id="btSolAdd" type="button">+ Acrescentar</button></div>'; }
 function secCanc(){ var L=pedidosCancelados(); if(!L.length) return '';
   return '<details class="canc"><summary>'+L.length+' pedido(s) cancelado(s) — não precisam de resposta</summary><ul>'+
     L.map(function(x){ return '<li><b>'+x.n+'</b> · '+esc(x.data)+' · '+esc(x.forn)+' — <s>cancelado</s>'+(x.por?' por '+esc(x.por):'')+(x.quando?' em '+esc(x.quando):'')+'</li>'; }).join('')+'</ul></details>'; }
@@ -210,13 +224,17 @@ document.addEventListener('click',function(e){ var t=e.target;
   if(t.matches('.seg button')){ var k=t.closest('.q').dataset.k, v=t.dataset.v; S.r[k]=(S.r[k]===v?undefined:v); if(!S.r[k]) delete S.r[k];
     t.closest('.seg').querySelectorAll('button').forEach(function(b){ b.classList.toggle('on',b.dataset.v===S.r[k]); }); salva(); return; }
   if(t.dataset.rm!=null){ F.splice(+t.dataset.rm,1); salva(); desenhaFotos(); return; }
+  if(t.dataset.solrm!=null){ (S.solm=S.solm||[]).splice(+t.dataset.solrm,1); salva(); var y2=window.scrollY; pintaPedidos(); window.scrollTo(0,y2); return; }
+  if(t.id==='btSolAdd'){ var ds=(document.getElementById('smDesc').value||'').trim(), sn=(document.getElementById('smSol').value||'').replace(/\D/g,''), qq=(document.getElementById('smQtd').value||'').trim();
+    if(!ds&&!sn){ msg('Escreva o material ou o nº da solicitação.'); return; }
+    (S.solm=S.solm||[]).push({sol:sn,desc:ds,qtd:qq}); salva(); var y3=window.scrollY; pintaPedidos(); window.scrollTo(0,y3); msg('Pedido acrescentado.'); return; }
   if(t.id==='btLimpar'){ if(!limpar){ limpar=true; msg('Clique de novo em Limpar para apagar este rascunho.'); setTimeout(function(){limpar=false;},4000); return; }
     var q=S.quem; S=novo(); S.quem=q; F=[]; salva(); render(); msg('Rascunho apagado.'); return; }
   if(t.id==='btEnviar'){ enviar(); }
 });
 var limpar=false;
 document.addEventListener('input',function(e){ var t=e.target, d=t.dataset;
-  if(t.id==='fObra'){ S.obra=t.value; S.ent={}; topo(); pintaPedidos(); }
+  if(t.id==='fObra'){ S.obra=t.value; S.ent={}; S.solm=[]; topo(); pintaPedidos(); }
   else if(t.id==='fData') S.data=t.value; else if(t.id==='fHora') S.hora=t.value; else if(t.id==='fFunc') S.func=t.value; else if(t.id==='fPct') S.pct=t.value;
   else if(t.id==='fQuem'){ S.quem=t.value; ls(CHQ,t.value); }
   else if(d.t) S.t[d.t]=t.value; else if(d.leg!=null) F[+d.leg].l=t.value; else return;
