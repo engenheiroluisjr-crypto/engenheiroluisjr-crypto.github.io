@@ -71,6 +71,8 @@ select,input{font:inherit;color:var(--tx);background:var(--card);border:1px soli
 html.emb,html.emb body{overflow-x:hidden}
 html.emb body{padding-bottom:0}</style>
 <script>if(window.parent!==window){document.documentElement.className+=' emb';}</script>
+<!-- 10/10: V2 Liquid Glass. Camada compartilhada; so @media screen, a impressao nao muda. -->
+<link rel="stylesheet" href="v2.css?v=202610101343">
 </head>
 <body>
 <header class="top"><h1>Simulação de fechamento do empreiteiro</h1><a href="./">← voltar ao painel</a></header>
@@ -91,11 +93,11 @@ html.emb body{padding-bottom:0}</style>
 </div>
 <div id="vazio" class="vazio"></div>
 <div id="rel"></div>
-<script src="fech.js?v=202610091923"></script>
-<script src="med_itens.js?v=202610091923"></script>
-<script src="sienge.js?v=202610091923"></script>
-<script src="sienge_itens.js?v=202610091923"></script>
-<script src="entregas.js?v=202610091923"></script>
+<script src="fech.js?v=202610101343"></script>
+<script src="med_itens.js?v=202610101343"></script>
+<script src="sienge.js?v=202610101343"></script>
+<script src="sienge_itens.js?v=202610101343"></script>
+<script src="entregas.js?v=202610101343"></script>
 <script src="libs/xlsx.mini.min.js"></script>
 <script>
 (function(){
@@ -338,5 +340,6 @@ pintaLista(); render();
 puxaMarcas().then(function(){ render(); });
 })();
 </script>
+<script src="v2.js?v=202610101343"></script>
 </body>
 </html>

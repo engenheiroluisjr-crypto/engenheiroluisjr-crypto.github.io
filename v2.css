@@ -1,0 +1,164 @@
+/* ===========================================================================
+   V2 · Liquid Glass — camada das paginas irmas (10/10/2026)
+
+   Mesma linguagem do painel: fundo de luz ambiente quente, cartoes de vidro,
+   acento terracota, cantos largos. As paginas irmas tem tokens proprios
+   (--bg --card --tx --mut --ln --pri ...), entao aqui eles sao REDEFINIDOS em
+   vez de reescrever o CSS de cada pagina. Um arquivo so para as seis.
+
+   Tudo dentro de @media screen: a impressao continua igual a V1 -- os PDFs do
+   checklist, do fechamento e do material nao mudam uma linha.
+
+   Quando a pagina esta dentro de uma aba do painel (html.emb), o fundo some e
+   as bordas externas somem junto: quem desenha o vidro ali e o painel.
+=========================================================================== */
+@media screen{
+:root{
+  --v2-amb1:#5a3a1e; --v2-amb2:#3b2716; --v2-amb3:#231a12; --v2-base:#120d09;
+  --v2-edge:rgba(255,255,255,.14); --v2-hi:rgba(255,255,255,.22);
+  --v2-shadow:0 18px 50px rgba(0,0,0,.38);
+  --v2-solid:#251c15; --v2-chip:rgba(255,255,255,.08);
+  --v2-pan:rgba(255,255,255,.88); --v2-pan-tx:#1d1712; --v2-pan-tx2:#6f6458;
+  /* tokens das proprias paginas, repintados */
+  --bg:transparent; --card:rgba(40,31,24,.58); --tx:#f6f0e9; --mut:#9a8d80;
+  --ln:rgba(255,255,255,.10); --pri:#f0682c; --priBar:transparent;
+  --ok:#5ec98f; --okb:rgba(94,201,143,.16); --bad:#f0736b; --badb:rgba(240,115,107,.16);
+  --warn:#f0bb57; --warnb:rgba(240,187,87,.16); --na:#9a8d80; --nab:rgba(255,255,255,.07);
+}
+html[data-tema="claro"]{
+  --v2-amb1:#e2bf97; --v2-amb2:#d2a77c; --v2-amb3:#f7efe5; --v2-base:#efe6da;
+  --v2-edge:rgba(255,255,255,.80); --v2-hi:rgba(255,255,255,.9);
+  --v2-shadow:0 16px 44px rgba(80,50,20,.14);
+  --v2-solid:#fbf6ef; --v2-chip:rgba(0,0,0,.05);
+  --bg:transparent; --card:rgba(255,255,255,.72); --tx:#1f1913; --mut:#857869;
+  --ln:rgba(70,45,20,.12); --pri:#d4561f;
+  --ok:#0f7a55; --okb:rgba(15,122,85,.12); --bad:#b52b2b; --badb:rgba(181,43,43,.12);
+  --warn:#96620a; --warnb:rgba(150,98,10,.14); --na:#857869; --nab:rgba(0,0,0,.05);
+}
+
+html,body{background:var(--v2-base) !important}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable","Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(38% 46% at 10% 18%,var(--v2-amb1),transparent 70%),
+  radial-gradient(44% 52% at 92% 12%,var(--v2-amb2),transparent 70%),
+  radial-gradient(52% 58% at 72% 98%,var(--v2-amb1),transparent 70%),
+  radial-gradient(60% 60% at 26% 88%,var(--v2-amb3),transparent 70%),var(--v2-base)}
+
+/* ---- cabecalho vira vidro flutuante ---- */
+header.top{position:sticky;top:12px;z-index:20;margin:12px 16px 0;padding:13px 18px;border-radius:24px;
+  background:rgba(40,31,24,.58);border:1px solid var(--v2-edge);color:var(--tx);
+  -webkit-backdrop-filter:blur(26px) saturate(165%);backdrop-filter:blur(26px) saturate(165%);
+  box-shadow:var(--v2-shadow),inset 0 1px 0 var(--v2-hi)}
+html[data-tema="claro"] header.top{background:rgba(255,255,255,.62)}
+header.top h1{font-size:15px;font-weight:700;letter-spacing:.01em;color:var(--tx)}
+header.top a{color:var(--mut);opacity:1;text-decoration:none;border:1px solid var(--v2-edge);
+  background:var(--v2-chip);border-radius:999px;padding:6px 13px;font-size:12px}
+header.top a:hover{color:var(--tx)}
+
+main{max-width:1560px;padding:16px 16px 48px}
+
+/* ---- barras de filtro e blocos viram vidro ---- */
+.barra,.card,.bloco,.quadro{background:var(--card) !important;border:1px solid var(--v2-edge) !important;
+  border-radius:22px !important;
+  -webkit-backdrop-filter:blur(26px) saturate(165%);backdrop-filter:blur(26px) saturate(165%);
+  box-shadow:var(--v2-shadow),inset 0 1px 0 var(--v2-hi);padding:14px 16px}
+label.f,label.chk{color:var(--mut)}
+select,input,textarea{border-radius:12px !important;background:var(--v2-chip) !important;
+  border:1px solid var(--v2-edge) !important;color:var(--tx) !important;padding:8px 11px !important;
+  min-height:38px}
+input[type=checkbox]{min-height:0;accent-color:var(--pri)}
+
+/* ---- os numeros do topo, iguais aos do Inicio ---- */
+.kpi{gap:12px}
+.kpi>div{background:var(--v2-pan) !important;color:var(--v2-pan-tx) !important;
+  border:1px solid rgba(255,255,255,.95) !important;border-radius:20px !important;padding:14px 16px !important;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+.kpi>div:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.18)}
+.kpi b{font-size:25px !important;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums;
+  color:inherit !important}
+.kpi span{color:var(--v2-pan-tx2) !important;font-size:11.5px}
+
+/* ---- titulos de secao ---- */
+h2{color:var(--tx) !important;font-size:14px;font-weight:700;letter-spacing:-.01em;
+  display:flex;align-items:center;gap:8px;margin:20px 0 9px}
+h2::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--pri);flex:none}
+
+/* ---- tabelas num painel claro, como no Inicio ---- */
+table{background:var(--v2-pan) !important;border:1px solid rgba(255,255,255,.95) !important;
+  border-radius:18px !important;overflow:hidden;color:var(--v2-pan-tx)}
+th{background:rgba(0,0,0,.04) !important;color:var(--v2-pan-tx2) !important;font-size:10.5px;
+  letter-spacing:.07em;text-transform:uppercase;font-weight:700;padding:10px 12px !important;
+  border-bottom:1px solid rgba(0,0,0,.08) !important}
+td{color:var(--v2-pan-tx);border-bottom:1px solid rgba(0,0,0,.07) !important;padding:9px 12px !important}
+tbody tr:hover td{background:rgba(240,104,44,.07)}
+tr.okrow td{background:rgba(15,122,85,.08) !important}
+.obra span,.mini,.auto,td .mini{color:var(--v2-pan-tx2) !important}
+
+/* ---- tabela larga rola dentro de si, nunca empurra a pagina ----
+   O envoltorio e criado pelo v2.js (as tabelas nascem de innerHTML). */
+.v2rol{overflow-x:auto;border-radius:18px;overscroll-behavior-x:contain;
+  scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.2) transparent;max-width:100%}
+.v2rol::-webkit-scrollbar{height:7px}
+.v2rol::-webkit-scrollbar-thumb{background:rgba(0,0,0,.2);border-radius:4px}
+.v2rol>table{border-radius:0 !important;border:0 !important;min-width:max-content}
+@media (max-width:760px){.v2rol>table{min-width:0}}
+
+/* ---- pilulas e botoes de marcacao ---- */
+.pill{border-radius:999px;font-weight:700;padding:3px 10px}
+.p-ok{background:rgba(12,163,12,.14) !important;color:#0a7a0a !important}
+.p-bad{background:rgba(217,69,63,.14) !important;color:#b52b2b !important}
+.p-warn{background:rgba(232,163,23,.18) !important;color:#8a5e05 !important}
+.p-na{background:rgba(0,0,0,.06) !important;color:var(--v2-pan-tx2) !important}
+.tg{border-radius:999px !important;border:1px solid rgba(0,0,0,.14) !important;
+  background:rgba(0,0,0,.03) !important;color:var(--v2-pan-tx2) !important}
+.tg.on{background:rgba(12,163,12,.14) !important;border-color:rgba(12,163,12,.45) !important;
+  color:#0a7a0a !important;font-weight:700}
+.tg.on.no{background:rgba(217,69,63,.14) !important;border-color:rgba(217,69,63,.45) !important;
+  color:#b52b2b !important}
+
+/* ---- botoes ---- */
+.bt,button.bt{border-radius:999px !important;border:1px solid var(--v2-edge) !important;
+  background:var(--v2-chip) !important;color:var(--tx) !important;padding:8px 15px !important}
+.bt:hover{background:rgba(255,255,255,.12) !important}
+.bt.pri{background:linear-gradient(135deg,#f0682c,#d4561f) !important;border-color:transparent !important;
+  color:#fff !important;font-weight:700;box-shadow:0 6px 18px rgba(240,104,44,.3)}
+/* dentro de tabela e de painel claro o botao segue o painel */
+table .bt,.v2claro .bt{border-color:rgba(0,0,0,.14) !important;background:rgba(0,0,0,.03) !important;
+  color:var(--v2-pan-tx) !important}
+table .bt.pri,.v2claro .bt.pri{border-color:transparent !important;color:#fff !important}
+
+/* ---- notas e avisos ---- */
+.sync,.nota,.aviso{color:var(--mut)}
+.nota,.aviso{background:var(--v2-chip) !important;border:1px solid var(--v2-edge) !important;
+  border-radius:16px !important;color:var(--mut) !important}
+.nota b,.aviso b{color:var(--tx) !important}
+/* nota que vive dentro de painel claro herda o painel */
+table + .nota,.card .nota{background:rgba(0,0,0,.04) !important;border-color:rgba(0,0,0,.08) !important;
+  color:var(--v2-pan-tx2) !important}
+.card .nota b{color:var(--v2-pan-tx) !important}
+
+/* ---- listas suspensas: vidro, e nunca passando da tela ----
+   O .ddp do fechamento (escolher obras) nasce ancorado a esquerda e, com a
+   fonte do V2, passava 60px da borda direita no desktop. */
+.ddp,.pop,.sug{background:var(--v2-solid) !important;border:1px solid var(--v2-edge) !important;
+  border-radius:16px !important;box-shadow:var(--v2-shadow) !important;color:var(--tx);
+  max-width:min(460px,calc(100vw - 32px)) !important}
+.ddp label,.pop label{color:var(--tx)}
+.ddp label:hover,.pop label:hover{background:var(--v2-chip)}
+
+/* ---- embutida numa aba do painel: sem fundo e sem borda externa ---- */
+html.emb body::before{display:none}
+html.emb,html.emb body{background:transparent !important}
+html.emb header.top{display:none}
+html.emb main{padding:2px 0 8px;max-width:none}
+
+/* ---- celular ---- */
+@media (max-width:760px){
+  header.top{margin:8px 12px 0;padding:11px 14px;border-radius:20px}
+  main{padding:12px 12px 40px}
+  .barra,.card,.bloco{border-radius:18px !important;padding:12px 13px}
+  table{border-radius:16px !important}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+}

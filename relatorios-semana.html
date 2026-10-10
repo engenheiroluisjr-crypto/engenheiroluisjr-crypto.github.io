@@ -66,6 +66,8 @@ tr.just td{opacity:.6}
 html.emb,html.emb body{overflow-x:hidden}
 html.emb body{padding-bottom:0}</style>
 <script>if(window.parent!==window){document.documentElement.className+=' emb';}</script>
+<!-- 10/10: V2 Liquid Glass. Camada compartilhada; so @media screen, a impressao nao muda. -->
+<link rel="stylesheet" href="v2.css?v=202610101343">
 </head>
 <body>
 <header class="top"><h1>Relatórios da semana — acompanhamento (RAO) e segurança (SST)</h1><a href="./">← voltar ao painel</a></header>
@@ -272,5 +274,6 @@ render(); puxa().then(envia);
 setInterval(function(){ if(document.visibilityState==='visible'&&!fila().length) puxa(); },60000);
 })();
 </script>
+<script src="v2.js?v=202610101343"></script>
 </body>
 </html>
