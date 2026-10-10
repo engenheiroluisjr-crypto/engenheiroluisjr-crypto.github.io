@@ -20,7 +20,7 @@
 <link rel="apple-touch-icon" href="icone-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<title>Gestão de obras - Sede Alphaville/Barueri - Coord. Luis Jr</title>
+<title>Gestão de obras - Sede Alphaville/Barueri</title>
 <style>
   :root{
     --plane:#0d0d0d; --surface-1:#1a1a19; --surface-2:#232322; --line:#33332f;
@@ -64,8 +64,12 @@
   .card{background:var(--surface-1);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
   header{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
   header h1{font-size:18px;margin:0;letter-spacing:.4px;flex:1 1 260px}
-  .logo{display:inline-flex;gap:3px;align-items:flex-end;height:22px;margin-right:10px;vertical-align:-4px}
-  .logo i{display:block;width:5px;border-radius:2px 2px 0 0;background:var(--previsto)}
+  /* 10/10: a marca era um grafico de 3 barrinhas — dizia "painel", nao dizia "obra".
+     Virou um capacete: le na hora, fecha em 22px e sai limpo no papel. O SVG LEVA
+     width/height no atributo de proposito — no print as regras da V2 nao valem e um
+     SVG sem medida ocupa a folha inteira (foi o que aconteceu com a lupa da busca). */
+  .logo{display:inline-block;width:22px;height:22px;margin-right:10px;vertical-align:-4px;
+    color:var(--previsto);fill:currentColor;flex:none}
   .tabs{display:flex;gap:6px;overflow-x:auto;overscroll-behavior-x:contain;
     scrollbar-width:thin;scrollbar-color:var(--line) transparent;padding-bottom:3px}
   .tabs::-webkit-scrollbar{height:6px}
@@ -1157,7 +1161,7 @@ h2{letter-spacing:.06em;font-weight:700}
 header{position:relative;gap:12px;margin-bottom:14px;padding:14px 18px;border-radius:26px;background:var(--surface-1);border:1px solid var(--v2-edge);
   -webkit-backdrop-filter:blur(26px) saturate(165%);backdrop-filter:blur(26px) saturate(165%);box-shadow:var(--v2-shadow),inset 0 1px 0 var(--v2-hi)}
 header h1{font-size:15px;letter-spacing:.02em;font-weight:700}
-header h1 .logo i{background:var(--v2-accent)}
+header h1 .logo{color:var(--v2-accent)}
 .tab{border-radius:999px!important;border:1px solid var(--v2-edge)!important;background:var(--v2-chip)!important;color:var(--text-primary)!important;
   padding:7px 14px!important;transition:background .2s,box-shadow .2s,transform .15s}
 .tab:hover{background:var(--surface-2)!important}
@@ -1167,7 +1171,9 @@ header h1 .logo i{background:var(--v2-accent)}
 .tabs.sub .tab{border-color:transparent!important;background:transparent!important}
 .tabs.sub .tab[aria-selected=true]{background:linear-gradient(135deg,var(--v2-accent),var(--acaoBg))!important}
 /* trilho de grupos */
-.grupos{position:fixed!important;left:16px;top:16px;bottom:16px;z-index:30;display:flex!important;flex-direction:column!important;align-items:center;gap:8px;
+/* 10/10: tinha `bottom:16px` e o trilho descia ate o pe da tela, deixando um tubo
+   vazio embaixo do ultimo botao. Sem o bottom ele mede o proprio conteudo. */
+.grupos{position:fixed!important;left:16px;top:16px;max-height:calc(100vh - 32px);z-index:30;display:flex!important;flex-direction:column!important;align-items:center;gap:8px;
   width:68px;padding:14px 0;border-radius:34px;background:var(--surface-1);border:1px solid var(--v2-edge);
   -webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);box-shadow:var(--v2-shadow),inset 0 1px 0 var(--v2-hi);overflow:visible!important;flex-wrap:nowrap!important}
 .grupos::before{content:"ATL";font-weight:800;font-size:12px;color:var(--v2-accent);letter-spacing:-.02em;margin:2px 0 10px}
@@ -1704,11 +1710,137 @@ html[data-paleta="azul"] .orc nav button[aria-selected="true"]{
 }
 }
 </style>
+<style id="v2print">
+/* ================= O PAPEL DEPOIS DA V2 — 10/10/2026 =======================
+   Toda a camada V2 mora dentro de @media screen, de proposito: o PDF nao podia
+   mudar. So que o INICIO nasceu dentro da V2 — no papel as classes v2* ficavam
+   sem regra nenhuma, e o estrago era grosso:
+     . a lupa da busca (SVG com viewBox e SEM width/height) tomava uma folha
+       inteira sozinha — era a pagina 1 do PDF;
+     . todo botao (cartao, dia do calendario, evento da agenda) voltava ao
+       cinza padrao do navegador;
+     . .v2main e .v2side sao .card: com borda e sem caber na folha, deixavam
+       dois tubos verticais correndo de ponta a ponta de cada pagina;
+     . o calendario virava uma fileira de numeros soltos.
+   Este e o UNICO lugar do arquivo onde as classes v2* aparecem fora do
+   @media screen, e so faz uma coisa: dar ao Inicio uma forma de papel.   ===== */
+@media print{
+  /* uma coluna; o cartao de vidro vira folha branca, sem borda e sem tubo */
+  #v2home{display:block !important;margin:0 0 6px !important}
+  #v2home .v2main,#v2home .v2side{display:block !important;padding:0 !important;
+    border:0 !important;background:#fff !important;box-shadow:none !important;
+    border-radius:0 !important;break-inside:auto !important}
+  /* o que so existe para clicar sai do papel */
+  #v2home .v2search,#v2home .v2res,#v2home .v2seg,#v2home .v2sect button,
+  #v2home .v2trocar,#v2home .v2cal,#v2home .v2me,#v2home .v2feat nav,
+  #v2home .v2ct,.v2badge{display:none !important}
+  /* nenhum botao do Inicio leva o cinza do navegador */
+  #v2home button{background:none !important;border:0 !important;color:#000 !important;
+    box-shadow:none !important;transform:none !important}
+  #v2home .v2top{display:block !important;margin-bottom:8px !important}
+  #v2home .v2top h3{font-size:13pt !important;margin:0 !important}
+  #v2home .v2top p{font-size:8pt !important;color:#3a3a36 !important}
+  /* os quatro numeros do topo */
+  #v2home .v2stats{display:grid !important;grid-template-columns:repeat(4,1fr) !important;
+    gap:5px !important;margin-bottom:8px !important;break-inside:avoid}
+  #v2home .v2st{display:block !important;border:1px solid #c2c2ba !important;
+    border-radius:6px !important;padding:5px 7px !important}
+  #v2home .v2st .h{display:block !important;font-size:7.4pt !important;color:#3a3a36 !important}
+  #v2home .v2st .ic{display:none !important}
+  #v2home .v2st .row{display:flex !important;align-items:flex-end !important;
+    justify-content:space-between !important;gap:6px !important}
+  #v2home .v2st .v{font-size:13pt !important;font-weight:700 !important;line-height:1.1 !important}
+  #v2home .v2st .u{font-size:7pt !important;color:#3a3a36 !important}
+  #v2home .v2st svg{width:58px !important;height:23px !important;flex:none !important}
+  /* grafico do mes + obra em destaque, lado a lado */
+  #v2home .v2g2{display:grid !important;grid-template-columns:1.55fr 1fr !important;
+    gap:8px !important;margin-bottom:8px !important;break-inside:avoid}
+  #v2home .v2pn{border:1px solid #c2c2ba !important;border-radius:6px !important;
+    padding:8px !important;background:#fff !important;color:#000 !important}
+  #v2home .v2ph{display:flex !important;justify-content:space-between !important}
+  #v2home .v2ph b{font-size:9.5pt !important;color:#000 !important}
+  #v2home .v2lg{display:flex !important;gap:10px !important;font-size:7.4pt !important;
+    color:#3a3a36 !important;margin:2px 0 4px !important;flex-wrap:wrap !important}
+  #v2home .v2lg span{display:flex !important;gap:4px !important;align-items:center !important}
+  #v2home .v2lg i{display:inline-block !important;width:12px !important;height:3px !important;
+    border-radius:2px !important;flex:none !important}
+  #v2home .v2chart svg{display:block !important;width:100% !important;height:auto !important;
+    max-width:none !important;max-height:none !important}
+  /* o cartao de destaque e escuro na tela; no papel ele e branco */
+  #v2home .v2feat{display:block !important;background:#fff !important;color:#000 !important;
+    border:1px solid #c2c2ba !important}
+  #v2home .v2feat .v2ph b,#v2home .v2feat b{color:#000 !important}
+  #v2home .v2feat small,#v2home .v2feat .ln div{color:#3a3a36 !important}
+  #v2home .v2feat .big{font-size:15pt !important}
+  #v2home .v2feat .ln{display:flex !important;gap:12px !important;flex-wrap:wrap !important}
+  #v2home .v2feat .ln b{display:block !important;font-size:9pt !important}
+  #v2home .v2sect{display:block !important;margin:8px 0 5px !important;break-after:avoid}
+  #v2home .v2sect b{font-size:9.5pt !important;display:block !important;font-weight:700 !important}
+  #v2home .v2sect b::before{display:none !important}
+  /* as tres obras de prazo mais apertado */
+  #v2home .v2c3{display:grid !important;grid-template-columns:repeat(3,1fr) !important;
+    gap:6px !important;break-inside:avoid}
+  #v2home .v2oc{display:flex !important;gap:8px !important;align-items:center !important;
+    justify-content:space-between !important;border:1px solid #c2c2ba !important;
+    border-radius:6px !important;padding:6px 8px !important;background:#fff !important;
+    color:#000 !important}
+  #v2home .v2oc .t{font-size:8.5pt !important;font-weight:700 !important}
+  #v2home .v2oc .m2,#v2home .v2oc .tg2{font-size:7pt !important;color:#3a3a36 !important;
+    background:none !important;padding:0 !important;margin:0 !important}
+  #v2home .v2oc svg{width:38px !important;height:38px !important;flex:none !important}
+  /* a coluna da direita vira agenda corrida, em duas colunas, no fim do bloco */
+  #v2home .v2side{margin-top:8px !important;break-inside:avoid}
+  #v2home .v2ev:nth-child(n+15){display:none !important}
+  #v2home .v2ag::after{content:"Os primeiros 14 compromissos; a lista completa dos próximos 15 dias está no painel.";
+    display:block;font-size:6.6pt;color:#3a3a36;margin-top:4px}
+  #v2home .v2trio{display:grid !important;grid-template-columns:repeat(3,1fr) !important;
+    border:1px solid #c2c2ba !important;border-radius:6px !important;padding:5px 2px !important;
+    text-align:center !important;background:#fff !important;margin-bottom:6px !important;
+    break-inside:avoid}
+  #v2home .v2trio b{display:block !important;font-size:11pt !important}
+  #v2home .v2trio span{font-size:7pt !important;color:#3a3a36 !important}
+  #v2home .v2ag h4{display:flex !important;justify-content:space-between !important;
+    align-items:baseline !important;margin:0 0 4px !important;break-after:avoid}
+  #v2home .v2ag h4 span{font-size:8pt !important}
+  #v2home #v2ag{display:grid !important;grid-template-columns:1fr 1fr !important;
+    gap:0 14px !important;overflow:visible !important;max-height:none !important}
+  #v2home .v2ev{display:grid !important;grid-template-columns:26px 1fr auto !important;
+    gap:6px !important;align-items:center !important;padding:2.5px 0 !important;
+    margin:0 !important;border:0 !important;border-bottom:.5pt solid #d9d9d0 !important;
+    border-radius:0 !important;break-inside:avoid}
+  #v2home .v2ev .d{width:26px !important;height:auto !important;display:block !important;
+    border-radius:3px !important;font-size:5.6pt !important;line-height:1.1 !important;
+    padding:1px 0 !important;color:#fff !important;text-align:center !important}
+  #v2home .v2ev .d b{display:block !important;font-size:7.5pt !important}
+  #v2home .v2ev .tx{display:block !important;min-width:0 !important}
+  #v2home .v2ev .tx b{display:block !important;font-size:7.6pt !important;
+    white-space:normal !important;overflow:visible !important}
+  #v2home .v2ev .tx span{display:block !important;font-size:6.6pt !important;color:#3a3a36 !important}
+  #v2home .v2ev .vv{font-size:7.4pt !important;font-weight:700 !important;margin:0 !important}
+  /* a faixa de risco e os cinco cartoes: no papel o clamp por vw nao encolhe o
+     bastante e "R$ 25.477.925" saia cortado no meio do cartao */
+  #faixaTit .ft{font-size:11pt !important;line-height:1.25 !important}
+  #faixaTit .fs{font-size:7.4pt !important}
+  #faixaTit{padding:7px 10px !important;margin-bottom:7px !important}
+  .kpis5{grid-template-columns:repeat(5,1fr) !important;gap:5px !important;
+    margin-bottom:7px !important;break-inside:avoid}
+  .kpiA{padding:6px 7px !important}
+  .kpiA .v{font-size:10.5pt !important;letter-spacing:-.3px !important;
+    white-space:normal !important;overflow-wrap:anywhere;margin:3px 0 1px !important}
+  .kpiA .t{font-size:7.4pt !important;line-height:1.2 !important}
+  .kpiA .s{font-size:7pt !important;line-height:1.25 !important}
+  .kpiA .rg{font-size:6.4pt !important}
+  /* NAO voltar a por aqui uma regra do tipo `svg:not([width])` para conter desenho
+     sem medida: varios graficos de verdade (v2line, curva S, meta do mes) nascem
+     sem width e sem style, e a regra encolheu todos eles para 110px. Quem precisa
+     de limite ganha limite pelo proprio seletor, como .v2st svg logo acima. */
+}
+</style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1><span class="logo"><i style="height:10px"></i><i style="height:16px"></i><i style="height:22px"></i></span>GESTÃO DE OBRAS - SEDE ALPHAVILLE/BARUERI - COORD. LUIS JR</h1>
+    <h1><svg class="logo" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.6 17c0-4.9 2.8-8.3 6.3-8.8V6.9q0-1.4 1.4-1.4h1.4q1.4 0 1.4 1.4v1.3c3.5.5 6.3 3.9 6.3 8.8Z"/><rect x="1.2" y="17.3" width="21.6" height="2.9" rx="1.45"/><path d="M8.4 17c0-3.6 1-6.4 2.3-7.9" fill="none" stroke="#fff" stroke-width="1.1" opacity=".5"/><path d="M15.6 17c0-3.6-1-6.4-2.3-7.9" fill="none" stroke="#fff" stroke-width="1.1" opacity=".5"/></svg>GESTÃO DE OBRAS - SEDE ALPHAVILLE/BARUERI</h1>
     <div class="grupos" id="grpBar" aria-label="Áreas do painel">
       <button class="tab grp" type="button" data-g="cart" title="o resumo da carteira: prazo, meta do mês e curva S">Visão geral</button>
       <button class="tab grp" type="button" data-g="obras" title="lista de todas as obras e a página de cada uma">Obras</button>
@@ -1847,8 +1979,9 @@ html[data-paleta="azul"] .orc nav button[aria-selected="true"]{
       <h2>Quem está mais atrasado no cronograma</h2>
       <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 8px;line-height:1.5" id="atrNota"></p>
       <div class="legend">
-        <span><i style="background:var(--realizado)"></i>Onde a obra está</span>
-        <span><i style="background:var(--critical)"></i>O quanto falta para alcançar o cronograma</span>
+        <span><i style="background:var(--realizado)"></i>Onde a obra está hoje</span>
+        <span><i style="background:transparent;box-shadow:inset 0 0 0 2px var(--critical)"></i>Onde o cronograma manda estar</span>
+        <span><i style="background:var(--critical);width:16px;height:5px;border-radius:3px"></i>A distância entre as duas</span>
       </div>
       <div id="cAtraso"></div>
       <details style="margin-top:10px">
@@ -3281,8 +3414,8 @@ function renderCarteira(){
   }).filter(x=>x.pp>0.5).sort((a,b)=>(b.pp-a.pp)||(b.atraso-a.atraso));
   const somaAtr=atr.reduce((a,b)=>a+b.atraso,0);
   $('atrNota').innerHTML='Da esquerda para a direita, quanto do contrato já foi medido. '+
-    'O traço vertical é onde o cronograma manda a obra estar em <b>'+mesAno(MES_REF)+'</b>; '+
-    'o vermelho é o buraco entre uma coisa e outra. A ordem é por <b>pontos percentuais de '+
+    'O ponto cheio é onde a obra está; o alvo vazado é onde o cronograma manda ela estar em <b>'+mesAno(MES_REF)+'</b>; '+
+    'a barra vermelha entre os dois é o atraso. A ordem é por <b>pontos percentuais de '+
     'atraso</b>, e não por R$ — assim obra grande e obra pequena competem igual. '+
     'São '+atr.length+' obras atrasadas'+(atr.length?', e alcançar o cronograma em todas custaria <b>'+brl(somaAtr)+'</b>':'')+'. '+
     (atr.length>12?'O placar mostra as 12 piores; a lista completa está logo abaixo.':'');
@@ -5054,62 +5187,85 @@ function renderPrev(){
 function rankingAtraso(el,lista){
   el.innerHTML='';
   if(!lista.length){el.innerHTML='<p style="color:var(--good);font-size:13px">'+
-    'Nenhuma obra do filtro esta atrasada no cronograma. </p>';return;}
-  const ml=290, mr=150, mt=22, h=16, gap=20, W=1140;
-  const H=mt+lista.length*(h+gap)+14;
-  const gw=W-ml-mr, xx=p=>Math.max(p,0)*gw;
+    'Nenhuma obra do filtro está atrasada no cronograma. </p>';return;}
+  /* ---------------------------------------------------------- redesenho 10/10
+     A versao anterior empilhava dois retangulos colados: [azul = onde esta]
+     [vermelho = o buraco], mais um traco preto com o rotulo "meta 93,0%" em
+     cima de cada linha. Tres marcas para dizer duas coisas, e o traco repetia
+     um numero que ja estava na dica. Virou HALTERE (dumbbell), que e o desenho
+     proprio para distancia entre dois estados:
+         bolinha cheia  = onde a obra esta hoje
+         alvo vazado    = onde o cronograma manda estar em MES_REF
+         barra grossa   = a distancia entre as duas, que e a propria nota
+     A meta nao precisa mais de rotulo: ela E o alvo. E o olho mede o atraso
+     pelo comprimento da barra, nao comparando dois blocos de cor.
+     O resto e placar: medalha nos tres primeiros, faixa da linha acendendo no
+     passe do mouse, e a empreiteira embaixo do nome (quem cobra e ela).        */
+  const ml=300, mr=170, mt=30, lin=46, W=1140;
+  const H=mt+lista.length*lin+22;
+  const gw=W-ml-mr, xx=p=>ml+Math.max(Math.min(p,1),0)*gw;
   const s=svgEl(W,H); s.setAttribute('style','width:100%;height:auto');
-  s.setAttribute('aria-label','Obras ordenadas pelo atraso em pontos percentuais: onde estao contra onde deveriam estar no cronograma');
-  // regua unica 0-100% do contrato
+  s.setAttribute('aria-label','Placar das obras mais atrasadas: onde cada uma esta contra onde o cronograma manda estar');
+  // regua unica 0-100% do contrato, pontilhada para nao competir com os halteres
   [0,.25,.5,.75,1].forEach(f=>{const x=ml+gw*f;
-    add(s,'line',{x1:x,x2:x,y1:mt-8,y2:H-16,stroke:'var(--grade)'});
-    txt(s,x,mt-13,(f*100).toFixed(0)+'%',{size:9,fill:'var(--text-muted)'});});
-  txt(s,ml,H-3,'% do contrato ja medido',{size:9,anchor:'start',fill:'var(--text-muted)'});
+    add(s,'line',{x1:x,x2:x,y1:mt-9,y2:H-18,stroke:'var(--grade)','stroke-dasharray':'2 6'});
+    txt(s,x,mt-15,(f*100).toFixed(0)+'%',{size:9,fill:'var(--text-muted)'});});
+  txt(s,ml,H-4,'% do contrato já medido',{size:9,anchor:'start',fill:'var(--text-muted)'});
   lista.forEach((d,i)=>{
-    const y=mt+i*(h+gap), o=d.o;
-    // ---- posicao a esquerda, nome numa coluna propria: um nao invade o outro
-    const pos=txt(s,20,y+h-3,(i+1)+'\u00ba',{size:i<3?15:12,anchor:'start',
-      fill:i<3?'var(--text-primary)':'var(--text-muted)'});
-    if(i<3) pos.setAttribute('font-weight','700');
+    const y=mt+i*lin, cy=y+lin/2, o=d.o, pod=i<3;
+    // faixa da linha: fundo discreto no podio, invisivel no resto ate o mouse
+    const faixa=add(s,'rect',{x:8,y:y+3,width:W-16,height:lin-6,rx:13,
+      fill:'var(--marca)','fill-opacity':pod?.10:0});
+    // medalha
+    add(s,'circle',{cx:32,cy:cy,r:14,fill:pod?'var(--critical)':'none',
+      'fill-opacity':pod?(i===0?1:i===1?.74:.52):0,
+      stroke:pod?'none':'var(--marca)','stroke-width':pod?0:1.2});
+    const np=txt(s,32,cy+4.5,(i+1),{size:pod?13:11.5,
+      fill:pod?'#fff':'var(--text-muted)'});
+    if(pod) np.setAttribute('font-weight','700');
+    // nome em cima, empreiteira embaixo: duas linhas cabem no vao de 46px
     let nome=o.cod+'  '+(o.unidade||('obra '+o.cod));
-    if(nome.length>30) nome=nome.slice(0,29)+'\u2026';
-    const t=txt(s,62,y+h-4,nome,{size:11.5,anchor:'start',fill:'var(--text-secondary)'});
-    t.style.cursor='pointer'; t.addEventListener('click',()=>abrirObra(o.cod));
+    if(nome.length>30) nome=nome.slice(0,29)+'…';
+    const t=txt(s,58,cy-2,nome,{size:12,anchor:'start',
+      fill:pod?'var(--text-primary)':'var(--text-secondary)'});
+    if(pod) t.setAttribute('font-weight','650');
+    txt(s,58,cy+12,(o.empreiteira||'sem empreiteira')+'  ·  '+brl(o.valor),
+      {size:9.5,anchor:'start',fill:'var(--text-muted)'});
+    // ------- o haltere
+    const xe=xx(d.esta), xd=xx(d.dev);
+    add(s,'line',{x1:ml,x2:ml+gw,y1:cy,y2:cy,stroke:'var(--trilho)',
+      'stroke-width':7,'stroke-linecap':'round'});
+    if(d.esta>0.004) add(s,'line',{x1:ml,x2:xe,y1:cy,y2:cy,stroke:'var(--realizado)',
+      'stroke-width':7,'stroke-linecap':'round'});
+    // a distancia: a barra grossa E a nota da obra
+    add(s,'line',{x1:xe,x2:xd,y1:cy,y2:cy,stroke:'var(--critical)',
+      'stroke-width':11,'stroke-linecap':'round','stroke-opacity':.92});
+    add(s,'circle',{cx:xe,cy:cy,r:10,fill:'var(--realizado)','fill-opacity':.20});
+    add(s,'circle',{cx:xe,cy:cy,r:6,fill:'var(--realizado)'});
+    add(s,'circle',{cx:xd,cy:cy,r:7.5,fill:'none',stroke:'var(--critical)','stroke-width':2.6});
+    add(s,'circle',{cx:xd,cy:cy,r:2.4,fill:'var(--critical)'});
+    // ------- o numero que ordena a lista
+    const nx=W-mr+12, pp=d.pp.toFixed(0);
+    const g=txt(s,nx,cy+2,pp,{size:19,anchor:'start',fill:'var(--critical)'});
+    g.setAttribute('font-weight','700');
+    txt(s,nx+pp.length*11.5+5,cy+2,'pts atrás',{size:10,anchor:'start',fill:'var(--text-muted)'});
+    txt(s,nx,cy+16,'falta medir '+brl(d.atraso),{size:9,anchor:'start',fill:'var(--text-muted)'});
+    // ------- uma area de clique para a linha inteira
     const dica='<b>'+esc(o.cod+' '+(o.unidade||''))+'</b>'+
       '<br><span class="k">Deveria estar em:</span> '+pct(d.dev)+
-      '<br><span class="k">Esta em:</span> '+pct(d.esta)+
-      '<br><b style="color:var(--critical)">'+d.pp.toFixed(0)+' pontos atras</b>'+
+      '<br><span class="k">Está em:</span> '+pct(d.esta)+
+      '<br><b style="color:var(--critical)">'+pp+' pontos atrás</b>'+
       '<br><span class="k">Contrato:</span> '+brl(o.valor)+
-      '<br><span class="k">Falta medir para alcancar:</span> '+brl(d.atraso)+
+      '<br><span class="k">Falta medir para alcançar:</span> '+brl(d.atraso)+
       '<br><span class="k">Empreiteira:</span> '+esc(o.empreiteira||'-');
-    const liga=n=>{n.addEventListener('mousemove',e=>showTip(e,dica));
-                   n.addEventListener('mouseleave',hideTip);
-                   n.style.cursor='pointer';
-                   n.addEventListener('click',()=>abrirObra(o.cod));};
-    // trilho ate 100% do contrato
-    add(s,'rect',{x:ml,y:y,width:gw,height:h,rx:4,fill:'var(--trilho)'});
-    // o que ja foi feito
-    if(d.esta>0.002) liga(add(s,'rect',{x:ml,y:y,width:Math.max(xx(d.esta)-2,2),height:h,rx:4,
-      fill:'var(--realizado)'}));
-    // o buraco ate o cronograma
-    liga(add(s,'rect',{x:ml+xx(d.esta),y:y,width:Math.max(xx(d.dev)-xx(d.esta)-2,2),height:h,rx:4,
-      fill:'var(--critical)'}));
-    // Marca de onde o cronograma manda estar. Quando a meta e 100% ela coincide com o
-    // fim do trilho — desenhar o traco e repetir "meta 100,0%" em toda linha so suja.
-    if(d.dev<0.985){
-      add(s,'line',{x1:ml+xx(d.dev),x2:ml+xx(d.dev),y1:y-4,y2:y+h+4,
-        stroke:'var(--text-primary)','stroke-width':1.5});
-      txt(s,ml+xx(d.dev),y-6,'meta '+pct(d.dev),{size:8.5,anchor:'middle',fill:'var(--text-muted)'});
-    }
-    // rotulo direto: o numero que ordena a lista, e o dinheiro que ele representa
-    const r=txt(s,W-mr+10,y+h-6,d.pp.toFixed(0)+' pontos atras',
-      {size:12,anchor:'start',fill:'var(--text-primary)'});
-    r.setAttribute('font-weight','600'); liga(r);
-    txt(s,W-mr+10,y+h+8,'falta medir '+brl(d.atraso),{size:9,anchor:'start',fill:'var(--text-muted)'});
+    const alvo=add(s,'rect',{x:8,y:y+3,width:W-16,height:lin-6,rx:13,fill:'transparent'});
+    alvo.style.cursor='pointer';
+    alvo.addEventListener('mousemove',e=>{faixa.setAttribute('fill-opacity',.18);showTip(e,dica);});
+    alvo.addEventListener('mouseleave',()=>{faixa.setAttribute('fill-opacity',pod?.10:0);hideTip();});
+    alvo.addEventListener('click',()=>abrirObra(o.cod));
   });
   el.appendChild(s);
 }
-
 function barrasPrev(el,lista){
   el.innerHTML='';
   if(!lista.length){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Nada a medir no filtro.</p>';return;}
@@ -8976,7 +9132,7 @@ aoFiltrar();
 </script>
 
 <!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
-<script src="fech.js?v=202610101753"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
+<script src="fech.js?v=202610101840"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
 <script>
 const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andrade", "cid": "BARUERI", "emp": "LEONARDO ZANAO", "sit": "5. CONCLUÍDA", "contrato": 235271.25, "taxa": 0.06, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 14116.27, "ap": 212526.4, "tr": 7207.92, "emp_ap": 12751.58, "emp_tot": 13184.06, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 12751.58, "saldo_tot": 13184.06}, "199": {"num": 199, "uni": "EE SEBASTIAO DE MORAES CARDOSO", "cid": "ITAPECERICA DA SERRA", "emp": "REINALDO", "sit": "5. CONCLUÍDA", "contrato": 186643.95, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 37328.79, "ap": 131576.49, "tr": 12451.6, "emp_ap": 26315.3, "emp_tot": 28805.62, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26315.3, "saldo_tot": 28805.62}, "200": {"num": 200, "uni": "EE OREDO RODRIGUES DA CRUZ", "cid": "JUQUITIBA", "emp": "ANTONIO CABELO", "sit": "5. CONCLUÍDA", "contrato": 171519.72, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 34303.94, "ap": 130434.87, "tr": 0.0, "emp_ap": 26086.97, "emp_tot": 26086.97, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26086.97, "saldo_tot": 26086.97}, "223": {"num": 223, "uni": "ETEC Antonio furlan", "cid": "BARUERI", "emp": "REINALDO", "sit": "4. EXECUÇÃO", "contrato": 1935375.91, "taxa": 0.538489, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 1042178.64, "ap": 413291.43, "tr": 273284.71, "emp_ap": 222552.89, "emp_tot": 369713.7, "mat": 127178.11, "serv": 19199.0, "sienge": 146945.42, "npedidos": 18, "top": [["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)", "m²", 731.4, 23331.66], ["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET", "m2", 450.0, 17946.0], ["Torneira de acionamento manual e com ciclo de ", "un", 18.0, 17457.3], ["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ", "un", 30.0, 14830.5], ["Tinta esmalte cinza médio 3,6 LT", "gl", 50.0, 5781.0], ["PORTA DE MADEIRA COMPLETA 0,92X2,10", "un", 6.0, 4296.0], ["TELA Q-92 2X3 M", "un", 60.0, 3996.0], ["Divisoria de Granilite frontal (DV-03) 0,40x1,", "un", 25.0, 3802.5], ["FERRO CHATO 5/8 X 3/16", "br", 90.0, 3780.0], ["LUMINÁRIA IL-45 - COM LÂMPADA LED", "un", 42.0, 3766.14], ["PR-09 C=2MM", "un", 12.0, 2808.0], ["Tinta Esmalte base d'água Branco 18l", "lt", 20.0, 2500.0], ["Esmalte Brilhante Branco Coralit 3, 6l", "gl", 20.0, 2500.0], ["TINTA ESMALTE BASE ÁGUA CINZA", "lt", 20.0, 2361.2], ["Coral Rende Muito Branco Neve 18l", "lt", 6.0, 2010.0], ["TINTA PISO CINZA MÉDIO 18L", "lt", 5.0, 1725.0], ["DV-04 C=1,2M", "un", 3.0, 1368.9], ["Divisórias de granilite 0,35 X 1,80 Conforme D", "un", 10.0, 1331.1], ["Cabo flex 6mm² preto", "rol", 2.0, 1295.0], ["Cabo flex 4mm² preto", "rol", 2.0, 864.8]], "saldo_ap": 75607.47, "saldo_tot": 222768.28, "absorv": 84486.46, "estoque": 61890.65, "saldo_ap_prop": 138066.43, "saldo_tot_prop": 285227.24}, "224": {"num": 224, "uni": "ELIZA DE OLIVEIRA RIBEIRO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1486645.35, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 486290.92, "tr": 274008.61, "emp_ap": null, "emp_tot": null, "mat": 2852.39, "serv": 0.0, "sienge": 2852.39, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "230": {"num": 230, "uni": "EE MARIA ANTONIETA MARTINS", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1979042.22, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 1083172.19, "tr": 179925.01, "emp_ap": null, "emp_tot": null, "mat": 1976.74, "serv": 0.0, "sienge": 1976.74, "npedidos": 9, "top": [], "saldo_ap": null, "saldo_tot": null}, "231": {"num": 231, "uni": "EE MARIA JOSE ANTUNES FERRAZ", "cid": "TABOÃO DA SERRA", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1912108.62, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 776720.04, "tr": 58057.26, "emp_ap": null, "emp_tot": null, "mat": 712.0, "serv": 0.0, "sienge": 712.0, "npedidos": 7, "top": [], "saldo_ap": null, "saldo_tot": null}, "232": {"num": 232, "uni": "EE NEIDE CELESTINA DE OLIVEIRA", "cid": "EMBU GUAÇU", "emp": "CRISTIAN GUIDO", "sit": "4. EXECUÇÃO", "contrato": 1394560.14, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 500062.77, "tr": 68313.36, "emp_ap": null, "emp_tot": null, "mat": 2080.0, "serv": 0.0, "sienge": 2080.0, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}, "269": {"num": 269, "uni": "EE JD CAMPESTRE", "cid": "EMBU GUAÇU", "emp": "RENILDO", "sit": "4. EXECUÇÃO", "contrato": 1328935.74, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 661977.78, "tr": 45518.87, "emp_ap": null, "emp_tot": null, "mat": 1113.72, "serv": 0.0, "sienge": 1113.72, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "274": {"num": 274, "uni": "ETEC EMBU", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1568182.98, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 104600.06, "tr": 468976.52, "emp_ap": null, "emp_tot": null, "mat": 1410.0, "serv": 0.0, "sienge": 1410.0, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "278": {"num": 278, "uni": "EE GERTRUDES EDER", "cid": "ITAPECERICA DA SERRA", "emp": "LEONARDO ZANAO", "sit": "4. EXECUÇÃO", "contrato": 2152584.69, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 156359.02, "tr": 57537.42, "emp_ap": null, "emp_tot": null, "mat": 4272.3, "serv": 0.0, "sienge": 4272.3, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "284": {"num": 284, "uni": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 114889.32, "taxa": 0.46, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 52849.09, "ap": 3522.17, "tr": 45000.54, "emp_ap": 1620.2, "emp_tot": 22320.45, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 1620.2, "saldo_tot": 22320.45}, "287": {"num": 287, "uni": "EEPROF LAERT ALMEIDA SÃO BERNARDO", "cid": "TABOÃO DA SERRA", "emp": "PEDRO", "sit": "4. EXECUÇÃO", "contrato": 1950390.3, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 32747.41, "tr": 273322.99, "emp_ap": null, "emp_tot": null, "mat": 1088.58, "serv": 0.0, "sienge": 1088.58, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "288": {"num": 288, "uni": "EE EDUARDO VAZ", "cid": "EMBU DAS ARTES", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1756795.6, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 2378.4, "tr": 156047.64, "emp_ap": null, "emp_tot": null, "mat": 8399.5, "serv": 0.0, "sienge": 8399.5, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}};
 (function(){
@@ -9212,10 +9368,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
-<script src="sienge.js?v=202610101753"></script>
-<script src="sienge_itens.js?v=202610101753"></script>
-<script src="sienge_solic.js?v=202610101753"></script>
-<script src="entregas.js?v=202610101753"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
+<script src="sienge.js?v=202610101840"></script>
+<script src="sienge_itens.js?v=202610101840"></script>
+<script src="sienge_solic.js?v=202610101840"></script>
+<script src="entregas.js?v=202610101840"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -10120,10 +10276,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: SUB-ABA FISCALIZAÇÃO (Livros de Ocorrência) ================= -->
-<script src="lo.js?v=202610101753"></script>
-<script src="seg.js?v=202610101753"></script>
-<script src="rao.js?v=202610101753"></script>
-<script src="relsem.js?v=202610101753"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
+<script src="lo.js?v=202610101840"></script>
+<script src="seg.js?v=202610101840"></script>
+<script src="rao.js?v=202610101840"></script>
+<script src="relsem.js?v=202610101840"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
 <style>
   #loBox .loK{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
   #loBox .loK>div{flex:1 1 150px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:10px 12px;background:var(--cd,#fff)}
@@ -10408,7 +10564,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
-<script src="consolidado.js?v=202610101753"></script>
+<script src="consolidado.js?v=202610101840"></script>
 <style>
   #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
   #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
@@ -11047,7 +11203,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   },700);
 })();
 </script>
-<script src="mat_aba.js?v=202610101753"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
+<script src="mat_aba.js?v=202610101840"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
 <script>
 /* ---------- sub-aba "Medições (checklist)" na pagina da obra (08/10) --------
    Era o unico dos cinco quadros gerais que NAO tinha recorte por obra: aberto
