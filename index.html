@@ -1498,59 +1498,63 @@ html[data-tema="claro"] .mdc table.tbl th{background:#f4f6f8 !important}
 }
 </style>
 <style id="v2tempo">
-/* ---- o tempo como painel que passa (10/10) ------------------------------
-   Pedido do Luis: em vez de despejar a tabela de todas as cidades x 5 dias,
-   passar cidade a cidade como o app do tempo do iPhone, podendo entrar para
-   ver os outros dias. A ordem nao e alfabetica: vem primeiro quem tem chuva
-   forte hoje, depois quem tem mais obra -- e o que decide o dia de trabalho.
-   No PAPEL a tabela antiga volta inteira: ali nao da para passar de cidade. */
+/* ---- o tempo como painel que passa (10/10, revisto) ---------------------
+   Primeira versao: uma cidade ocupando a largura toda, sobrando vazio a
+   direita, e as setas no canto superior direito -- onde o icone do tempo
+   passava por cima e escondia o botao de trocar de cidade.
+   Agora: DUAS cidades lado a lado quando ha largura (uma no celular), e as
+   setas num rodape proprio, onde nada as cobre. */
 @media screen{
 .tpSoPapel{display:none}
-#tempoPalco{position:relative;border-radius:22px;overflow:hidden;
-  background:linear-gradient(150deg,#132c3e,#1e3a4c 55%,#2f6b86);color:#fff;
-  min-height:188px;display:flex;flex-direction:column}
-html[data-paleta="terracota"] #tempoPalco{background:linear-gradient(150deg,#2a211a,#4a3322 55%,#a5521f)}
-#tempoPalco.tpChuvoso{background:linear-gradient(150deg,#10212e,#1b3647 55%,#3b5f72)}
-#tempoPalco .tpCena{display:flex;gap:18px;align-items:flex-start;justify-content:space-between;
-  padding:16px 18px 10px;flex:1;flex-wrap:wrap}
-#tempoPalco .tpEsq{min-width:0;flex:1 1 230px}
-#tempoPalco .tpCid{font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
-#tempoPalco .tpObr{font-size:11.5px;color:rgba(255,255,255,.72);margin-top:2px;display:block}
-#tempoPalco .tpAgora{display:flex;align-items:flex-end;gap:12px;margin-top:10px}
-#tempoPalco .tpGrau{font-size:46px;font-weight:300;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
-#tempoPalco .tpCond{font-size:12.5px;color:rgba(255,255,255,.85);line-height:1.4;padding-bottom:5px}
-#tempoPalco .tpCond b{display:block;font-size:13.5px;color:#fff;font-weight:600}
-#tempoPalco .tpIcone{font-size:40px;line-height:1;flex:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
-#tempoPalco .tpDias{display:flex;gap:6px;padding:0 18px 14px;overflow-x:auto;scrollbar-width:none}
+#tempoPalco{position:relative}
+#tempoPalco .tpGrade{display:grid;gap:12px;grid-template-columns:1fr}
+#tempoPalco .tpGrade[data-n="2"]{grid-template-columns:1fr 1fr}
+#tempoPalco .tpCard{position:relative;border-radius:20px;overflow:hidden;min-width:0;
+  background:linear-gradient(150deg,#132c3e,#1e3a4c 60%,#2f6b86);color:#fff;
+  display:flex;flex-direction:column}
+html[data-paleta="terracota"] #tempoPalco .tpCard{background:linear-gradient(150deg,#2a211a,#4a3322 60%,#a5521f)}
+#tempoPalco .tpCard.tpChuvoso{background:linear-gradient(150deg,#0e1f2b,#1b3647 60%,#3b5f72)}
+#tempoPalco .tpCena{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;
+  padding:15px 16px 8px}
+#tempoPalco .tpEsq{min-width:0;flex:1}
+#tempoPalco .tpCid{font-size:16px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+#tempoPalco .tpObr{font-size:11px;color:rgba(255,255,255,.72);margin-top:2px;display:block}
+#tempoPalco .tpAgora{display:flex;align-items:flex-end;gap:11px;margin-top:9px}
+#tempoPalco .tpGrau{font-size:40px;font-weight:300;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+#tempoPalco .tpCond{font-size:12px;color:rgba(255,255,255,.85);line-height:1.4;padding-bottom:4px}
+#tempoPalco .tpCond b{display:block;font-size:13px;color:#fff;font-weight:600}
+#tempoPalco .tpIcone{font-size:34px;line-height:1;flex:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
+#tempoPalco .tpDias{display:flex;gap:5px;padding:0 16px 10px;overflow-x:auto;scrollbar-width:none}
 #tempoPalco .tpDias::-webkit-scrollbar{display:none}
-#tempoPalco .tpDia{flex:none;min-width:62px;border-radius:14px;padding:8px 9px;text-align:center;
+#tempoPalco .tpDia{flex:1 1 0;min-width:54px;border-radius:13px;padding:7px 6px;text-align:center;
   background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);cursor:pointer;
   font:inherit;color:#fff;transition:background .18s,transform .18s}
 #tempoPalco .tpDia:hover{background:rgba(255,255,255,.2);transform:translateY(-2px)}
 #tempoPalco .tpDia[aria-pressed=true]{background:rgba(255,255,255,.26);border-color:rgba(255,255,255,.5)}
-#tempoPalco .tpDia .d{font-size:10.5px;color:rgba(255,255,255,.75);display:block}
-#tempoPalco .tpDia .i{font-size:17px;display:block;margin:3px 0 1px}
+#tempoPalco .tpDia .d{font-size:10px;color:rgba(255,255,255,.75);display:block}
+#tempoPalco .tpDia .i{font-size:16px;display:block;margin:2px 0 1px}
 #tempoPalco .tpDia .t{font-size:11.5px;font-weight:650;display:block;font-variant-numeric:tabular-nums}
-#tempoPalco .tpDia .p{font-size:10px;color:rgba(255,255,255,.72);display:block}
+#tempoPalco .tpDia .p{font-size:9.5px;color:rgba(255,255,255,.72);display:block}
 #tempoPalco .tpDia.tpMolhado{background:rgba(120,180,230,.26);border-color:rgba(160,205,240,.45)}
-#tempoPalco .tpNav{position:absolute;top:14px;right:14px;display:flex;gap:6px;align-items:center}
-#tempoPalco .tpNav button{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.3);
-  background:rgba(255,255,255,.14);color:#fff;cursor:pointer;font-size:14px;line-height:1}
-#tempoPalco .tpNav button:hover{background:rgba(255,255,255,.26)}
-#tempoPalco .tpConta{font-size:11px;color:rgba(255,255,255,.7);font-variant-numeric:tabular-nums;margin-right:4px}
-#tempoPalco .tpBarra{height:2px;background:rgba(255,255,255,.18)}
-#tempoPalco .tpBarra i{display:block;height:100%;background:rgba(255,255,255,.75);width:0;transition:width .25s linear}
-#tempoPalco .tpEntrar{position:absolute;left:18px;bottom:auto;top:auto}
-#tempoPalco .tpObras{display:flex;gap:6px;flex-wrap:wrap;padding:0 18px 14px}
+#tempoPalco .tpObras{display:flex;gap:5px;flex-wrap:wrap;padding:0 16px 14px;margin-top:auto}
 #tempoPalco .tpOb{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);color:#fff;
-  border-radius:999px;padding:4px 11px;font:inherit;font-size:11.5px;cursor:pointer;white-space:nowrap}
+  border-radius:999px;padding:4px 10px;font:inherit;font-size:11px;cursor:pointer;white-space:nowrap;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis}
 #tempoPalco .tpOb:hover{background:rgba(255,255,255,.22)}
-#tempoPalco .tpMais{font-size:11px;color:rgba(255,255,255,.7);align-self:center}
-@media (max-width:640px){
-  #tempoPalco .tpGrau{font-size:38px}
-  #tempoPalco .tpIcone{font-size:32px}
-  #tempoPalco .tpCena{padding:14px 14px 8px}
-  #tempoPalco .tpDias,#tempoPalco .tpObras{padding-left:14px;padding-right:14px}
+#tempoPalco .tpMais{font-size:10.5px;color:rgba(255,255,255,.7);align-self:center}
+/* as setas num rodape proprio: nada passa por cima delas */
+#tempoPalco .tpRodape{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:9px 2px 6px}
+#tempoPalco .tpConta{font-size:11.5px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+#tempoPalco .tpSetas{display:flex;gap:6px}
+#tempoPalco .tpSetas button{width:30px;height:30px;border-radius:50%;border:1px solid var(--v2-edge);
+  background:var(--v2-chip);color:var(--text-primary);cursor:pointer;font-size:15px;line-height:1}
+#tempoPalco .tpSetas button:hover{background:var(--surface-2);border-color:var(--text-muted)}
+#tempoPalco .tpBarra{height:2px;border-radius:2px;background:var(--trilho);overflow:hidden}
+#tempoPalco .tpBarra i{display:block;height:100%;background:var(--v2-accent);width:0;transition:width .25s linear}
+@media (max-width:860px){
+  #tempoPalco .tpGrade[data-n="2"]{grid-template-columns:1fr}
+  #tempoPalco .tpGrau{font-size:36px}
 }
 }
 @media print{ #tempoPalco{display:none !important} }
@@ -1592,6 +1596,77 @@ html[data-paleta="terracota"] #tempoPalco{background:linear-gradient(150deg,#2a2
 #fechBox .fqLink:hover{text-decoration-style:solid}
 }
 @media print{ #fechBox .fqSeta,#fechBox .fqLink{display:none !important} }
+</style>
+<style id="v2orcamento">
+/* ---- Orçamento e os cartões da obra no padrão novo (10/10) --------------
+   Duas coisas ficaram para trás quando o V2 entrou:
+   1. os cinco cartões da PÁGINA DA OBRA (#oKpiTopo) seguiam a anatomia antiga
+      -- título em caixa alta, régua de corte, faixa grossa -- enquanto os da
+      Visão geral já tinham sido alinhados;
+   2. a aba Orçamento desenha os próprios blocos (.orc .bloco), com raio 10 e
+      sem vidro, porque nasceu antes de tudo isto.
+   Aqui os dois adotam o painel claro e o vidro do resto do portal. ------- */
+@media screen{
+
+/* ---------- os cinco cartões da obra ---------- */
+#oKpiTopo .kpiA{background:rgba(255,255,255,.88) !important;color:#1d1712;
+  border:1px solid rgba(255,255,255,.95) !important;border-radius:20px !important;
+  padding:14px 16px 17px;box-shadow:none !important;
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+#oKpiTopo .kpiA:hover{transform:translateY(-4px);
+  box-shadow:0 14px 30px rgba(0,0,0,.18) !important;background:rgba(255,255,255,.95) !important}
+#oKpiTopo .kpiA .t{color:#6f6458;font-size:12.5px;font-weight:600;text-transform:none;
+  letter-spacing:0;line-height:1.3;padding-right:0;display:flex;align-items:flex-start;
+  gap:6px;flex-wrap:nowrap;min-height:30px}
+#oKpiTopo .kpiA .v{font-size:clamp(17px,1.55vw,25px);font-weight:700;letter-spacing:-.03em;
+  line-height:1.1;margin:8px 0 3px;white-space:nowrap;color:#1d1712}
+#oKpiTopo .kpiA[data-nv="al"] .v{color:#b52b2b}
+#oKpiTopo .kpiA[data-nv="at"] .v{color:#8a5e05}
+#oKpiTopo .kpiA[data-nv="ok"] .v{color:#0a7a0a}
+#oKpiTopo .kpiA .s{color:#6f6458;font-size:11.5px;line-height:1.4}
+#oKpiTopo .kpiA .rg{color:#8b8276;font-size:10px;margin-top:8px;padding-top:7px;
+  border-top:1px solid rgba(0,0,0,.07)}
+#oKpiTopo .kpiA .ver{position:static;margin-left:auto;flex:none;border:1px solid rgba(0,0,0,.12);
+  color:#8b8276;background:rgba(0,0,0,.04);font-size:9px;padding:2px 7px;letter-spacing:.04em}
+#oKpiTopo .kpiA.clic:hover .ver{color:var(--v2-accent);border-color:var(--v2-accent);background:transparent}
+#oKpiTopo .kpiA .faixa{height:3px}
+
+/* ---------- a aba Orçamento ---------- */
+.orc .bloco{background:var(--surface-1) !important;border:1px solid var(--v2-edge) !important;
+  border-radius:22px !important;
+  -webkit-backdrop-filter:blur(26px) saturate(165%);backdrop-filter:blur(26px) saturate(165%);
+  box-shadow:var(--v2-shadow),inset 0 1px 0 var(--v2-hi);overflow:hidden}
+.orc .bloco>header{border-bottom:1px solid var(--line);padding:14px 16px 11px}
+.orc .bloco>header h2{font-size:13.5px;letter-spacing:-.01em;text-transform:none;
+  font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:8px}
+.orc .bloco>header h2::before{content:"";width:3px;height:14px;border-radius:2px;
+  background:var(--v2-accent);flex:none}
+.orc .bloco>header p{font-size:11.5px;color:var(--text-muted);line-height:1.5}
+/* as cifras do orçamento ganham o painel claro, como os números do Início */
+.orc .cifras>*{background:rgba(255,255,255,.88);color:#1d1712;
+  border:1px solid rgba(255,255,255,.95);border-radius:18px;padding:12px 14px}
+.orc .cifras .v{color:#1d1712;font-weight:700;letter-spacing:-.025em}
+.orc .cifras .l,.orc .cifras span:not(.v){color:#6f6458}
+/* a navegação interna do orçamento vira pílula, como o resto */
+.orc nav{padding:5px;border-radius:999px;background:var(--v2-chip);
+  border:1px solid var(--v2-edge);width:max-content;max-width:100%;overflow-x:auto}
+.orc nav button{border:0 !important;background:transparent !important;border-radius:999px !important;
+  color:var(--text-secondary) !important;padding:6px 13px;font-size:12px;white-space:nowrap}
+.orc nav button:hover{background:var(--surface-2) !important;color:var(--text-primary) !important}
+.orc nav button[aria-selected="true"]{
+  background:linear-gradient(135deg,var(--v2-accent),var(--acaoBg)) !important;
+  color:#fff !important;font-weight:650;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+html[data-paleta="azul"] .orc nav button[aria-selected="true"]{
+  background:linear-gradient(135deg,#2f6b86,#1e3a4c) !important}
+/* tabela do orçamento no mesmo tom das outras */
+.orc table th{background:var(--v2-solid);color:var(--text-muted);font-size:10.5px;
+  letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.orc .rol{border-radius:14px}
+/* o campo de busca e os seletores do orçamento */
+.orc select,.orc input[type=search]{border-radius:12px !important;background:var(--v2-chip) !important;
+  border:1px solid var(--v2-edge) !important;color:var(--text-primary) !important;padding:7px 11px !important}
+}
 </style>
 <style id="v2gaveta">
 /* ---- gaveta: o que abria aba nova agora abre aqui, por cima do painel ----
@@ -2784,7 +2859,7 @@ function barras(el,dados,alt,comMeta){
     if(dados.length<=20||i%Math.ceil(dados.length/16)===0)
       txt(s,gx+gw/2,H-11,mesAno(d.k),{size:9,fill:destaque?'var(--text-primary)':'var(--text-secondary)'});
   });
-  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'#44443f'});
+  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'var(--marca)'});
 }
 
 function curva(el,dados,total){
@@ -2828,7 +2903,7 @@ function curva(el,dados,total){
     hit.addEventListener('mouseleave',hideTip);
     if(pts.length<=20||i%Math.ceil(pts.length/16)===0)txt(s,xx(i),H-11,mesAno(d.k),{size:9});
   });
-  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'#44443f'});
+  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'var(--marca)'});
 }
 
 // ------------------------------------------------------------------ filtros
@@ -3499,7 +3574,7 @@ function curvaS(el,dados,total){
           `<br><span class="k">Deixaria de entregar:</span> ${brl(q.pv-q.pr)}`)));
     hit.addEventListener('mouseleave',hideTip);
     if(pts.length<=20||q.i%Math.ceil(pts.length/16)===0)txt(s,xx(q.i),H-11,mesAno(q.k),{size:9});});
-  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'#44443f'});
+  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'var(--marca)'});
 }
 
 function variacao(el,dados){
@@ -3514,7 +3589,8 @@ function variacao(el,dados){
   const yy=v=>mt+ih/2-(Math.max(Math.min(v,lim),-lim)/lim)*(ih/2);
   const passo=iw/d.length,bw=Math.min(passo-14,40);
   [-1,-.5,0,.5,1].forEach(f=>{const y=yy(lim*f);
-    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,stroke:f===0?'#44443f':'#2a2a28'});
+    add(s,'line',{x1:ml,x2:W-mr,y1:y,y2:y,
+      stroke:f===0?'var(--marca)':'var(--grade)','stroke-dasharray':f===0?'':'2 6'});
     txt(s,ml-8,y+3,f===0?'0':kfmt(lim*f),{anchor:'end',size:9});});
   txt(s,ml+4,mt+10,'acima ↑',{anchor:'start',size:8,fill:'var(--realizado)'});
   txt(s,ml+4,mt+ih-3,'abaixo ↓',{anchor:'start',size:8,fill:'var(--previsto)'});
@@ -3522,7 +3598,7 @@ function variacao(el,dados){
     const cx=ml+i*passo+passo/2, y0=yy(0), y1=yy(r.sv);
     const cor=r.aberto?'var(--text-muted)':(r.sv>=0?'var(--realizado)':'var(--previsto)');
     const rect=add(s,'rect',{x:cx-bw/2,y:Math.min(y0,y1),width:bw,
-      height:Math.max(Math.abs(y1-y0),2),rx:4,fill:cor,'fill-opacity':r.aberto?.55:1});
+      height:Math.max(Math.abs(y1-y0),3),rx:6,fill:cor,'fill-opacity':r.aberto?.5:.92});
     rect.addEventListener('mousemove',e=>showTip(e,`<b>${mesAno(r.k)}</b>`+
       (r.aberto?' · <span style="color:var(--warning)">mês ainda aberto</span>':'')+
       `<br><span class="k">Previsto (RV):</span> ${brl(r.p)}`+
@@ -3544,7 +3620,10 @@ function spiChart(el,dados){
   const kH=MES_HOJE();
   const base=dados.filter(r=>r.k<=kH);
   if(base.length<2){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Série insuficiente.</p>';return;}
-  const W=1140,H=190,ml=44,mr=52,mt=14,mb=30,s=svgEl(W,H);el.appendChild(s);
+  /* 10/10: era 1140x190 -- a proporcao de uma faixa larga, dentro de um painel
+     de MEIA largura. O SVG encolhia para caber e virava um fio no topo, com o
+     painel vazio embaixo. Agora usa a mesma caixa do grafico vizinho. */
+  const W=560,H=235,ml=46,mr=52,mt=16,mb=32,s=svgEl(W,H);el.appendChild(s);
   const iw=W-ml-mr,ih=H-mt-mb;
   let pv=0,et=0,ea=0;
   const d=base.map((r,i)=>{pv+=r.p;et+=_exec(r);ea+=r.m;
@@ -3552,16 +3631,22 @@ function spiChart(el,dados){
   const lo=Math.min(.5,...d.map(q=>q.spa))-.05, hi=Math.max(1.3,...d.map(q=>q.spi))+.05;
   const xx=i=>ml+(i/(d.length-1))*iw, yy=v=>mt+ih-(Math.min(Math.max(v,lo),hi)-lo)/(hi-lo)*ih;
   add(s,'rect',{x:ml,y:yy(1.05),width:iw,height:Math.max(yy(.95)-yy(1.05),1),
-    fill:'var(--terceiro)','fill-opacity':.2});
+    rx:4,fill:'var(--terceiro)','fill-opacity':.14});
   [.5,.75,1,1.25].filter(v=>v>=lo&&v<=hi).forEach(v=>{
-    add(s,'line',{x1:ml,x2:W-mr,y1:yy(v),y2:yy(v),stroke:v===1?'#44443f':'#2a2a28'});
+    add(s,'line',{x1:ml,x2:W-mr,y1:yy(v),y2:yy(v),
+      stroke:v===1?'var(--marca)':'var(--grade)','stroke-dasharray':v===1?'':'2 6'});
     txt(s,ml-8,yy(v)+3,v.toFixed(2).replace('.',','),{anchor:'end',size:9});});
   add(s,'path',{d:'M'+d.map(q=>`${xx(q.i)} ${yy(q.spa)}`).join(' L'),
-    stroke:'var(--text-secondary)','stroke-width':2,fill:'none','stroke-dasharray':'5 4'});
+    stroke:'var(--text-secondary)','stroke-width':2.2,fill:'none','stroke-dasharray':'2 6',
+    'stroke-linecap':'round'});
+  add(s,'path',{d:'M'+d.map(q=>`${xx(q.i)} ${yy(q.spi)}`).join(' L')+
+    ` L${xx(d.length-1)} ${mt+ih} L${ml} ${mt+ih} Z`,fill:areaDe(s,'real')});
   add(s,'path',{d:'M'+d.map(q=>`${xx(q.i)} ${yy(q.spi)}`).join(' L'),
-    stroke:'var(--realizado)','stroke-width':2,fill:'none'});
+    stroke:'var(--realizado)','stroke-width':2.6,fill:'none',
+    'stroke-linecap':'round','stroke-linejoin':'round'});
   d.forEach(q=>{
-    add(s,'circle',{cx:xx(q.i),cy:yy(q.spi),r:q.aberto?5:3.5,
+    if(q.aberto) add(s,'circle',{cx:xx(q.i),cy:yy(q.spi),r:10,fill:'var(--realizado)','fill-opacity':.18});
+    add(s,'circle',{cx:xx(q.i),cy:yy(q.spi),r:q.aberto?5.5:3.5,
       fill:'var(--realizado)',stroke:'var(--surface-1)','stroke-width':2});
     const hx0=Math.max(ml,xx(q.i)-iw/d.length/2), hx1=Math.min(W-mr,xx(q.i)+iw/d.length/2);
     const hit=add(s,'rect',{x:hx0,y:mt,width:Math.max(0,hx1-hx0),height:ih,fill:'transparent'});
@@ -3576,7 +3661,7 @@ function spiChart(el,dados){
   const u=d[d.length-1];
   txt(s,W-mr+5,yy(u.spi)+4,u.spi.toFixed(2),{anchor:'start',size:11,fill:'var(--realizado)'});
   txt(s,W-mr+5,yy(u.spa)+4,u.spa.toFixed(2),{anchor:'start',size:11,fill:'var(--text-secondary)'});
-  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'#44443f'});
+  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'var(--marca)'});
 }
 
 function alvoDoMes(el,dados){
@@ -6161,7 +6246,7 @@ function barrasReceb(el,dados){
     if(dados.length<=22||i%Math.ceil(dados.length/18)===0)
       txt(s,gx+bw/2,H-12,mesAno(d.k),{size:9,fill:hoje?'var(--text-primary)':'var(--text-secondary)'});
   });
-  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'#44443f'});
+  add(s,'line',{x1:ml,x2:W-mr,y1:mt+ih,y2:mt+ih,stroke:'var(--marca)'});
 }
 
 function irReceb(){ mostra('receb'); renderReceb(); window.scrollTo(0,0); }
@@ -8891,7 +8976,7 @@ aoFiltrar();
 </script>
 
 <!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
-<script src="fech.js?v=202610101744"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
+<script src="fech.js?v=202610101753"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
 <script>
 const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andrade", "cid": "BARUERI", "emp": "LEONARDO ZANAO", "sit": "5. CONCLUÍDA", "contrato": 235271.25, "taxa": 0.06, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 14116.27, "ap": 212526.4, "tr": 7207.92, "emp_ap": 12751.58, "emp_tot": 13184.06, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 12751.58, "saldo_tot": 13184.06}, "199": {"num": 199, "uni": "EE SEBASTIAO DE MORAES CARDOSO", "cid": "ITAPECERICA DA SERRA", "emp": "REINALDO", "sit": "5. CONCLUÍDA", "contrato": 186643.95, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 37328.79, "ap": 131576.49, "tr": 12451.6, "emp_ap": 26315.3, "emp_tot": 28805.62, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26315.3, "saldo_tot": 28805.62}, "200": {"num": 200, "uni": "EE OREDO RODRIGUES DA CRUZ", "cid": "JUQUITIBA", "emp": "ANTONIO CABELO", "sit": "5. CONCLUÍDA", "contrato": 171519.72, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 34303.94, "ap": 130434.87, "tr": 0.0, "emp_ap": 26086.97, "emp_tot": 26086.97, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26086.97, "saldo_tot": 26086.97}, "223": {"num": 223, "uni": "ETEC Antonio furlan", "cid": "BARUERI", "emp": "REINALDO", "sit": "4. EXECUÇÃO", "contrato": 1935375.91, "taxa": 0.538489, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 1042178.64, "ap": 413291.43, "tr": 273284.71, "emp_ap": 222552.89, "emp_tot": 369713.7, "mat": 127178.11, "serv": 19199.0, "sienge": 146945.42, "npedidos": 18, "top": [["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)", "m²", 731.4, 23331.66], ["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET", "m2", 450.0, 17946.0], ["Torneira de acionamento manual e com ciclo de ", "un", 18.0, 17457.3], ["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ", "un", 30.0, 14830.5], ["Tinta esmalte cinza médio 3,6 LT", "gl", 50.0, 5781.0], ["PORTA DE MADEIRA COMPLETA 0,92X2,10", "un", 6.0, 4296.0], ["TELA Q-92 2X3 M", "un", 60.0, 3996.0], ["Divisoria de Granilite frontal (DV-03) 0,40x1,", "un", 25.0, 3802.5], ["FERRO CHATO 5/8 X 3/16", "br", 90.0, 3780.0], ["LUMINÁRIA IL-45 - COM LÂMPADA LED", "un", 42.0, 3766.14], ["PR-09 C=2MM", "un", 12.0, 2808.0], ["Tinta Esmalte base d'água Branco 18l", "lt", 20.0, 2500.0], ["Esmalte Brilhante Branco Coralit 3, 6l", "gl", 20.0, 2500.0], ["TINTA ESMALTE BASE ÁGUA CINZA", "lt", 20.0, 2361.2], ["Coral Rende Muito Branco Neve 18l", "lt", 6.0, 2010.0], ["TINTA PISO CINZA MÉDIO 18L", "lt", 5.0, 1725.0], ["DV-04 C=1,2M", "un", 3.0, 1368.9], ["Divisórias de granilite 0,35 X 1,80 Conforme D", "un", 10.0, 1331.1], ["Cabo flex 6mm² preto", "rol", 2.0, 1295.0], ["Cabo flex 4mm² preto", "rol", 2.0, 864.8]], "saldo_ap": 75607.47, "saldo_tot": 222768.28, "absorv": 84486.46, "estoque": 61890.65, "saldo_ap_prop": 138066.43, "saldo_tot_prop": 285227.24}, "224": {"num": 224, "uni": "ELIZA DE OLIVEIRA RIBEIRO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1486645.35, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 486290.92, "tr": 274008.61, "emp_ap": null, "emp_tot": null, "mat": 2852.39, "serv": 0.0, "sienge": 2852.39, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "230": {"num": 230, "uni": "EE MARIA ANTONIETA MARTINS", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1979042.22, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 1083172.19, "tr": 179925.01, "emp_ap": null, "emp_tot": null, "mat": 1976.74, "serv": 0.0, "sienge": 1976.74, "npedidos": 9, "top": [], "saldo_ap": null, "saldo_tot": null}, "231": {"num": 231, "uni": "EE MARIA JOSE ANTUNES FERRAZ", "cid": "TABOÃO DA SERRA", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1912108.62, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 776720.04, "tr": 58057.26, "emp_ap": null, "emp_tot": null, "mat": 712.0, "serv": 0.0, "sienge": 712.0, "npedidos": 7, "top": [], "saldo_ap": null, "saldo_tot": null}, "232": {"num": 232, "uni": "EE NEIDE CELESTINA DE OLIVEIRA", "cid": "EMBU GUAÇU", "emp": "CRISTIAN GUIDO", "sit": "4. EXECUÇÃO", "contrato": 1394560.14, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 500062.77, "tr": 68313.36, "emp_ap": null, "emp_tot": null, "mat": 2080.0, "serv": 0.0, "sienge": 2080.0, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}, "269": {"num": 269, "uni": "EE JD CAMPESTRE", "cid": "EMBU GUAÇU", "emp": "RENILDO", "sit": "4. EXECUÇÃO", "contrato": 1328935.74, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 661977.78, "tr": 45518.87, "emp_ap": null, "emp_tot": null, "mat": 1113.72, "serv": 0.0, "sienge": 1113.72, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "274": {"num": 274, "uni": "ETEC EMBU", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1568182.98, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 104600.06, "tr": 468976.52, "emp_ap": null, "emp_tot": null, "mat": 1410.0, "serv": 0.0, "sienge": 1410.0, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "278": {"num": 278, "uni": "EE GERTRUDES EDER", "cid": "ITAPECERICA DA SERRA", "emp": "LEONARDO ZANAO", "sit": "4. EXECUÇÃO", "contrato": 2152584.69, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 156359.02, "tr": 57537.42, "emp_ap": null, "emp_tot": null, "mat": 4272.3, "serv": 0.0, "sienge": 4272.3, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "284": {"num": 284, "uni": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 114889.32, "taxa": 0.46, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 52849.09, "ap": 3522.17, "tr": 45000.54, "emp_ap": 1620.2, "emp_tot": 22320.45, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 1620.2, "saldo_tot": 22320.45}, "287": {"num": 287, "uni": "EEPROF LAERT ALMEIDA SÃO BERNARDO", "cid": "TABOÃO DA SERRA", "emp": "PEDRO", "sit": "4. EXECUÇÃO", "contrato": 1950390.3, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 32747.41, "tr": 273322.99, "emp_ap": null, "emp_tot": null, "mat": 1088.58, "serv": 0.0, "sienge": 1088.58, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "288": {"num": 288, "uni": "EE EDUARDO VAZ", "cid": "EMBU DAS ARTES", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1756795.6, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 2378.4, "tr": 156047.64, "emp_ap": null, "emp_tot": null, "mat": 8399.5, "serv": 0.0, "sienge": 8399.5, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}};
 (function(){
@@ -9127,10 +9212,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
-<script src="sienge.js?v=202610101744"></script>
-<script src="sienge_itens.js?v=202610101744"></script>
-<script src="sienge_solic.js?v=202610101744"></script>
-<script src="entregas.js?v=202610101744"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
+<script src="sienge.js?v=202610101753"></script>
+<script src="sienge_itens.js?v=202610101753"></script>
+<script src="sienge_solic.js?v=202610101753"></script>
+<script src="entregas.js?v=202610101753"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -9821,16 +9906,28 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
                 .sort(function(a,b){ return a.cod-b.cod; });
   }
   function cond(p){ return p>=70?'Chuva forte':p>=40?'Pancadas':p>=20?'Sol com nuvens':'Sol'; }
+  function quantos(){ var w=(document.getElementById('tempoPalco')||{}).clientWidth||0;
+    return w>=860?2:1; }                 /* duas cidades quando ha largura */
   function palco(){
     var el=$('tempoPalco'); if(!el||!pLista.length) return;
-    var c=pLista[pIdx%pLista.length], d=(pDados[pIdx%pLista.length]||{}).daily;
-    if(!d){ el.innerHTML='<div class="tpCena"><div class="tpEsq"><div class="tpCid">'+esc(titulo(c.nome))+'</div>'+
-      '<span class="tpObr">sem previsão para esta cidade</span></div></div>'; return; }
-    var i=Math.min(pDia,(d.time||[]).length-1);
+    var n=Math.min(quantos(),pLista.length);
+    var cartoes='';
+    for(var j=0;j<n;j++) cartoes+=cartao((pIdx+j)%pLista.length, j===0);
+    el.innerHTML='<div class="tpGrade" data-n="'+n+'">'+cartoes+'</div>'+
+      '<div class="tpRodape">'+
+        '<span class="tpConta">'+(pIdx%pLista.length+1)+(n>1?'–'+((pIdx+n-1)%pLista.length+1):'')+' de '+pLista.length+' cidades</span>'+
+        '<div class="tpSetas"><button type="button" data-tp="-1" aria-label="Cidades anteriores">‹</button>'+
+        '<button type="button" data-tp="1" aria-label="Próximas cidades">›</button></div>'+
+      '</div><div class="tpBarra"><i id="tpProg"></i></div>';
+  }
+  function cartao(k,primeiro){
+    var c=pLista[k], d=(pDados[k]||{}).daily;
+    if(!d) return '<div class="tpCard"><div class="tpCid">'+esc(titulo(c.nome))+'</div>'+
+      '<span class="tpObr">sem previsão para esta cidade</span></div>';
+    var i=primeiro?Math.min(pDia,(d.time||[]).length-1):0;
     var p=Math.round(d.precipitation_probability_max[i]||0), mm=Math.round(d.precipitation_sum[i]||0);
     var tmin=Math.round(d.temperature_2m_min[i]), tmax=Math.round(d.temperature_2m_max[i]);
     var obs=obrasDaCidade(c.nome);
-    el.classList.toggle('tpChuvoso',p>=70);
     var dias=(d.time||[]).map(function(iso,k){
       var pp=Math.round(d.precipitation_probability_max[k]||0);
       var dd=dataLocal(iso);
@@ -9840,10 +9937,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
         '<span class="t">'+Math.round(d.temperature_2m_max[k])+'°</span>'+
         '<span class="p">'+pp+'%</span></button>';
     }).join('');
-    el.innerHTML=
-      '<div class="tpNav"><span class="tpConta">'+(pIdx%pLista.length+1)+'/'+pLista.length+'</span>'+
-        '<button type="button" data-tp="-1" aria-label="Cidade anterior">‹</button>'+
-        '<button type="button" data-tp="1" aria-label="Próxima cidade">›</button></div>'+
+    return '<div class="tpCard'+(p>=70?' tpChuvoso':'')+'">'+
       '<div class="tpCena"><div class="tpEsq">'+
         '<div class="tpCid">'+esc(titulo(c.nome))+'</div>'+
         '<span class="tpObr">'+c.obras+' obra'+(c.obras>1?'s':'')+' em andamento · '+
@@ -9853,19 +9947,20 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
           '<span class="tpCond"><b>'+cond(p)+'</b>mín '+tmin+'° · '+p+'% de chuva'+(mm?' · '+mm+' mm':'')+'</span></div>'+
       '</div><span class="tpIcone">'+icone(p)+'</span></div>'+
       '<div class="tpDias">'+dias+'</div>'+
-      (obs.length?'<div class="tpObras">'+obs.slice(0,6).map(function(o){
-        return '<button class="tpOb" data-obra="'+o.cod+'">'+o.cod+' · '+esc(String(o.unidade||'').slice(0,26))+'</button>';
-      }).join('')+(obs.length>6?'<span class="tpMais">+'+(obs.length-6)+'</span>':'')+'</div>':'')+
-      '<div class="tpBarra"><i id="tpProg"></i></div>';
+      (obs.length?'<div class="tpObras">'+obs.slice(0,4).map(function(o){
+        return '<button class="tpOb" data-obra="'+o.cod+'">'+o.cod+' · '+esc(String(o.unidade||'').slice(0,22))+'</button>';
+      }).join('')+(obs.length>4?'<span class="tpMais">+'+(obs.length-4)+'</span>':'')+'</div>':'')+
+      '</div>';
   }
-  function anda(n){ pIdx=(pIdx+n+pLista.length)%pLista.length; pDia=0; palco(); reinicia(); }
+  function anda(n){ var passo=Math.min(quantos(),pLista.length);
+    pIdx=(pIdx+n*passo+pLista.length*2)%pLista.length; pDia=0; palco(); reinicia(); }
   function reinicia(){
     clearInterval(pRelogio); var t=0, el=$('tempoPalco'); if(!el) return;
     pRelogio=setInterval(function(){
       if(!document.getElementById('tempoPalco')){ clearInterval(pRelogio); return; }
       if(el.matches(':hover')||el.contains(document.activeElement)) return;
       t+=1; var b=$('tpProg'); if(b) b.style.width=(t/70*100)+'%';
-      if(t>=70){ t=0; pIdx=(pIdx+1)%pLista.length; pDia=0; palco(); }
+      if(t>=70){ t=0; pIdx=(pIdx+Math.min(quantos(),pLista.length))%pLista.length; pDia=0; palco(); }
     },100);
   }
   (function liga(){
@@ -10025,10 +10120,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: SUB-ABA FISCALIZAÇÃO (Livros de Ocorrência) ================= -->
-<script src="lo.js?v=202610101744"></script>
-<script src="seg.js?v=202610101744"></script>
-<script src="rao.js?v=202610101744"></script>
-<script src="relsem.js?v=202610101744"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
+<script src="lo.js?v=202610101753"></script>
+<script src="seg.js?v=202610101753"></script>
+<script src="rao.js?v=202610101753"></script>
+<script src="relsem.js?v=202610101753"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
 <style>
   #loBox .loK{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
   #loBox .loK>div{flex:1 1 150px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:10px 12px;background:var(--cd,#fff)}
@@ -10313,7 +10408,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
-<script src="consolidado.js?v=202610101744"></script>
+<script src="consolidado.js?v=202610101753"></script>
 <style>
   #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
   #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
@@ -10952,7 +11047,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   },700);
 })();
 </script>
-<script src="mat_aba.js?v=202610101744"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
+<script src="mat_aba.js?v=202610101753"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
 <script>
 /* ---------- sub-aba "Medições (checklist)" na pagina da obra (08/10) --------
    Era o unico dos cinco quadros gerais que NAO tinha recorte por obra: aberto
