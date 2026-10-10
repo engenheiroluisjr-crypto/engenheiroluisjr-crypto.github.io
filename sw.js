@@ -30,7 +30,7 @@
    aceitar .css tambem; fora dele cairiam no ignoreSearch, onde o ?v= nao conta, e a
    primeira versao baixada ficaria para sempre -- a aparencia do portal inteiro
    congelada no primeiro acesso de cada aparelho. */
-const VERSAO = 'painel-v14';
+const VERSAO = 'painel-v15';
 const PRE = ['./', 'libs/jspdf.umd.min.js', 'libs/jspdf.plugin.autotable.min.js', 'libs/xlsx.mini.min.js'];
 const DADOS = /\/(fech|lo|seg|rao|relsem|catalogo|consolidado|sienge|sienge_itens|sienge_solic|entregas|sst_modelo|chk|mat|mat_aba|comp)\.js$|\/v2\.(js|css)$/;
 
