@@ -1369,13 +1369,32 @@ iframe.embF{border-radius:20px;border:1px solid var(--v2-edge)!important;backgro
   transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
 #v2home #kpiTopo.v2dentro .kpiA:hover{transform:translateY(-4px);
   box-shadow:0 14px 30px rgba(0,0,0,.18) !important;background:rgba(255,255,255,.95) !important}
-#v2home #kpiTopo.v2dentro .kpiA .t{color:#6f6458}
-#v2home #kpiTopo.v2dentro .kpiA .v{color:#1d1712;font-weight:700;letter-spacing:-.03em}
-#v2home #kpiTopo.v2dentro .kpiA .s,#v2home #kpiTopo.v2dentro .kpiA .rg{color:#6f6458}
-#v2home #kpiTopo.v2dentro .kpiA .ver{border-color:rgba(0,0,0,.14);color:#6f6458;
-  background:rgba(0,0,0,.05)}
-#v2home #kpiTopo.v2dentro .kpiA.clic:hover .ver{color:var(--v2-accent);border-color:var(--v2-accent)}
-#v2home #kpiTopo.v2dentro .kpiA .faixa{height:4px}
+/* mesma anatomia dos quatro cartoes de cima: titulo em caixa normal, numero
+   no mesmo corpo, subtitulo no mesmo tamanho. O que era so daqui -- o selo
+   "ver obras", a regua de corte e a faixa de severidade -- fica, mas recua
+   para o peso de rodape. A cor do numero permanece: ali ela e informacao. */
+#v2home #kpiTopo.v2dentro .kpiA .t{color:#6f6458;font-size:12.5px;font-weight:600;
+  text-transform:none;letter-spacing:0;line-height:1.3;padding-right:0;
+  display:flex;align-items:flex-start;gap:6px;flex-wrap:nowrap;min-height:30px}
+#v2home #kpiTopo.v2dentro .kpiA .v{font-size:clamp(17px,1.55vw,25px);font-weight:700;
+  letter-spacing:-.03em;line-height:1.1;margin:8px 0 3px;white-space:nowrap}
+#v2home #kpiTopo.v2dentro .kpiA .v{color:#1d1712}
+#v2home #kpiTopo.v2dentro .kpiA[data-nv="al"] .v{color:#b52b2b}
+#v2home #kpiTopo.v2dentro .kpiA[data-nv="at"] .v{color:#8a5e05}
+#v2home #kpiTopo.v2dentro .kpiA[data-nv="ok"] .v{color:#0a7a0a}
+#v2home #kpiTopo.v2dentro .kpiA .s{color:#6f6458;font-size:11.5px;line-height:1.4}
+#v2home #kpiTopo.v2dentro .kpiA .rg{color:#8b8276;font-size:10px;margin-top:8px;
+  padding-top:7px;border-top:1px solid rgba(0,0,0,.07)}
+/* o selo sai do canto absoluto e vira um chip discreto ao lado do titulo,
+   na mesma altura do icone redondo dos cartoes de cima */
+#v2home #kpiTopo.v2dentro .kpiA .ver{position:static;margin-left:auto;flex:none;
+  border:1px solid rgba(0,0,0,.12);color:#8b8276;background:rgba(0,0,0,.04);
+  font-size:9px;padding:2px 7px;letter-spacing:.04em}
+#v2home #kpiTopo.v2dentro .kpiA.clic:hover .ver{color:var(--v2-accent);
+  border-color:var(--v2-accent);background:transparent}
+#v2home #kpiTopo.v2dentro .kpiA .faixa{height:3px}
+/* o (i) de ajuda encolhe para nao competir com o titulo */
+#v2home #kpiTopo.v2dentro .kpiA .t .inf{transform:scale(.85);opacity:.7}
 #v2home #v2sectRisco{margin-top:18px}
 /* o quadro que o cartão "Em tramitação" vai abrir pisca de leve ao chegar */
 details.v2pisca{outline:2px solid var(--v2-accent);outline-offset:3px;
@@ -8726,7 +8745,7 @@ aoFiltrar();
 </script>
 
 <!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
-<script src="fech.js?v=202610101717"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
+<script src="fech.js?v=202610101723"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
 <script>
 const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andrade", "cid": "BARUERI", "emp": "LEONARDO ZANAO", "sit": "5. CONCLUÍDA", "contrato": 235271.25, "taxa": 0.06, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 14116.27, "ap": 212526.4, "tr": 7207.92, "emp_ap": 12751.58, "emp_tot": 13184.06, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 12751.58, "saldo_tot": 13184.06}, "199": {"num": 199, "uni": "EE SEBASTIAO DE MORAES CARDOSO", "cid": "ITAPECERICA DA SERRA", "emp": "REINALDO", "sit": "5. CONCLUÍDA", "contrato": 186643.95, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 37328.79, "ap": 131576.49, "tr": 12451.6, "emp_ap": 26315.3, "emp_tot": 28805.62, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26315.3, "saldo_tot": 28805.62}, "200": {"num": 200, "uni": "EE OREDO RODRIGUES DA CRUZ", "cid": "JUQUITIBA", "emp": "ANTONIO CABELO", "sit": "5. CONCLUÍDA", "contrato": 171519.72, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 34303.94, "ap": 130434.87, "tr": 0.0, "emp_ap": 26086.97, "emp_tot": 26086.97, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26086.97, "saldo_tot": 26086.97}, "223": {"num": 223, "uni": "ETEC Antonio furlan", "cid": "BARUERI", "emp": "REINALDO", "sit": "4. EXECUÇÃO", "contrato": 1935375.91, "taxa": 0.538489, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 1042178.64, "ap": 413291.43, "tr": 273284.71, "emp_ap": 222552.89, "emp_tot": 369713.7, "mat": 127178.11, "serv": 19199.0, "sienge": 146945.42, "npedidos": 18, "top": [["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)", "m²", 731.4, 23331.66], ["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET", "m2", 450.0, 17946.0], ["Torneira de acionamento manual e com ciclo de ", "un", 18.0, 17457.3], ["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ", "un", 30.0, 14830.5], ["Tinta esmalte cinza médio 3,6 LT", "gl", 50.0, 5781.0], ["PORTA DE MADEIRA COMPLETA 0,92X2,10", "un", 6.0, 4296.0], ["TELA Q-92 2X3 M", "un", 60.0, 3996.0], ["Divisoria de Granilite frontal (DV-03) 0,40x1,", "un", 25.0, 3802.5], ["FERRO CHATO 5/8 X 3/16", "br", 90.0, 3780.0], ["LUMINÁRIA IL-45 - COM LÂMPADA LED", "un", 42.0, 3766.14], ["PR-09 C=2MM", "un", 12.0, 2808.0], ["Tinta Esmalte base d'água Branco 18l", "lt", 20.0, 2500.0], ["Esmalte Brilhante Branco Coralit 3, 6l", "gl", 20.0, 2500.0], ["TINTA ESMALTE BASE ÁGUA CINZA", "lt", 20.0, 2361.2], ["Coral Rende Muito Branco Neve 18l", "lt", 6.0, 2010.0], ["TINTA PISO CINZA MÉDIO 18L", "lt", 5.0, 1725.0], ["DV-04 C=1,2M", "un", 3.0, 1368.9], ["Divisórias de granilite 0,35 X 1,80 Conforme D", "un", 10.0, 1331.1], ["Cabo flex 6mm² preto", "rol", 2.0, 1295.0], ["Cabo flex 4mm² preto", "rol", 2.0, 864.8]], "saldo_ap": 75607.47, "saldo_tot": 222768.28, "absorv": 84486.46, "estoque": 61890.65, "saldo_ap_prop": 138066.43, "saldo_tot_prop": 285227.24}, "224": {"num": 224, "uni": "ELIZA DE OLIVEIRA RIBEIRO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1486645.35, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 486290.92, "tr": 274008.61, "emp_ap": null, "emp_tot": null, "mat": 2852.39, "serv": 0.0, "sienge": 2852.39, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "230": {"num": 230, "uni": "EE MARIA ANTONIETA MARTINS", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1979042.22, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 1083172.19, "tr": 179925.01, "emp_ap": null, "emp_tot": null, "mat": 1976.74, "serv": 0.0, "sienge": 1976.74, "npedidos": 9, "top": [], "saldo_ap": null, "saldo_tot": null}, "231": {"num": 231, "uni": "EE MARIA JOSE ANTUNES FERRAZ", "cid": "TABOÃO DA SERRA", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1912108.62, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 776720.04, "tr": 58057.26, "emp_ap": null, "emp_tot": null, "mat": 712.0, "serv": 0.0, "sienge": 712.0, "npedidos": 7, "top": [], "saldo_ap": null, "saldo_tot": null}, "232": {"num": 232, "uni": "EE NEIDE CELESTINA DE OLIVEIRA", "cid": "EMBU GUAÇU", "emp": "CRISTIAN GUIDO", "sit": "4. EXECUÇÃO", "contrato": 1394560.14, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 500062.77, "tr": 68313.36, "emp_ap": null, "emp_tot": null, "mat": 2080.0, "serv": 0.0, "sienge": 2080.0, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}, "269": {"num": 269, "uni": "EE JD CAMPESTRE", "cid": "EMBU GUAÇU", "emp": "RENILDO", "sit": "4. EXECUÇÃO", "contrato": 1328935.74, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 661977.78, "tr": 45518.87, "emp_ap": null, "emp_tot": null, "mat": 1113.72, "serv": 0.0, "sienge": 1113.72, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "274": {"num": 274, "uni": "ETEC EMBU", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1568182.98, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 104600.06, "tr": 468976.52, "emp_ap": null, "emp_tot": null, "mat": 1410.0, "serv": 0.0, "sienge": 1410.0, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "278": {"num": 278, "uni": "EE GERTRUDES EDER", "cid": "ITAPECERICA DA SERRA", "emp": "LEONARDO ZANAO", "sit": "4. EXECUÇÃO", "contrato": 2152584.69, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 156359.02, "tr": 57537.42, "emp_ap": null, "emp_tot": null, "mat": 4272.3, "serv": 0.0, "sienge": 4272.3, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "284": {"num": 284, "uni": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 114889.32, "taxa": 0.46, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 52849.09, "ap": 3522.17, "tr": 45000.54, "emp_ap": 1620.2, "emp_tot": 22320.45, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 1620.2, "saldo_tot": 22320.45}, "287": {"num": 287, "uni": "EEPROF LAERT ALMEIDA SÃO BERNARDO", "cid": "TABOÃO DA SERRA", "emp": "PEDRO", "sit": "4. EXECUÇÃO", "contrato": 1950390.3, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 32747.41, "tr": 273322.99, "emp_ap": null, "emp_tot": null, "mat": 1088.58, "serv": 0.0, "sienge": 1088.58, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "288": {"num": 288, "uni": "EE EDUARDO VAZ", "cid": "EMBU DAS ARTES", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1756795.6, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 2378.4, "tr": 156047.64, "emp_ap": null, "emp_tot": null, "mat": 8399.5, "serv": 0.0, "sienge": 8399.5, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}};
 (function(){
@@ -8946,10 +8965,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
-<script src="sienge.js?v=202610101717"></script>
-<script src="sienge_itens.js?v=202610101717"></script>
-<script src="sienge_solic.js?v=202610101717"></script>
-<script src="entregas.js?v=202610101717"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
+<script src="sienge.js?v=202610101723"></script>
+<script src="sienge_itens.js?v=202610101723"></script>
+<script src="sienge_solic.js?v=202610101723"></script>
+<script src="entregas.js?v=202610101723"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -9662,10 +9681,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: SUB-ABA FISCALIZAÇÃO (Livros de Ocorrência) ================= -->
-<script src="lo.js?v=202610101717"></script>
-<script src="seg.js?v=202610101717"></script>
-<script src="rao.js?v=202610101717"></script>
-<script src="relsem.js?v=202610101717"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
+<script src="lo.js?v=202610101723"></script>
+<script src="seg.js?v=202610101723"></script>
+<script src="rao.js?v=202610101723"></script>
+<script src="relsem.js?v=202610101723"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
 <style>
   #loBox .loK{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
   #loBox .loK>div{flex:1 1 150px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:10px 12px;background:var(--cd,#fff)}
@@ -9950,7 +9969,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
-<script src="consolidado.js?v=202610101717"></script>
+<script src="consolidado.js?v=202610101723"></script>
 <style>
   #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
   #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
@@ -10589,7 +10608,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   },700);
 })();
 </script>
-<script src="mat_aba.js?v=202610101717"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
+<script src="mat_aba.js?v=202610101723"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
 <script>
 /* ---------- sub-aba "Medições (checklist)" na pagina da obra (08/10) --------
    Era o unico dos cinco quadros gerais que NAO tinha recorte por obra: aberto
@@ -10825,6 +10844,16 @@ var O=D.obras.map(function(o){var ini=pd(o.ini),fim=pd(o.fimPrev),pz=null;if(ini
   var pf=o.valor?Math.round(((o.medido_ap||0))/o.valor*100):null;
   return {o:o,cod:o.cod,ini:ini,fim:fim,pz:pz,pf:pf,ativa:ATIVA(o),rest:fim?Math.round((fim-HOJE)/DAY):null}});
 var A=O.filter(function(x){return x.ativa});
+/* 10/10: as cores do Inicio vinham cravadas no codigo, entao o grafico, os
+   minigraficos e os aneis continuavam laranja-e-azul da V1 mesmo com a paleta
+   azul ligada. Agora saem dos tokens, lidos na hora de desenhar. Trocar de
+   paleta recarrega a pagina -- e o unico jeito de o HTML ja montado (os quatro
+   cartoes, a legenda) renascer com a cor nova sem reescrever tudo. */
+function PC(n,f){ try{ var v=getComputedStyle(document.documentElement).getPropertyValue('--'+n).trim(); return v||f; }catch(e){ return f; } }
+var C_PREV=PC('previsto','#f0682c'), C_REAL=PC('realizado','#2a78d6'),
+    C_OK=PC('good','#0ca30c'), C_WARN=PC('warning','#e09a00'), C_BAD=PC('critical','#d03b3b'),
+    C_SOLIDO=PC('v2-solid','#251c15'), C_TXT=PC('text-primary','#f6f0e9');
+function mistura(c,p){ return 'color-mix(in srgb,'+c+' '+p+'%,transparent)'; }
 var COR={'Execução':'#0ca30c','Atenção':'#fab219','Atrasado':'#d03b3b','Sem data':'#9a9188','Concluída':'#8f8377','Cancelada':'#8f8377'};
 var ICS={'Execução':'●','Atenção':'▲','Atrasado':'■','Sem data':'○','Concluída':'✓','Cancelada':'×'};
 var abre=function(cod){try{if(typeof abrirObra==='function'){abrirObra(+cod);window.scrollTo(0,0);}}catch(e){}};
@@ -10859,13 +10888,13 @@ var INIC=QUEM?QUEM.split(/\s+/).filter(Boolean).slice(0,2).map(function(x){retur
 var html='<section id="v2home"><div class="v2main card"><div class="v2top"><div><h3>'+(h<12?'Bom dia':h<18?'Boa tarde':'Boa noite')+(PRIM?', '+esc(PRIM):'')+'</h3><p>'+wd+' · '+A.length+' obras ativas · dados do controle de '+fmtD(gerado)+'</p></div>'+
  '<div style="position:relative;flex:0 1 340px;min-width:0"><label class="v2search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="v2q" type="search" placeholder="Buscar obra, escola ou cidade" autocomplete="off"></label><div class="v2res" id="v2res" hidden></div></div></div>'+
  '<div class="v2stats">'+
-  '<button class="v2st" data-ir="tLista"><div class="h">Obras ativas<span class="ic" style="background:#f0682c22;color:#f0682c">⌂</span></div><div class="row"><div><div class="v">'+A.length+'</div><div class="u">'+nAtr+' atrasadas · '+nAt+' em atenção</div></div>'+barsS([A.length-nAtr-nAt,nAt,nAtr],'#f0682c')+'</div></button>'+
-  '<button class="v2st" data-ir="tMed"><div class="h">Medido em '+S[ci-1].m.toLocaleDateString('pt-BR',{month:'long'})+'<span class="ic" style="background:#2a78d622;color:#2a78d6">R$</span></div><div class="row"><div><div class="v">'+mi(S[ci-1].me+S[ci-1].t)+'</div><div class="u">'+(S[ci-1].p?Math.round((S[ci-1].me+S[ci-1].t)/S[ci-1].p*100)+'% do previsto ('+mi(S[ci-1].p)+')':'sem previsto')+'</div></div>'+spark(S.slice(0,ci).map(function(s){return s.me+s.t}),'#2a78d6')+'</div></button>'+
-  '<button class="v2st" data-ir="tMed"><div class="h">Em tramitação<span class="ic" style="background:#fab21922;color:#c98500">⏳</span></div><div class="row"><div><div class="v">'+mi(trA)+'</div><div class="u">aguardando a FDE aprovar</div></div>'+spark(S.slice(0,ci+1).map(function(s){return s.t}),'#e09a00')+'</div></button>'+
-  '<button class="v2st" data-ir="tReceb"><div class="h">A receber em 30 dias<span class="ic" style="background:#0ca30c22;color:#0ca30c">✓</span></div><div class="row"><div><div class="v">'+mi(a30)+'</div><div class="u">aprovado, pagamento previsto</div></div>'+barsS(S.slice(ci-5,ci+1).map(function(s){return s.me}),'#0ca30c')+'</div></button>'+
+  '<button class="v2st" data-ir="tLista"><div class="h">Obras ativas<span class="ic" style="background:'+mistura(C_PREV,13)+';color:'+C_PREV+'">⌂</span></div><div class="row"><div><div class="v">'+A.length+'</div><div class="u">'+nAtr+' atrasadas · '+nAt+' em atenção</div></div>'+barsS([A.length-nAtr-nAt,nAt,nAtr],C_PREV)+'</div></button>'+
+  '<button class="v2st" data-ir="tMed"><div class="h">Medido em '+S[ci-1].m.toLocaleDateString('pt-BR',{month:'long'})+'<span class="ic" style="background:'+mistura(C_REAL,13)+';color:'+C_REAL+'">R$</span></div><div class="row"><div><div class="v">'+mi(S[ci-1].me+S[ci-1].t)+'</div><div class="u">'+(S[ci-1].p?Math.round((S[ci-1].me+S[ci-1].t)/S[ci-1].p*100)+'% do previsto ('+mi(S[ci-1].p)+')':'sem previsto')+'</div></div>'+spark(S.slice(0,ci).map(function(s){return s.me+s.t}),C_REAL)+'</div></button>'+
+  '<button class="v2st" data-ir="tMed"><div class="h">Em tramitação<span class="ic" style="background:'+mistura(C_WARN,15)+';color:'+C_WARN+'">⏳</span></div><div class="row"><div><div class="v">'+mi(trA)+'</div><div class="u">aguardando a FDE aprovar</div></div>'+spark(S.slice(0,ci+1).map(function(s){return s.t}),C_WARN)+'</div></button>'+
+  '<button class="v2st" data-ir="tReceb"><div class="h">A receber em 30 dias<span class="ic" style="background:'+mistura(C_OK,13)+';color:'+C_OK+'">✓</span></div><div class="row"><div><div class="v">'+mi(a30)+'</div><div class="u">aprovado, pagamento previsto</div></div>'+barsS(S.slice(ci-5,ci+1).map(function(s){return s.me}),C_OK)+'</div></button>'+
  '</div>'+
  '<div class="v2g2"><div class="v2pn"><div class="v2ph"><b>Previsto × medido por mês</b><div class="v2seg" id="v2seg"><button aria-pressed="true" data-k="mes">No mês</button><button aria-pressed="false" data-k="acu">Acumulado</button></div></div>'+
-  '<div class="v2lg"><span><i style="background:#f0682c"></i>Previsto do cronograma</span><span><i style="background:#2a78d6"></i>Medido (aprovado + tramitação)</span></div>'+
+  '<div class="v2lg"><span><i style="background:'+C_PREV+'"></i>Previsto do cronograma</span><span><i style="background:'+C_REAL+'"></i>Medido (aprovado + tramitação)</span></div>'+
   '<div class="v2chart"><svg id="v2line" viewBox="0 0 640 230" role="img" aria-label="Previsto e medido da carteira por mês"></svg><div class="v2ct" id="v2lt"></div></div></div>'+
   '<div class="v2pn v2feat" id="v2feat"></div></div>'+
  '<div class="v2sect"><b>Prazo mais apertado</b><button data-ir="tLista">Ver controle das obras</button></div><div class="v2c3" id="v2hot"></div>'+
@@ -10874,7 +10903,7 @@ var html='<section id="v2home"><div class="v2main card"><div class="v2top"><div>
    '<button type="button" class="v2trocar" id="v2trocar">trocar de pessoa</button></div></div>'+
  '<div class="v2trio"><div><b>'+A.length+'</b><span>Ativas</span></div><div><b>'+mi(ctrA).replace(' mi','')+'<small style="font-size:11px"> mi</small></b><span>Contratado</span></div><div><b>'+(ctrA?Math.round(apA/ctrA*100):0)+'%</b><span>Aprovado</span></div></div>'+
  '<div class="v2cal"><div class="ch"><button id="v2pm" aria-label="Mês anterior">‹</button><b id="v2ct"></b><button id="v2nm" aria-label="Próximo mês">›</button></div><div class="v2dow"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="v2days" id="v2days"></div>'+
- '<div class="v2cl"><span><i style="background:#0ca30c"></i>Pagamento previsto</span><span><i style="background:#2a78d6"></i>Aprovação FDE</span><span><i style="background:#f0682c"></i>Término de obra</span><span><i style="background:#d03b3b"></i>Obra atrasada</span></div></div>'+
+ '<div class="v2cl"><span><i style="background:'+C_OK+'"></i>Pagamento previsto</span><span><i style="background:'+C_REAL+'"></i>Aprovação FDE</span><span><i style="background:'+C_PREV+'"></i>Término de obra</span><span><i style="background:'+C_BAD+'"></i>Obra atrasada</span></div></div>'+
  '<div class="v2ag"><h4><span id="v2agT" style="font-size:13.5px;color:var(--text-primary);font-weight:700">Próximos 15 dias</span><span id="v2agS"></span></h4><div id="v2ag"></div></div></aside></section>';
 sec.insertAdjacentHTML('afterbegin',html);
 var $=function(id){return document.getElementById(id)};
@@ -10937,11 +10966,11 @@ function line(){var W=640,H=230,L=46,Rr=14,T=26,B=30;
  var pa=path(serA),pb=path(serB),cp=pb.pts[pb.pts.length-1];
  var lab=S.map(function(s,i){return '<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle" font-size="10.5" fill="currentColor" opacity="'+(i===ci?.95:.5)+'" font-weight="'+(i===ci?700:500)+'">'+s.m.toLocaleDateString('pt-BR',{month:'short'}).replace('.','')+'</text>'}).join('');
  var cur=mi(serB[ci])+' até agora';
- $('v2line').innerHTML='<defs><linearGradient id="v2g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2a78d6" stop-opacity=".25"/><stop offset="1" stop-color="#2a78d6" stop-opacity="0"/></linearGradient></defs>'+g+
+ $('v2line').innerHTML='<defs><linearGradient id="v2g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="'+C_REAL+'" stop-opacity=".25"/><stop offset="1" stop-color="'+C_REAL+'" stop-opacity="0"/></linearGradient></defs>'+g+
   (pb.d?'<path d="'+pb.d+' L'+cp[0]+' '+(H-B)+' L'+pb.pts[0][0]+' '+(H-B)+'Z" fill="url(#v2g)"/>':'')+
-  '<path d="'+pa.d+'" fill="none" stroke="#f0682c" stroke-width="2.4" stroke-dasharray="1 0" stroke-linecap="round"/>'+
-  '<path d="'+pb.d+'" fill="none" stroke="#2a78d6" stroke-width="2.6" stroke-linecap="round"/>'+
-  (cp?'<line x1="'+cp[0]+'" x2="'+cp[0]+'" y1="'+cp[1]+'" y2="'+(H-B)+'" stroke="#2a78d6" stroke-dasharray="3 4" opacity=".6"/><g transform="translate('+Math.min(cp[0],W-60)+','+(cp[1]-22)+')"><rect x="-52" y="-11" width="104" height="22" rx="11" fill="#fff" stroke="#2a78d6"/><text y="4" text-anchor="middle" font-size="11" font-weight="700" fill="#1f5fae">'+cur+'</text></g><circle cx="'+cp[0]+'" cy="'+cp[1]+'" r="6" fill="#fff" stroke="#2a78d6" stroke-width="3"/>':'')+lab+
+  '<path d="'+pa.d+'" fill="none" stroke="'+C_PREV+'" stroke-width="2.4" stroke-dasharray="1 0" stroke-linecap="round"/>'+
+  '<path d="'+pb.d+'" fill="none" stroke="'+C_REAL+'" stroke-width="2.6" stroke-linecap="round"/>'+
+  (cp?'<line x1="'+cp[0]+'" x2="'+cp[0]+'" y1="'+cp[1]+'" y2="'+(H-B)+'" stroke="'+C_REAL+'" stroke-dasharray="3 4" opacity=".6"/><g transform="translate('+Math.min(cp[0],W-60)+','+(cp[1]-22)+')"><rect x="-52" y="-11" width="104" height="22" rx="11" fill="#fff" stroke="'+C_REAL+'"/><text y="4" text-anchor="middle" font-size="11" font-weight="700" fill="'+C_REAL+'">'+cur+'</text></g><circle cx="'+cp[0]+'" cy="'+cp[1]+'" r="6" fill="#fff" stroke="'+C_REAL+'" stroke-width="3"/>':'')+lab+
   '<g id="v2hov" opacity="0"><line id="v2hl" y1="'+T+'" y2="'+(H-B)+'" stroke="currentColor" opacity=".25"/></g><rect id="v2hit" x="'+L+'" y="'+T+'" width="'+(W-L-Rr)+'" height="'+(H-T-B)+'" fill="transparent"/>';
  var svg=$('v2line'),tp=$('v2lt');
  svg.querySelector('#v2hit').onpointermove=function(e){var r=svg.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width*W;var i=Math.max(0,Math.min(S.length-1,Math.round((sx-L)/((W-L-Rr)/(S.length-1)))));
@@ -10969,7 +10998,7 @@ function hot(){var L=A.filter(function(x){return x.rest!=null&&x.rest>=0}).sort(
 var EV=[];
 R.forEach(function(r){var p=pd(r.p),a=pd(r.a);if(p)EV.push({d:p,t:'pag',cod:r.c,v:r.v,n:r.n});if(a)EV.push({d:a,t:'ap',cod:r.c,v:r.v,n:r.n})});
 A.forEach(function(x){if(x.fim)EV.push({d:x.fim,t:x.o.status==='Atrasado'?'atr':'fim',cod:x.cod})});
-var EC={pag:'#0ca30c',ap:'#2a78d6',fim:'#f0682c',atr:'#d03b3b'},EL={pag:'Pagamento previsto',ap:'Aprovada na FDE',fim:'Término previsto',atr:'Término vencido'};
+var EC={pag:C_OK,ap:C_REAL,fim:C_PREV,atr:C_BAD},EL={pag:'Pagamento previsto',ap:'Aprovada na FDE',fim:'Término previsto',atr:'Término vencido'};
 var same=function(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()};
 var cm=new Date(HOJE.getFullYear(),HOJE.getMonth(),1),sel=null;
 function cal(){var s=cm.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});$('v2ct').textContent=s.charAt(0).toUpperCase()+s.slice(1);
@@ -11026,9 +11055,11 @@ line();feat();hot();cal();ag();
     document.documentElement.setAttribute('data-paleta',nova);
     try{ localStorage.setItem('painelPaleta',nova); }catch(e){}
     pinta();
-    /* o Inicio desenha grafico e aneis com a cor lida na hora: redesenha */
-    ['linha','feat','hot','cal'].forEach(function(f){
-      try{ if(typeof window[f]==='function') window[f](); }catch(e){} });
+    /* o grafico, os minigraficos e os aneis sao desenhados com a cor lida no
+       momento em que o HTML foi montado. Recarregar e o jeito honesto de tudo
+       renascer na paleta nova -- redesenhar so o grafico deixaria os quatro
+       cartoes de cima na cor antiga. */
+    location.reload();
   });
 })();
 </script>
