@@ -42,9 +42,15 @@
     var u; try{ u=new URL(a.href,location.href); }catch(err){ return; }
     if(u.origin!==location.origin) return;
     e.preventDefault();
-    var t=(a.textContent||'').trim().replace(/\s+/g,' ').slice(0,70)||'Documento';
+    /* "abrir ficha" e "PDF" sao rotulo de botao, nao nome de documento: quem tem
+       nome de verdade manda em data-tit (o catalogo.html manda o codigo + a ficha). */
+    var GEN=/^(abrir|abrir ficha|abrir pdf|pdf|ver|baixar|abrir relat[oó]rio)$/i;
+    var rot=(a.textContent||'').trim().replace(/\s+/g,' ');
+    var arq=decodeURIComponent(u.pathname.split('/').pop()||'');
+    var t=a.getAttribute('data-tit')||(GEN.test(rot)?arq:(rot.slice(0,70)||arq));
+    var sub=a.getAttribute('data-sub')||arq;
     try{
-      if(parent.v2Gaveta) parent.v2Gaveta(u.pathname+u.search,t,u.pathname.split('/').pop());
+      if(parent.v2Gaveta) parent.v2Gaveta(u.pathname+u.search,t,sub);
       else location.href=u.href;
     }catch(err){ location.href=u.href; }
   },true);

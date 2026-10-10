@@ -71,7 +71,7 @@ html.emb,html.emb body{overflow-x:hidden}
 html.emb body{padding-bottom:0}</style>
 <script>if(window.parent!==window){document.documentElement.className+=' emb';}</script>
 <!-- 10/10: V2 Liquid Glass. Camada compartilhada; so @media screen, a impressao nao muda. -->
-<link rel="stylesheet" href="v2.css?v=202610101343">
+<link rel="stylesheet" href="v2.css?v=202610101642">
 </head>
 <body>
 <header class="top"><h1>Catálogos técnicos FDE</h1><a href="./">← voltar ao painel</a></header>
@@ -85,7 +85,7 @@ html.emb body{padding-bottom:0}</style>
   <p class="nota" id="nota"></p>
   <div id="res"></div>
 </main>
-<script src="catalogo.js?v=1791174419"></script>
+<script src="catalogo.js?v=202610101642"></script>
 <script>
 const C=window.CATFDE, F=C.f, M=C.m, $=id=>document.getElementById(id);
 let lim=40;
@@ -98,7 +98,17 @@ $('cat').innerHTML+=cats.map(c=>`<option>${esc(c)}</option>`).join('');
 const proprias=Object.values(M).filter(x=>x[2].some(r=>r[1]==='d'||r[1][0]==='c')).length;
 $('kpi').innerHTML=[[fmt(F.length),'fichas nos catálogos'],[fmt(Object.keys(M).length),'serviços do boletim FDE'],[fmt(proprias),'serviços com ficha própria'],[C.ger,'índice gerado em']]
   .map(([b,s],i)=>`<div><b${i===3?' class="dt"':''}>${b}</b><span>${s}</span></div>`).join('');
-function fichaLi(i,tag){const f=F[i]; return `<li><span class="fc">${esc(f[0])}</span><span class="fn">${esc(f[1])} <span class="cat">· ${esc(f[2])}</span>${tag||''}</span>${f[3]?`<a class="tg" href="${esc(f[3])}" target="_blank" rel="noopener">abrir ficha ↗</a>`:''}</li>`;}
+/* 10/10: a ficha agora mora no portal (publicar/catalogo/, 674 PDFs importados
+   pelo importar_fichas_catalogo.py). f[5] e o caminho publicado; f[3], a URL no
+   site da FDE, fica de reserva para a ficha que nao veio. O link local NAO leva
+   target="_blank": assim a gaveta do painel o captura e a ficha abre por cima,
+   sem sair do portal. */
+function linkFicha(f){
+  if(f[5]) return `<a class="tg" href="${esc(f[5])}" data-tit="${esc(f[0]?f[0]+' · '+f[1]:f[1])}" data-sub="${esc(f[2])}">abrir ficha</a>`;
+  if(f[3]) return `<a class="tg" href="${esc(f[3])}" target="_blank" rel="noopener">abrir no site da FDE ↗</a>`;
+  return '';
+}
+function fichaLi(i,tag){const f=F[i]; return `<li><span class="fc">${esc(f[0])}</span><span class="fn">${esc(f[1])} <span class="cat">· ${esc(f[2])}</span>${tag||''}</span>${linkFicha(f)}</li>`;}
 function linhaServ(c){const x=M[c], cf=$('cat').value;
   let L=x[2]; if(cf) L=L.filter(r=>F[r[0]][2]===cf);
   const ordem='dcsg'; L=[...L].sort((a,b)=>ordem.indexOf(a[1][0])-ordem.indexOf(b[1][0]));
@@ -123,7 +133,7 @@ function busca(){
     if(q) L=L.filter(i=>{const t=norm(F[i].slice(0,3).join(' ')); return palavras.every(w=>t.includes(w));});
     $('nota').textContent=`${fmt(L.length)} ficha(s) de ${fmt(F.length)} nos catálogos técnicos da FDE.`;
     out.innerHTML = L.length ? `<table><thead><tr><th>Código</th><th>Ficha</th><th>Catálogo</th><th></th></tr></thead><tbody>${L.slice(0,lim*4).map(i=>{const f=F[i];
-      return `<tr><td data-l="Código" class="cod">${esc(f[0])}</td><td data-l="Ficha">${esc(f[1])}</td><td data-l="Catálogo" class="mini">${esc(f[2])}</td><td>${f[3]?`<a class="tg" href="${esc(f[3])}" target="_blank" rel="noopener">abrir ficha ↗</a>`:''}</td></tr>`;}).join('')}</tbody></table>`+(L.length>lim*4?'<button class="mais" id="mais">mostrar mais</button>':'') : '<div class="vazio">Nada encontrado.</div>';
+      return `<tr><td data-l="Código" class="cod">${esc(f[0])}</td><td data-l="Ficha">${esc(f[1])}</td><td data-l="Catálogo" class="mini">${esc(f[2])}</td><td>${linkFicha(f)}</td></tr>`;}).join('')}</tbody></table>`+(L.length>lim*4?'<button class="mais" id="mais">mostrar mais</button>':'') : '<div class="vazio">Nada encontrado.</div>';
   }
   const b=$('mais'); if(b) b.onclick=()=>{lim+=40; busca();};
 }
@@ -134,6 +144,6 @@ if(P0.get('cat')) $('cat').value=P0.get('cat');
 if(P0.get('f')){ $('modo').value='F'; $('q').value=P0.get('f'); } else $('q').value=P0.get('c')||'';
 busca();
 </script>
-<script src="v2.js?v=202610101343"></script>
+<script src="v2.js?v=202610101642"></script>
 </body>
 </html>

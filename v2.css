@@ -14,7 +14,11 @@
 =========================================================================== */
 @media screen{
 :root{
-  --v2-amb1:#5a3a1e; --v2-amb2:#3b2716; --v2-amb3:#231a12; --v2-base:#120d09;
+  /* 10/10: o banho de fundo recuou. Ele estava quente demais e competia com o
+     vidro -- o cartao e o painel apareciam por cima de um ambiente ja forte,
+     em vez de o ambiente servir de chao. Base quase preta e os tres focos de
+     luz bem mais fechados: o calor continua ali, mas como sugestao. */
+  --v2-amb1:#33210f; --v2-amb2:#231710; --v2-amb3:#17110c; --v2-base:#0b0908;
   --v2-edge:rgba(255,255,255,.14); --v2-hi:rgba(255,255,255,.22);
   --v2-shadow:0 18px 50px rgba(0,0,0,.38);
   --v2-solid:#251c15; --v2-chip:rgba(255,255,255,.08);
@@ -26,7 +30,7 @@
   --warn:#f0bb57; --warnb:rgba(240,187,87,.16); --na:#9a8d80; --nab:rgba(255,255,255,.07);
 }
 html[data-tema="claro"]{
-  --v2-amb1:#e2bf97; --v2-amb2:#d2a77c; --v2-amb3:#f7efe5; --v2-base:#efe6da;
+  --v2-amb1:#eddcc6; --v2-amb2:#e6cfb4; --v2-amb3:#faf5ee; --v2-base:#f3ece2;
   --v2-edge:rgba(255,255,255,.80); --v2-hi:rgba(255,255,255,.9);
   --v2-shadow:0 16px 44px rgba(80,50,20,.14);
   --v2-solid:#fbf6ef; --v2-chip:rgba(0,0,0,.05);
