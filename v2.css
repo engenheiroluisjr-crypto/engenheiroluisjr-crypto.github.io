@@ -49,6 +49,27 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
   radial-gradient(52% 58% at 72% 98%,var(--v2-amb1),transparent 70%),
   radial-gradient(60% 60% at 26% 88%,var(--v2-amb3),transparent 70%),var(--v2-base)}
 
+/* ---- paleta AZUL nas páginas irmãs (10/10) ----
+   Os mesmos tons do painel, mapeados para os tokens próprios destas páginas. */
+html[data-paleta="azul"]{
+  --v2-amb1:#15354a; --v2-amb2:#102838; --v2-amb3:#0b1c28; --v2-base:#07111a;
+  --v2-edge:rgba(170,205,225,.16); --v2-hi:rgba(190,220,240,.20);
+  --v2-shadow:0 18px 50px rgba(0,10,20,.46);
+  --v2-solid:#122a3a; --v2-chip:rgba(170,205,225,.09);
+  --card:rgba(18,42,58,.60); --tx:#eef3f7; --mut:#8296a4;
+  --ln:rgba(170,205,225,.13); --pri:#f07858;
+}
+html[data-paleta="azul"][data-tema="claro"]{
+  --v2-amb1:#cfe0ea; --v2-amb2:#dce8f0; --v2-amb3:#f4f7fa; --v2-base:#eef1f4;
+  --v2-edge:rgba(255,255,255,.86); --v2-hi:rgba(255,255,255,.95);
+  --v2-shadow:0 16px 44px rgba(20,50,75,.13);
+  --v2-solid:#ffffff; --v2-chip:rgba(30,58,76,.06);
+  --card:rgba(255,255,255,.70); --tx:#1c1c1c; --mut:#7b8893;
+  --ln:rgba(30,58,76,.14); --pri:#b85122;
+}
+html[data-paleta="azul"] .bt.pri{background:linear-gradient(135deg,#2f6b86,#1e3a4c) !important;
+  box-shadow:0 6px 18px rgba(30,58,76,.35)}
+
 /* ---- cabecalho vira vidro flutuante ---- */
 header.top{position:sticky;top:12px;z-index:20;margin:12px 16px 0;padding:13px 18px;border-radius:24px;
   background:rgba(40,31,24,.58);border:1px solid var(--v2-edge);color:var(--tx);

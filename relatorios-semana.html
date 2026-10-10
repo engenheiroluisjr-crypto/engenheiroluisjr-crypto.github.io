@@ -6,6 +6,9 @@
 <meta name="theme-color" content="#f4f3ef">
 <script>
 /* segue o tema escolhido no painel (chave painelTema), como as outras paginas */
+/* 10/10: a paleta acompanha o painel */
+(function(){var p;try{p=localStorage.getItem('painelPaleta');}catch(e){}
+ document.documentElement.setAttribute('data-paleta',p==='terracota'?'terracota':'azul');})();
 (function(){var t;try{t=localStorage.getItem('painelTema');}catch(e){}
  if(t!=='claro'&&t!=='escuro'){t=(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'claro':'escuro';}
  document.documentElement.setAttribute('data-tema',t);
@@ -67,7 +70,7 @@ html.emb,html.emb body{overflow-x:hidden}
 html.emb body{padding-bottom:0}</style>
 <script>if(window.parent!==window){document.documentElement.className+=' emb';}</script>
 <!-- 10/10: V2 Liquid Glass. Camada compartilhada; so @media screen, a impressao nao muda. -->
-<link rel="stylesheet" href="v2.css?v=202610101712">
+<link rel="stylesheet" href="v2.css?v=202610102016">
 </head>
 <body>
 <header class="top"><h1>Relatórios da semana — acompanhamento (RAO) e segurança (SST)</h1><a href="./">← voltar ao painel</a></header>
@@ -75,7 +78,7 @@ html.emb body{padding-bottom:0}</style>
 <script src="chk.js"></script>
 <script src="rao.js"></script>
 <script src="seg.js"></script>
-<script src="relsem.js?v=202610101712"></script>
+<script src="relsem.js?v=202610102016"></script>
 <script src="entregas.js"></script>
 <script>
 (function(){
@@ -274,6 +277,6 @@ render(); puxa().then(envia);
 setInterval(function(){ if(document.visibilityState==='visible'&&!fila().length) puxa(); },60000);
 })();
 </script>
-<script src="v2.js?v=202610101712"></script>
+<script src="v2.js?v=202610102016"></script>
 </body>
 </html>

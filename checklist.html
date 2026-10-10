@@ -8,6 +8,9 @@
 /* 06/10: segue o tema escolhido no painel (mesma chave painelTema). Antes esta pagina so
    olhava o prefers-color-scheme, entao quem punha o painel no escuro e clicava aqui caia
    numa pagina clara. Roda antes de pintar para nao piscar. */
+/* 10/10: a paleta acompanha o painel */
+(function(){var p;try{p=localStorage.getItem('painelPaleta');}catch(e){}
+ document.documentElement.setAttribute('data-paleta',p==='terracota'?'terracota':'azul');})();
 (function(){var t;try{t=localStorage.getItem('painelTema');}catch(e){}
  if(t!=='claro'&&t!=='escuro'){t=(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'claro':'escuro';}
  document.documentElement.setAttribute('data-tema',t);
@@ -67,12 +70,12 @@ html.emb,html.emb body{overflow-x:hidden}
 html.emb body{padding-bottom:0}</style>
 <script>if(window.parent!==window){document.documentElement.className+=' emb';}</script>
 <!-- 10/10: V2 Liquid Glass. Camada compartilhada; so @media screen, a impressao nao muda. -->
-<link rel="stylesheet" href="v2.css?v=202610101712">
+<link rel="stylesheet" href="v2.css?v=202610102016">
 </head>
 <body>
 <header class="top"><h1>Checklist de medições</h1><a href="./">← voltar ao painel</a></header>
 <main id="app"><p>Carregando…</p></main>
-<script src="chk.js?v=202610101712"></script>
+<script src="chk.js?v=202610102016"></script>
 <script src="entregas.js"></script>
 <script>
 (function(){
@@ -262,6 +265,6 @@ render(); puxa().then(envia);
 setInterval(function(){ if(document.visibilityState==='visible'&&!fila().length) puxa(); },60000);
 })();
 </script>
-<script src="v2.js?v=202610101712"></script>
+<script src="v2.js?v=202610102016"></script>
 </body>
 </html>
