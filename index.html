@@ -1331,8 +1331,8 @@ iframe.embF{border-radius:20px;border:1px solid var(--v2-edge)!important;backgro
   background:var(--surface-1);border:1px solid var(--v2-edge);
   -webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);
   box-shadow:var(--v2-shadow),inset 0 1px 0 var(--v2-hi)}
-#v2quem .qlogo{display:inline-flex;gap:3px;align-items:flex-end;height:22px;margin-bottom:14px}
-#v2quem .qlogo i{display:block;width:5px;border-radius:2px 2px 0 0;background:var(--v2-accent)}
+#v2quem .qlogo{display:inline-block;width:26px;height:26px;margin-bottom:14px;
+  color:var(--v2-accent);fill:currentColor}
 #v2quem h2{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em;color:var(--text-primary);
   text-transform:none;display:block}
 #v2quem p{margin:6px 0 16px;font-size:12.5px;line-height:1.6;color:var(--text-secondary)}
@@ -1836,6 +1836,208 @@ html[data-paleta="azul"] .orc nav button[aria-selected="true"]{
      de limite ganha limite pelo proprio seletor, como .v2st svg logo acima. */
 }
 </style>
+<style id="v2anim">
+/* =================== COREOGRAFIA DE ENTRADA — 10/10/2026 ====================
+   Referencia: os dois videos que o Luis mandou (bento dashboard animation e a
+   barra de abas com a bolinha). Tres coisas, todas dentro de @media screen para
+   o papel nao ver nada disto:
+     1. os blocos sobem e aparecem em cascata, no primeiro desenho e a cada troca
+        de aba (classe .v2ent no CONTAINER, o atraso sai do :nth-child);
+     2. o numero grande conta ate o valor — e no ultimo quadro escreve de volta a
+        string ORIGINAL, entao nao existe risco de o painel ficar com numero
+        arredondado se a animacao for interrompida;
+     3. a linha do grafico se desenha (stroke-dashoffset). Traco que JA e
+        pontilhado fica de fora: animar dasharray nele apagaria o pontilhado.
+   `prefers-reduced-motion` desliga tudo — e uma preferencia do sistema, nao um
+   detalhe. =================================================================== */
+@media screen{
+  @keyframes v2in{from{opacity:0;transform:translateY(14px) scale(.986)}to{opacity:1;transform:none}}
+  .v2ent>*{animation:v2in .52s cubic-bezier(.22,1,.36,1) both}
+  .v2ent>*:nth-child(1){animation-delay:.00s}
+  .v2ent>*:nth-child(2){animation-delay:.05s}
+  .v2ent>*:nth-child(3){animation-delay:.10s}
+  .v2ent>*:nth-child(4){animation-delay:.15s}
+  .v2ent>*:nth-child(5){animation-delay:.20s}
+  .v2ent>*:nth-child(6){animation-delay:.25s}
+  .v2ent>*:nth-child(7){animation-delay:.28s}
+  .v2ent>*:nth-child(8){animation-delay:.31s}
+  .v2ent>*:nth-child(n+9){animation-delay:.34s}
+  /* o traco se desenhando */
+  @keyframes v2traco{to{stroke-dashoffset:0}}
+  .v2draw{animation:v2traco .9s cubic-bezier(.33,1,.68,1) both}
+  /* a bolinha da barra de abas: um indicador que escorrega e se espreme no meio
+     do caminho, como a barra que "derrete" em volta da aba ativa do video */
+  .tabs{position:relative}
+  .tabs .v2bead{position:absolute;z-index:0;border-radius:999px;pointer-events:none;
+    background:linear-gradient(135deg,var(--v2-accent),var(--acaoBg));
+    box-shadow:0 6px 18px color-mix(in srgb,var(--v2-accent) 38%,transparent);
+    transition:transform .42s cubic-bezier(.34,1.3,.5,1),width .42s cubic-bezier(.34,1.3,.5,1),opacity .2s;
+    opacity:0}
+  .tabs.v2temBead .v2bead{opacity:1}
+  /* com a bolinha desenhando o fundo, a aba ativa so precisa da cor do texto */
+  .tabs.v2temBead .tab[aria-selected=true],
+  .tabs.v2temBead .tab.on{background:transparent!important;box-shadow:none!important}
+  .tabs.v2temBead .tab{position:relative;z-index:1}
+  /* trilho da esquerda: o mesmo indicador, na vertical */
+  .grupos{position:fixed}
+  .grupos .v2bead{position:absolute;left:0;top:0;width:46px;height:46px;border-radius:15px;
+    z-index:0;pointer-events:none;
+    background:linear-gradient(135deg,var(--v2-accent),var(--acaoBg));
+    box-shadow:0 6px 18px color-mix(in srgb,var(--v2-accent) 38%,transparent);
+    transition:transform .42s cubic-bezier(.34,1.3,.5,1),width .42s,height .42s,opacity .2s;opacity:0}
+  .grupos.v2temBead .v2bead{opacity:1}
+  .grupos.v2temBead .tab.grp[aria-current=true],
+  .grupos.v2temBead .tab.grp.on{background:transparent!important}
+  .grupos .tab.grp{position:relative;z-index:1}
+}
+@media (prefers-reduced-motion:reduce){
+  .v2ent>*{animation:none!important}
+  .v2draw{animation:none!important;stroke-dashoffset:0!important}
+  .tabs .v2bead,.grupos .v2bead{transition:none!important}
+}
+@media print{.v2ent>*{animation:none!important}.tabs .v2bead,.grupos .v2bead{display:none!important}}
+</style>
+<style id="v2eng">
+/* ---------------- a carteira de cada engenheiro (10/10/2026) ----------------
+   Pedido do Luis depois dos videos: "dashboards de cada engenheiro". Um cartao
+   por engenheiro, no mesmo vocabulario do Inicio — anel com o percentual no
+   meio, numeros em coluna e, embaixo, a barra da meta do mes no padrao do
+   video: solido = ja lancado, pontilhado = o que falta. Clicar joga o nome no
+   filtro de engenheiro do topo e abre o Controle das obras.
+   OBRA COM DOIS ENGENHEIROS CONTA NOS DOIS — por isso a soma dos cartoes pode
+   passar do total da carteira, e a nota em cima diz isso quando acontece.     */
+@media screen{
+  #engBox .engGrade{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+  #engBox .engC{display:flex;flex-direction:column;gap:10px;padding:14px 15px;min-width:0;
+    border-radius:20px;background:var(--surface-2);border:1px solid var(--v2-edge,var(--line));
+    text-align:left;font:inherit;color:var(--text-primary);cursor:pointer;
+    transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,border-color .2s}
+  #engBox .engC:hover{transform:translateY(-4px);border-color:var(--previsto);
+    box-shadow:0 14px 30px rgba(0,0,0,.16)}
+  #engBox .engC:focus-visible{outline:2px solid var(--previsto);outline-offset:2px}
+  #engBox .engTopo{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  #engBox .engNome{font-size:16px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+  #engBox .engSub{font-size:11.5px;color:var(--text-muted);margin-top:2px}
+  #engBox .engAnel{flex:none;color:var(--text-muted)}
+  #engBox .engNums{display:grid;grid-template-columns:1fr 1fr;gap:7px 12px}
+  #engBox .engNums div{min-width:0}
+  #engBox .engNums span{display:block;font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--text-muted)}
+  #engBox .engNums b{display:block;font-size:14px;font-weight:650;font-variant-numeric:tabular-nums;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #engBox .engMeta{margin-top:2px}
+  #engBox .engMetaT{display:flex;justify-content:space-between;gap:8px;font-size:11px;
+    color:var(--text-muted);margin-bottom:4px}
+  #engBox .engMetaT b{color:var(--text-primary);font-variant-numeric:tabular-nums}
+  /* a barra do video: o trilho e pontilhado (o que falta), o preenchido e solido */
+  #engBox .engBar{position:relative;height:9px;border-radius:5px;overflow:hidden;
+    background:repeating-linear-gradient(90deg,var(--marca) 0 3px,transparent 3px 7px)}
+  #engBox .engBar i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;
+    background:linear-gradient(90deg,var(--realizado),color-mix(in srgb,var(--realizado) 70%,#fff));
+    transition:width .6s cubic-bezier(.22,1,.36,1)}
+  #engBox .engBar.cheia i{background:var(--good)}
+  #engBox .engTag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;
+    padding:3px 8px;border-radius:999px;background:color-mix(in srgb,var(--critical) 12%,transparent);
+    color:var(--critical)}
+  #engBox .engTag.ok{background:color-mix(in srgb,var(--good) 12%,transparent);color:var(--good)}
+}
+@media print{
+  #engBox .engGrade{display:grid !important;grid-template-columns:repeat(3,1fr) !important;gap:6px !important}
+  #engBox .engC{border:1px solid #c2c2ba !important;border-radius:6px !important;padding:6px 8px !important;
+    background:#fff !important;transform:none !important;box-shadow:none !important;break-inside:avoid}
+  /* o <button> centraliza e o display:block dos rotulos e so de tela: sem isto
+     o papel saia com "ContratadoR$ 29.797.334" tudo colado e no meio do cartao */
+  #engBox .engC{text-align:left !important;display:block !important}
+  #engBox .engTopo{display:flex !important;align-items:center !important;
+    justify-content:space-between !important;gap:8px !important;margin-bottom:4px}
+  #engBox .engNome{font-size:10pt !important;line-height:1.2}
+  #engBox .engSub{font-size:6.6pt !important;color:#3a3a36 !important}
+  #engBox .engNums{display:grid !important;grid-template-columns:1fr 1fr !important;
+    gap:3px 8px !important;margin-bottom:4px}
+  #engBox .engNums b{display:block !important;font-size:8.5pt !important}
+  #engBox .engNums span{display:block !important;font-size:6.4pt !important;color:#3a3a36 !important}
+  #engBox .engMetaT{display:flex !important;justify-content:space-between !important;
+    gap:8px !important;font-size:6.8pt !important;margin-bottom:2px}
+  #engBox .engBar{height:6px !important}
+  #engBox .engTag{font-size:6.6pt !important;padding:1px 5px !important}
+  #engBox .engAnel svg{width:44px !important;height:44px !important}
+}
+</style>
+<style id="v2mobile">
+/* ================= O TELEFONE — 10/10/2026 =================================
+   Os engenheiros abrem o portal mais no celular do que no computador, entao o
+   telefone nao e "a versao que tambem funciona": e a principal.
+   Tres coisas estavam erradas e sao corrigidas aqui:
+     1. O CALENDARIO. `.v2day{aspect-ratio:1}` numa coluna de 1000px dava um
+        circulo de 140px por dia — era o que aparecia no iPad. O cofre do
+        aspect-ratio e otimo ate a coluna ficar larga; a partir de 1240px para
+        baixo a lateral vira coluna unica e o calendario precisa de teto.
+     2. A BOLINHA DA BARRA. No telefone o trilho deita e vira barra de baixo;
+        a bolinha agora copia a caixa do botao ativo nos dois eixos (ver o JS).
+     3. OS QUATRO NUMEROS DO TOPO em duas colunas de 170px quebravam o rotulo em
+        tres linhas. Abaixo de 560px vai um por linha, que e onde o numero e o
+        desenho cabem lado a lado. ============================================ */
+@media screen and (max-width:1240px){
+  /* o calendario para de esticar: 7 colunas de ~54px, como no telefone */
+  #v2home .v2cal{max-width:400px}
+  #v2home .v2day{aspect-ratio:1;height:auto;border-radius:50%}
+}
+@media screen and (min-width:761px) and (max-width:1240px){
+  /* no tablet a lateral deita: calendario de um lado, agenda do outro */
+  #v2home .v2side{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:12px 16px}
+  #v2home .v2me,#v2home .v2trio{flex:1 1 100%}
+  #v2home .v2cal{flex:0 1 400px}
+  #v2home .v2ag{flex:1 1 320px;min-width:0}
+  #v2home #v2ag{max-height:none}
+}
+@media screen and (max-width:760px){
+  /* alvo de toque: 44px e o minimo que o dedo acerta sem erro */
+  .grupos{height:64px}
+  .grupos .tab.grp{width:44px;height:44px}
+  #v2home .v2cal{max-width:none}
+}
+@media screen and (max-width:760px){
+  /* As colunas por mes (aba Medicao) sao um flex de 12 colunas; cada uma carrega
+     um "R$ 1.234.567" que define a largura minima, entao a LINHA nao encolhia e
+     empurrava a PAGINA inteira — 536px num telefone de 390. Mes a mes e conteudo
+     que se le rolando de lado: a rolagem fica na faixa, nunca na pagina. */
+  .cols{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;scrollbar-color:var(--marca) transparent;padding-bottom:4px}
+  .cols .col{flex:0 0 54px;min-width:0}
+  .cols .col .cv{font-size:9.5px}
+  .cols::-webkit-scrollbar{height:5px}
+  .cols::-webkit-scrollbar-thumb{background:var(--marca);border-radius:3px}
+  /* a etiqueta do lote nao pode ser o que estoura a linha */
+  .lote{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+}
+@media screen and (max-width:560px){
+  /* cabecalho: o titulo e longo e comia duas linhas inteiras */
+  header{padding:11px 13px;border-radius:20px}
+  header h1{font-size:13px;line-height:1.35}
+  .logo{width:18px;height:18px;margin-right:7px;vertical-align:-3px}
+  /* os quatro do topo, um por linha: o numero e o desenho ficam lado a lado */
+  .v2stats{grid-template-columns:1fr;gap:9px}
+  .v2st{padding:11px 13px}
+  .v2st .h{font-size:12px}
+  .v2st .v{font-size:24px}
+  .v2st .u{font-size:11.5px}
+  .v2st svg{width:76px;height:32px}
+  .v2top h3{font-size:19px}
+  .v2top p{font-size:12px}
+  /* os cinco cartoes de risco: valor de 8 digitos nao pode vazar do cartao */
+  .kpis5{gap:8px}
+  .kpiA{padding:11px 12px}
+  .kpiA .v{font-size:19px;overflow-wrap:anywhere}
+  #faixaTit .ft{font-size:15px}
+  /* a carteira por engenheiro em coluna unica */
+  #engBox .engGrade{grid-template-columns:1fr}
+  #engBox .engNums{grid-template-columns:1fr 1fr;gap:6px 10px}
+  /* graficos lado a lado nao cabem */
+  .v2g2{grid-template-columns:1fr}
+  /* a agenda da lateral rola menos: no telefone a pagina inteira ja rola */
+  #v2home #v2ag{max-height:none;overflow:visible}
+}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -1988,6 +2190,12 @@ html[data-paleta="azul"] .orc nav button[aria-selected="true"]{
         <summary style="cursor:pointer;color:var(--text-secondary);font-size:12px">ver a lista completa, com os valores</summary>
         <div class="rol"><table class="tbl" id="tabAtraso" style="margin-top:8px"></table></div>
       </details>
+    </div>
+
+    <div class="card" style="margin-top:10px" id="engBox">
+      <h2>Por engenheiro</h2>
+      <p style="font-size:11px;color:var(--text-muted);margin:-2px 0 10px;line-height:1.5" id="engNota"></p>
+      <div class="engGrade" id="engGrade"></div>
     </div>
 
   </section>
@@ -3420,6 +3628,7 @@ function renderCarteira(){
     'São '+atr.length+' obras atrasadas'+(atr.length?', e alcançar o cronograma em todas custaria <b>'+brl(somaAtr)+'</b>':'')+'. '+
     (atr.length>12?'O placar mostra as 12 piores; a lista completa está logo abaixo.':'');
   rankingAtraso($('cAtraso'),atr.slice(0,12));
+  painelEngenheiros(obras.filter(ATIVA2));
 
   // ---- Regiao 1: faixa de titulo — conclui, nao descreve --------------------
   // ---- Regiao 2/3: os cinco cartoes com faixa de alerta --------------------
@@ -5266,6 +5475,102 @@ function rankingAtraso(el,lista){
   });
   el.appendChild(s);
 }
+
+/* =================== A CARTEIRA DE CADA ENGENHEIRO (10/10/2026) ============
+   Um cartao por engenheiro das obras ATIVAS do filtro. Nada aqui inventa
+   numero: tudo sai dos mesmos campos que alimentam os KPIs do topo.
+     anel          = quanto do contrato ja foi medido (aprovado + tramitacao)
+     meta do mes   = soma de metaDoMes() das obras com cronograma
+     lancado       = o que ja entrou na competencia de MES_REF
+   Obra com DOIS engenheiros entra nos dois cartoes — a soma dos cartoes passa
+   do total da carteira nesse caso, e a nota avisa quando acontece.           */
+/* o ring() do Inicio mora dentro da IIFE dele; este e o anel desta aba */
+function anelPct(p,cor,sz){
+  const r=sz*.4, C=2*Math.PI*r, f=Math.max(0,Math.min(p||0,100))/100, c=sz/2, w=sz*.085;
+  return '<svg viewBox="0 0 '+sz+' '+sz+'" style="width:'+sz+'px;height:'+sz+'px" aria-hidden="true">'+
+    '<circle cx="'+c+'" cy="'+c+'" r="'+r+'" fill="none" stroke="currentColor" opacity=".18" stroke-width="'+w+'"/>'+
+    '<circle cx="'+c+'" cy="'+c+'" r="'+r+'" fill="none" stroke="'+cor+'" stroke-width="'+w+'" '+
+      'stroke-linecap="round" stroke-dasharray="'+(C*f)+' '+C+'" transform="rotate(-90 '+c+' '+c+')"/>'+
+    '<text x="'+c+'" y="'+(c+sz*.07)+'" text-anchor="middle" font-size="'+(sz*.235)+'" '+
+      'font-weight="700" fill="var(--text-primary)">'+Math.round(p||0)+'%</text></svg>';
+}
+function painelEngenheiros(ativas){
+  const box=$('engGrade'); if(!box) return;
+  const G={}, SEM='Sem engenheiro no controle';
+  let dobradas=0;
+  ativas.forEach(o=>{
+    const es=(o.engs&&o.engs.length)?o.engs:[SEM];
+    if(es.length>1) dobradas++;
+    es.forEach(nome=>{
+      const k=String(nome).trim()||SEM;
+      const g=G[k]||(G[k]={k,obras:0,valor:0,med:0,tra:0,atras:0,prev:0,exec:0,meta:0,lanc:0,cron:0});
+      g.obras++; g.valor+=o.valor||0; g.med+=o.medido||0; g.tra+=o.tramitacao||0;
+      if(o.status==='Atrasado') g.atras++;
+      if(o.cronograma&&o.serie){
+        g.cron++;
+        let pv=0,ap=0,tr=0;
+        o.serie.forEach(x=>{ if(x.k<=MES_REF){ pv+=x.p; ap+=x.m; tr+=(x.t||0); } });
+        g.prev+=pv; g.exec+=ap+tr;
+        g.meta+=metaDoMes(o.serie,MES_REF);
+        const sm=o.serie.find(x=>x.k===MES_REF);
+        if(sm) g.lanc+=(sm.m||0)+(sm.t||0);
+      }
+    });
+  });
+  const L=Object.values(G).sort((a,b)=>(b.meta-b.lanc)-(a.meta-a.lanc)||b.valor-a.valor);
+  if(!L.length){ box.innerHTML='<p style="color:var(--text-muted);font-size:12px">'+
+    'Nenhuma obra ativa no filtro.</p>'; if($('engNota')) $('engNota').textContent=''; return; }
+  if($('engNota')) $('engNota').innerHTML=
+    'A carteira ativa repartida entre os '+L.length+' engenheiro'+(L.length>1?'s':'')+' do recorte. '+
+    'O anel é quanto do contrato já foi medido; a barra embaixo é a meta de <b>'+mesAno(MES_REF)+
+    '</b> — o cheio é o que já foi lançado, o pontilhado é o que falta. '+
+    'Clique no cartão para jogar o nome no filtro do topo e abrir o Controle das obras.'+
+    (dobradas?' <b>'+dobradas+' obra'+(dobradas>1?'s têm':' tem')+' dois engenheiros</b> e conta'+
+      (dobradas>1?'m':'')+' nos dois cartões, então a soma passa do total da carteira.':'');
+  box.innerHTML=L.map(g=>{
+    const pMed = g.valor? Math.round((g.med+g.tra)/g.valor*100) : 0;
+    const falta= Math.max(g.meta-g.lanc,0);
+    const pMeta= g.meta? Math.min(Math.round(g.lanc/g.meta*100),100) : 100;
+    const cor  = pMeta>=100?'var(--good)':pMeta>=60?'var(--warning)':'var(--critical)';
+    return '<button type="button" class="engC" data-eng="'+esc(g.k)+'">'+
+      '<div class="engTopo"><div style="min-width:0">'+
+        '<div class="engNome">'+esc(g.k)+'</div>'+
+        '<div class="engSub">'+g.obras+' obra'+(g.obras>1?'s':'')+' ativa'+(g.obras>1?'s':'')+
+          (g.cron<g.obras?' · '+g.cron+' com cronograma':'')+'</div></div>'+
+        '<div class="engAnel">'+anelPct(pMed,'var(--realizado)',64)+'</div></div>'+
+      '<div class="engNums">'+
+        '<div><span>Contratado</span><b>'+brl(g.valor)+'</b></div>'+
+        '<div><span>Medido aprovado</span><b>'+brl(g.med)+'</b></div>'+
+        '<div><span>Em tramitação</span><b style="color:'+(g.tra?'var(--warning)':'inherit')+'">'+
+          (g.tra?brl(g.tra):'—')+'</b></div>'+
+        '<div><span>Atrasadas</span><b>'+
+          (g.atras?'<span class="engTag">'+g.atras+' obra'+(g.atras>1?'s':'')+'</span>'
+                  :'<span class="engTag ok">nenhuma</span>')+'</b></div>'+
+      '</div>'+
+      '<div class="engMeta"><div class="engMetaT"><span>Meta de '+mesAno(MES_REF)+'</span>'+
+        '<span>'+(falta?'falta <b>'+brl(falta)+'</b>':'<b style="color:var(--good)">meta batida</b>')+
+        '</span></div>'+
+        '<div class="engBar'+(pMeta>=100?' cheia':'')+'"><i style="width:'+pMeta+'%;background:'+
+          (pMeta>=100?'var(--good)':'')+'"></i></div></div>'+
+      '</button>';
+  }).join('');
+  box.querySelectorAll('[data-eng]').forEach(b=>b.addEventListener('click',()=>{
+    const nome=b.dataset.eng;
+    try{
+      if(window.MS&&MS.fEng&&MS.fEng.sel){
+        MS.fEng.sel.clear();
+        if(nome!=='Sem engenheiro no controle') MS.fEng.sel.add(nome);
+        const cx=$('fEng');
+        if(cx) cx.querySelectorAll('.pop input').forEach(i=>{i.checked=MS.fEng.sel.has(i.value);});
+        if(typeof msLabel==='function') msLabel('fEng');
+        if(typeof MS.fEng.aoMudar==='function') MS.fEng.aoMudar();
+      }
+    }catch(e){}
+    if(typeof mostra==='function') mostra('lista');
+    window.scrollTo(0,0);
+  }));
+}
+
 function barrasPrev(el,lista){
   el.innerHTML='';
   if(!lista.length){el.innerHTML='<p style="color:var(--text-muted);font-size:12px">Nada a medir no filtro.</p>';return;}
@@ -9132,7 +9437,7 @@ aoFiltrar();
 </script>
 
 <!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
-<script src="fech.js?v=202610101840"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
+<script src="fech.js?v=202610101902"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
 <script>
 const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andrade", "cid": "BARUERI", "emp": "LEONARDO ZANAO", "sit": "5. CONCLUÍDA", "contrato": 235271.25, "taxa": 0.06, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 14116.27, "ap": 212526.4, "tr": 7207.92, "emp_ap": 12751.58, "emp_tot": 13184.06, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 12751.58, "saldo_tot": 13184.06}, "199": {"num": 199, "uni": "EE SEBASTIAO DE MORAES CARDOSO", "cid": "ITAPECERICA DA SERRA", "emp": "REINALDO", "sit": "5. CONCLUÍDA", "contrato": 186643.95, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 37328.79, "ap": 131576.49, "tr": 12451.6, "emp_ap": 26315.3, "emp_tot": 28805.62, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26315.3, "saldo_tot": 28805.62}, "200": {"num": 200, "uni": "EE OREDO RODRIGUES DA CRUZ", "cid": "JUQUITIBA", "emp": "ANTONIO CABELO", "sit": "5. CONCLUÍDA", "contrato": 171519.72, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 34303.94, "ap": 130434.87, "tr": 0.0, "emp_ap": 26086.97, "emp_tot": 26086.97, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26086.97, "saldo_tot": 26086.97}, "223": {"num": 223, "uni": "ETEC Antonio furlan", "cid": "BARUERI", "emp": "REINALDO", "sit": "4. EXECUÇÃO", "contrato": 1935375.91, "taxa": 0.538489, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 1042178.64, "ap": 413291.43, "tr": 273284.71, "emp_ap": 222552.89, "emp_tot": 369713.7, "mat": 127178.11, "serv": 19199.0, "sienge": 146945.42, "npedidos": 18, "top": [["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)", "m²", 731.4, 23331.66], ["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET", "m2", 450.0, 17946.0], ["Torneira de acionamento manual e com ciclo de ", "un", 18.0, 17457.3], ["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ", "un", 30.0, 14830.5], ["Tinta esmalte cinza médio 3,6 LT", "gl", 50.0, 5781.0], ["PORTA DE MADEIRA COMPLETA 0,92X2,10", "un", 6.0, 4296.0], ["TELA Q-92 2X3 M", "un", 60.0, 3996.0], ["Divisoria de Granilite frontal (DV-03) 0,40x1,", "un", 25.0, 3802.5], ["FERRO CHATO 5/8 X 3/16", "br", 90.0, 3780.0], ["LUMINÁRIA IL-45 - COM LÂMPADA LED", "un", 42.0, 3766.14], ["PR-09 C=2MM", "un", 12.0, 2808.0], ["Tinta Esmalte base d'água Branco 18l", "lt", 20.0, 2500.0], ["Esmalte Brilhante Branco Coralit 3, 6l", "gl", 20.0, 2500.0], ["TINTA ESMALTE BASE ÁGUA CINZA", "lt", 20.0, 2361.2], ["Coral Rende Muito Branco Neve 18l", "lt", 6.0, 2010.0], ["TINTA PISO CINZA MÉDIO 18L", "lt", 5.0, 1725.0], ["DV-04 C=1,2M", "un", 3.0, 1368.9], ["Divisórias de granilite 0,35 X 1,80 Conforme D", "un", 10.0, 1331.1], ["Cabo flex 6mm² preto", "rol", 2.0, 1295.0], ["Cabo flex 4mm² preto", "rol", 2.0, 864.8]], "saldo_ap": 75607.47, "saldo_tot": 222768.28, "absorv": 84486.46, "estoque": 61890.65, "saldo_ap_prop": 138066.43, "saldo_tot_prop": 285227.24}, "224": {"num": 224, "uni": "ELIZA DE OLIVEIRA RIBEIRO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1486645.35, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 486290.92, "tr": 274008.61, "emp_ap": null, "emp_tot": null, "mat": 2852.39, "serv": 0.0, "sienge": 2852.39, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "230": {"num": 230, "uni": "EE MARIA ANTONIETA MARTINS", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1979042.22, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 1083172.19, "tr": 179925.01, "emp_ap": null, "emp_tot": null, "mat": 1976.74, "serv": 0.0, "sienge": 1976.74, "npedidos": 9, "top": [], "saldo_ap": null, "saldo_tot": null}, "231": {"num": 231, "uni": "EE MARIA JOSE ANTUNES FERRAZ", "cid": "TABOÃO DA SERRA", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1912108.62, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 776720.04, "tr": 58057.26, "emp_ap": null, "emp_tot": null, "mat": 712.0, "serv": 0.0, "sienge": 712.0, "npedidos": 7, "top": [], "saldo_ap": null, "saldo_tot": null}, "232": {"num": 232, "uni": "EE NEIDE CELESTINA DE OLIVEIRA", "cid": "EMBU GUAÇU", "emp": "CRISTIAN GUIDO", "sit": "4. EXECUÇÃO", "contrato": 1394560.14, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 500062.77, "tr": 68313.36, "emp_ap": null, "emp_tot": null, "mat": 2080.0, "serv": 0.0, "sienge": 2080.0, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}, "269": {"num": 269, "uni": "EE JD CAMPESTRE", "cid": "EMBU GUAÇU", "emp": "RENILDO", "sit": "4. EXECUÇÃO", "contrato": 1328935.74, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 661977.78, "tr": 45518.87, "emp_ap": null, "emp_tot": null, "mat": 1113.72, "serv": 0.0, "sienge": 1113.72, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "274": {"num": 274, "uni": "ETEC EMBU", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1568182.98, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 104600.06, "tr": 468976.52, "emp_ap": null, "emp_tot": null, "mat": 1410.0, "serv": 0.0, "sienge": 1410.0, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "278": {"num": 278, "uni": "EE GERTRUDES EDER", "cid": "ITAPECERICA DA SERRA", "emp": "LEONARDO ZANAO", "sit": "4. EXECUÇÃO", "contrato": 2152584.69, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 156359.02, "tr": 57537.42, "emp_ap": null, "emp_tot": null, "mat": 4272.3, "serv": 0.0, "sienge": 4272.3, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "284": {"num": 284, "uni": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 114889.32, "taxa": 0.46, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 52849.09, "ap": 3522.17, "tr": 45000.54, "emp_ap": 1620.2, "emp_tot": 22320.45, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 1620.2, "saldo_tot": 22320.45}, "287": {"num": 287, "uni": "EEPROF LAERT ALMEIDA SÃO BERNARDO", "cid": "TABOÃO DA SERRA", "emp": "PEDRO", "sit": "4. EXECUÇÃO", "contrato": 1950390.3, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 32747.41, "tr": 273322.99, "emp_ap": null, "emp_tot": null, "mat": 1088.58, "serv": 0.0, "sienge": 1088.58, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "288": {"num": 288, "uni": "EE EDUARDO VAZ", "cid": "EMBU DAS ARTES", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1756795.6, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 2378.4, "tr": 156047.64, "emp_ap": null, "emp_tot": null, "mat": 8399.5, "serv": 0.0, "sienge": 8399.5, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}};
 (function(){
@@ -9368,10 +9673,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
-<script src="sienge.js?v=202610101840"></script>
-<script src="sienge_itens.js?v=202610101840"></script>
-<script src="sienge_solic.js?v=202610101840"></script>
-<script src="entregas.js?v=202610101840"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
+<script src="sienge.js?v=202610101902"></script>
+<script src="sienge_itens.js?v=202610101902"></script>
+<script src="sienge_solic.js?v=202610101902"></script>
+<script src="entregas.js?v=202610101902"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -10276,10 +10581,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: SUB-ABA FISCALIZAÇÃO (Livros de Ocorrência) ================= -->
-<script src="lo.js?v=202610101840"></script>
-<script src="seg.js?v=202610101840"></script>
-<script src="rao.js?v=202610101840"></script>
-<script src="relsem.js?v=202610101840"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
+<script src="lo.js?v=202610101902"></script>
+<script src="seg.js?v=202610101902"></script>
+<script src="rao.js?v=202610101902"></script>
+<script src="relsem.js?v=202610101902"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
 <style>
   #loBox .loK{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
   #loBox .loK>div{flex:1 1 150px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:10px 12px;background:var(--cd,#fff)}
@@ -10564,7 +10869,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
-<script src="consolidado.js?v=202610101840"></script>
+<script src="consolidado.js?v=202610101902"></script>
 <style>
   #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
   #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
@@ -11203,7 +11508,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   },700);
 })();
 </script>
-<script src="mat_aba.js?v=202610101840"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
+<script src="mat_aba.js?v=202610101902"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
 <script>
 /* ---------- sub-aba "Medições (checklist)" na pagina da obra (08/10) --------
    Era o unico dos cinco quadros gerais que NAO tinha recorte por obra: aberto
@@ -11668,7 +11973,7 @@ line();feat();hot();cal();ag();
 
 <div id="v2quem" hidden role="dialog" aria-modal="true" aria-labelledby="v2quemTit">
   <form class="qc" id="v2quemF">
-    <span class="qlogo"><i style="height:10px"></i><i style="height:16px"></i><i style="height:22px"></i></span>
+    <svg class="qlogo" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 17c0-4.9 2.8-8.3 6.3-8.8V6.9q0-1.4 1.4-1.4h1.4q1.4 0 1.4 1.4v1.3c3.5.5 6.3 3.9 6.3 8.8Z"/><rect x="1.2" y="17.3" width="21.6" height="2.9" rx="1.45"/></svg>
     <h2 id="v2quemTit">Quem está usando o portal?</h2>
     <p>O nome fica neste aparelho e acompanha tudo que você marcar — medição inserida,
        e-mail enviado, relatório fotográfico, entrega de material. É assim que depois
@@ -11844,6 +12149,160 @@ line();feat();hot();cal();ag();
     var tit=a.getAttribute('data-tit')||(GEN.test(rot)?arq:(rot.slice(0,70)||arq));
     abre(u.pathname+u.search, tit, a.getAttribute('data-sub')||arq, a);
   },true);
+})();
+</script>
+
+<script id="v2animJS">
+/* ============ coreografia de entrada, contagem e bolinha das abas ===========
+   Ver o comentario do <style id="v2anim">. Tudo aqui e enfeite: se qualquer
+   parte falhar, a pagina continua inteira — por isso cada gancho esta dentro de
+   try/catch e nada aqui calcula numero nenhum. ============================== */
+(function(){
+  var PARADO = window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  /* ---- 1. cascata ---------------------------------------------------------
+     Os containers que valem a pena: os que tem filhos irmaos em grade. */
+  var GRADES = '.v2stats,.v2g2,.v2c3,.kpis5,.kpis,#v2ag,.grid2,.grid3';
+  function cascata(raiz){
+    if(PARADO||!raiz) return;
+    try{
+      raiz.querySelectorAll(GRADES).forEach(function(g){
+        if(!g.offsetParent && g!==raiz) return;        // escondido: nao gasta quadro
+        g.classList.remove('v2ent'); void g.offsetWidth; g.classList.add('v2ent');
+      });
+    }catch(e){}
+  }
+
+  /* ---- 2. contagem --------------------------------------------------------
+     Pega o primeiro numero do texto, anima so ele e preserva prefixo e sufixo
+     ("R$ 25.477.925", "4,5 mi", "31%"). No fim escreve de volta a string
+     original: o valor exibido nunca pode depender da animacao ter terminado. */
+  function conta(el){
+    if(PARADO||!el) return;
+    var fim = el.textContent;
+    var m = fim.match(/-?\d[\d.]*(?:,\d+)?/);
+    if(!m) return;
+    var bruto = m[0];
+    var num = parseFloat(bruto.replace(/\./g,'').replace(',','.'));
+    if(!isFinite(num) || Math.abs(num) < 5) return;     // 0,52 ou 3 nao tem o que contar
+    var dec = (bruto.split(',')[1]||'').length;
+    var pre = fim.slice(0, m.index), pos = fim.slice(m.index + bruto.length);
+    var tok = (el.__v2tok = (el.__v2tok||0) + 1);
+    var t0 = 0, DUR = 760;
+    function passo(t){
+      if(el.__v2tok !== tok || !el.isConnected) return; // outro desenho assumiu
+      if(!t0) t0 = t;
+      var k = Math.min((t - t0)/DUR, 1), e = 1 - Math.pow(1-k, 3);
+      if(k >= 1){ el.textContent = fim; return; }       // <- a string de verdade
+      el.textContent = pre + (num*e).toLocaleString('pt-BR',
+        {minimumFractionDigits:dec, maximumFractionDigits:dec}) + pos;
+      requestAnimationFrame(passo);
+    }
+    requestAnimationFrame(passo);
+  }
+  function contarEm(raiz){
+    if(PARADO||!raiz) return;
+    try{
+      raiz.querySelectorAll('.v2st .v,.kpiA .v,.kpi .v,.v2trio b').forEach(conta);
+    }catch(e){}
+  }
+
+  /* ---- 3. o traco se desenhando ------------------------------------------
+     So linha cheia: quem ja tem stroke-dasharray usa o pontilhado para dizer
+     alguma coisa (projecao, meta) e nao pode ser mexido. */
+  function desenhar(raiz){
+    if(PARADO||!raiz) return;
+    try{
+      var n = 0;
+      raiz.querySelectorAll('svg path').forEach(function(p){
+        if(n > 24) return;
+        if(!p.getAttribute('stroke') || p.getAttribute('stroke')==='none') return;
+        if((p.getAttribute('fill')||'none') !== 'none') return;
+        if(p.getAttribute('stroke-dasharray') || p.style.strokeDasharray) return;
+        var L = 0; try{ L = p.getTotalLength(); }catch(e){ return; }
+        if(!L || L < 40 || L > 12000) return;
+        p.style.strokeDasharray = L + ' ' + L;
+        p.style.strokeDashoffset = L;
+        p.classList.add('v2draw');
+        n++;
+        setTimeout(function(){                           // devolve o traco ao normal
+          p.classList.remove('v2draw');
+          p.style.strokeDasharray = ''; p.style.strokeDashoffset = '';
+        }, 1200);
+      });
+    }catch(e){}
+  }
+
+  function entrar(raiz){ cascata(raiz); contarEm(raiz); desenhar(raiz); }
+
+  /* ---- 4. a bolinha que escorrega entre as abas ---------------------------
+     Um unico elemento por barra, posicionado por transform (nao por left: o
+     navegador anima transform sem refazer o layout). A barra pode nascer com
+     largura zero — enquanto isso a bolinha fica invisivel. */
+  function bead(barra, vertical){
+    if(!barra || barra.__v2bead) return;
+    var b = document.createElement('i');
+    b.className = 'v2bead'; b.setAttribute('aria-hidden','true');
+    barra.insertBefore(b, barra.firstChild);
+    barra.__v2bead = b;
+    /* mede o botao ativo e copia a caixa dele. Serve para a barra deitada do topo
+       E para o trilho em pe — que no telefone vira a barra de baixo, tambem deitada.
+       Por isso nada aqui assume eixo: as duas coordenadas sao sempre escritas. */
+    barra.__v2mover = function(){
+      var a = barra.querySelector('.tab[aria-selected="true"],.tab[aria-current="true"],.tab.on');
+      if(!a || !a.offsetParent){ barra.classList.remove('v2temBead'); return; }
+      var rb = barra.getBoundingClientRect(), ra = a.getBoundingClientRect();
+      if(!ra.width || !ra.height){ barra.classList.remove('v2temBead'); return; }
+      b.style.left = '0px'; b.style.top = '0px';
+      b.style.width = ra.width + 'px';
+      b.style.height = ra.height + 'px';
+      b.style.transform = 'translate(' + (ra.left - rb.left) + 'px,' + (ra.top - rb.top) + 'px)';
+      barra.classList.add('v2temBead');
+    };
+    barra.__v2mover();
+  }
+  function beads(){
+    try{
+      document.querySelectorAll('.tabs').forEach(function(t){ bead(t,false); });
+      bead(document.getElementById('grpBar'), true);
+      document.querySelectorAll('.tabs').forEach(function(t){ if(t.__v2mover) t.__v2mover(); });
+      var g = document.getElementById('grpBar'); if(g && g.__v2mover) g.__v2mover();
+    }catch(e){}
+  }
+
+  /* ---- 5. ganchos ---------------------------------------------------------
+     mostra() e a troca de aba do painel; envolvo em vez de reescrever. */
+  function ligar(){
+    try{
+      if(typeof window.mostra === 'function' && !window.mostra.__v2){
+        var orig = window.mostra;
+        window.mostra = function(q){
+          var r = orig.apply(this, arguments);
+          setTimeout(function(){
+            var sec = document.querySelector('.wrap section:not(.oculto)');
+            entrar(sec); beads();
+          }, 0);
+          return r;
+        };
+        window.mostra.__v2 = true;
+      }
+    }catch(e){}
+    document.addEventListener('click', function(e){
+      if(e.target.closest && e.target.closest('.tab')) setTimeout(beads, 0);
+    }, true);
+    window.addEventListener('resize', function(){ clearTimeout(window.__v2rz);
+      window.__v2rz = setTimeout(beads, 120); });
+  }
+
+  function comecar(){
+    ligar(); beads();
+    var sec = document.querySelector('.wrap section:not(.oculto)') || document.querySelector('.wrap');
+    entrar(sec);
+    setTimeout(beads, 400);     // depois que as fontes assentam a largura das abas muda
+  }
+  if(document.readyState === 'complete') setTimeout(comecar, 60);
+  else window.addEventListener('load', function(){ setTimeout(comecar, 60); });
+  window.v2Entrar = entrar;     // o Inicio chama isto quando se redesenha
 })();
 </script>
 
