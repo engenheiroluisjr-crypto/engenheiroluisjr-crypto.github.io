@@ -1447,6 +1447,23 @@ html[data-paleta="azul"][data-tema="claro"]{
   --acaoBg:#b85122;
   --trilho:rgba(30,58,76,.09); --grade:rgba(30,58,76,.09); --marca:rgba(30,58,76,.20);
 }
+/* A NAVEGAÇÃO selecionada segue o azul, não o laranja. No guia o laranja é o
+   destaque de 10% -- serve para alerta e chamada, não para dizer "você está
+   aqui" o tempo todo. O ícone aceso do trilho e a aba selecionada ficam azuis;
+   o laranja segue nos alertas, nos minigráficos e no hover do "ver obras". */
+html[data-paleta="azul"] .grupos .tab.grp[aria-current=true],
+html[data-paleta="azul"] .grupos .tab.grp.on{
+  background:linear-gradient(135deg,#2f6b86,#1e3a4c) !important;color:#fff !important;
+  box-shadow:0 6px 16px rgba(30,58,76,.45)}
+html[data-paleta="azul"] .tab[aria-selected=true],
+html[data-paleta="azul"] .tab.on,
+html[data-paleta="azul"] .tab[aria-pressed=true]:not(#btTema):not(#btPaleta){
+  background:linear-gradient(135deg,#2f6b86,#1e3a4c) !important;border-color:transparent !important;
+  color:#fff !important;box-shadow:0 6px 18px rgba(30,58,76,.35)}
+html[data-paleta="azul"][data-tema="claro"] .grupos .tab.grp[aria-current=true],
+html[data-paleta="azul"][data-tema="claro"] .tab[aria-selected=true]{
+  background:linear-gradient(135deg,#2a6076,#1e3a4c) !important}
+/* o selo de alerta no ícone continua vermelho: é contagem de pendência */
 /* o cartão-destaque em degradê segue a identidade */
 html[data-paleta="azul"] .v2feat{background:linear-gradient(150deg,#0f2634,#1e3a4c 55%,#2f6b86)}
 html[data-paleta="azul"] .v2oc.hot{background:linear-gradient(140deg,#2a6b8a,#1e3a4c)}
@@ -8745,7 +8762,7 @@ aoFiltrar();
 </script>
 
 <!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
-<script src="fech.js?v=202610101723"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
+<script src="fech.js?v=202610101733"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
 <script>
 const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andrade", "cid": "BARUERI", "emp": "LEONARDO ZANAO", "sit": "5. CONCLUÍDA", "contrato": 235271.25, "taxa": 0.06, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 14116.27, "ap": 212526.4, "tr": 7207.92, "emp_ap": 12751.58, "emp_tot": 13184.06, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 12751.58, "saldo_tot": 13184.06}, "199": {"num": 199, "uni": "EE SEBASTIAO DE MORAES CARDOSO", "cid": "ITAPECERICA DA SERRA", "emp": "REINALDO", "sit": "5. CONCLUÍDA", "contrato": 186643.95, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 37328.79, "ap": 131576.49, "tr": 12451.6, "emp_ap": 26315.3, "emp_tot": 28805.62, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26315.3, "saldo_tot": 28805.62}, "200": {"num": 200, "uni": "EE OREDO RODRIGUES DA CRUZ", "cid": "JUQUITIBA", "emp": "ANTONIO CABELO", "sit": "5. CONCLUÍDA", "contrato": 171519.72, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 34303.94, "ap": 130434.87, "tr": 0.0, "emp_ap": 26086.97, "emp_tot": 26086.97, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26086.97, "saldo_tot": 26086.97}, "223": {"num": 223, "uni": "ETEC Antonio furlan", "cid": "BARUERI", "emp": "REINALDO", "sit": "4. EXECUÇÃO", "contrato": 1935375.91, "taxa": 0.538489, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 1042178.64, "ap": 413291.43, "tr": 273284.71, "emp_ap": 222552.89, "emp_tot": 369713.7, "mat": 127178.11, "serv": 19199.0, "sienge": 146945.42, "npedidos": 18, "top": [["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)", "m²", 731.4, 23331.66], ["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET", "m2", 450.0, 17946.0], ["Torneira de acionamento manual e com ciclo de ", "un", 18.0, 17457.3], ["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ", "un", 30.0, 14830.5], ["Tinta esmalte cinza médio 3,6 LT", "gl", 50.0, 5781.0], ["PORTA DE MADEIRA COMPLETA 0,92X2,10", "un", 6.0, 4296.0], ["TELA Q-92 2X3 M", "un", 60.0, 3996.0], ["Divisoria de Granilite frontal (DV-03) 0,40x1,", "un", 25.0, 3802.5], ["FERRO CHATO 5/8 X 3/16", "br", 90.0, 3780.0], ["LUMINÁRIA IL-45 - COM LÂMPADA LED", "un", 42.0, 3766.14], ["PR-09 C=2MM", "un", 12.0, 2808.0], ["Tinta Esmalte base d'água Branco 18l", "lt", 20.0, 2500.0], ["Esmalte Brilhante Branco Coralit 3, 6l", "gl", 20.0, 2500.0], ["TINTA ESMALTE BASE ÁGUA CINZA", "lt", 20.0, 2361.2], ["Coral Rende Muito Branco Neve 18l", "lt", 6.0, 2010.0], ["TINTA PISO CINZA MÉDIO 18L", "lt", 5.0, 1725.0], ["DV-04 C=1,2M", "un", 3.0, 1368.9], ["Divisórias de granilite 0,35 X 1,80 Conforme D", "un", 10.0, 1331.1], ["Cabo flex 6mm² preto", "rol", 2.0, 1295.0], ["Cabo flex 4mm² preto", "rol", 2.0, 864.8]], "saldo_ap": 75607.47, "saldo_tot": 222768.28, "absorv": 84486.46, "estoque": 61890.65, "saldo_ap_prop": 138066.43, "saldo_tot_prop": 285227.24}, "224": {"num": 224, "uni": "ELIZA DE OLIVEIRA RIBEIRO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1486645.35, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 486290.92, "tr": 274008.61, "emp_ap": null, "emp_tot": null, "mat": 2852.39, "serv": 0.0, "sienge": 2852.39, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "230": {"num": 230, "uni": "EE MARIA ANTONIETA MARTINS", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1979042.22, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 1083172.19, "tr": 179925.01, "emp_ap": null, "emp_tot": null, "mat": 1976.74, "serv": 0.0, "sienge": 1976.74, "npedidos": 9, "top": [], "saldo_ap": null, "saldo_tot": null}, "231": {"num": 231, "uni": "EE MARIA JOSE ANTUNES FERRAZ", "cid": "TABOÃO DA SERRA", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1912108.62, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 776720.04, "tr": 58057.26, "emp_ap": null, "emp_tot": null, "mat": 712.0, "serv": 0.0, "sienge": 712.0, "npedidos": 7, "top": [], "saldo_ap": null, "saldo_tot": null}, "232": {"num": 232, "uni": "EE NEIDE CELESTINA DE OLIVEIRA", "cid": "EMBU GUAÇU", "emp": "CRISTIAN GUIDO", "sit": "4. EXECUÇÃO", "contrato": 1394560.14, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 500062.77, "tr": 68313.36, "emp_ap": null, "emp_tot": null, "mat": 2080.0, "serv": 0.0, "sienge": 2080.0, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}, "269": {"num": 269, "uni": "EE JD CAMPESTRE", "cid": "EMBU GUAÇU", "emp": "RENILDO", "sit": "4. EXECUÇÃO", "contrato": 1328935.74, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 661977.78, "tr": 45518.87, "emp_ap": null, "emp_tot": null, "mat": 1113.72, "serv": 0.0, "sienge": 1113.72, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "274": {"num": 274, "uni": "ETEC EMBU", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1568182.98, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 104600.06, "tr": 468976.52, "emp_ap": null, "emp_tot": null, "mat": 1410.0, "serv": 0.0, "sienge": 1410.0, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "278": {"num": 278, "uni": "EE GERTRUDES EDER", "cid": "ITAPECERICA DA SERRA", "emp": "LEONARDO ZANAO", "sit": "4. EXECUÇÃO", "contrato": 2152584.69, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 156359.02, "tr": 57537.42, "emp_ap": null, "emp_tot": null, "mat": 4272.3, "serv": 0.0, "sienge": 4272.3, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "284": {"num": 284, "uni": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 114889.32, "taxa": 0.46, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 52849.09, "ap": 3522.17, "tr": 45000.54, "emp_ap": 1620.2, "emp_tot": 22320.45, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 1620.2, "saldo_tot": 22320.45}, "287": {"num": 287, "uni": "EEPROF LAERT ALMEIDA SÃO BERNARDO", "cid": "TABOÃO DA SERRA", "emp": "PEDRO", "sit": "4. EXECUÇÃO", "contrato": 1950390.3, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 32747.41, "tr": 273322.99, "emp_ap": null, "emp_tot": null, "mat": 1088.58, "serv": 0.0, "sienge": 1088.58, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "288": {"num": 288, "uni": "EE EDUARDO VAZ", "cid": "EMBU DAS ARTES", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1756795.6, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 2378.4, "tr": 156047.64, "emp_ap": null, "emp_tot": null, "mat": 8399.5, "serv": 0.0, "sienge": 8399.5, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}};
 (function(){
@@ -8965,10 +8982,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
-<script src="sienge.js?v=202610101723"></script>
-<script src="sienge_itens.js?v=202610101723"></script>
-<script src="sienge_solic.js?v=202610101723"></script>
-<script src="entregas.js?v=202610101723"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
+<script src="sienge.js?v=202610101733"></script>
+<script src="sienge_itens.js?v=202610101733"></script>
+<script src="sienge_solic.js?v=202610101733"></script>
+<script src="entregas.js?v=202610101733"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -9025,6 +9042,27 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   #siengeBox .sgLin:hover{background:var(--surface-2)}
   #siengeBox .sgLinAberta{background:var(--surface-2)}
   #siengeBox .sgSeta{color:var(--text-muted);font-size:10px;margin-right:3px}
+  /* ---- situação por insumo (10/10) ----
+     Quatro estados por insumo, e a quantidade quando veio pela metade. Antes
+     era uma caixa de seleção só: chegou ou não chegou. */
+  #siengeBox .sgItSt{width:268px;vertical-align:top}
+  #siengeBox .sgIbs{display:flex;gap:3px;flex-wrap:wrap}
+  #siengeBox .sgIb{background:transparent;color:var(--text-muted);border:1px solid var(--line);
+    border-radius:999px;padding:3px 8px;font-size:10.5px;cursor:pointer;white-space:nowrap;font-family:inherit}
+  #siengeBox .sgIb:hover:not(:disabled){border-color:var(--text-muted);color:var(--text-primary)}
+  #siengeBox .sgIb:disabled{opacity:.4;cursor:default}
+  #siengeBox .sgIb.on.e{background:var(--good);border-color:var(--good);color:#fff;font-weight:650}
+  #siengeBox .sgIb.on.p{background:var(--warning);border-color:var(--warning);color:#1a1a19;font-weight:650}
+  #siengeBox .sgIb.on.n{background:var(--critical);border-color:var(--critical);color:#fff;font-weight:650}
+  #siengeBox .sgIb.on.c{background:#6b6b66;border-color:#6b6b66;color:#fff;font-weight:650}
+  #siengeBox .sgItQ{display:flex;align-items:center;gap:6px;margin-top:5px;font-size:10.5px;color:var(--text-muted)}
+  #siengeBox .sgItQ label{display:flex;align-items:center;gap:5px}
+  #siengeBox .sgItQ input{width:76px;background:var(--surface-1);color:var(--text-primary);
+    border:1px solid var(--warning);border-radius:6px;padding:3px 6px;font-size:11.5px;text-align:right;font-family:inherit}
+  #siengeBox .sgItNd{color:var(--text-muted)}
+  #siengeBox tr.sgItParc td{background:color-mix(in srgb,var(--warning) 9%,transparent)}
+  #siengeBox tr.sgItNao td{background:color-mix(in srgb,var(--critical) 9%,transparent)}
+  #siengeBox tr.sgItCanc td:not(.sgItSt){color:var(--text-muted);text-decoration:line-through}
   #siengeBox tr.sgItens{display:none}
   #siengeBox .sgItCk{width:52px;text-align:center}
   #siengeBox .sgItCk input{width:18px;height:18px;cursor:pointer}
@@ -9207,6 +9245,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
     function agora(){ var d=new Date(); return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
     function redesenha(){ if(atualCod!=null){ renderSg(atualCod); reabre(); } }
     function marca(p,st){ if(travado(p)) return;
+      /* 10/10: "parcial" sem dizer o que faltou nao serve para cobrar ninguem.
+         Marcar o pedido como parcial abre a lista de insumos na hora, que e
+         onde se escolhe o que nao veio ou quanto veio. */
+      if(st==='P') ABT[String(p)]=true;
       if(st==='E'){ PEND[p]=!PEND[p]; redesenha(); return; }
       PEND[p]=false; var m=getM(p); if(get(p).sg) m.sg=true; m.destrava=false; m.s=(m.s===st?null:st); m.quando=m.s?agora():null; m.por=m.s?quem():null; set(p,m); redesenha(); }
     function salvaE(p){ if(travado(p)) return;
@@ -9216,15 +9258,74 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
     function cancelaE(p){ PEND[p]=false; redesenha(); }
     /* 02/10 (Luis): marcar QUAIS insumos do pedido chegaram. Parte marcada -> "Entregue parcial";
        todos marcados -> pede o "Salvar entregue" (trava), igual ao botão Entregue. */
-    function marcaIt(p,k,on,tot){ if(travado(p)) return;
-      if(!quem()){ var q=document.getElementById('sgQuem'); if(q){ q.focus(); q.style.borderColor='var(--critical)'; }
-        SYNC.msg='\u26a0 digite seu nome em "Marcando como" para marcar os insumos'; pintaStatus(); SYNC.msg=''; redesenha(); return; }
-      var m=getM(p), l=(Array.isArray(m.it)?m.it.slice():[]).filter(function(x){ return x!==k; });
-      if(on) l.push(k); l.sort(function(a,b){return a-b;});
-      if(get(p).sg) m.sg=true; m.destrava=false; m.it=l;
-      if(l.length&&l.length<tot){ m.s='P'; } else if(!l.length&&m.s==='P'){ m.s=null; }
+    /* ---------- insumo a insumo (10/10) --------------------------------------
+       Antes havia um unico "chegou" por insumo, sim ou nao. Pedido do Luis:
+       poder dizer CANCELADO por insumo e, quando veio menos do que foi pedido,
+       quanto veio. Agora cada insumo tem quatro estados -- E chegou, P parcial,
+       N nao chegou, C cancelado -- e o parcial carrega a quantidade recebida.
+
+       Compatibilidade: o registro antigo era m.it = [indices que chegaram], e
+       varias coisas (o contador, o travamento, o Excel) ainda leem isso. O
+       estado novo mora em m.ix = {indice:{s,q}} e o m.it continua sendo escrito
+       com os indices em E -- marcacao velha abre sem perder nada.
+    ------------------------------------------------------------------------ */
+    function ixDe(m){ return (m&&typeof m.ix==='object'&&m.ix)?m.ix:{}; }
+    function ixLe(p,k){
+      var m=getM(p), ix=ixDe(m), r=ix[String(k)];
+      if(r) return r;
+      /* registro antigo: estar na lista it significa que chegou inteiro */
+      return {s:(Array.isArray(m.it)&&m.it.indexOf(k)>=0)?'E':null, q:null};
+    }
+    function ixGrava(p,k,r,tot){
+      var m=getM(p), ix={}; var ant=ixDe(m);
+      Object.keys(ant).forEach(function(x){ ix[x]=ant[x]; });
+      /* traz o registro antigo para o formato novo, uma vez */
+      if(Array.isArray(m.it)) m.it.forEach(function(i){ if(!ix[String(i)]) ix[String(i)]={s:'E',q:null}; });
+      if(r&&r.s) ix[String(k)]=r; else delete ix[String(k)];
+      m.ix=ix;
+      var ent=[], nE=0,nP=0,nN=0,nC=0;
+      Object.keys(ix).forEach(function(x){ var e=ix[x].s;
+        if(e==='E'){ ent.push(+x); nE++; } else if(e==='P') nP++; else if(e==='N') nN++; else if(e==='C') nC++; });
+      ent.sort(function(a,b){return a-b;});
+      m.it=ent;
+      /* o estado do PEDIDO vem do que os insumos dizem, sem ninguem precisar
+         marcar duas vezes. Cancelado so manda se TODOS estiverem cancelados. */
+      var marcados=nE+nP+nN+nC;
+      if(tot>0&&nC===tot) m.s='C';
+      else if(tot>0&&nE===tot) m.s='E';
+      else if(nP||nN||(marcados&&marcados<tot)||(nE&&nE<tot)) m.s='P';
+      else if(!marcados&&m.s==='P') m.s=null;
+      if(get(p).sg) m.sg=true; m.destrava=false;
       m.quando=agora(); m.por=quem(); set(p,m);
-      PEND[p]=(l.length===tot&&tot>0); redesenha(); }
+      PEND[p]=(nE===tot&&tot>0);
+    }
+    function pedeNome(){
+      if(quem()) return false;
+      var q=document.getElementById('sgQuem'); if(q){ q.focus(); q.style.borderColor='var(--critical)'; }
+      SYNC.msg='⚠ digite seu nome em "Marcando como" para marcar os insumos'; pintaStatus(); SYNC.msg=''; redesenha();
+      return true;
+    }
+    /* clique num dos quatro botoes do insumo */
+    function marcaItS(p,k,st,tot){ if(travado(p)||pedeNome()) return;
+      var atual=ixLe(p,k);
+      var novo = (atual.s===st) ? {s:null,q:null}            /* clicar de novo desmarca */
+               : {s:st, q: st==='P' ? (atual.q!=null?atual.q:null) : null};
+      ixGrava(p,k,novo.s?novo:null,tot);
+      ABT[String(p)]=true;                                    /* a lista fica aberta */
+      redesenha();
+    }
+    /* quantidade recebida, quando o insumo veio pela metade */
+    function marcaItQ(p,k,v,tot,pedido){ if(travado(p)||pedeNome()) return;
+      var q=parseFloat(String(v).replace(',','.'));
+      if(!(q>=0)) q=null;
+      if(q!=null&&pedido>0&&q>pedido) q=pedido;
+      var r=ixLe(p,k);
+      ixGrava(p,k,{s:(q!=null&&pedido>0&&q>=pedido)?'E':'P', q:q},tot);
+      ABT[String(p)]=true;
+      redesenha();
+    }
+    /* a assinatura antiga continua valendo (importacao de json, atalhos) */
+    function marcaIt(p,k,on,tot){ marcaItS(p,k,on?'E':null,tot); }
     /* 02/10: retirar um "Entregue · travado" marcado por engano (pedido do Luis) — 2 cliques */
     var RET={};
     function retira(p){
@@ -9276,15 +9377,37 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
     function linhaItens(cod,ped){ var l=itens(cod,ped); if(!l.length) return '';
       var mm=get(ped), mk=(Array.isArray(getM(ped).it)?getM(ped).it:[]), trv=!!mm.trava, tot=l.length;
       var h='<tr class="sgItens"><td colspan="9"><div class="sgItBox"><b>Itens do pedido '+ped+'</b>'+
-        (trv?'':' <span class="sgItDica">marque os insumos que chegaram'+(mk.length?' · '+mk.length+' de '+tot+' marcado(s)':'')+'</span>')+
-        '<table class="sgItTab"><thead><tr><th class="sgItCk" title="chegou">Chegou</th><th>Insumo</th><th>Un</th><th class="n">Qtde</th><th class="n">Pendente</th>'+
+        (trv?'':' <span class="sgItDica">diga o que aconteceu com cada insumo — em <b>parcial</b>, informe quanto chegou'+(mk.length?' · '+mk.length+' de '+tot+' já chegou(aram) inteiro(s)':'')+'</span>')+
+        '<table class="sgItTab"><thead><tr><th class="sgItSt">Situação do insumo</th><th>Insumo</th><th>Un</th><th class="n">Pedido</th><th class="n">Recebido</th><th class="n">Pendente</th>'+
           (l.some(function(i){return i.length>5&&i[5]!=null;})?'<th class="n">Vl. unit.</th><th class="n">Valor</th>':'')+
         '</tr></thead><tbody>'+
-        l.map(function(i,k){ var tv=(i.length>5&&i[5]!=null), ok=trv&&mm.s==='E'||mk.indexOf(k)>=0;
-          return '<tr'+(ok?' class="sgItOk"':'')+'><td class="sgItCk"><input type="checkbox" aria-label="insumo entregue"'+(ok?' checked':'')+(trv?' disabled':'')+
-            ' onclick="event.stopPropagation()" onchange="SGE.marcaIt('+ped+','+k+',this.checked,'+tot+')"></td><td>'+String(i[0]).replace(/[&<>]/g,'')+'</td><td>'+String(i[1]).replace(/[&<>]/g,'')+'</td><td class="n">'+nfmt(i[2])+
-          '</td><td class="n'+((i[3]||0)>0.0005?' pend':'')+'">'+((i[3]||0)>0.0005?nfmt(i[3]):'—')+'</td>'+
-          (tv?'<td class="n">'+brl(i[4])+'</td><td class="n"><b>'+brl(i[5])+'</b></td>':'')+'</tr>'; }).join('')+
+        l.map(function(i,k){ var tv=(i.length>5&&i[5]!=null);
+          var r=ixLe(ped,k), st=(trv&&mm.s==='E')?'E':r.s, qp=Number(i[2]||0);
+          /* quanto chegou: tudo em E, o que foi digitado em P, nada em N/C */
+          var rec = st==='E'?qp : st==='P'?(r.q!=null?r.q:null) : (st==='N'||st==='C')?0 : null;
+          var falta = (rec!=null)?Math.max(0,qp-rec):null;
+          function bt(cod,rot,cls,tit){
+            return '<button class="sgIb'+(st===cod?' on '+cls:'')+'"'+(trv?' disabled':'')+
+              ' title="'+tit+'" onclick="event.stopPropagation();SGE.marcaItS('+ped+','+k+',\''+cod+'\','+tot+')">'+rot+'</button>';
+          }
+          return '<tr class="'+(st==='E'?'sgItOk':st==='C'?'sgItCanc':st==='N'?'sgItNao':st==='P'?'sgItParc':'')+'">'+
+            '<td class="sgItSt"><div class="sgIbs">'+
+              bt('E','chegou','e','o insumo chegou inteiro')+
+              bt('P','parcial','p','chegou menos do que foi pedido')+
+              bt('N','não veio','n','o insumo não chegou')+
+              bt('C','cancelado','c','o item foi cancelado no pedido')+
+            '</div>'+
+            (st==='P'&&!trv?'<div class="sgItQ"><label>recebido<input type="number" step="any" min="0" max="'+qp+'" '+
+               'value="'+(r.q!=null?r.q:'')+'" placeholder="0" onclick="event.stopPropagation()" '+
+               'onchange="SGE.marcaItQ('+ped+','+k+',this.value,'+tot+','+qp+')"></label>'+
+               '<span>de '+nfmt(qp)+' '+String(i[1]).replace(/[&<>]/g,'')+'</span></div>':'')+
+            '</td>'+
+            '<td>'+String(i[0]).replace(/[&<>]/g,'')+'</td><td>'+String(i[1]).replace(/[&<>]/g,'')+'</td>'+
+            '<td class="n">'+nfmt(qp)+'</td>'+
+            '<td class="n">'+(rec==null?'<span class="sgItNd">—</span>':nfmt(rec))+'</td>'+
+            '<td class="n'+((falta!=null&&falta>0.0005)?' pend':'')+'">'+
+              (falta==null?((i[3]||0)>0.0005?nfmt(i[3]):'—'):(falta>0.0005?nfmt(falta):'—'))+'</td>'+
+            (tv?'<td class="n">'+brl(i[4])+'</td><td class="n"><b>'+brl(i[5])+'</b></td>':'')+'</tr>'; }).join('')+
         '</tbody></table></div></td></tr>';
       return h; }
     var ABT={};
@@ -9299,7 +9422,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
         var tr=document.querySelector('#siengeBox tr.sgLin[data-ped="'+p+'"]'); if(tr) pinta(tr,true); }); }catch(e){} }
     function todos(ab){ ABT={}; [].forEach.call(document.querySelectorAll('#siengeBox tr.sgLin'),function(tr){
         if(pinta(tr,ab)) ABT[tr.getAttribute('data-ped')]=ab; }); }
-    return {marcaIt:marcaIt,retira:retira,cancelaR:cancelaR,sg:sg,getM:getM,puxa:puxa,envia:envia,fila:fila,get:get,marca:marca,salvaE:salvaE,cancelaE:cancelaE,travado:travado,obs:obs,botoes:botoes,contador:contador,exportar:exportar,importar:importar,quem:quem,setQuem:setQuem,rot:rot,linhaItens:linhaItens,abre:abre,reabre:reabre,todos:todos};
+    return {marcaIt:marcaIt,marcaItS:marcaItS,marcaItQ:marcaItQ,retira:retira,cancelaR:cancelaR,sg:sg,getM:getM,puxa:puxa,envia:envia,fila:fila,get:get,marca:marca,salvaE:salvaE,cancelaE:cancelaE,travado:travado,obs:obs,botoes:botoes,contador:contador,exportar:exportar,importar:importar,quem:quem,setQuem:setQuem,rot:rot,linhaItens:linhaItens,abre:abre,reabre:reabre,todos:todos};
   })();
   window.SGE=SGE;
 
@@ -9681,10 +9804,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: SUB-ABA FISCALIZAÇÃO (Livros de Ocorrência) ================= -->
-<script src="lo.js?v=202610101723"></script>
-<script src="seg.js?v=202610101723"></script>
-<script src="rao.js?v=202610101723"></script>
-<script src="relsem.js?v=202610101723"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
+<script src="lo.js?v=202610101733"></script>
+<script src="seg.js?v=202610101733"></script>
+<script src="rao.js?v=202610101733"></script>
+<script src="relsem.js?v=202610101733"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
 <style>
   #loBox .loK{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
   #loBox .loK>div{flex:1 1 150px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:10px 12px;background:var(--cd,#fff)}
@@ -9969,7 +10092,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
-<script src="consolidado.js?v=202610101723"></script>
+<script src="consolidado.js?v=202610101733"></script>
 <style>
   #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
   #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
@@ -10608,7 +10731,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   },700);
 })();
 </script>
-<script src="mat_aba.js?v=202610101723"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
+<script src="mat_aba.js?v=202610101733"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
 <script>
 /* ---------- sub-aba "Medições (checklist)" na pagina da obra (08/10) --------
    Era o unico dos cinco quadros gerais que NAO tinha recorte por obra: aberto
