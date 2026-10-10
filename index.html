@@ -1291,7 +1291,7 @@ iframe.embF{border-radius:20px;border:1px solid var(--v2-edge)!important;backgro
 @media (max-width:1240px){#v2home{grid-template-columns:1fr}.v2stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:860px){.v2g2{grid-template-columns:1fr}.v2c3{grid-template-columns:1fr}}
 @media (max-width:760px){
-  .wrap{padding:12px 12px 96px}
+  .wrap{padding:12px 12px 112px}
   .grupos{top:auto!important;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));width:auto;height:62px;flex-direction:row!important;justify-content:space-around;padding:0 6px;border-radius:24px}
   .grupos::before{display:none}
   .grupos .tab.grp{width:42px;height:42px}
@@ -1464,6 +1464,14 @@ html[data-paleta="azul"][data-tema="claro"]{
 html[data-paleta="azul"] .grupos .tab.grp[aria-current=true],
 html[data-paleta="azul"] .grupos .tab.grp.on{
   background:linear-gradient(135deg,#2f6b86,#1e3a4c) !important;color:#fff !important;
+  box-shadow:0 6px 16px rgba(30,58,76,.45)}
+/* 10/10: a bolinha que escorrega entre as abas nasceu com o degrade de
+   --v2-accent -> --acaoBg, que no azul continua terracota. Resultado: a aba
+   selecionada ficava azul e aparecia uma lasca laranja por baixo dela. Aqui a
+   bolinha passa a usar o MESMO azul da navegacao. */
+html[data-paleta="azul"] .tabs .v2bead,
+html[data-paleta="azul"] .grupos .v2bead{
+  background:linear-gradient(135deg,#2f6b86,#1e3a4c);
   box-shadow:0 6px 16px rgba(30,58,76,.45)}
 html[data-paleta="azul"] .tab[aria-selected=true],
 html[data-paleta="azul"] .tab.on,
@@ -1936,10 +1944,15 @@ html[data-paleta="azul"] .orc nav button[aria-selected="true"]{
   /* a barra do video: o trilho e pontilhado (o que falta), o preenchido e solido */
   #engBox .engBar{position:relative;height:9px;border-radius:5px;overflow:hidden;
     background:repeating-linear-gradient(90deg,var(--marca) 0 3px,transparent 3px 7px)}
-  #engBox .engBar i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;
+  #engBox .engBar i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;min-width:5px;
     background:linear-gradient(90deg,var(--realizado),color-mix(in srgb,var(--realizado) 70%,#fff));
     transition:width .6s cubic-bezier(.22,1,.36,1)}
   #engBox .engBar.cheia i{background:var(--good)}
+  /* `#engBox .engNums span` (o rotulo) tem mais peso que `#engBox .engTag`, entao a
+     etiqueta virava bloco e esticava a coluna inteira. O seletor abaixo repete a
+     classe para ganhar a disputa — e a regra de impressao faz o mesmo. */
+  #engBox .engNums span.engTag{display:inline-flex;align-items:center;gap:5px;
+    font-size:10.5px;font-weight:700;width:auto}
   #engBox .engTag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;
     padding:3px 8px;border-radius:999px;background:color-mix(in srgb,var(--critical) 12%,transparent);
     color:var(--critical)}
@@ -1960,6 +1973,8 @@ html[data-paleta="azul"] .orc nav button[aria-selected="true"]{
     gap:3px 8px !important;margin-bottom:4px}
   #engBox .engNums b{display:block !important;font-size:8.5pt !important}
   #engBox .engNums span{display:block !important;font-size:6.4pt !important;color:#3a3a36 !important}
+  #engBox .engNums span.engTag{display:inline-flex !important;width:auto !important;
+    color:inherit !important}
   #engBox .engMetaT{display:flex !important;justify-content:space-between !important;
     gap:8px !important;font-size:6.8pt !important;margin-bottom:2px}
   #engBox .engBar{height:6px !important}
@@ -5558,19 +5573,22 @@ function painelEngenheiros(ativas){
           (pMeta>=100?'var(--good)':'')+'"></i></div></div>'+
       '</button>';
   }).join('');
+  /* 10/10: a primeira versao olhava `window.MS` e nao achava nada — MS e um
+     `const` no topo deste mesmo script, nunca foi para o window. O try engolia o
+     erro e o cartao so trocava de aba, sem filtrar. Agora usa o MS direto e
+     CONFERE se a marca pegou antes de trocar de aba. */
   box.querySelectorAll('[data-eng]').forEach(b=>b.addEventListener('click',()=>{
-    const nome=b.dataset.eng;
-    try{
-      if(window.MS&&MS.fEng&&MS.fEng.sel){
-        MS.fEng.sel.clear();
-        if(nome!=='Sem engenheiro no controle') MS.fEng.sel.add(nome);
-        const cx=$('fEng');
-        if(cx) cx.querySelectorAll('.pop input').forEach(i=>{i.checked=MS.fEng.sel.has(i.value);});
-        if(typeof msLabel==='function') msLabel('fEng');
-        if(typeof MS.fEng.aoMudar==='function') MS.fEng.aoMudar();
-      }
-    }catch(e){}
-    if(typeof mostra==='function') mostra('lista');
+    const nome=b.dataset.eng, M=MS['fEng'];
+    if(M&&M.sel){
+      M.sel.clear();
+      if(nome!==SEM) M.sel.add(nome);
+      const cx=$('fEng');
+      if(cx) cx.querySelectorAll('.pop input').forEach(i=>{i.checked=M.sel.has(i.value);});
+      MS_ORIGEM='fEng';
+      msLabel('fEng');
+      M.aoMudar();
+    }
+    mostra('lista');
     window.scrollTo(0,0);
   }));
 }
@@ -9441,7 +9459,7 @@ aoFiltrar();
 </script>
 
 <!-- ================= FECHAMENTO DE EMPREITEIRO (aba da pagina da obra) ================= -->
-<script src="fech.js?v=202610101908"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
+<script src="fech.js?v=202610101914"></script>  <!-- 25/09: taxa de empreita da coluna M do CTR (gerador: gera_fech_js.py) -->
 <script>
 const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "E.E Mario Joaquim Escobar de Andrade", "cid": "BARUERI", "emp": "LEONARDO ZANAO", "sit": "5. CONCLUÍDA", "contrato": 235271.25, "taxa": 0.06, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 14116.27, "ap": 212526.4, "tr": 7207.92, "emp_ap": 12751.58, "emp_tot": 13184.06, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 12751.58, "saldo_tot": 13184.06}, "199": {"num": 199, "uni": "EE SEBASTIAO DE MORAES CARDOSO", "cid": "ITAPECERICA DA SERRA", "emp": "REINALDO", "sit": "5. CONCLUÍDA", "contrato": 186643.95, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 37328.79, "ap": 131576.49, "tr": 12451.6, "emp_ap": 26315.3, "emp_tot": 28805.62, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26315.3, "saldo_tot": 28805.62}, "200": {"num": 200, "uni": "EE OREDO RODRIGUES DA CRUZ", "cid": "JUQUITIBA", "emp": "ANTONIO CABELO", "sit": "5. CONCLUÍDA", "contrato": 171519.72, "taxa": 0.2, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 34303.94, "ap": 130434.87, "tr": 0.0, "emp_ap": 26086.97, "emp_tot": 26086.97, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 26086.97, "saldo_tot": 26086.97}, "223": {"num": 223, "uni": "ETEC Antonio furlan", "cid": "BARUERI", "emp": "REINALDO", "sit": "4. EXECUÇÃO", "contrato": 1935375.91, "taxa": 0.538489, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 1042178.64, "ap": 413291.43, "tr": 273284.71, "emp_ap": 222552.89, "emp_tot": 369713.7, "mat": 127178.11, "serv": 19199.0, "sienge": 146945.42, "npedidos": 18, "top": [["AZULEJO ELIANE: FORMA BRANCO BR (32,5X59CM)", "m²", 731.4, 23331.66], ["PISO PORCELANATO MUNARI CONCRETO AC 60X60 RET", "m2", 450.0, 17946.0], ["Torneira de acionamento manual e com ciclo de ", "un", 18.0, 17457.3], ["DV-01 DIVISORIA DE GRANILITE - LATERAL ABERTA ", "un", 30.0, 14830.5], ["Tinta esmalte cinza médio 3,6 LT", "gl", 50.0, 5781.0], ["PORTA DE MADEIRA COMPLETA 0,92X2,10", "un", 6.0, 4296.0], ["TELA Q-92 2X3 M", "un", 60.0, 3996.0], ["Divisoria de Granilite frontal (DV-03) 0,40x1,", "un", 25.0, 3802.5], ["FERRO CHATO 5/8 X 3/16", "br", 90.0, 3780.0], ["LUMINÁRIA IL-45 - COM LÂMPADA LED", "un", 42.0, 3766.14], ["PR-09 C=2MM", "un", 12.0, 2808.0], ["Tinta Esmalte base d'água Branco 18l", "lt", 20.0, 2500.0], ["Esmalte Brilhante Branco Coralit 3, 6l", "gl", 20.0, 2500.0], ["TINTA ESMALTE BASE ÁGUA CINZA", "lt", 20.0, 2361.2], ["Coral Rende Muito Branco Neve 18l", "lt", 6.0, 2010.0], ["TINTA PISO CINZA MÉDIO 18L", "lt", 5.0, 1725.0], ["DV-04 C=1,2M", "un", 3.0, 1368.9], ["Divisórias de granilite 0,35 X 1,80 Conforme D", "un", 10.0, 1331.1], ["Cabo flex 6mm² preto", "rol", 2.0, 1295.0], ["Cabo flex 4mm² preto", "rol", 2.0, 864.8]], "saldo_ap": 75607.47, "saldo_tot": 222768.28, "absorv": 84486.46, "estoque": 61890.65, "saldo_ap_prop": 138066.43, "saldo_tot_prop": 285227.24}, "224": {"num": 224, "uni": "ELIZA DE OLIVEIRA RIBEIRO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1486645.35, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 486290.92, "tr": 274008.61, "emp_ap": null, "emp_tot": null, "mat": 2852.39, "serv": 0.0, "sienge": 2852.39, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "230": {"num": 230, "uni": "EE MARIA ANTONIETA MARTINS", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1979042.22, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 1083172.19, "tr": 179925.01, "emp_ap": null, "emp_tot": null, "mat": 1976.74, "serv": 0.0, "sienge": 1976.74, "npedidos": 9, "top": [], "saldo_ap": null, "saldo_tot": null}, "231": {"num": 231, "uni": "EE MARIA JOSE ANTUNES FERRAZ", "cid": "TABOÃO DA SERRA", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1912108.62, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 776720.04, "tr": 58057.26, "emp_ap": null, "emp_tot": null, "mat": 712.0, "serv": 0.0, "sienge": 712.0, "npedidos": 7, "top": [], "saldo_ap": null, "saldo_tot": null}, "232": {"num": 232, "uni": "EE NEIDE CELESTINA DE OLIVEIRA", "cid": "EMBU GUAÇU", "emp": "CRISTIAN GUIDO", "sit": "4. EXECUÇÃO", "contrato": 1394560.14, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 500062.77, "tr": 68313.36, "emp_ap": null, "emp_tot": null, "mat": 2080.0, "serv": 0.0, "sienge": 2080.0, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}, "269": {"num": 269, "uni": "EE JD CAMPESTRE", "cid": "EMBU GUAÇU", "emp": "RENILDO", "sit": "4. EXECUÇÃO", "contrato": 1328935.74, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 661977.78, "tr": 45518.87, "emp_ap": null, "emp_tot": null, "mat": 1113.72, "serv": 0.0, "sienge": 1113.72, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "274": {"num": 274, "uni": "ETEC EMBU", "cid": "EMBU DAS ARTES", "emp": "RAFAEL", "sit": "4. EXECUÇÃO", "contrato": 1568182.98, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 104600.06, "tr": 468976.52, "emp_ap": null, "emp_tot": null, "mat": 1410.0, "serv": 0.0, "sienge": 1410.0, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "278": {"num": 278, "uni": "EE GERTRUDES EDER", "cid": "ITAPECERICA DA SERRA", "emp": "LEONARDO ZANAO", "sit": "4. EXECUÇÃO", "contrato": 2152584.69, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 156359.02, "tr": 57537.42, "emp_ap": null, "emp_tot": null, "mat": 4272.3, "serv": 0.0, "sienge": 4272.3, "npedidos": 2, "top": [], "saldo_ap": null, "saldo_tot": null}, "284": {"num": 284, "uni": "EE PROFA IGNES AMELIA OLIVEIRA MACHADO", "cid": "ITAPEVI", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 114889.32, "taxa": 0.46, "taxa_fonte": "campo Desconto da planilha - EMPREITA (CONFERIR: e o desconto da Atlantica x tabela FDE, pode nao ser a taxa do empreiteiro)", "empreita": 52849.09, "ap": 3522.17, "tr": 45000.54, "emp_ap": 1620.2, "emp_tot": 22320.45, "mat": 0.0, "serv": 0.0, "sienge": 0.0, "npedidos": 0, "top": [], "saldo_ap": 1620.2, "saldo_tot": 22320.45}, "287": {"num": 287, "uni": "EEPROF LAERT ALMEIDA SÃO BERNARDO", "cid": "TABOÃO DA SERRA", "emp": "PEDRO", "sit": "4. EXECUÇÃO", "contrato": 1950390.3, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 32747.41, "tr": 273322.99, "emp_ap": null, "emp_tot": null, "mat": 1088.58, "serv": 0.0, "sienge": 1088.58, "npedidos": 5, "top": [], "saldo_ap": null, "saldo_tot": null}, "288": {"num": 288, "uni": "EE EDUARDO VAZ", "cid": "EMBU DAS ARTES", "emp": "ANTONIO CABELO", "sit": "4. EXECUÇÃO", "contrato": 1756795.6, "taxa": null, "taxa_fonte": "taxa do empreiteiro nao cadastrada", "empreita": null, "ap": 2378.4, "tr": 156047.64, "emp_ap": null, "emp_tot": null, "mat": 8399.5, "serv": 0.0, "sienge": 8399.5, "npedidos": 4, "top": [], "saldo_ap": null, "saldo_tot": null}};
 (function(){
@@ -9677,10 +9695,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 })();
 </script>
 <!-- ================= 22/09: PEDIDOS DO SIENGE + RELATÓRIO DA OBRA COM ESCOLHA ================= -->
-<script src="sienge.js?v=202610101908"></script>
-<script src="sienge_itens.js?v=202610101908"></script>
-<script src="sienge_solic.js?v=202610101908"></script>
-<script src="entregas.js?v=202610101908"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
+<script src="sienge.js?v=202610101914"></script>
+<script src="sienge_itens.js?v=202610101914"></script>
+<script src="sienge_solic.js?v=202610101914"></script>
+<script src="entregas.js?v=202610101914"></script>  <!-- marcas de entrega consolidadas (gerador: pasta entregas/) -->
 <style>
   #relObraPop{position:fixed;z-index:60;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
   #relObraPop.on{display:flex}
@@ -10585,10 +10603,10 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: SUB-ABA FISCALIZAÇÃO (Livros de Ocorrência) ================= -->
-<script src="lo.js?v=202610101908"></script>
-<script src="seg.js?v=202610101908"></script>
-<script src="rao.js?v=202610101908"></script>
-<script src="relsem.js?v=202610101908"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
+<script src="lo.js?v=202610101914"></script>
+<script src="seg.js?v=202610101914"></script>
+<script src="rao.js?v=202610101914"></script>
+<script src="relsem.js?v=202610101914"></script>  <!-- 02/10: semanal de todas as obras (gera_relsem_js.py) -->  <!-- 30/09: relatorios de visita (gerador: gera_rao_js.py) -->
 <style>
   #loBox .loK{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
   #loBox .loK>div{flex:1 1 150px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:10px 12px;background:var(--cd,#fff)}
@@ -10873,7 +10891,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
 
 
 <!-- ================= 25/09: FECHAMENTO CONSOLIDADO (aba Empreiteiros) ================= -->
-<script src="consolidado.js?v=202610101908"></script>
+<script src="consolidado.js?v=202610101914"></script>
 <style>
   #consBox .cK{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
   #consBox .cK>div{flex:1 1 170px;border:1px solid var(--bd,#d9d9d4);border-radius:10px;padding:9px 12px;background:var(--cd,#fff)}
@@ -11512,7 +11530,7 @@ const FECH_DADOS=(window.FECH&&window.FECH.obras)||{"195": {"num": 195, "uni": "
   },700);
 })();
 </script>
-<script src="mat_aba.js?v=202610101908"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
+<script src="mat_aba.js?v=202610101914"></script>  <!-- 06/10: sub-aba Materiais (checklist) na pagina da obra -->
 <script>
 /* ---------- sub-aba "Medições (checklist)" na pagina da obra (08/10) --------
    Era o unico dos cinco quadros gerais que NAO tinha recorte por obra: aberto
